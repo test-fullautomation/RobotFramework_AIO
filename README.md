@@ -1,2 +1,2 @@
 # RobotFramework_AIO
-RobotFramework All in One installer
+RobotFramework All in One installer.
