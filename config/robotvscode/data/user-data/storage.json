@@ -1,0 +1,46 @@
+{
+    "theme": "vs-dark",
+    "themeBackground": "#1e1e1e",
+    "windowSplash": {
+        "baseTheme": "vs-dark",
+        "colorInfo": {
+            "foreground": "#cccccc",
+            "background": "#1e1e1e",
+            "editorBackground": "#1e1e1e",
+            "titleBarBackground": "#3c3c3c",
+            "activityBarBackground": "#333333",
+            "sideBarBackground": "#252526",
+            "statusBarBackground": "#007acc",
+            "statusBarNoFolderBackground": "#68217a"
+        },
+        "layoutInfo": {
+            "sideBarSide": "left",
+            "editorPartMinWidth": 220,
+            "titleBarHeight": 30,
+            "activityBarWidth": 48,
+            "sideBarWidth": 256,
+            "statusBarHeight": 22,
+            "windowBorder": false
+        }
+    },
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "{RobotTestPath}",
+            "uiState": {
+                "mode": 1,
+                "x": 256,
+                "y": 48,
+                "width": 1024,
+                "height": 779
+            }
+        },
+        "openedWindows": []
+    },
+    "openedPathsList": {
+        "entries": [
+            {
+                "folderUri": "{RobotTestPath}"
+            }
+        ]
+    }
+}

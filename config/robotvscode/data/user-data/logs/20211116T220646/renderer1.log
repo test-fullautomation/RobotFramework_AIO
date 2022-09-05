@@ -1,0 +1,8 @@
+[2021-11-16 22:06:47.483] [renderer1] [info] Starting extension host with pid 15312.
+[2021-11-16 22:06:47.483] [renderer1] [info] [LocalProcessExtensionHost]: IExtensionHostStarter.start() took 353 ms.
+[2021-11-16 22:06:47.884] [renderer1] [error] [Extension Host] (node:15312) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `Code --trace-deprecation ...` to show where the warning was created)
+[2021-11-16 22:06:47.907] [renderer1] [error] net::ERR_PROXY_CONNECTION_FAILED: Error: net::ERR_PROXY_CONNECTION_FAILED
+    at SimpleURLLoaderWrapper.<anonymous> (electron/js2c/browser_init.js:109:7068)
+    at SimpleURLLoaderWrapper.emit (events.js:315:20)
+[2021-11-16 22:06:54.198] [renderer1] [error] The terminal's pty host process exited, the connection to all terminal processes was lost

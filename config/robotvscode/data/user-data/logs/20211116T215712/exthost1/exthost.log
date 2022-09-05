@@ -1,0 +1,15 @@
+[2021-11-16 21:57:14.843] [exthost] [info] Extension host with pid 20160 started
+[2021-11-16 21:57:14.843] [exthost] [info] Skipping acquiring lock for c:\temp\VSCode-win32-x64-1.62.2\data\user-data\User\workspaceStorage\71d0b217857a2a37d6325375085ef87d.
+[2021-11-16 21:57:14.928] [exthost] [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+[2021-11-16 21:57:14.942] [exthost] [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 21:57:14.950] [exthost] [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 21:57:14.969] [exthost] [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 21:57:14.983] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: true, activationEvent: '*'
+[2021-11-16 21:57:14.990] [exthost] [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*', root cause: vscode.github
+[2021-11-16 21:57:15.468] [exthost] [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+[2021-11-16 21:57:15.486] [exthost] [info] Eager extensions activated
+[2021-11-16 21:57:15.540] [exthost] [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+[2021-11-16 21:57:15.554] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 21:57:15.560] [exthost] [info] ExtensionService#_doActivateExtension ms-vscode-remote.remote-wsl-recommender, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 21:57:22.410] [exthost] [info] extension host terminating: renderer closed the socket
+[2021-11-16 21:57:23.420] [exthost] [info] Extension host with pid 20160 exiting with code 0

@@ -1,0 +1,7 @@
+[2021-11-16 22:06:36.296] [renderer1] [info] Starting extension host with pid 11396.
+[2021-11-16 22:06:36.296] [renderer1] [info] [LocalProcessExtensionHost]: IExtensionHostStarter.start() took 366 ms.
+[2021-11-16 22:06:36.729] [renderer1] [error] [Extension Host] (node:11396) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `Code --trace-deprecation ...` to show where the warning was created)
+[2021-11-16 22:06:36.776] [renderer1] [error] net::ERR_PROXY_CONNECTION_FAILED: Error: net::ERR_PROXY_CONNECTION_FAILED
+    at SimpleURLLoaderWrapper.<anonymous> (electron/js2c/browser_init.js:109:7068)
+    at SimpleURLLoaderWrapper.emit (events.js:315:20)

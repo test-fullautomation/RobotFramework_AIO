@@ -1,0 +1,5 @@
+[2021-11-16 22:13:48.070] [sharedprocess] [info] WSL is not installed, so could not detect WSL profiles
+[2021-11-16 22:14:31.848] [sharedprocess] [info] Uninstalling extension: ms-python.python
+[2021-11-16 22:14:31.858] [sharedprocess] [info] Uninstalling extension: ms-python.vscode-pylance
+[2021-11-16 22:14:31.891] [sharedprocess] [info] Successfully uninstalled extension: ms-python.python
+[2021-11-16 22:14:31.892] [sharedprocess] [info] Successfully uninstalled extension: ms-python.vscode-pylance

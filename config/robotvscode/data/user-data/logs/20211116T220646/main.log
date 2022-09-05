@@ -1,0 +1,11 @@
+[2021-11-16 22:06:46.312] [main] [info] update#setState idle
+[2021-11-16 22:06:54.211] [main] [error] CodeWindow: renderer process crashed (reason: killed, code: -1073741510)
+[2021-11-16 22:06:54.222] [main] [warning] Error sending IPC message to channel 'vscode:reportError' of window 1: Render frame was disposed before WebFrameMain could be accessed
+[2021-11-16 22:06:54.222] [main] [error] [uncaught exception in main]: Error: SharedProcess: crashed (detail: killed, code: -1073741510)
+[2021-11-16 22:06:54.222] [main] [error] Error: SharedProcess: crashed (detail: killed, code: -1073741510)
+    at C:\temp\VSCode-win32-x64-1.62.2\resources\app\out\vs\code\electron-main\main.js:77:70518
+    at m.fire (C:\temp\VSCode-win32-x64-1.62.2\resources\app\out\vs\code\electron-main\main.js:16:1712)
+    at C:\temp\VSCode-win32-x64-1.62.2\resources\app\out\vs\code\electron-main\main.js:14:53160
+    at m.fire (C:\temp\VSCode-win32-x64-1.62.2\resources\app\out\vs\code\electron-main\main.js:16:1712)
+    at Object.<anonymous> (C:\temp\VSCode-win32-x64-1.62.2\resources\app\out\vs\code\electron-main\main.js:76:11720)
+    at Object.emit (events.js:327:22)

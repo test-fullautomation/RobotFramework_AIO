@@ -1,0 +1,6 @@
+[2021-11-16 22:01:35.519] [main] [info] update#setState idle
+[2021-11-16 22:02:05.522] [main] [info] update#setState checking for updates
+[2021-11-16 22:02:05.539] [main] [error] Error: net::ERR_PROXY_CONNECTION_FAILED
+    at SimpleURLLoaderWrapper.<anonymous> (electron/js2c/browser_init.js:109:7068)
+    at SimpleURLLoaderWrapper.emit (events.js:315:20)
+[2021-11-16 22:02:05.539] [main] [info] update#setState idle

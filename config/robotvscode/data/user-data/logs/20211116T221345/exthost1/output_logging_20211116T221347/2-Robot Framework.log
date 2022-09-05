@@ -1,0 +1,49 @@
+Getting language server Python executable.
+Starting RobotFramework Language Server with args: C:\RobotFramework\python39\python.exe,-u,c:\temp\VSCode-win32-x64-1.62.2\data\extensions\robocorp.robotframework-lsp-0.28.0\src\robotframework_ls\__main__.py
+Waiting for RobotFramework (python) Language Server to finish activating...
+RobotFramework Language Server ready. Took: 1.8s
+lsp: 2021-11-16 22:13:50 UTC pid: 16284 - ThreadPoolExecutor-1_0 - EXCEPTION - robotframework_ls.impl.libspec_manager
+Error creating libspec: Selenium2Library.
+Return code: 252
+Output:
+Importing test library 'Selenium2Library' failed: ModuleNotFoundError: No module named 'Selenium2Library'
+Traceback (most recent call last):
+  None
+PYTHONPATH:
+  c:\repo\robot\selftest\testcases\connectivity\Serial
+  C:\RobotFramework\python39\python39.zip
+  C:\RobotFramework\python39\DLLs
+  C:\RobotFramework\python39\lib
+  C:\RobotFramework\python39
+  C:\Users\AGT2HC\AppData\Roaming\Python\Python39\site-packages
+  C:\RobotFramework\python39\lib\site-packages
+  C:\RobotFramework\python39\lib\site-packages\robotframework_seriallibrary-0.3.1-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotframework_robocop-1.7.1-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotframework_bits_platform_interface-0.1.0-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\jsonpreprocessor-0.0.1-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotframework_qconnect_baselibrary-1.0.0-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotresults2rqm-1.0.1-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotresults2db-1.1.0-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotframework_testsuites-0.1.0-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\tmllog2robotlog-1.0.0-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\robotframework-3.2rc2-py3.9.egg
+  C:\RobotFramework\python39\lib\site-packages\win32
+  C:\RobotFramework\python39\lib\site-packages\win32\lib
+  C:\RobotFramework\python39\lib\site-packages\Pythonwin
+
+Try --help for usage information.
+
+
+Traceback (most recent call last):
+  File "c:\temp\VSCode-win32-x64-1.62.2\data\extensions\robocorp.robotframework-lsp-0.28.0\src\robotframework_ls\impl\libspec_manager.py", line 891, in _cached_create_libspec
+    self._subprocess_check_output(
+  File "c:\temp\VSCode-win32-x64-1.62.2\data\extensions\robocorp.robotframework-lsp-0.28.0\src\robotframework_ls\impl\libspec_manager.py", line 775, in _subprocess_check_output
+    return subprocess.check_output(*args, **kwargs)
+  File "subprocess.py", line 420, in check_output
+  File "subprocess.py", line 524, in run
+subprocess.CalledProcessError: Command '['C:\\RobotFramework\\python39\\python.exe', '-m', 'robot.libdoc', '--format', 'XML:HTML', 'Selenium2Library', 'C:\\Users\\AGT2HC\\.robotframework-ls\\specs\\v2\\c926419b_3.2rc2\\user\\Selenium2Library.libspec']' returned non-zero exit status 252.
+Exception ignored in: <function Popen.__del__ at 0x0000027E15D4C040>
+Traceback (most recent call last):
+  File "subprocess.py", line 1051, in __del__
+  File "subprocess.py", line 1453, in _internal_poll
+OSError: [WinError 6] The handle is invalid

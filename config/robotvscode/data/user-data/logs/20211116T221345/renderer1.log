@@ -1,0 +1,11 @@
+[2021-11-16 22:13:46.757] [renderer1] [info] Starting extension host with pid 17832.
+[2021-11-16 22:13:46.757] [renderer1] [info] [LocalProcessExtensionHost]: IExtensionHostStarter.start() took 363 ms.
+[2021-11-16 22:13:47.176] [renderer1] [error] [Extension Host] (node:17832) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `Code --trace-deprecation ...` to show where the warning was created)
+[2021-11-16 22:13:47.225] [renderer1] [error] net::ERR_PROXY_CONNECTION_FAILED: Error: net::ERR_PROXY_CONNECTION_FAILED
+    at SimpleURLLoaderWrapper.<anonymous> (electron/js2c/browser_init.js:109:7068)
+    at SimpleURLLoaderWrapper.emit (events.js:315:20)
+[2021-11-16 22:14:26.656] [renderer1] [error] Error: XHR failed
+    at XMLHttpRequest.C.onerror (vscode-file://vscode-app/c:/temp/VSCode-win32-x64-1.62.2/resources/app/out/vs/workbench/workbench.desktop.main.js:85:24735)
+[2021-11-16 22:14:52.872] [renderer1] [error] Error: XHR failed
+    at XMLHttpRequest.C.onerror (vscode-file://vscode-app/c:/temp/VSCode-win32-x64-1.62.2/resources/app/out/vs/workbench/workbench.desktop.main.js:85:24735)

@@ -1,0 +1,9 @@
+Package: robotframework-aio
+Version: 0.5.1.1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends:
+Maintainer: Thomas Pollerspöck (Thomas.Pollerspoeck@de.bosch.com)
+Description: Robot Framework AIO (All In One)
+

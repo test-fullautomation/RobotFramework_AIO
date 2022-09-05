@@ -1,0 +1,10 @@
+[2021-11-16 17:55:28.503] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
+[2021-11-16 17:55:28.983] [renderer1] [info] Starting extension host with pid 7044.
+[2021-11-16 17:55:28.984] [renderer1] [info] [LocalProcessExtensionHost]: IExtensionHostStarter.start() took 370 ms.
+[2021-11-16 17:55:29.092] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
+[2021-11-16 17:55:29.382] [renderer1] [error] [Extension Host] (node:7044) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `Code --trace-deprecation ...` to show where the warning was created)
+[2021-11-16 17:55:30.218] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
+[2021-11-16 17:55:30.892] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
+[2021-11-16 17:55:31.576] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
+[2021-11-16 17:57:11.821] [renderer1] [warning] Settings pattern "keyboard.*" doesn't match any settings
