@@ -1,0 +1,19 @@
+#!/bin/bash
+ROBFWPython=/opt/rfwaio/python39/install/bin/python3.9
+
+# Handle arguments from command
+if [ $# -eq 0 ] || [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
+  # robot help
+  ${ROBFWPython} -m robot -h
+elif [ "${1}" = "-v" ] || [ "${1}" = "--version" ]; then
+  # robot framework core version
+  ${ROBFWPython} -m robot --version
+elif [ "${1}" = "-aio" ] || [ "${1}" = "--version_aio" ]; then
+  # robot framework aio version
+  ${ROBFWPython} -m RobotFramework_Testsuites.version
+elif [ -f ${1} ]; then
+  # execute robot test file directly 
+  ${ROBFWPython} -m robot "${@}"
+else
+  ${ROBFWPython} -m robot "${@}"
+fi

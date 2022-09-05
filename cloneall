@@ -1,0 +1,131 @@
+#!/bin/bash
+#This script helps to clone all repositories
+
+#
+# import common bash scripts
+#
+. ./include/bash/common.sh
+
+
+# return github url bases on provided authentication or not
+function github_url () {
+	reponame=$1
+	GITHUB_PROJECT_URL="github.com/test-fullautomation"
+	repo_url="https://${GITHUB_PROJECT_URL}/${reponame}.git"
+	if [ -n "${GITHUB_BOT_USERNAME}" ] && [ -n "${GITHUB_BOT_PASSWORD}" ]; then
+		repo_url="https://${GITHUB_BOT_USERNAME}:${GITHUB_BOT_PASSWORD}@${GITHUB_PROJECT_URL}/${reponame}.git"
+	fi
+	echo $repo_url
+}
+
+# Clone or update repository
+# Arguments:
+#	$repo_path : location to clone repo into
+#	$repo_url  : repo url
+function clone_update_repo () {
+	repo_path=$1
+	repo_url=$2
+
+	if [ -d "$repo_path" ]; then
+		echo "Cleaning and updating repo $repo_path"
+		git -C "$repo_path" reset --hard HEAD
+		git -C "$repo_path" clean -f -d
+		git -C "$repo_path" pull
+
+		# try to remove existing directory and clone repo again
+		if [ "$?" -ne 0 ]; then
+			echo "Cloning $repo_url again"
+			rm -rf "$repo_path"
+			git clone "$repo_url" "$repo_path"
+		fi
+	else
+		echo "Cloning $repo_url"
+		git clone "$repo_url" "$repo_path"
+	fi
+	if [ "$?" -ne 0 ]; then
+		exit 1
+	fi
+}
+
+# Parse repo information for cloning/updating
+# Arguments:
+#	$conf_file : repo configuration file
+#	$repo_type : repo type
+function parse_repo () {
+	conf_file=$1
+	repo_type=$2
+
+	greenmsg "processing section $repo_type"
+	list_repos=($(git config -f $conf_file --list --name-only | grep $repo_type.))
+	for repo in "${list_repos[@]}"
+	do
+	    reponame=${repo#$repo_type.}
+		repo_url=$(git config -f $1 --get ${repo});
+		if [ "$repo_url" ==  "" ]; then
+			if [[ "$repo_type" == "gitlab" ]]; then
+				repo_url=$(gitlab_url ${reponame})
+			elif [[ "$repo_type" == "github" ]]; then
+				repo_url=$(github_url ${reponame})
+			elif [[ "$repo_type" == "internal" ]]; then
+				repo_url=$(soco_url ${reponame})
+			else
+				errormsg "not supported repo type '$repo_type'"
+			fi
+		fi
+		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+		clone_update_repo "../$reponame" "$repo_url"
+	done
+	if [ "$?" -ne 0 ]; then
+		exit 1
+	fi
+}
+
+
+function parse_config () {
+	#echo "git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq"
+	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
+	#echo $conf_section
+	for section in "${conf_section[@]}"
+	do 
+		if [ "$section" == "internal" ] || [ "$section" == "github" ] || [ "$section" == "gitlab" ]; then
+			parse_repo $1 $section
+		elif [ "$section" == "proxy" ]; then
+		    #TODO: Implement proxy config"
+			:;
+		else
+			sec_name=$(git config -f "$1" --get ${section}.name)
+			if [ "$sec_name" == "" ]; then
+				sec_name=${section}
+			fi
+			
+			echo
+			greenmsg "processing section $sec_name"
+			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+			
+			sec_path=$(git config -f $1 --get ${section}.path)
+			if [ "$sec_path" == "" ]; then
+				sec_path="../${sec_name}"
+			fi
+			sec_url=$(eval echo $(git config -f $1 --get ${section}.url))
+			if [ "$sec_url" == "" ]; then	
+				sec_url=$(gitlab_url ${sec_name})
+			fi
+			
+			clone_update_repo "$sec_path" "$sec_url"
+
+			echo
+			echo
+		fi
+	done
+}
+
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
+echo -e "${COL_GREEN}#          Cloning repositories                                                    #${COL_RESET}"
+echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+
+#iterate over all repositories and apply now the clone command                    
+parse_config ./config/repositories/repositories.conf
+
+goodmsg "Cloning repositories successfully done"

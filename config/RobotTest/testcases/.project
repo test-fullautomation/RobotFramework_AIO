@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>FirstRobot</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.python.pydev.PyDevBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.robotframework.ide.eclipse.main.plugin.robotLibrariesBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.robotframework.ide.eclipse.main.plugin.robotNature</nature>
+		<nature>org.python.pydev.pythonNature</nature>
+	</natures>
+</projectDescription>

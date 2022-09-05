@@ -1,0 +1,8 @@
+TML can be started by means of TMLDevEclipse with the following
+external tool configuration.
+
+Location:
+<TMLINSTALLATIONPaTH>\ConEmu\ConEmu64.exe
+
+Arguments:
+/Title TML /WndX 0  /WndY 0 /WndW 220 /WndH 85 /Icon "<TMLINSTALLATIONPATH>\AutoTest\lib\Icon\tml.ico" /cmd "${resource_loc}" -allowdebug -waitatend -tracelevel=verbose

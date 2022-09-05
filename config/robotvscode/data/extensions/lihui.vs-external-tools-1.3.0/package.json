@@ -1,0 +1,521 @@
+{
+	"name": "vs-external-tools",
+	"displayName": "External Tools",
+	"description": "Allows you to easily launch many other applications",
+	"version": "1.3.0",
+	"publisher": "lihui",
+	"engines": {
+		"vscode": "^1.16.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./out/src/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "vs-external-tools.externalCommand1",
+				"title": "External Command 1"
+			},
+			{
+				"command": "vs-external-tools.externalCommand2",
+				"title": "External Command 2"
+			},
+			{
+				"command": "vs-external-tools.externalCommand3",
+				"title": "External Command 3"
+			},
+			{
+				"command": "vs-external-tools.externalCommand4",
+				"title": "External Command 4"
+			},
+			{
+				"command": "vs-external-tools.externalCommand5",
+				"title": "External Command 5"
+			},
+			{
+				"command": "vs-external-tools.externalCommand6",
+				"title": "External Command 6"
+			},
+			{
+				"command": "vs-external-tools.externalCommand7",
+				"title": "External Command 7"
+			},
+			{
+				"command": "vs-external-tools.externalCommand8",
+				"title": "External Command 8"
+			},
+			{
+				"command": "vs-external-tools.externalCommand9",
+				"title": "External Command 9"
+			},
+			{
+				"command": "vs-external-tools.externalCommand10",
+				"title": "External Command 10"
+			},
+			{
+				"command": "vs-external-tools.externalCommand11",
+				"title": "External Command 11"
+			},
+			{
+				"command": "vs-external-tools.externalCommand12",
+				"title": "External Command 12"
+			},
+			{
+				"command": "vs-external-tools.externalCommand13",
+				"title": "External Command 13"
+			},
+			{
+				"command": "vs-external-tools.externalCommand14",
+				"title": "External Command 14"
+			},
+			{
+				"command": "vs-external-tools.externalCommand15",
+				"title": "External Command 15"
+			},
+			{
+				"command": "vs-external-tools.externalCommand16",
+				"title": "External Command 16"
+			},
+			{
+				"command": "vs-external-tools.externalCommand17",
+				"title": "External Command 17"
+			},
+			{
+				"command": "vs-external-tools.externalCommand18",
+				"title": "External Command 18"
+			},
+			{
+				"command": "vs-external-tools.externalCommand19",
+				"title": "External Command 19"
+			},
+			{
+				"command": "vs-external-tools.externalCommand20",
+				"title": "External Command 20"
+			},
+			{
+				"command": "vs-external-tools.externalCommand21",
+				"title": "External Command 21"
+			},
+			{
+				"command": "vs-external-tools.externalCommand22",
+				"title": "External Command 22"
+			},
+			{
+				"command": "vs-external-tools.externalCommand23",
+				"title": "External Command 23"
+			},
+			{
+				"command": "vs-external-tools.externalCommand24",
+				"title": "External Command 24"
+			}
+		],
+		"configuration": {
+			"title": "vs-external-tools",
+			"properties": {
+				"vs-external-tools.externalCommand1.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand1.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand1.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand2.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand2.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand2.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand3.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand3.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand3.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand4.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand4.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand4.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand5.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand5.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand5.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand6.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand6.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand6.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand7.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand7.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand7.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand8.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand8.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand8.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand9.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand9.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand9.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand10.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand10.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand10.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand11.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand11.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand11.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand12.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand12.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand12.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand13.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand13.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand13.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand14.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand14.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand14.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand15.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand15.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand15.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand16.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand16.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand16.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand17.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand17.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand17.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand18.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand18.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand18.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand19.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand19.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand19.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand20.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand20.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand20.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand21.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand21.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand21.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand22.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand22.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand22.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand23.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand23.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand23.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				},
+				"vs-external-tools.externalCommand24.command": {
+					"type": "string",
+					"default": "",
+					"description": "Command"
+				},
+				"vs-external-tools.externalCommand24.args": {
+					"type": "array",
+					"default": [],
+					"description": "Arguments"
+				},
+				"vs-external-tools.externalCommand24.cwd": {
+					"type": "string",
+					"default": "",
+					"description": "Initial directory"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.5.2",
+		"vscode": "^1.1.5",
+		"mocha": "^3.5.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
+	},
+	"icon": "icon.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/leehooi/vs-external-tools.git"
+	},
+	"keywords": [
+		"external",
+		"tool",
+		"command",
+		"shell",
+		"bat",
+		"exe",
+		"cmd"
+	],
+	"dependencies": {
+		"clipboardy": "^1.2.1"
+	},
+	"__metadata": {
+		"id": "8f80fa0a-a645-4aa8-8a64-f9ce1243de84",
+		"publisherId": "cff53437-19cd-45f4-8395-deb2ee802a3e",
+		"publisherDisplayName": "lihui",
+		"isPreReleaseVersion": false,
+		"preRelease": false,
+		"installedTimestamp": 1649734589309
+	}
+}

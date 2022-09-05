@@ -1,0 +1,14 @@
+Validating found git in: C:\Program Files\Git\cmd\git.exe
+Using git 2.31.1.windows.1 from C:\Program Files\Git\cmd\git.exe
+> git rev-parse --git-dir
+Open repository: c:\repo\robot\selftest
+> git status -z -u
+> git symbolic-ref --short HEAD
+> git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track) refs/heads/develop refs/remotes/develop
+> git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname)
+> git remote --verbose
+> git check-ignore -v -z --stdin
+Warning: Failed to watch ref 'c:\repo\robot\selftest\.git\refs\remotes\origin\develop', is most likely packed.
+> git config --get commit.template
+> git show --textconv :testcases/connectivity/Serial/HelloWorld.robot
+> git ls-files --stage -- C:\repo\robot\selftest\testcases\connectivity\Serial\HelloWorld.robot

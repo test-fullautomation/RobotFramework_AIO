@@ -1,0 +1,13 @@
+[2021-11-16 22:13:47.256] [exthost] [info] Extension host with pid 17832 started
+[2021-11-16 22:13:47.258] [exthost] [info] Skipping acquiring lock for c:\temp\VSCode-win32-x64-1.62.2\data\user-data\User\workspaceStorage\71d0b217857a2a37d6325375085ef87d.
+[2021-11-16 22:13:47.360] [exthost] [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+[2021-11-16 22:13:47.372] [exthost] [info] ExtensionService#_doActivateExtension robocorp.robotframework-lsp, startup: false, activationEvent: 'onLanguage:robotframework'
+[2021-11-16 22:13:47.619] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: true, activationEvent: '*'
+[2021-11-16 22:13:47.624] [exthost] [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*', root cause: vscode.github
+[2021-11-16 22:13:47.716] [exthost] [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+[2021-11-16 22:13:47.809] [exthost] [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+[2021-11-16 22:13:47.818] [exthost] [info] Eager extensions activated
+[2021-11-16 22:13:47.820] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 22:13:47.825] [exthost] [info] ExtensionService#_doActivateExtension ms-vscode-remote.remote-wsl-recommender, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 22:14:54.917] [exthost] [info] extension host terminating: renderer closed the socket
+[2021-11-16 22:14:55.928] [exthost] [info] Extension host with pid 17832 exiting with code 0

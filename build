@@ -1,0 +1,258 @@
+#!/bin/bash
+
+#Commandline argument 
+#iscc /DRobotFrameworkVersion=version /DSETUPVersion=version
+#allows to set a RobotFramework- and Setup version 
+#If nothing is provided, then use an empty string. The resulting
+#installer will be called __RobotFramework_setup__.exe in this case
+#otherwise it is called   __RobotFramework_setup_RobotFrameworkVersion__SETUPVersion.exe
+
+#set -x
+
+#
+# import common bash scripts
+#
+. ./include/bash/common.sh
+
+echo 
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
+echo -e "${COL_GREEN}#          Compiling RobotFramework AIO setup...                                   #${COL_RESET}"
+echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+
+RobotFrameworkVersion=""
+SETUPVersion=""
+ITrackService="NONE"
+
+arguments=( "${@}" )
+
+if [ "$#" -eq 0 ]; then
+   # for Gitlab CI pipeline
+   if [ -n "$CI_COMMIT_TAG" ] ; then
+	  RobotFrameworkVersion=`echo $CI_COMMIT_TAG | sed -e "s/rel\///g"`
+   elif [ "$CI_COMMIT_REF_NAME" == "$CI_DEFAULT_BRANCH" ]; then
+	  RobotFrameworkVersion=`echo merged_$CI_COMMIT_REF_NAME | sed -e "s/\//-/g"`
+   elif [ -n "$CI_COMMIT_REF_NAME" ]; then
+      RobotFrameworkVersion=`echo dev_$CI_COMMIT_REF_NAME | sed -e "s/\//-/g"`
+   fi
+
+   arguments=`echo "//DRobotFrameworkVersion=$RobotFrameworkVersion"`
+
+   echo -e $COL_GREEN"RobotFrameworkVersion   = $RobotFrameworkVersion"$COL_RESET
+   echo -e $COL_GREEN"SETUPVersion = $SETUPVersion"$COL_RESET
+
+   echo you can  provide versions with arguments 
+   echo ./build //DRobotFrameworkVersion=version //DSETUPVersion=version //DITrackService=URL \(attention: use double backslash instead of slashes!\)
+   echo versions will be part of resulting installer executable and
+   echo will be displayed when setup is started at initial screeen.
+   echo
+else
+   for i in "$@"
+   do
+      case $i in
+          //DRobotFrameworkVersion=*)
+          RobotFrameworkVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
+          ;;
+          //DSETUPVersion=*)
+          SETUPVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
+          ;;
+          //DITrackService=*)
+          ITrackService=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
+          ITrackService=`echo $ITrackService | sed -e  's/\\\\/\//g'`
+          curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null 
+          if [ "$?" -ne 0 ]; then
+              echo -e $COL_RED"ITrackService not available:"$COL_RESET $ITrackService
+              echo -e $COL_RED"build terminated."$COL_RESET
+              exit 1
+          fi
+          
+          ;;
+          *)
+              echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
+              echo -e $COL_RED"build terminated."$COL_RESET
+              exit 1
+          ;;
+      esac
+   done
+   
+   echo -e $COL_GREEN"RobotFrameworkVersion    = $RobotFrameworkVersion"$COL_RESET
+   echo -e $COL_GREEN"SETUPVersion  = $SETUPVersion"$COL_RESET
+   if [ "$ITrackService" != "NONE" ]; then
+      echo -e $COL_GREEN"ITrackService = $ITrackService"$COL_RESET
+   fi
+   echo
+    
+fi       
+
+# read -n1 -r -p "Press space to continue..." key
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+echo -e "${COL_GREEN}#          Installing/Updating libraries                                           #${COL_RESET}"
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+CURDIR=$(pwd)
+PYDIR=$(cd ../python39; pwd -W)
+cd $CURDIR
+
+#
+# import common bash scripts
+#
+. ./include/bash/common.sh
+
+function parse_internal_repo () {
+	internal_repo=($(git config -f $1 --list --name-only | grep internal.))
+	for repo in "${internal_repo[@]}"
+	do
+	    reponame=${repo#internal.}
+		repo_url=$(git config -f $1 --get ${repo});
+		if [[ "$repo_url" ==  "" ]]; then
+			repo_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${reponame}.git"
+		fi
+		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+
+		cd "../$reponame" 
+	   
+	   # if script is called without commandline paramteters,
+	   # then print "git status", else handover command line parameters
+	   # to git call
+		   #using force option setup.py to overwrite old files
+		if [ -f "./setup.py" ]; then
+			PACKNAME=""
+			if grep -w setuptools ./setup.py | grep -w import; then
+				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+				/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+				logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
+			fi
+			${PYDIR}/python.exe ./setup.py clean --all install
+			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+		fi
+		cd $CURDIR
+	done
+}
+
+function parse_github_repo () {
+	github_repo=($(git config -f $1 --list --name-only | grep github.))
+	for repo in "${github_repo[@]}"
+	do
+	    reponame=${repo#github.}
+		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+		cd "../$reponame" 
+	   
+	   # if script is called without commandline paramteters,
+	   # then print "git status", else handover command line parameters
+	   # to git call
+		   #using force option setup.py to overwrite old files
+		if [ -f "./setup.py" ]; then
+			PACKNAME=""
+			if grep -w setuptools ./setup.py | grep -w import; then
+				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+				if [[ -n "$PACKNAME" ]]; then
+					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
+				fi
+			fi
+			${PYDIR}/python.exe ./setup.py clean --all install
+			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+		fi
+		cd $CURDIR
+	done
+}
+
+function parse_gitlab_repo () {
+	gitlab_repo=($(git config -f $1 --list --name-only | grep gitlab.))
+	for repo in "${gitlab_repo[@]}"
+	do
+	    reponame=${repo#gitlab.}
+		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+		cd "../$reponame" 
+	   
+	   # if script is called without commandline paramteters,
+	   # then print "git status", else handover command line parameters
+	   # to git call
+		   #using force option setup.py to overwrite old files
+		if [ -f "./setup.py" ]; then
+			PACKNAME=""
+			if grep -w setuptools ./setup.py | grep -w import; then
+				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+				if [[ -n "$PACKNAME" ]]; then
+					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
+				fi
+			fi
+			${PYDIR}/python.exe ./setup.py clean --all install
+			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+		fi
+		cd $CURDIR
+	done
+}
+
+function parse_config () {
+	echo "git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq"
+	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
+	#echo $conf_section
+	for section in "${conf_section[@]}"
+	do 
+		if [[ "$section" == "internal" ]]; then
+			parse_internal_repo $1
+			if [ "$?" -ne 0 ]; then
+				exit 1
+			fi
+		elif [[ "$section" == "gitlab" ]]; then
+			parse_gitlab_repo $1
+			if [ "$?" -ne 0 ]; then
+				exit 1
+			fi
+		elif [[ "$section" == "proxy" ]]; then
+		    echo "TODO: Implement proxy config"
+		else
+			sec_name=$(git config -f "$1" --get ${section}.name);
+			if [ "$sec_name" == "" ]; then
+				sec_name=${section}
+			fi
+			
+			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+			
+			sec_path=$(git config -f $1 --get ${section}.path);
+			if [ "$sec_path" == "" ]; then
+				sec_path="../${sec_name}"
+			fi
+			sec_url=$(git config -f $1 --get ${section}.url);
+			if [ "$sec_url" == "" ]; then
+				sec_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${sec_name}.git"
+			fi
+			
+			cd "$sec_path"
+			if [ -f "./setup.py" ]; then
+				PACKNAME=""
+				if grep -w setuptools ./setup.py | grep -w import; then
+					PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
+				fi
+				${PYDIR}/python.exe ./setup.py clean --all install
+				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
+			fi
+			cd $CURDIR
+		fi
+	done
+}
+
+# Add pandoc to PATH env
+mypath=$(realpath $(dirname $0))
+export PATH=$PATH:$mypath/../pandoc/pandoc-2.18
+echo $PATH
+# parse_config ./config/repositories/repositories.conf
+
+cd $CURDIR
+
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
+echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+
+./scripts/precompile.bat
+./tools/InnoSetup5.5.1/ISCC "$arguments" ./scripts/RobotFrameworkSetup.iss
+logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
+./scripts/postcompile.bat
+

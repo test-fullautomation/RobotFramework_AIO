@@ -1,0 +1,56 @@
+
+osd:build:
+  extends: .build-version
+  stage: clone
+  needs: ["mirror repos"]
+  allow_failure: true
+  image: <put_here_imagepath>
+  tags:
+    - internal
+  before_script:
+    - chmod +x ./wget/install_via_cntlm.sh
+    - chmod +x ./wget/make_setting_ci.sh
+    - chmod +x ./cloneall
+    - chmod +x ./build_linux
+    - apt-get update -y
+    - apt-get install curl -y
+    - apt-get install cntlm -y
+    - apt-get install libxshmfence1 libglu1 -y
+    - apt-get install libatk1.0-0 -y
+    - apt-get install libatk-bridge2.0-0 -y
+    - apt-get install -y libgdk-pixbuf2.0-dev
+    - apt-get install -y libgtk-3-0
+    - apt-get install -y libgbm-dev
+    - apt-get install -y libasound2-dev
+    - apt-get install -y zstd
+    - apt-get install -y xmlstarlet
+    - apt-get install -y curl
+    - apt-get install -y default-jre
+    - apt-get install -y libmariadbclient-dev
+    - apt-get install -y clang
+    - apt-get install -y unixodbc-dev
+    - apt-get install -y python3-dev
+    - apt-get install -y build-essential
+    - apt-get install -y pandoc
+    - ./wget/make_setting_ci.sh
+  script:
+    - echo "Cloning/Updating repositories"
+    - ./cloneall
+    - echo "Installing python and VsCode ..."
+    - ./wget/install_via_cntlm.sh
+    - echo "Building OSD Installer package ..."
+    - ./build_linux
+  artifacts:
+    paths:
+      - output_lx/*.deb
+
+osd:selftest:
+  stage: test
+  needs: ["osd:build"]
+  # dependencies:
+  #   - build:osd
+  tags:
+    - internal
+  script:
+    - echo "Selftest for OSD"
+  when: manual

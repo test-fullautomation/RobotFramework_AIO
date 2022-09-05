@@ -1,0 +1,14 @@
+{
+    "Common.Yes": "Yes",
+    "Common.No": "No",
+    "Common.remindMeLater": "Remind me later",
+    "Common.reload": "Reload",
+    "LanguageServer.turnItOn": "Yes, and reload",
+    "LanguageServer.noThanks": "No thanks",
+    "LanguageServer.settingsMigratedMessage": "Settings applicable to Microsoft Language Server were copied to Pylance settings. Please check settings.json file(s) for details.",
+    "LanguageServer.settingsMigrationError": "The following settings could not be migrated:",
+    "Insiders.downloadingInsiders": "Downloading Pylance insiders build...",
+    "Insiders.installingInsiders": "Installing Pylance insiders build...",
+    "Insiders.installedInsiders": "Please reload Visual Studio Code to use the insiders build of Pylance.",
+    "Insiders.downgrade": "Your Pylance insiders channel is set to \"off\", but you still have an insiders build installed. Would you like to install the latest stable build of Pylance?"
+}

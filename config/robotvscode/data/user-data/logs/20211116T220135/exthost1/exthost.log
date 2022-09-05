@@ -1,0 +1,16 @@
+[2021-11-16 22:01:37.203] [exthost] [info] Extension host with pid 6008 started
+[2021-11-16 22:01:37.205] [exthost] [info] Skipping acquiring lock for c:\temp\VSCode-win32-x64-1.62.2\data\user-data\User\workspaceStorage\71d0b217857a2a37d6325375085ef87d.
+[2021-11-16 22:01:37.310] [exthost] [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+[2021-11-16 22:01:37.322] [exthost] [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 22:01:37.329] [exthost] [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 22:01:37.348] [exthost] [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+[2021-11-16 22:01:37.360] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: true, activationEvent: '*'
+[2021-11-16 22:01:37.366] [exthost] [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*', root cause: vscode.github
+[2021-11-16 22:01:37.905] [exthost] [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+[2021-11-16 22:01:37.918] [exthost] [info] Eager extensions activated
+[2021-11-16 22:01:37.921] [exthost] [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+[2021-11-16 22:01:37.932] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 22:01:37.937] [exthost] [info] ExtensionService#_doActivateExtension ms-vscode-remote.remote-wsl-recommender, startup: false, activationEvent: 'onStartupFinished'
+[2021-11-16 22:02:32.353] [exthost] [info] ExtensionService#_doActivateExtension robocorp.robotframework-lsp, startup: false, activationEvent: 'onLanguage:robotframework'
+[2021-11-16 22:05:26.390] [exthost] [info] extension host terminating: renderer closed the socket
+[2021-11-16 22:05:27.416] [exthost] [info] Extension host with pid 6008 exiting with code 0

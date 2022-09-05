@@ -1,0 +1,4 @@
+Getting language server Python executable.
+Starting RobotFramework Language Server with args: C:\RobotFramework\python39\python.exe,-u,c:\temp\VSCode-win32-x64-1.62.2\data\extensions\robocorp.robotframework-lsp-0.28.0\src\robotframework_ls\__main__.py
+Waiting for RobotFramework (python) Language Server to finish activating...
+RobotFramework Language Server ready. Took: 2.0s
