@@ -1,0 +1,144 @@
+# **************************************************************************************************************
+# GenPackageDoc configuration file
+#
+# GenPackageDoc creates tex files out of the docstrings of Python modules and out of separate rst files.
+# With the help of a LaTeX compiler the tex files can be converted into a PDF file.
+# This json file contains the required settings.
+#
+# 15.09.2022
+#
+# **************************************************************************************************************
+# Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
+# All fixed terms (keys) have to be written in capital letters, all user defined keys in small letters.
+# Paths to files and folders within this file must be relative (except "TEX"). The reference for relative paths
+# is the position of this file.
+# --------------------------------------------------------------------------------------------------------------
+
+{
+
+# Section "CONTROL":
+# ------------------
+# Contains parameter to control the application behavior in general.
+
+   "CONTROL" : {
+                # if 'INCLUDEPRIVATE' is false: private methods are skipped, otherwise they are included in documentation
+                "INCLUDEPRIVATE"      : false,
+                # if 'INCLUDEUNDOCUMENTED' is true: also classes and methods without docstring are listed in the documentation;
+                # otherwise they are skipped
+                "INCLUDEUNDOCUMENTED" : true,
+                # if 'STRICT' is true: missing LaTeX compiler causes an error; otherwise PDF generation is handled as option
+                # and a missing LaTeX compiler does not cause an error
+                "STRICT" : false
+               },
+
+# Section "TOC":
+# --------------
+# Defines the content of the PDF document (= the order of the chapters).
+# A chapter can be represented by an additional text file in rst format. Every rst file is a separate chapter
+# within the resulting PDF document.
+# A chapter can also be represented by an additional tex file. Every tex file is a separate chapter
+# within the resulting PDF document.
+# In case of Python modules are involved, every Python module is a chapter.
+# Class and function definitions within a Python module are subchapters. Methods of classes are subsubchapters.
+# In this section every additional rst file is represented by a short name (key) and a path incl. file name (key value).
+# This is completely under the responsibility of the user and therefore the names have to be written in small letters only.
+# The keys with name starting with "INTERFACE" points to folder containing Python modules that have to be documented.
+# In case of a repository contains several separate folder with Python modules, it is possible to use more than one
+# key starting with "INTERFACE", e.g. "INTERFACE_part1" and "INTERFACE_part2".
+# The key "DOCUMENTPARTS" contains a list of all defined keys in the order of their desired appearances within the resulting PDF document.
+# It is strongly recommended to place all additional rst files flat into one single folder (and not in any further sub folder).
+# Reason is that currently the tex files generated out of the rst files are also placed flat into only one single output folder
+# (see section "OUTPUT") and the relative paths to possibly imported pictures (see section "PICTURES") must be kept valid!
+
+   "TOC" : {
+            "introduction"  : "./additional_docs/Introduction.rst",
+            "RST-test-1"    : "./additional_docs/RST test 1.rst",
+            "RST-test-2"    : "./additional_docs/RST test 2.rst",
+            "LaTeX-test-1"  : "./additional_docs/LaTeX test 1.tex",
+            "LaTeX-test-2"  : "./additional_docs/LaTeX test 2.tex",
+            "INTERFACE"     : "../###PACKAGENAME###",
+            "appendix"      : "./additional_docs/Appendix.rst",
+            "history"       : "./additional_docs/History.tex",
+            "DOCUMENTPARTS" : ["introduction","RST-test-1","RST-test-2","LaTeX-test-1","LaTeX-test-2","INTERFACE","appendix","history"]
+           },
+
+# Section "PARAMS":
+# -----------------
+# In this section a user has the ability to define own runtime variables, that are accessible within the doctrings of involved Python modules
+# and also within separate rst files. Key names have to be written in small letters to indicate that they are user defined.
+# Values can be either hard coded or taken over from the repository configuration (see config/repository_config.json).
+# In second case the key name has to be encapsulated within three hashes '#'. The same notation can be used in rst files and doctrings
+# of Python modules (for example adding an additional hint within a doctring of a class: ###additional_hint###).
+# This mechanism is limited to strings!
+# This key is optional. In case of own parameters are not needed, this key can be removed or set to null.
+
+   "PARAMS" : {
+                 "additional_hint" : "An additional hint is given ###NOW###",
+                 "the_name"        : "###AUTHOR###",
+                 "the_url"         : "###URL###"
+              },
+
+# Section "DOCUMENT":
+# -------------------
+# This section contains basic details about the output document. Like in the previous section, values can be defined
+# either hard coded or taken over from the repository configuration (with '#' notation).
+# The keys in this section also are runtime variables.
+
+   "DOCUMENT" : {
+                 "OUTPUTFILENAME" : "###PACKAGENAME###.tex",
+                 "AUTHOR"         : "###AUTHOR###",
+                 "TITLE"          : "###PACKAGENAME###",
+                 "DATE"           : "###PACKAGEDATE###",
+                 "VERSION"        : "###PACKAGEVERSION###"
+                },
+
+# Section "PICTURES":
+# -------------------
+# Additional rst files may import pictures. GenPackageDoc needs to know where to find them.
+# To keep the relative paths to possibly imported pictures valid also within the created tex files,
+# this pictures folder will be copied into the output folder defined by key "OUTPUT".
+# This key is optional. In case of there are no pictures needed in this package description,
+# this key can be removed or set to null.
+
+   "PICTURES" : "./additional_docs/pictures",
+
+# Section "OUTPUT":
+# -----------------
+# Defines the path to the output folder containing the generated tex files and the PDF file.
+
+   "OUTPUT" : "./build",
+
+# Section "PDFDEST":
+# -----------------
+# Defines the path to a folder in which the PDF file will be copied after creation
+# (the "OUTPUT" folder in which the LaTeX compiler creates the PDF file, is not really a proper destination finally)
+# This key is optional. In case of it is not required to copy the PDF file to another location,
+# this key can be removed or set to null.
+
+   "PDFDEST" : "../###PACKAGENAME###",
+
+# Section "CONFIGDEST":
+# -----------------
+# Defines the path to a folder in which a dump of the current configuration will be copied to.
+# The configuration dump is part of the build output (section 'OUTPUT') and available in txt and in json format.
+# It might be useful for further processes to have access to all details regarding the current
+# documentation build.
+# This key is optional. In case of it is not required to have the configuration dump saved
+# this key can be removed or set to null.
+
+   "CONFIGDEST" : null,
+
+# Section "TEX":
+# -----------------
+# Converting the generated text source files to a PDF document requires a LaTeX distribution.
+# GenPackageDoc needs to know where to find LaTeX. Because the path to the LaTeX interpreter depends
+# on the operating system, this path has to be defined separately for every supported operating system
+# (currently "WINDOWS" and "LINUX").
+# Example:
+
+   "TEX" : {
+            "WINDOWS" : "%GENDOC_LATEXPATH%/pdflatex.exe",
+            "LINUX"   : "${GENDOC_LATEXPATH}/pdflatex"
+           }
+}
+
