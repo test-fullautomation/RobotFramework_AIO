@@ -1,0 +1,19 @@
+{
+   "REPOSITORYNAME" : "reference-package-test",
+   "PACKAGENAME" : "ReferencePackage",
+   "AUTHOR" : "Holger Queckenstedt",
+   "AUTHOREMAIL" : "Holger.Queckenstedt@de.bosch.com",
+   "DESCRIPTION" : "Reference package for documentation test",
+   "LONGDESCRIPTIONCONTENTTYPE" : "text/markdown",
+   "URL" : "no URL",
+   "PROGRAMMINGLANGUAGE" : "Programming Language :: Python :: 3",
+   "LICENCE" : "License :: OSI Approved :: Apache Software License",
+   "OPERATINGSYSTEM" : "Operating System :: OS Independent",
+   "PYTHONREQUIRES" : ">=3.0",
+   "DEVELOPMENTSTATUS" : "Development Status :: 3 - Alpha",
+   "INTENDEDAUDIENCE" : "Intended Audience :: Developers",
+   "TOPIC" : "Topic :: Software Development",
+   "INSTALLREQUIRES" : ["pypandoc","colorama"],
+   "PACKAGEDATA" : ["*.pdf"],
+   "PACKAGEDOC" : "./packagedoc"
+}
