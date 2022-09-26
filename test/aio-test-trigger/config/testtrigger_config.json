@@ -1,0 +1,59 @@
+# **************************************************************************************************************
+#
+# test trigger configuration file
+#
+# 26.09.2022
+#
+# **************************************************************************************************************
+# Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+# --------------------------------------------------------------------------------------------------------------
+
+{
+
+# Section "COMPONENTS":
+# ---------------------
+# 
+# It is assumed that 'TESTFOLDER' is a subfolder of 'COMPONENTROOTPATH' and that 'TESTEXECUTOR' is placed inside 'TESTFOLDER'!
+# 'TESTTYPE' has to be one of ['ROBOT', 'PYTEST']
+# It is assumed that 'COMPONENTROOTPATH' does exist.
+# The complete path of 'LOGFILE' is being created during test trigger execution.
+
+   "COMPONENTS" : [
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
+                       "TESTFOLDER"   : "test",
+                       "TESTEXECUTOR" : "executerobottest.py",
+                       "TESTTYPE"     : "ROBOT",
+                       "LOGFILE"      : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../python-extensions-collection",
+                       "TESTFOLDER"   : "pytest",
+                       "TESTEXECUTOR" : "executepytest.py",
+                       "TESTTYPE"     : "PYTEST",
+                       "LOGFILE"      : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    }
+                  ],
+
+# Section "TESTTYPES":
+# --------------------
+#
+# Defines for every test type:
+# - the path and name of the database executor
+# - the command line of the database executor
+
+   "TESTTYPES" : {
+                  "ROBOT"  : {
+                               "DATABASEEXECUTOR"  : "../mocks/robot2db-mock.py",
+                               "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json",
+                               "ADDITIONALCMDLINE" : "additionalparam=robot"
+                             },
+                  "PYTEST" : {
+                              "DATABASEEXECUTOR"  : "../mocks/pytest2db-mock.py",
+                              "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json",
+                              "ADDITIONALCMDLINE" : "additionalparam=pytest"
+                             }
+                }
+
+}
