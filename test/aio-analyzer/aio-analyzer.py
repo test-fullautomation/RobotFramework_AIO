@@ -18,8 +18,6 @@
 #
 # aio-analyzer.py
 #
-# 27.09.2022
-#
 # XC-CT/ECA3-Queckenstedt
 #
 # --------------------------------------------------------------------------------------------------------------
@@ -29,7 +27,7 @@
 #
 # Return values:
 # 0 : all fine
-# 1 : error, e.g. missing file ort not able to parse content
+# 1 : error, e.g. missing file or not able to parse content
 # 2 : version mismatch
 #
 # --------------------------------------------------------------------------------------------------------------
