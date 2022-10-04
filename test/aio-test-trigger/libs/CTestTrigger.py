@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 26.09.2022
+# 04.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -89,11 +89,16 @@ class CTestTrigger():
 
       sMethod = "CTestTrigger.Trigger"
 
+      nReturn  = ERROR
       bSuccess = None
       sResult  = "UNKNOWN"
 
-      # PrettyPrint(self.__dictTestTriggerConfig, sPrefix="(Trigger)")
+      nCntSubProcessErrors = 0
+
       PYTHON = self.__oTestTriggerConfig.Get('PYTHON')
+      ROBOTCOMMANDLINE  = self.__oTestTriggerConfig.Get('ROBOTCOMMANDLINE')
+      PYTESTCOMMANDLINE = self.__oTestTriggerConfig.Get('PYTESTCOMMANDLINE')
+
       listofdictComponents = self.__oTestTriggerConfig.Get('COMPONENTS')
       nNrOfComponents = len(listofdictComponents)
       nCntComponent = 0
@@ -112,7 +117,7 @@ class CTestTrigger():
          dictTestType = dictTestTypes[TESTTYPE]
          DATABASEEXECUTOR  = dictTestType['DATABASEEXECUTOR']
          ADDITIONALCONFIG  = dictTestType['ADDITIONALCONFIG']
-         ADDITIONALCMDLINE = dictTestType['ADDITIONALCMDLINE']
+         # ADDITIONALCMDLINE = dictTestType['ADDITIONALCMDLINE'] # TODO: needs more clarification
 
          # -- prepare the command line for the test execution
 
@@ -121,6 +126,15 @@ class CTestTrigger():
          listCmdLineParts.append(f"\"{TESTEXECUTOR}\"")
          listCmdLineParts.append("--logfile")
          listCmdLineParts.append(f"\"{LOGFILE}\"")
+
+         if TESTTYPE == "ROBOT":
+            if ROBOTCOMMANDLINE is not None:
+               listCmdLineParts.append(f"--robotcommandline \"{ROBOTCOMMANDLINE}\"")
+
+         if TESTTYPE == "PYTEST":
+            if PYTESTCOMMANDLINE is not None:
+               listCmdLineParts.append(f"--pytestcommandline \"{PYTESTCOMMANDLINE}\"")
+
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
@@ -131,25 +145,32 @@ class CTestTrigger():
          print(f"* ({nCntComponent}/{nNrOfComponents}) : '{TESTFOLDER}' ({TESTTYPE})")
          print()
 
-         listCmdLineParts = shlex.split(sCmdLine)
-         sCmdLine = " ".join(listCmdLineParts)
          print(f"Now executing command line:\n{sCmdLine}")
          print()
+
+         listCmdLineParts = shlex.split(sCmdLine)
+
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
-            # debug only:
-            # print(f"[test executor] : Subprocess returned {nReturn}")
-            # print()
+            print()
+            print(f"[test trigger] : Subprocess {TESTTYPE} executor returned {nReturn}")
          except Exception as ex:
+            nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
-            return bSuccess, sResult
-         # print()
+            return nReturn, bSuccess, sResult
+         print()
          if nReturn != SUCCESS:
+            nCntSubProcessErrors = nCntSubProcessErrors + 1
             bSuccess = False
-            sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess has not returned expected value {SUCCESS}")
-            return bSuccess, sResult
+            sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess {TESTTYPE} executor has not returned expected value {SUCCESS}")
+            print()
+            print(COLBR + sResult)
+            print()
+            print(COLBY + "Skipping database access and continuing with next test execution!")
+            print()
+            continue
 
          # -- prepare the command line for database access
 
@@ -158,7 +179,7 @@ class CTestTrigger():
          listCmdLineParts.append(f"\"{DATABASEEXECUTOR}\"")
          listCmdLineParts.append(f"--logfile=\"{LOGFILE}\"")
          listCmdLineParts.append(f"--config=\"{ADDITIONALCONFIG}\"")
-         # listCmdLineParts.append(f"--additionalparams=\"{ADDITIONALCMDLINE}\"")
+         # listCmdLineParts.append(f"--additionalparams=\"{ADDITIONALCMDLINE}\"")     # TODO: needs more clarification
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
@@ -166,33 +187,43 @@ class CTestTrigger():
 
          print(COLBY + "Writing testresults to database")
          print()
-
-         listCmdLineParts = shlex.split(sCmdLine)
-         sCmdLine = " ".join(listCmdLineParts)
          print(f"Now executing command line:\n{sCmdLine}")
          print()
+
+         listCmdLineParts = shlex.split(sCmdLine)
+
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
-            # debug only:
-            # print(f"[test executor] : Subprocess returned {nReturn}")
-            # print()
+            print()
+            print(f"[test trigger] : Subprocess database executor returned {nReturn}")
          except Exception as ex:
+            nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
-            return bSuccess, sResult
-         # print()
+            return nReturn, bSuccess, sResult
+         print()
          if nReturn != SUCCESS:
+            nCntSubProcessErrors = nCntSubProcessErrors + 1
             bSuccess = False
-            sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess has not returned expected value {SUCCESS}")
-            return bSuccess, sResult
+            sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess database executor has not returned expected value {SUCCESS}")
+            print()
+            print(COLBR + sResult)
+            print()
+            continue
 
       # eof for dictComponent in listofdictComponents:
 
-      bSuccess = True
-      sResult  = "All components tested and all results saved"
+      if nCntSubProcessErrors == 0:
+         nReturn  = SUCCESS
+         bSuccess = True
+         sResult  = "All components tested and all results saved"
+      else:
+         nReturn  = -nCntSubProcessErrors
+         bSuccess = False
+         sResult  = f"[test trigger] : {nCntSubProcessErrors} errors occurred during the execution of subprocesses"
 
-      return bSuccess, sResult
+      return nReturn, bSuccess, sResult
 
    # eof def Trigger(self):
 

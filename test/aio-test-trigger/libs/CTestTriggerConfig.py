@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 26.09.2022
+# 04.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -78,22 +78,30 @@ class CTestTriggerConfig():
 
       sWhoAmI = CString.NormalizePath(sWhoAmI)
       sReferencePath = os.path.dirname(sWhoAmI)
-      sConfigPath = f"{sReferencePath}/config"
-      sTestTriggerConfigFileName = "testtrigger_config.json"
-      sTestTriggerConfigFile = f"{sConfigPath}/{sTestTriggerConfigFileName}"
+      # update config
+      self.__dictTestTriggerConfig['WHOAMI']        = sWhoAmI
+      self.__dictTestTriggerConfig['REFERENCEPATH'] = sReferencePath
+      self.__dictTestTriggerConfig['NAME']          = NAME
+      self.__dictTestTriggerConfig['VERSION']       = VERSION
+      self.__dictTestTriggerConfig['VERSION_DATE']  = VERSION_DATE
+
+      self.__GetCommandLine()
+
+      sTestTriggerConfigFile = self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE']
+      if sTestTriggerConfigFile is None:
+         # no config file given in command line, therefore using default config file (within subfolder 'config')
+         sConfigPath = f"{sReferencePath}/config"
+         sTestTriggerConfigFileName = "testtrigger_config.json"
+         sTestTriggerConfigFile = f"{sConfigPath}/{sTestTriggerConfigFileName}"
+         self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sTestTriggerConfigFile
+
       if os.path.isfile(sTestTriggerConfigFile) is False:
          bSuccess = None
          sResult  = f"Configuration file not found: '{sTestTriggerConfigFile}'."
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      # update config
-      self.__dictTestTriggerConfig['NAME']                  = NAME
-      self.__dictTestTriggerConfig['VERSION']               = VERSION
-      self.__dictTestTriggerConfig['VERSION_DATE']          = VERSION_DATE
-      self.__dictTestTriggerConfig['WHOAMI']                = sWhoAmI
-      self.__dictTestTriggerConfig['REFERENCEPATH']         = sReferencePath
-      self.__dictTestTriggerConfig['CONFIGPATH']            = sConfigPath
-      self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sTestTriggerConfigFile
+      sConfigPath = os.path.dirname(sTestTriggerConfigFile)
+      self.__dictTestTriggerConfig['CONFIGPATH'] = sConfigPath # absolute path that is the reference for all relative paths within the config file
 
       # operating system and temporary path
       sOSName = os.name
@@ -123,6 +131,7 @@ class CTestTriggerConfig():
       # Therefore we read in this file in text format, remove the comments and save the cleaned file within the temp folder.
       # Now it's a valid json file and we read the file from there.
 
+      sTestTriggerConfigFileName = os.path.basename(sTestTriggerConfigFile)
       sTestTriggerConfigFileCleaned = f"{sTmpPath}/{sTestTriggerConfigFileName}"
 
       oTestTriggerConfigFile = CFile(sTestTriggerConfigFile)
@@ -255,10 +264,12 @@ class CTestTriggerConfig():
             sResult  = f"File '{ADDITIONALCONFIG}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['ADDITIONALCONFIG'] = ADDITIONALCONFIG
-         if "ADDITIONALCMDLINE" not in dictTestType:
-            bSuccess = None
-            sResult  = f"Missing key 'ADDITIONALCMDLINE' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         # TODO: needs more clarification
+         # if "ADDITIONALCMDLINE" not in dictTestType:
+            # bSuccess = None
+            # sResult  = f"Missing key 'ADDITIONALCMDLINE' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
+            # raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+
 
       # final debug
       # PrettyPrint(self.__dictTestTriggerConfig, sPrefix="final TestTriggerConfig")
@@ -272,6 +283,36 @@ class CTestTriggerConfig():
    def __del__(self):
       del self.__dictTestTriggerConfig
 
+   def __GetCommandLine(self):
+      oCmdLineParser = argparse.ArgumentParser()
+      oCmdLineParser.add_argument('--robotcommandline', type=str, help='Command line for RobotFramework AIO (optional).')
+      oCmdLineParser.add_argument('--pytestcommandline', type=str, help='Command line for Python pytest module (optional).')
+      oCmdLineParser.add_argument('--configfile', type=str, help='Path and name of configuration file (optional).')
+      oCmdLineArgs = oCmdLineParser.parse_args()
+
+      sRobotCommandLine = None
+      if oCmdLineArgs.robotcommandline is not None:
+         sRobotCommandLine = oCmdLineArgs.robotcommandline
+         # recover the masking of nested quotes
+         sRobotCommandLine = sRobotCommandLine.replace("\"", r"\"")
+         sRobotCommandLine = sRobotCommandLine.replace("'", r"\"")
+      self.__dictTestTriggerConfig['ROBOTCOMMANDLINE'] = sRobotCommandLine
+
+      sPytestCommandLine = None
+      if oCmdLineArgs.pytestcommandline is not None:
+         sPytestCommandLine = oCmdLineArgs.pytestcommandline
+         # recover the masking of nested quotes
+         sPytestCommandLine = sPytestCommandLine.replace("\"", r"\"")
+         sPytestCommandLine = sPytestCommandLine.replace("'", r"\"")
+      self.__dictTestTriggerConfig['PYTESTCOMMANDLINE'] = sPytestCommandLine
+
+      sConfigFile = None
+      if oCmdLineArgs.configfile is not None:
+         sConfigFile = oCmdLineArgs.configfile
+         sConfigFile = CString.NormalizePath(sConfigFile, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+      self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sConfigFile
+
+   # eof def __GetCommandLine(self):
 
    def PrintConfig(self):
       # -- print configuration to console
