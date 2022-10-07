@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project UIAutomatorViewer">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="D:/Project/Esclipse/workspace"/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/UIAutomatorUI.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.android.uiautomator.UiAutomatorViewer"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.jarfile}/bin"/>
+            <fileset dir="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse/plugins/org.eclipse.core.commands_3.9.200.v20180827-1727.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse/plugins/org.eclipse.equinox.common_3.10.200.v20181021-1645.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse/plugins/org.eclipse.jface_3.15.0.v20181123-1505.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse/plugins/org.eclipse.osgi_3.13.200.v20181130-2106.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/eclipse-jee-2018-12-R-win32-x86_64/eclipse/plugins/org.eclipse.ui.workbench_3.112.100.v20181127-1518.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/commons-io-2.11.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/commons-lang3-3.12.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/jaxb-api-2.4.0-b180830.0359.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/org.apache.commons.io.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/org.eclipse.swt.win32.win32.x86_64_3.109.0.v20181204-1801.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/jar/json-simple-1.1.1.jar"/>
+        </jar>
+    </target>
+</project>

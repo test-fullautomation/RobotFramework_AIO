@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project UIAutomatorViewer">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/.."/>
+    <property name="dir.jarfile" value="${dir.workspace}/Output"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/UIAutomatorUI.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.android.uiautomator.UiAutomatorViewer"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+            <fileset dir="${dir.workspace}/org.eclipse.swt"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/org.eclipse.swt/swt.jar"/>
+            <fileset dir="D:/DevTools/java-oxygen3/eclipse"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/java-oxygen3/eclipse/plugins/org.eclipse.core.commands_3.9.100.v20170607-0939.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/java-oxygen3/eclipse/plugins/org.eclipse.equinox.common_3.9.100.v20170829-0948.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/java-oxygen3/eclipse/plugins/org.eclipse.jface_3.13.100.v20170906-1356.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/java-oxygen3/eclipse/plugins/org.eclipse.osgi_3.13.0.v20170912-1859.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/DevTools/java-oxygen3/eclipse/plugins/org.eclipse.ui.workbench_3.110.100.v20170905-1149.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/jar/org.apache.commons.io.jar"/>
+        </jar>
+    </target>
+</project>
