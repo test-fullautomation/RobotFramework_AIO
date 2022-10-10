@@ -2,7 +2,7 @@
 #
 # test trigger configuration file
 #
-# 26.09.2022
+# 04.10.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -33,6 +33,13 @@
                        "TESTEXECUTOR" : "executepytest.py",
                        "TESTTYPE"     : "PYTEST",
                        "LOGFILE"      : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
+                       "TESTFOLDER"   : "test",
+                       "TESTEXECUTOR" : "executerobottest.py",
+                       "TESTTYPE"     : "ROBOT",
+                       "LOGFILE"      : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
 
@@ -46,13 +53,13 @@
    "TESTTYPES" : {
                   "ROBOT"  : {
                                "DATABASEEXECUTOR"  : "../mocks/robot2db-mock.py",
-                               "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json",
-                               "ADDITIONALCMDLINE" : "additionalparam=robot"
+                               "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json"
+                               # "ADDITIONALCMDLINE" : "additionalparam=robot" # TODO: needs more clarification
                              },
                   "PYTEST" : {
                               "DATABASEEXECUTOR"  : "../mocks/pytest2db-mock.py",
-                              "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json",
-                              "ADDITIONALCMDLINE" : "additionalparam=pytest"
+                              "ADDITIONALCONFIG"  : "../mocks/additionalconfig.json"
+                              # "ADDITIONALCMDLINE" : "additionalparam=pytest" # TODO: needs more clarification
                              }
                 }
 

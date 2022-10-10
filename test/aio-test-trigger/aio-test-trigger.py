@@ -22,7 +22,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 26.09.2022
+# 04.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -64,36 +64,31 @@ except Exception as ex:
 
 # -- setting up the test trigger
 try:
-    oTestTrigger = CTestTrigger(oTestTriggerConfig)
+   oTestTrigger = CTestTrigger(oTestTriggerConfig)
 except Exception as ex:
-    print()
-    printexception(str(ex))
-    print()
-    sys.exit(ERROR)
+   print()
+   printexception(str(ex))
+   print()
+   sys.exit(ERROR)
 
-bSuccess, sResult = oTestTrigger.Trigger()
+nReturn, bSuccess, sResult = oTestTrigger.Trigger()
 if bSuccess is None:
-    print()
-    printexception(sResult)
-    print()
-    sys.exit(ERROR)
+   print()
+   printexception(sResult)
+   nReturn = ERROR
 elif bSuccess is False:
-    print()
-    printerror(sResult)
-    print()
-    sys.exit(ERROR)
+   print()
+   printerror(sResult)
 elif bSuccess is True:
-      print(COLBG + sResult)
-      print()
-      sys.exit(SUCCESS)
+   print()
+   print(COLBG + sResult)
 else:
-    print()
-    printerror("Internal aio-test-trigger error")
-    print()
-    sys.exit(ERROR)
+   print()
+   printerror("Internal aio-test-trigger error")
+   nReturn = ERROR
 
-# emergency fallback
-sys.exit(ERROR)
+print()
+sys.exit(nReturn)
 
 # --------------------------------------------------------------------------------------------------------------
 
