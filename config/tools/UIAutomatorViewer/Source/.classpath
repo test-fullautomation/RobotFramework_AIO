@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="ECLIPSE_HOME"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.commands_3.9.200.v20180827-1727.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.equinox.common_3.10.200.v20181021-1645.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.15.0.v20181123-1505.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.osgi_3.13.200.v20181130-2106.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.112.100.v20181127-1518.jar"/>
+	<classpathentry kind="lib" path="jar/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="jar/commons-lang3-3.12.0.jar"/>
+	<classpathentry kind="lib" path="jar/jaxb-api-2.4.0-b180830.0359.jar"/>
+	<classpathentry kind="lib" path="jar/org.apache.commons.io.jar"/>
+	<classpathentry kind="lib" path="jar/org.eclipse.swt.win32.win32.x86_64_3.109.0.v20181204-1801.jar"/>
+	<classpathentry kind="lib" path="jar/json-simple-1.1.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
