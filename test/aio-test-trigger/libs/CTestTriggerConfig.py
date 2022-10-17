@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 04.10.2022
+# 17.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 
-import os, sys, time, platform, json, argparse
+import os, sys, time, platform, json, argparse, re
 import colorama as col
 
 from version import NAME
@@ -53,10 +53,7 @@ ERROR   = 1
 # --------------------------------------------------------------------------------------------------------------
 
 def printerror(sMsg):
-   sys.stderr.write(COLBR + f"Error: {sMsg}!\n")
-
-def printexception(sMsg):
-   sys.stderr.write(COLBR + f"Exception: {sMsg}!\n")
+   sys.stderr.write(COLBR + f"{sMsg}!\n")
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +82,9 @@ class CTestTriggerConfig():
       self.__dictTestTriggerConfig['VERSION']       = VERSION
       self.__dictTestTriggerConfig['VERSION_DATE']  = VERSION_DATE
 
-      self.__GetCommandLine()
+      bSuccess, sResult = self.__GetCommandLine()
+      if bSuccess is not True:
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       sTestTriggerConfigFile = self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE']
       if sTestTriggerConfigFile is None:
@@ -124,6 +123,11 @@ class CTestTriggerConfig():
       self.__dictTestTriggerConfig['TMPPATH']        = sTmpPath
 
       self.PrintConfig()
+
+      # precompile regular expression needed for parsing the parameters in configuration file
+      sPattern_Parameters = r"\${(\w+?)}"  # version 1: only alphanumerical characters (including the underline) are allowed within names
+      # sPattern_Parameters = r"\${(.+?)}" # version 2: all characters are allowed within names
+      self.__dictTestTriggerConfig['regex_Parameters'] = re.compile(sPattern_Parameters)
 
       # Read the test trigger configuration from separate json file.
       #
@@ -187,6 +191,9 @@ class CTestTriggerConfig():
       listofdictComponents = self.__dictTestTriggerConfig['COMPONENTS']
       for dictComponent in listofdictComponents:
          COMPONENTROOTPATH = CString.NormalizePath(dictComponent['COMPONENTROOTPATH'], sReferencePathAbs=sConfigPath)
+         COMPONENTROOTPATH, bSuccess, sResult = self.__ResolveParameters(COMPONENTROOTPATH)
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          dictComponent['COMPONENTROOTPATH'] = COMPONENTROOTPATH
          if os.path.isdir(COMPONENTROOTPATH) is False:
             bSuccess = None
@@ -197,6 +204,9 @@ class CTestTriggerConfig():
             sResult  = f"Missing key 'TESTFOLDER' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          TESTFOLDER = f"{COMPONENTROOTPATH}/{dictComponent['TESTFOLDER']}"
+         TESTFOLDER, bSuccess, sResult = self.__ResolveParameters(TESTFOLDER)
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          dictComponent['TESTFOLDER'] = TESTFOLDER
          if os.path.isdir(TESTFOLDER) is False:
             bSuccess = None
@@ -207,11 +217,14 @@ class CTestTriggerConfig():
             sResult  = f"Missing key 'TESTEXECUTOR' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          TESTEXECUTOR = f"{TESTFOLDER}/{dictComponent['TESTEXECUTOR']}"
-         dictComponent['TESTEXECUTOR'] = TESTEXECUTOR
+         TESTEXECUTOR, bSuccess, sResult = self.__ResolveParameters(TESTEXECUTOR)
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          if os.path.isfile(TESTEXECUTOR) is False:
             bSuccess = None
             sResult  = f"File '{TESTEXECUTOR}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         dictComponent['TESTEXECUTOR'] = TESTEXECUTOR
          if "TESTTYPE" not in dictComponent:
             bSuccess = None
             sResult  = f"Missing key 'TESTTYPE' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
@@ -221,12 +234,29 @@ class CTestTriggerConfig():
             bSuccess = None
             sResult  = f"TESTTYPE '{TESTTYPE}' not supported in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         dictComponent['LOGFILE'] = CString.NormalizePath(dictComponent['LOGFILE'], sReferencePathAbs=sConfigPath) # will be created, therefore existence is not checked here
+
+         # optional
+         LOCALCOMMANDLINE = None # caution: same name like in section "TESTTYPES"
+         if "LOCALCOMMANDLINE" in dictComponent:
+            LOCALCOMMANDLINE = dictComponent['LOCALCOMMANDLINE']
+            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveParameters(LOCALCOMMANDLINE)
+            if bSuccess is False:
+               raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
+
+         LOGFILE = CString.NormalizePath(dictComponent['LOGFILE'], sReferencePathAbs=sConfigPath) # will be created, therefore existence is not checked here
+         LOGFILE, bSuccess, sResult = self.__ResolveParameters(LOGFILE)
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         dictComponent['LOGFILE'] = LOGFILE
 
          # short summary
          dictTestExecution = {}
-         dictTestExecution['TESTFOLDER'] = dictComponent['TESTFOLDER']
-         dictTestExecution['TESTTYPE']   = dictComponent['TESTTYPE']
+         dictTestExecution['TESTFOLDER']       = dictComponent['TESTFOLDER']
+         dictTestExecution['TESTTYPE']         = dictComponent['TESTTYPE']
+         dictTestExecution['TESTEXECUTOR']     = dictComponent['TESTEXECUTOR']
+         dictTestExecution['LOCALCOMMANDLINE'] = dictComponent['LOCALCOMMANDLINE']
+         dictTestExecution['LOGFILE']          = dictComponent['LOGFILE']
          self.__listofdictTestExecutions.append(dictTestExecution)
 
       # eof for dictComponent in listofdictComponents:
@@ -249,27 +279,25 @@ class CTestTriggerConfig():
             sResult  = f"Missing key 'DATABASEEXECUTOR' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          DATABASEEXECUTOR = CString.NormalizePath(self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['DATABASEEXECUTOR'], sReferencePathAbs=sConfigPath)
+         DATABASEEXECUTOR, bSuccess, sResult = self.__ResolveParameters(DATABASEEXECUTOR)
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          if os.path.isfile(DATABASEEXECUTOR) is False:
             bSuccess = None
             sResult  = f"File '{DATABASEEXECUTOR}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['DATABASEEXECUTOR'] = DATABASEEXECUTOR
-         if "ADDITIONALCONFIG" not in dictTestType:
-            bSuccess = None
-            sResult  = f"Missing key 'ADDITIONALCONFIG' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         ADDITIONALCONFIG = CString.NormalizePath(self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['ADDITIONALCONFIG'], sReferencePathAbs=sConfigPath)
-         if os.path.isfile(ADDITIONALCONFIG) is False:
-            bSuccess = None
-            sResult  = f"File '{ADDITIONALCONFIG}' does not exist"
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['ADDITIONALCONFIG'] = ADDITIONALCONFIG
-         # TODO: needs more clarification
-         # if "ADDITIONALCMDLINE" not in dictTestType:
-            # bSuccess = None
-            # sResult  = f"Missing key 'ADDITIONALCMDLINE' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
-            # raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
+         # optional
+         LOCALCOMMANDLINE = None # caution: same name like in section "COMPONENTS"
+         if "LOCALCOMMANDLINE" in dictTestType:
+            LOCALCOMMANDLINE = dictTestType['LOCALCOMMANDLINE']
+            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveParameters(LOCALCOMMANDLINE)
+            if bSuccess is False:
+               raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
+
+      # eof for dictComponent in listofdictComponents:
 
       # final debug
       # PrettyPrint(self.__dictTestTriggerConfig, sPrefix="final TestTriggerConfig")
@@ -283,36 +311,144 @@ class CTestTriggerConfig():
    def __del__(self):
       del self.__dictTestTriggerConfig
 
+   # --------------------------------------------------------------------------------------------------------------
+
+   def __ResolveParameters(self, sString=""):
+      sMethod  = "CTestTriggerConfig.__ResolveParameters"
+      bSuccess = None
+      sResult  = "unknown"
+      regex_Parameters = self.__dictTestTriggerConfig['regex_Parameters']
+      dictParams = self.__dictTestTriggerConfig['PARAMS']
+      # replace all possible parameters
+      for sName, sValue in dictParams.items():
+         # TODO: not nice exception here; find better solution
+         if sName == "config":
+            sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+         sPlaceholder = "${" + sName + "}"
+         sString = sString.replace(sPlaceholder, sValue)
+      # check if there are undefined parameters left
+      listUndefinedParameters = regex_Parameters.findall(sString)
+      if len(listUndefinedParameters) == 0:
+         bSuccess = True
+         sResult  = "Done"
+         # check for further issues caused by failed regular expressions or incomplete parameter syntax
+         if ( ('$' in sString) or ('{' in sString) or ('}' in sString) ):
+            bSuccess = False
+            sResult  = f"After resolving the parameters still issues found in configuration (probably caused by a not matching regular expression or incomplete parameter syntax. Line:'{sString}'"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+      else:
+         bSuccess = False
+         sResult  = "The following parameters are not defined : [" + ",".join(listUndefinedParameters) + "], (in '" + sString + "'). Please add them to the test trigger command line."
+         sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+
+      return sString, bSuccess, sResult
+
+   # --------------------------------------------------------------------------------------------------------------
+
    def __GetCommandLine(self):
+
+      sMethod = "CTestTriggerConfig.__GetCommandLine"
+
+      bSuccess = None
+      sResult  = "UNKNOWN"
+
       oCmdLineParser = argparse.ArgumentParser()
       oCmdLineParser.add_argument('--robotcommandline', type=str, help='Command line for RobotFramework AIO (optional).')
       oCmdLineParser.add_argument('--pytestcommandline', type=str, help='Command line for Python pytest module (optional).')
       oCmdLineParser.add_argument('--configfile', type=str, help='Path and name of configuration file (optional).')
-      oCmdLineArgs = oCmdLineParser.parse_args()
+      oCmdLineParser.add_argument('--params', type=str, help='List of further parameters to be added to command line (defined in configuration file).')
+
+      try:
+         oCmdLineArgs = oCmdLineParser.parse_args()
+      except SystemExit as reason:
+         bSuccess = None
+         sResult  = "Error in command line: " + str(reason) + "\n\n" + oCmdLineParser.format_help()
+         sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+         return bSuccess, sResult
 
       sRobotCommandLine = None
       if oCmdLineArgs.robotcommandline is not None:
          sRobotCommandLine = oCmdLineArgs.robotcommandline
-         # recover the masking of nested quotes
-         sRobotCommandLine = sRobotCommandLine.replace("\"", r"\"")
-         sRobotCommandLine = sRobotCommandLine.replace("'", r"\"")
       self.__dictTestTriggerConfig['ROBOTCOMMANDLINE'] = sRobotCommandLine
 
       sPytestCommandLine = None
       if oCmdLineArgs.pytestcommandline is not None:
          sPytestCommandLine = oCmdLineArgs.pytestcommandline
-         # recover the masking of nested quotes
-         sPytestCommandLine = sPytestCommandLine.replace("\"", r"\"")
-         sPytestCommandLine = sPytestCommandLine.replace("'", r"\"")
       self.__dictTestTriggerConfig['PYTESTCOMMANDLINE'] = sPytestCommandLine
 
       sConfigFile = None
       if oCmdLineArgs.configfile is not None:
          sConfigFile = oCmdLineArgs.configfile
          sConfigFile = CString.NormalizePath(sConfigFile, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+         if os.path.isfile(sConfigFile) is False:
+            bSuccess = False
+            sResult  = f"Configuration file does not exist: '{sConfigFile}'"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+            return bSuccess, sResult
       self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sConfigFile
 
+      dictParams = None
+      if oCmdLineArgs.params is not None:
+         dictParams = {}
+         sParams = oCmdLineArgs.params
+         sParams = sParams.strip()
+         if sParams == "":
+            bSuccess = False
+            sResult  = f"Empty parameter list (--params)"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+            return bSuccess, sResult
+
+         listAssignments = sParams.split(';')
+         for sAssignment in listAssignments:
+            sAssignment = sAssignment.strip()
+            if sAssignment == "":
+               bSuccess = False
+               sResult  = f"Empty parameter assignment found in parameter list '{sParams}'"
+               sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+               return bSuccess, sResult
+
+            listParts = sAssignment.split('=')
+            if len(listParts) != 2:
+               bSuccess = False
+               sResult  = f"Invalid parameter assignment: '{sAssignment}' found in parameter list '{sParams}'"
+               sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+               return bSuccess, sResult
+
+            sName  = listParts[0].strip()
+            sValue = listParts[1].strip()
+            if sName == "":
+               bSuccess = False
+               sResult  = f"Missing parameter name in parameter assignment '{sAssignment}' of parameter list '{sParams}'"
+               sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+               return bSuccess, sResult
+
+            if sValue == "":
+               bSuccess = False
+               sResult  = f"Missing parameter value in parameter assignment '{sAssignment}' of parameter list '{sParams}'"
+               sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+               return bSuccess, sResult
+
+            dictParams[sName] = sValue
+
+         # eof for sAssignment in listAssignments:
+
+         if len(dictParams) == 0:
+            bSuccess = False
+            sResult  = f"Parsing of parameter list '{sParams}' failed"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+            return bSuccess, sResult
+
+      # eof if oCmdLineArgs.params is not None:
+
+      self.__dictTestTriggerConfig['PARAMS'] = dictParams
+
+      bSuccess = True
+      sResult  = "Done"
+      return bSuccess, sResult
+
    # eof def __GetCommandLine(self):
+
+   # --------------------------------------------------------------------------------------------------------------
 
    def PrintConfig(self):
       # -- print configuration to console
@@ -323,16 +459,24 @@ class CTestTriggerConfig():
       print()
    # eof def PrintConfig(self):
 
+   # --------------------------------------------------------------------------------------------------------------
+
    def PrintConfiguredTestExecutions(self):
       # -- print configured test executions to console
-      nJust = 8
+      nJust = 25
       print()
-      print("Configured test folders together with their test types:")
+      print("Configured tests:")
       print()
       for dictTestExecution in self.__listofdictTestExecutions:
-         print(dictTestExecution['TESTTYPE'].rjust(nJust, ' ') + " : " + str(dictTestExecution['TESTFOLDER']))
-      print()
+         print("TESTFOLDER".rjust(nJust, ' ')       + " : " + str(dictTestExecution['TESTFOLDER']))
+         print("TESTTYPE".rjust(nJust, ' ')         + " : " + str(dictTestExecution['TESTTYPE']))
+         print("TESTEXECUTOR".rjust(nJust, ' ')     + " : " + str(dictTestExecution['TESTEXECUTOR']))
+         print("LOCALCOMMANDLINE".rjust(nJust, ' ') + " : " + str(dictTestExecution['LOCALCOMMANDLINE']))
+         print("LOGFILE".rjust(nJust, ' ')          + " : " + str(dictTestExecution['LOGFILE']))
+         print()
    # eof def PrintConfig(self):
+
+   # --------------------------------------------------------------------------------------------------------------
 
    def PrintConfigKeys(self):
       """Prints all configuration key names to console.
@@ -345,6 +489,7 @@ class CTestTriggerConfig():
       print()
    # eof def PrintConfigKeys(self):
 
+   # --------------------------------------------------------------------------------------------------------------
 
    def Get(self, sName=None):
       """Returns the configuration value belonging to a key name.
@@ -362,6 +507,7 @@ class CTestTriggerConfig():
          return self.__dictTestTriggerConfig[sName]
    # eof def Get(self, sName=None):
 
+   # --------------------------------------------------------------------------------------------------------------
 
    def GetConfig(self):
       """Returns the complete configuration dictionary.

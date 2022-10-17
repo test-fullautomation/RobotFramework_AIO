@@ -22,7 +22,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 04.10.2022
+# 10.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -45,10 +45,7 @@ ERROR   = 1
 # --------------------------------------------------------------------------------------------------------------
 
 def printerror(sMsg):
-   sys.stderr.write(COLBR + f"Error: {sMsg}!\n")
-
-def printexception(sMsg):
-   sys.stderr.write(COLBR + f"Exception: {sMsg}!\n")
+   sys.stderr.write(COLBR + f"{sMsg}!\n")
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -58,7 +55,7 @@ try:
    oTestTriggerConfig = CTestTriggerConfig(os.path.abspath(sys.argv[0]))
 except Exception as ex:
    print()
-   printexception(str(ex))
+   printerror(str(ex))
    print()
    sys.exit(ERROR)
 
@@ -67,14 +64,14 @@ try:
    oTestTrigger = CTestTrigger(oTestTriggerConfig)
 except Exception as ex:
    print()
-   printexception(str(ex))
+   printerror(str(ex))
    print()
    sys.exit(ERROR)
 
 nReturn, bSuccess, sResult = oTestTrigger.Trigger()
 if bSuccess is None:
    print()
-   printexception(sResult)
+   printerror(sResult)
    nReturn = ERROR
 elif bSuccess is False:
    print()

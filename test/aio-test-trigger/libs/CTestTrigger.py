@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 04.10.2022
+# 17.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -99,25 +99,27 @@ class CTestTrigger():
       ROBOTCOMMANDLINE  = self.__oTestTriggerConfig.Get('ROBOTCOMMANDLINE')
       PYTESTCOMMANDLINE = self.__oTestTriggerConfig.Get('PYTESTCOMMANDLINE')
 
+      # recover the masking of nested quotes
+      if ROBOTCOMMANDLINE is not None:
+         ROBOTCOMMANDLINE = ROBOTCOMMANDLINE.replace("\"", r"\"")
+         ROBOTCOMMANDLINE = ROBOTCOMMANDLINE.replace("'", r"\"")
+      if PYTESTCOMMANDLINE is not None:
+         PYTESTCOMMANDLINE = PYTESTCOMMANDLINE.replace("\"", r"\"")
+         PYTESTCOMMANDLINE = PYTESTCOMMANDLINE.replace("'", r"\"")
+
       listofdictComponents = self.__oTestTriggerConfig.Get('COMPONENTS')
       nNrOfComponents = len(listofdictComponents)
       nCntComponent = 0
       for dictComponent in listofdictComponents:
          nCntComponent = nCntComponent + 1
 
-         # -- needed for test execution
+         # -- get data for test execution
          COMPONENTROOTPATH = dictComponent['COMPONENTROOTPATH']
          TESTFOLDER        = dictComponent['TESTFOLDER']
-         TESTEXECUTOR      = dictComponent['TESTEXECUTOR']
          TESTTYPE          = dictComponent['TESTTYPE']
+         TESTEXECUTOR      = dictComponent['TESTEXECUTOR']
+         LOCALCOMMANDLINE  = dictComponent['LOCALCOMMANDLINE']
          LOGFILE           = dictComponent['LOGFILE']
-
-         # -- needed for database access
-         dictTestTypes = self.__oTestTriggerConfig.Get('TESTTYPES')
-         dictTestType = dictTestTypes[TESTTYPE]
-         DATABASEEXECUTOR  = dictTestType['DATABASEEXECUTOR']
-         ADDITIONALCONFIG  = dictTestType['ADDITIONALCONFIG']
-         # ADDITIONALCMDLINE = dictTestType['ADDITIONALCMDLINE'] # TODO: needs more clarification
 
          # -- prepare the command line for the test execution
 
@@ -127,13 +129,30 @@ class CTestTrigger():
          listCmdLineParts.append("--logfile")
          listCmdLineParts.append(f"\"{LOGFILE}\"")
 
+         if LOCALCOMMANDLINE is not None:
+            # recover the masking of nested quotes
+            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
+            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("'", r"\"")
+
          if TESTTYPE == "ROBOT":
-            if ROBOTCOMMANDLINE is not None:
-               listCmdLineParts.append(f"--robotcommandline \"{ROBOTCOMMANDLINE}\"")
+            if ( (ROBOTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
+               listCmdLineParts.append(f"--robotcommandline")
+               if ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
+                  listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE}\"")
+               elif ( (ROBOTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
+                  listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
+               elif ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
+                  listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
 
          if TESTTYPE == "PYTEST":
-            if PYTESTCOMMANDLINE is not None:
-               listCmdLineParts.append(f"--pytestcommandline \"{PYTESTCOMMANDLINE}\"")
+            if ( (PYTESTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
+               listCmdLineParts.append(f"--pytestcommandline")
+               if ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
+                  listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE}\"")
+               elif ( (PYTESTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
+                  listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
+               elif ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
+                  listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
 
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
@@ -172,14 +191,25 @@ class CTestTrigger():
             print()
             continue
 
+
+         # -- get data for database access
+         dictTestTypes = self.__oTestTriggerConfig.Get('TESTTYPES')
+         dictTestType  = dictTestTypes[TESTTYPE] # TESTTYPE got from data for test execution above
+         DATABASEEXECUTOR = dictTestType['DATABASEEXECUTOR']
+         LOCALCOMMANDLINE = dictTestType['LOCALCOMMANDLINE']
+
          # -- prepare the command line for database access
 
          listCmdLineParts = []
          listCmdLineParts.append(f"\"{PYTHON}\"")
          listCmdLineParts.append(f"\"{DATABASEEXECUTOR}\"")
-         listCmdLineParts.append(f"--logfile=\"{LOGFILE}\"")
-         listCmdLineParts.append(f"--config=\"{ADDITIONALCONFIG}\"")
-         # listCmdLineParts.append(f"--additionalparams=\"{ADDITIONALCMDLINE}\"")     # TODO: needs more clarification
+         listCmdLineParts.append(f"\"{LOGFILE}\"")
+
+         if LOCALCOMMANDLINE is not None:
+            # recover the masking of nested quotes
+            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
+            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("'", r"\"")
+            listCmdLineParts.append(LOCALCOMMANDLINE)
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
