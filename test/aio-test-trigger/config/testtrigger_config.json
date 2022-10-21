@@ -1,8 +1,8 @@
 # **************************************************************************************************************
 #
-# test trigger configuration file
+# Test Trigger configuration file
 #
-# 17.10.2022
+# 19.10.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -43,7 +43,6 @@
                        "TESTFOLDER"        : "test",
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "TESTTYPE"          : "ROBOT",
-                       "LOCALCOMMANDLINE"  : "--variable config_file:\"${config_file}\"",
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
@@ -56,7 +55,7 @@
 # - the command line of the database executor (except the test log file containing the test results - is considered internally)
 # The log file ("LOGFILE") is taken over from setion "COMPONENTS" and must not be defined here!
 # A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
-# In every case the test trigger command line must contain all parameters - also the ones that are optional for the affected database executor
+# In every case the Test Trigger command line must contain all parameters - also the ones that are optional for the affected database executor
 # (because they are a fix part of "LOCALCOMMANDLINE").
 # "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
 

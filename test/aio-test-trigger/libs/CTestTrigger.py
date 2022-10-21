@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.10.2022
+# 21.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 
-import os, sys, time, json, shlex, subprocess, platform, shutil, re
+import os, sys, time, json, shlex, subprocess, platform, shutil, re, ctypes
 import colorama as col
 import pypandoc
 
@@ -172,6 +172,8 @@ class CTestTrigger():
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
+            # Executor may return negative values; must be converted back to negative value after received here
+            nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess {TESTTYPE} executor returned {nReturn}")
          except Exception as ex:
@@ -187,13 +189,17 @@ class CTestTrigger():
             print()
             print(COLBR + sResult)
             print()
-            print(COLBY + "Skipping database access and continuing with next test execution!")
-            print()
-            continue
-
 
          # -- get data for database access
          dictTestTypes = self.__oTestTriggerConfig.Get('TESTTYPES')
+         if TESTTYPE not in dictTestTypes:
+            # missing testttype definition
+            nReturn  = ERROR
+            bSuccess = None
+            sResult  = f"Missing defintion of TESTTYPE '{TESTTYPE}' in configuration"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+            return nReturn, bSuccess, sResult
+
          dictTestType  = dictTestTypes[TESTTYPE] # TESTTYPE got from data for test execution above
          DATABASEEXECUTOR = dictTestType['DATABASEEXECUTOR']
          LOCALCOMMANDLINE = dictTestType['LOCALCOMMANDLINE']
@@ -225,6 +231,8 @@ class CTestTrigger():
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
+            # Executor may return negative values; must be converted back to negative value after received here
+            nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess database executor returned {nReturn}")
          except Exception as ex:

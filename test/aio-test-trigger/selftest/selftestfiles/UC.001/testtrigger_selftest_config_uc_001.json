@@ -1,0 +1,63 @@
+# **************************************************************************************************************
+#
+# Test Trigger configuration file
+#
+# 19.10.2022
+#
+# **************************************************************************************************************
+# Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+# --------------------------------------------------------------------------------------------------------------
+
+# Command line parameter (--params) are used for both section "COMPONENTS" and section "TESTTYPES".
+
+{
+
+# Section "COMPONENTS":
+# ---------------------
+# 
+# It is assumed that "TESTFOLDER" is a subfolder of "COMPONENTROOTPATH" and that "TESTEXECUTOR" (the name only) is placed inside "TESTFOLDER"!
+# "TESTTYPE" has to be one of ['ROBOT', 'PYTEST']
+# It is assumed that "COMPONENTROOTPATH" does exist.
+# The complete path of "LOGFILE" is being created by the test executors.
+# "LOCALCOMMANDLINE" is optional; other keys of section "COMPONENTS" are required.
+# Meaning of "LOCALCOMMANDLINE" is: command line part that is only valid for this single test folder
+
+   "COMPONENTS" : [
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "TESTTYPE"          : "ROBOT",
+                       "LOGFILE"           : "./ROBOT/logfiles/selftestlogfile_robot_001.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "TESTTYPE"          : "PYTEST",
+                       "LOGFILE"           : "./PYTEST/logfiles/selftestlogfile_pytest_001.xml"
+                    }
+                  ],
+
+# Section "TESTTYPES":
+# --------------------
+#
+# Defines for every test type:
+# - the path and name of the database executor
+# - the command line of the database executor (except the test log file containing the test results - is considered internally)
+# The log file ("LOGFILE") is taken over from setion "COMPONENTS" and must not be defined here!
+# A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
+# In every case the Test Trigger command line must contain all parameters - also the ones that are optional for the affected database executor
+# (because they are a fix part of "LOCALCOMMANDLINE").
+# "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
+
+   "TESTTYPES" : {
+                  "ROBOT"  : {
+                               "DATABASEEXECUTOR" : "../../mocks/robot2db-mock.py"
+                             },
+                  "PYTEST" : {
+                               "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py"
+                             }
+                }
+}

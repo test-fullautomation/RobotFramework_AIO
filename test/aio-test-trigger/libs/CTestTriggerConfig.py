@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.10.2022
+# 21.10.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ class CTestTriggerConfig():
          del hTestTriggerConfigFileCleaned
       except Exception as reason:
          bSuccess = None
-         sResult  = str(reason)
+         sResult  = "An exception occurred while loading the configuration file:\n" + str(reason)
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       if dictExternalConfigValues is None:
@@ -190,15 +190,21 @@ class CTestTriggerConfig():
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
       listofdictComponents = self.__dictTestTriggerConfig['COMPONENTS']
       for dictComponent in listofdictComponents:
-         COMPONENTROOTPATH = CString.NormalizePath(dictComponent['COMPONENTROOTPATH'], sReferencePathAbs=sConfigPath)
-         COMPONENTROOTPATH, bSuccess, sResult = self.__ResolveParameters(COMPONENTROOTPATH)
+         #
+         if "COMPONENTROOTPATH" not in dictComponent:
+            bSuccess = None
+            sResult  = f"Missing key 'COMPONENTROOTPATH' in file {sTestTriggerConfigFile}"
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         COMPONENTROOTPATH, bSuccess, sResult = self.__ResolveParameters(dictComponent['COMPONENTROOTPATH'])
          if bSuccess is False:
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         COMPONENTROOTPATH = CString.NormalizePath(COMPONENTROOTPATH, sReferencePathAbs=sConfigPath)
          dictComponent['COMPONENTROOTPATH'] = COMPONENTROOTPATH
          if os.path.isdir(COMPONENTROOTPATH) is False:
             bSuccess = None
-            sResult  = f"Folder '{COMPONENTROOTPATH}' does not exist"
+            sResult  = f"Component root path '{COMPONENTROOTPATH}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         #
          if "TESTFOLDER" not in dictComponent:
             bSuccess = None
             sResult  = f"Missing key 'TESTFOLDER' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
@@ -207,11 +213,13 @@ class CTestTriggerConfig():
          TESTFOLDER, bSuccess, sResult = self.__ResolveParameters(TESTFOLDER)
          if bSuccess is False:
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         TESTFOLDER = CString.NormalizePath(TESTFOLDER, sReferencePathAbs=sConfigPath)
          dictComponent['TESTFOLDER'] = TESTFOLDER
          if os.path.isdir(TESTFOLDER) is False:
             bSuccess = None
-            sResult  = f"Folder '{TESTFOLDER}' does not exist"
+            sResult  = f"Test folder '{TESTFOLDER}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         #
          if "TESTEXECUTOR" not in dictComponent:
             bSuccess = None
             sResult  = f"Missing key 'TESTEXECUTOR' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
@@ -220,11 +228,13 @@ class CTestTriggerConfig():
          TESTEXECUTOR, bSuccess, sResult = self.__ResolveParameters(TESTEXECUTOR)
          if bSuccess is False:
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         TESTEXECUTOR = CString.NormalizePath(TESTEXECUTOR, sReferencePathAbs=sConfigPath)
+         dictComponent['TESTEXECUTOR'] = TESTEXECUTOR
          if os.path.isfile(TESTEXECUTOR) is False:
             bSuccess = None
-            sResult  = f"File '{TESTEXECUTOR}' does not exist"
+            sResult  = f"Test Executor '{TESTEXECUTOR}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         dictComponent['TESTEXECUTOR'] = TESTEXECUTOR
+         #
          if "TESTTYPE" not in dictComponent:
             bSuccess = None
             sResult  = f"Missing key 'TESTTYPE' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
@@ -232,8 +242,19 @@ class CTestTriggerConfig():
          TESTTYPE = dictComponent['TESTTYPE']
          if TESTTYPE not in tupleSupportedTestTypes:
             bSuccess = None
-            sResult  = f"TESTTYPE '{TESTTYPE}' not supported in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
+            sResult  = f"TESTTYPE '{TESTTYPE}' not supported; file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         #
+         if "LOGFILE" not in dictComponent:
+            bSuccess = None
+            sResult  = f"Missing key 'LOGFILE' in file {sTestTriggerConfigFile}, component '{COMPONENTROOTPATH}'"
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         LOGFILE, bSuccess, sResult = self.__ResolveParameters(dictComponent['LOGFILE'])
+         if bSuccess is False:
+            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         LOGFILE = CString.NormalizePath(LOGFILE, sReferencePathAbs=sConfigPath)
+         dictComponent['LOGFILE'] = LOGFILE
+         # LOGFILE will be created, therefore existence is not checked here
 
          # optional
          LOCALCOMMANDLINE = None # caution: same name like in section "TESTTYPES"
@@ -244,11 +265,6 @@ class CTestTriggerConfig():
                raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
 
-         LOGFILE = CString.NormalizePath(dictComponent['LOGFILE'], sReferencePathAbs=sConfigPath) # will be created, therefore existence is not checked here
-         LOGFILE, bSuccess, sResult = self.__ResolveParameters(LOGFILE)
-         if bSuccess is False:
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         dictComponent['LOGFILE'] = LOGFILE
 
          # short summary
          dictTestExecution = {}
@@ -271,7 +287,7 @@ class CTestTriggerConfig():
       for TESTTYPE in self.__dictTestTriggerConfig['TESTTYPES'].keys():
          if TESTTYPE not in tupleSupportedTestTypes:
             bSuccess = None
-            sResult  = f"TESTTYPE '{TESTTYPE}' not supported in file {sTestTriggerConfigFile}, section 'TESTTYPES'"
+            sResult  = f"TESTTYPE '{TESTTYPE}' not supported; file {sTestTriggerConfigFile}, section 'TESTTYPES'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          dictTestType = self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]
          if "DATABASEEXECUTOR" not in dictTestType:
@@ -284,7 +300,7 @@ class CTestTriggerConfig():
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          if os.path.isfile(DATABASEEXECUTOR) is False:
             bSuccess = None
-            sResult  = f"File '{DATABASEEXECUTOR}' does not exist"
+            sResult  = f"Database Executor '{DATABASEEXECUTOR}' does not exist"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['DATABASEEXECUTOR'] = DATABASEEXECUTOR
 
@@ -319,16 +335,24 @@ class CTestTriggerConfig():
       sResult  = "unknown"
       regex_Parameters = self.__dictTestTriggerConfig['regex_Parameters']
       dictParams = self.__dictTestTriggerConfig['PARAMS']
-      # replace all possible parameters
-      for sName, sValue in dictParams.items():
-         # TODO: not nice exception here; find better solution
-         if sName == "config":
-            sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
-         sPlaceholder = "${" + sName + "}"
-         sString = sString.replace(sPlaceholder, sValue)
+      if dictParams is not None:
+         # replace all possible parameters
+         for sName, sValue in dictParams.items():
+            # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
+            if sName == "config":
+               sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+            sPlaceholder = "${" + sName + "}"
+            sString = sString.replace(sPlaceholder, sValue)
+
       # check if there are undefined parameters left
+      bSuccess = False
+      sResult  = "UNKNOWN"
       listUndefinedParameters = regex_Parameters.findall(sString)
-      if len(listUndefinedParameters) == 0:
+      if len(listUndefinedParameters) > 0:
+         bSuccess = False
+         sResult  = "The following parameters are not defined : [" + ",".join(listUndefinedParameters) + "], (in '" + sString + "'). Please add them to the test trigger command line."
+         sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+      else:
          bSuccess = True
          sResult  = "Done"
          # check for further issues caused by failed regular expressions or incomplete parameter syntax
@@ -336,10 +360,6 @@ class CTestTriggerConfig():
             bSuccess = False
             sResult  = f"After resolving the parameters still issues found in configuration (probably caused by a not matching regular expression or incomplete parameter syntax. Line:'{sString}'"
             sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
-      else:
-         bSuccess = False
-         sResult  = "The following parameters are not defined : [" + ",".join(listUndefinedParameters) + "], (in '" + sString + "'). Please add them to the test trigger command line."
-         sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
 
       return sString, bSuccess, sResult
 
