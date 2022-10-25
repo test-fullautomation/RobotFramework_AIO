@@ -1,0 +1,20 @@
+::
+All\scomponents\stested\sand\sall\sresults\ssaved
+done
+generated\sxml\sfile
+has\snot\sreturned\sexpected\svalue
+LOCALCOMMANDLINE\s:
+Now\sexecuting\scommand\sline
+Starting\stest\sexecution
+Subprocess\sdatabase\sexecutor\sreturned
+Subprocess\sPYTEST\sreturned
+Subprocess\sROBOT\sexecutor\sreturned
+Subprocess\sROBOT\sreturned
+TESTTYPE\s:
+Test\sresults\sin
+Test\sTrigger\sreturned
+Test\sTrigger\sself\stest
+Writing\stestresults\sto\sdatabase
+\d+\s+test,\s+\d+\s+passed,\s+\d+\s+failed,\s+\d+\s+unknown
+\| FAIL \|
+\| PASS \|
