@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 19.10.2022
+# 03.11.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -27,22 +27,23 @@
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
                        "TESTFOLDER"        : "test",
-                       "TESTEXECUTOR"      : "executerobottest.py",
                        "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       # "LOCALCOMMANDLINE"  : ["--variable config_file:\"${config_file}\""],
                        "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-extensions-collection",
                        "TESTFOLDER"        : "pytest",
-                       "TESTEXECUTOR"      : "executepytest.py",
                        "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
                        "TESTFOLDER"        : "test",
-                       "TESTEXECUTOR"      : "executerobottest.py",
                        "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
@@ -55,18 +56,16 @@
 # - the command line of the database executor (except the test log file containing the test results - is considered internally)
 # The log file ("LOGFILE") is taken over from setion "COMPONENTS" and must not be defined here!
 # A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
-# In every case the Test Trigger command line must contain all parameters - also the ones that are optional for the affected database executor
-# (because they are a fix part of "LOCALCOMMANDLINE").
+# Finally (after internally the parameters are resolved) the LOCALCOMMANDLINE only contains parameter that are defined in the command line of the Test Trigger.
 # "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
 
    "TESTTYPES" : {
                   "ROBOT"  : {
-                               "DATABASEEXECUTOR" : "../mocks/robot2db-mock.py",
-                               "LOCALCOMMANDLINE" : "\"${server}\" \"${user}\" \"${password}\" \"${database}\" --UUID \"${UUID}\" --variant \"${variant}\" --versions \"${versions}\" --config \"${config}\""
+                               "DATABASEEXECUTOR" : "%ROBOTPYTHONPATH%/Lib/site-packages/RobotResults2DB/robot2db.py",
+                               "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}", "-UUID ${UUID}", "--variant ${variant}", "--versions ${versions}", "--config ${config}"]
                              },
                   "PYTEST" : {
-                               "DATABASEEXECUTOR" : "../mocks/pytest2db-mock.py",
-                               "LOCALCOMMANDLINE" : "\"${server}\" \"${user}\" \"${password}\" \"${database}\" --UUID \"${UUID}\" --variant \"${variant}\" --versions \"${versions}\" --config \"${config}\""
+                               "DATABASEEXECUTOR" : "../mocks/pytest2db-mock.py"
                              }
                 }
 }

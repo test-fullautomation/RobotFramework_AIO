@@ -36,7 +36,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 21.10.2022
+# 03.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -124,6 +124,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.001/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 0
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -136,6 +137,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.002/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = r"--variable global_cmdline_var:\"global command line test string\""
 dictUsecase['PYTESTCOMMANDLINE'] = r"-k \"not _NOTME_\""
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 0
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -148,6 +150,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.003/testtrigger_selftest_
 dictUsecase['PARAMS']            = "pytestexclude=not _NOTME_;local_cmdline_var=local command line test string;robot2db_param_1=robot2db_param_1_value;robot2db_param_2=robot2db_param_2_value;pytest2db_param_1=pytest2db_param_1_value;pytest2db_param_2=pytest2db_param_2_value"
 dictUsecase['ROBOTCOMMANDLINE']  = r"--variable global_cmdline_var:\"global command line test string\""
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 0
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -160,6 +163,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.004/testtrigger_selftest_
 dictUsecase['PARAMS']            = "COMPONENTROOTPATH=.;FOLDERNAMEEXTENSION=TEST;EXECUTORPREFIX=execute;LOGFOLDERNAME=logfiles;USECASENUMBER=004;MOCKSFOLDER=mocks"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 0
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -172,7 +176,21 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.005/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = -2
+listofdictUsecases.append(dictUsecase)
+del dictUsecase
+
+# --------------------------------------------------------------------------------------------------------------
+dictUsecase = {}
+dictUsecase['NAME']              = "006"
+dictUsecase['DESCRIPTION']       = "ROBOT and PYTEST test suite / no params / no commandlines / database not active / good case"
+dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.006/testtrigger_selftest_config_uc_006.json"
+dictUsecase['PARAMS']            = None
+dictUsecase['ROBOTCOMMANDLINE']  = None
+dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = False
+dictUsecase['EXPECTEDRETURN']    = 0
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 
@@ -186,6 +204,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.100/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -198,6 +217,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.101/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -210,6 +230,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.102/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -222,6 +243,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.103/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -234,6 +256,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.104/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -246,6 +269,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.105/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -258,6 +282,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.106/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -270,6 +295,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.107/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -282,6 +308,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.108/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -294,6 +321,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.109/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -306,6 +334,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.110/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -318,6 +347,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.111/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -331,6 +361,7 @@ dictUsecase['PARAMS']             = None
 dictUsecase['ROBOTCOMMANDLINE']   = None
 dictUsecase['PYTESTCOMMANDLINE']  = None
 dictUsecase['INVALIDCOMMANDLINE'] = "--invalidparam \"no matter value\""
+dictUsecase['RESULTS2DB']         = True
 dictUsecase['EXPECTEDRETURN']     = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -343,6 +374,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.113/testtrigger_selftest_
 dictUsecase['PARAMS']            = "param1=value1;param2=value2"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -355,6 +387,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.114/testtrigger_selftest_
 dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -367,6 +400,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.115/testtrigger_selftest_
 dictUsecase['PARAMS']            = "param1=value1;param2=value2"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -379,6 +413,7 @@ dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.116/testtrigger_selftest_
 dictUsecase['PARAMS']            = "param1=value1;param2=value2"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
+dictUsecase['RESULTS2DB']        = True
 dictUsecase['EXPECTEDRETURN']    = 1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
@@ -404,6 +439,7 @@ for dictUsecase in listofdictUsecases:
    PARAMS            = dictUsecase['PARAMS']
    ROBOTCOMMANDLINE  = dictUsecase['ROBOTCOMMANDLINE']
    PYTESTCOMMANDLINE = dictUsecase['PYTESTCOMMANDLINE']
+   RESULTS2DB        = dictUsecase['RESULTS2DB']
    EXPECTEDRETURN    = dictUsecase['EXPECTEDRETURN']
 
    INVALIDCOMMANDLINE = None
@@ -433,6 +469,8 @@ for dictUsecase in listofdictUsecases:
    if PYTESTCOMMANDLINE is not None:
       listCmdLineParts.append("--pytestcommandline")
       listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE}\"")
+   if RESULTS2DB is True:
+      listCmdLineParts.append("--results2db")
 
    sCmdLine = " ".join(listCmdLineParts)
    del listCmdLineParts

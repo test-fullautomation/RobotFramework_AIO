@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 21.10.2022
+# 02.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -75,12 +75,14 @@ class CTestTriggerConfig():
 
       sWhoAmI = CString.NormalizePath(sWhoAmI)
       sReferencePath = os.path.dirname(sWhoAmI)
+      sExecutionLogFile = f"{sReferencePath}/ExecutionLogFile.log"
       # update config
-      self.__dictTestTriggerConfig['WHOAMI']        = sWhoAmI
-      self.__dictTestTriggerConfig['REFERENCEPATH'] = sReferencePath
-      self.__dictTestTriggerConfig['NAME']          = NAME
-      self.__dictTestTriggerConfig['VERSION']       = VERSION
-      self.__dictTestTriggerConfig['VERSION_DATE']  = VERSION_DATE
+      self.__dictTestTriggerConfig['WHOAMI']           = sWhoAmI
+      self.__dictTestTriggerConfig['REFERENCEPATH']    = sReferencePath
+      self.__dictTestTriggerConfig['EXECUTIONLOGFILE'] = sExecutionLogFile
+      self.__dictTestTriggerConfig['NAME']             = NAME
+      self.__dictTestTriggerConfig['VERSION']          = VERSION
+      self.__dictTestTriggerConfig['VERSION_DATE']     = VERSION_DATE
 
       bSuccess, sResult = self.__GetCommandLine()
       if bSuccess is not True:
@@ -260,11 +262,21 @@ class CTestTriggerConfig():
          LOCALCOMMANDLINE = None # caution: same name like in section "TESTTYPES"
          if "LOCALCOMMANDLINE" in dictComponent:
             LOCALCOMMANDLINE = dictComponent['LOCALCOMMANDLINE']
-            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveParameters(LOCALCOMMANDLINE)
+            # In this section 'LOCALCOMMANDLINE' is a list. Every element of the list is a single command line parameter.
+            # These parameters can be required or optional. Now we convert the list to a command line string containing
+            # only the parameters that are given in command line of the Test Trigger (--params).
+            # With this command line string (together with the global command line) the Test Executor is called.
+            # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
+            # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
+            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
+            # under the responsibility of the Test Executor to react on missing parameters properly.
+            # But in the following code no valuation of command line parameters will happen.
+            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveCommandLine(LOCALCOMMANDLINE)
             if bSuccess is False:
                raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         # eof if "LOCALCOMMANDLINE" in dictComponent:
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
-
 
          # short summary
          dictTestExecution = {}
@@ -308,9 +320,20 @@ class CTestTriggerConfig():
          LOCALCOMMANDLINE = None # caution: same name like in section "COMPONENTS"
          if "LOCALCOMMANDLINE" in dictTestType:
             LOCALCOMMANDLINE = dictTestType['LOCALCOMMANDLINE']
-            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveParameters(LOCALCOMMANDLINE)
+            # In this section 'LOCALCOMMANDLINE' is a list. Every element of the list is a single command line parameter.
+            # These parameters can be required or optional. Now we convert the list to a command line string containing
+            # only the parameters that are given in command line of the Test Trigger (--params).
+            # With this command line string (together with the global command line) the Database Executor is called.
+            # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
+            # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
+            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
+            # under the responsibility of the Database Executor to react on missing parameters properly.
+            # But in the following code no valuation of command line parameters will happen.
+            LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveCommandLine(LOCALCOMMANDLINE)
             if bSuccess is False:
                raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+         # eof if "LOCALCOMMANDLINE" in dictTestType:
          self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
 
       # eof for dictComponent in listofdictComponents:
@@ -365,6 +388,45 @@ class CTestTriggerConfig():
 
    # --------------------------------------------------------------------------------------------------------------
 
+   def __ResolveCommandLine(self, LOCALCOMMANDLINE=[]):
+      # similar to __ResolveParameters but designed for command lines with possible optional parameters;
+      # therefore no error handling in case of missing parameters
+
+      sMethod = "CTestTriggerConfig.__ResolveCommandLine"
+
+      sLocalCommandLine = None
+      bSuccess = None
+      sResult  = "unknown"
+
+      listLocalCommandLineParts = []
+
+      regex_Parameters = self.__dictTestTriggerConfig['regex_Parameters']
+      dictParams = self.__dictTestTriggerConfig['PARAMS']
+      if dictParams is not None:
+         # resolve all possible parameters
+         for sParameter in LOCALCOMMANDLINE:
+            for sName, sValue in dictParams.items():
+               # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
+               if sName == "config":
+                  sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+               sPlaceholder = "${" + sName + "}"
+               if sPlaceholder in sParameter:
+                  sValue = "\"" + sValue + "\"" # assuming that all command line parameters can contain blanks
+                  sParameter = sParameter.replace(sPlaceholder, sValue)
+                  listLocalCommandLineParts.append(sParameter)
+            # eof for sName, sValue in dictParams.items():
+         # eof for sParameter in LOCALCOMMANDLINE:
+      # eof if dictParams is not None:
+      if len(listLocalCommandLineParts) > 0:
+         sLocalCommandLine = " ".join(listLocalCommandLineParts)
+
+      bSuccess = True
+      sResult  = "Done"
+
+      return sLocalCommandLine, bSuccess, sResult
+
+   # --------------------------------------------------------------------------------------------------------------
+
    def __GetCommandLine(self):
 
       sMethod = "CTestTriggerConfig.__GetCommandLine"
@@ -375,8 +437,9 @@ class CTestTriggerConfig():
       oCmdLineParser = argparse.ArgumentParser()
       oCmdLineParser.add_argument('--robotcommandline', type=str, help='Command line for RobotFramework AIO (optional).')
       oCmdLineParser.add_argument('--pytestcommandline', type=str, help='Command line for Python pytest module (optional).')
-      oCmdLineParser.add_argument('--configfile', type=str, help='Path and name of configuration file (optional).')
-      oCmdLineParser.add_argument('--params', type=str, help='List of further parameters to be added to command line (defined in configuration file).')
+      oCmdLineParser.add_argument('--configfile', type=str, help='Path and name of Test Trigger configuration file (optional).')
+      oCmdLineParser.add_argument('--params', type=str, help='List of values for parameters used in Test Trigger configuration file (optional).')
+      oCmdLineParser.add_argument('--results2db', action='store_true', help='Activates the database access and test results will be written to database (boolean switch).')
 
       try:
          oCmdLineArgs = oCmdLineParser.parse_args()
@@ -461,6 +524,12 @@ class CTestTriggerConfig():
       # eof if oCmdLineArgs.params is not None:
 
       self.__dictTestTriggerConfig['PARAMS'] = dictParams
+
+      bResults2DB = False
+      # database access only in case of the user explicitely order this
+      if oCmdLineArgs.results2db is not None:
+         bResults2DB = oCmdLineArgs.results2db
+      self.__dictTestTriggerConfig['RESULTS2DB'] = bResults2DB
 
       bSuccess = True
       sResult  = "Done"

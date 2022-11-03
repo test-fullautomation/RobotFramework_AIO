@@ -1,2 +1,22 @@
-
-dummy only
+{
+   "component"  : {
+                     "cli"        : "robot/cli",
+                     "core"       : "robot/core",
+                     "external"   : "robot/external",
+                     "keywords"   : "robot/keywords",
+                     "libdoc"     : "robot/libdoc",
+                     "output"     : "robot/output",
+                     "parsing"    : "robot/parsing",
+                     "reboot"     : "robot/reboot",
+                     "rpa"        : "robot/rpa",
+                     "running"    : "robot/running",
+                     "std_lib"    : "robot/standard_libraries",
+                     "tags"       : "robot/tags",
+                     "test_lib"   : "robot/test_libraries",
+                     "testdoc"    : "robot/testdoc",
+                     "tidy"       : "robot/tidy",
+                     "variables"  : "robot/variables"
+                  },
+   "version_sw" : "selftest",
+   "variant"    : "ROBFW"
+}
