@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.10.2022
+# 03.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 
-import os, sys, time, json, shlex, subprocess, platform, shutil, re
+import os, sys, time, json, shlex, subprocess, platform, shutil, re, ctypes
 import colorama as col
 import pypandoc
 
@@ -74,11 +74,16 @@ class CTestTrigger():
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       self.__oTestTriggerConfig = oTestTriggerConfig
+      EXECUTIONLOGFILE = self.__oTestTriggerConfig.Get('EXECUTIONLOGFILE')
+      self.__oExecutionLogFile = CFile(EXECUTIONLOGFILE)
 
    # eof def __init__(self, oTestTriggerConfig=None):
 
    def __del__(self):
-      pass
+      try:
+         del self.__oExecutionLogFile
+      except:
+         pass
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -98,6 +103,30 @@ class CTestTrigger():
       PYTHON = self.__oTestTriggerConfig.Get('PYTHON')
       ROBOTCOMMANDLINE  = self.__oTestTriggerConfig.Get('ROBOTCOMMANDLINE')
       PYTESTCOMMANDLINE = self.__oTestTriggerConfig.Get('PYTESTCOMMANDLINE')
+
+      NAME         = self.__oTestTriggerConfig.Get('NAME')
+      VERSION      = self.__oTestTriggerConfig.Get('VERSION')
+      VERSION_DATE = self.__oTestTriggerConfig.Get('VERSION_DATE')
+
+      RESULTS2DB = self.__oTestTriggerConfig.Get('RESULTS2DB')
+
+      self.__oExecutionLogFile.Write(120*"*")
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write(f"{NAME} / v. {VERSION} / {VERSION_DATE}")
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write("Executed at " + time.strftime('%d.%m.%Y - %H:%M:%S'))
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write(120*"-")
+      if RESULTS2DB is True:
+         sMessage = "Database access active. Test results will be written to database."
+      else:
+         sMessage = "Database access not active. Test results will not be written to database."
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write(sMessage)
+      self.__oExecutionLogFile.Write()
+      print()
+      print(COLBY + sMessage)
+      print()
 
       # recover the masking of nested quotes
       if ROBOTCOMMANDLINE is not None:
@@ -157,6 +186,8 @@ class CTestTrigger():
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
+         self.__oExecutionLogFile.Write(sCmdLine)
+
          # -- execute the tests
 
          print(COLBY + "Starting test execution:")
@@ -172,28 +203,41 @@ class CTestTrigger():
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
+            # Executor may return negative values; must be converted back to negative value after received here
+            nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess {TESTTYPE} executor returned {nReturn}")
          except Exception as ex:
             nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
+            self.__oExecutionLogFile.Write(sResult)
             return nReturn, bSuccess, sResult
          print()
          if nReturn != SUCCESS:
             nCntSubProcessErrors = nCntSubProcessErrors + 1
             bSuccess = False
             sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess {TESTTYPE} executor has not returned expected value {SUCCESS}")
+            self.__oExecutionLogFile.Write(sResult)
             print()
             print(COLBR + sResult)
             print()
-            print(COLBY + "Skipping database access and continuing with next test execution!")
-            print()
-            continue
 
+         # ---- write test results to database (if activated; otherwise continue with next component)
+         if RESULTS2DB is False:
+            continue # for dictComponent in listofdictComponents:
 
          # -- get data for database access
          dictTestTypes = self.__oTestTriggerConfig.Get('TESTTYPES')
+         if TESTTYPE not in dictTestTypes:
+            # missing testttype definition
+            nReturn  = ERROR
+            bSuccess = None
+            sResult  = f"Missing definition of TESTTYPE '{TESTTYPE}' in configuration"
+            sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
+            self.__oExecutionLogFile.Write(sResult)
+            return nReturn, bSuccess, sResult
+
          dictTestType  = dictTestTypes[TESTTYPE] # TESTTYPE got from data for test execution above
          DATABASEEXECUTOR = dictTestType['DATABASEEXECUTOR']
          LOCALCOMMANDLINE = dictTestType['LOCALCOMMANDLINE']
@@ -206,12 +250,12 @@ class CTestTrigger():
          listCmdLineParts.append(f"\"{LOGFILE}\"")
 
          if LOCALCOMMANDLINE is not None:
-            # recover the masking of nested quotes
-            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
-            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("'", r"\"")
             listCmdLineParts.append(LOCALCOMMANDLINE)
+
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
+
+         self.__oExecutionLogFile.Write(sCmdLine)
 
          # -- execute the database application
 
@@ -225,33 +269,44 @@ class CTestTrigger():
          nReturn = ERROR
          try:
             nReturn = subprocess.call(listCmdLineParts)
+            # Executor may return negative values; must be converted back to negative value after received here
+            nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess database executor returned {nReturn}")
          except Exception as ex:
             nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
+            self.__oExecutionLogFile.Write(sResult)
             return nReturn, bSuccess, sResult
          print()
          if nReturn != SUCCESS:
             nCntSubProcessErrors = nCntSubProcessErrors + 1
             bSuccess = False
             sResult  = CString.FormatResult(sMethod, bSuccess, f"Subprocess database executor has not returned expected value {SUCCESS}")
+            self.__oExecutionLogFile.Write(sResult)
             print()
             print(COLBR + sResult)
             print()
-            continue
 
       # eof for dictComponent in listofdictComponents:
 
       if nCntSubProcessErrors == 0:
          nReturn  = SUCCESS
          bSuccess = True
-         sResult  = "All components tested and all results saved"
+         if RESULTS2DB is True:
+            sResult  = "All components tested and all test results written to database"
+         else:
+            sResult  = "All components tested - but database access skipped"
       else:
          nReturn  = -nCntSubProcessErrors
          bSuccess = False
          sResult  = f"[test trigger] : {nCntSubProcessErrors} errors occurred during the execution of subprocesses"
+
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write(sResult)
+      self.__oExecutionLogFile.Write()
+      self.__oExecutionLogFile.Write(120*"-")
 
       return nReturn, bSuccess, sResult
 

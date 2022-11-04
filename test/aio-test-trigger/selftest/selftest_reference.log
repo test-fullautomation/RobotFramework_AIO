@@ -1,0 +1,1687 @@
+
+selftest.py is running under Windows (nt)
+
+Testing 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py'
+
+* Test Trigger self test usecase 1/23 : 001
+
+  ROBOT and PYTEST test suite / no params / no commandlines / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/testtrigger_selftest_config_uc_001.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/testtrigger_selftest_config_uc_001.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles/selftestlogfile_robot_001.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles/selftestlogfile_robot_001.xml"
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles -o selftestlogfile_robot_001.xml -l selftestlogfile_robot_001_log.html -r selftestlogfile_robot_001_report.html -b selftestlogfile_robot_001.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT"
+
+==============================================================================
+ROBOT                                                                         
+==============================================================================
+ROBOT.Test 001 :: test suite 001                                              
+==============================================================================
+robot_001 :: robot_001                                                Hello Test Trigger self test
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 001 :: test suite 001                                      | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT                                                                 | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\ROBOT\logfiles\selftestlogfile_robot_001.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\ROBOT\logfiles\selftestlogfile_robot_001.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\ROBOT\logfiles\selftestlogfile_robot_001_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\ROBOT\logfiles\selftestlogfile_robot_001_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles/selftestlogfile_robot_001.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles/selftestlogfile_robot_001.xml"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/ROBOT/logfiles/selftestlogfile_robot_001.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (2/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml"
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _Linux_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\PYTEST, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 1 item
+
+selftestfiles\UC.001\PYTEST\test_001.py::Test_001::test_001[test_001] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.001\PYTEST\logfiles\selftestlogfile_pytest_001.xml -
+============================== 1 passed in 0.05s ==============================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.001/PYTEST/logfiles/selftestlogfile_pytest_001.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+
+All components tested and all test results written to database
+
+
+[selftest.py] : Test Trigger returned 0
+
+
+* Test Trigger self test usecase 2/23 : 002
+
+  ROBOT and PYTEST test suite / no params / with global commandlines / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/testtrigger_selftest_config_uc_002.json" --robotcommandline "--variable global_cmdline_var:\"global command line test string\"" --pytestcommandline "-k \"not _NOTME_\"" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : --variable global_cmdline_var:"global command line test string"
+        PYTESTCOMMANDLINE : -k "not _NOTME_"
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/testtrigger_selftest_config_uc_002.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles/selftestlogfile_robot_002.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles/selftestlogfile_robot_002.xml" --robotcommandline "--variable global_cmdline_var:\"global command line test string\""
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot --variable global_cmdline_var:"global command line test string" -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles -o selftestlogfile_robot_002.xml -l selftestlogfile_robot_002_log.html -r selftestlogfile_robot_002_report.html -b selftestlogfile_robot_002.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT"
+
+==============================================================================
+ROBOT                                                                         
+==============================================================================
+ROBOT.Test 002 :: test suite 002                                              
+==============================================================================
+robot_002 :: robot_002                                                Hello Test Trigger self test
+global commandline variable (global_cmdline_var): global command line test string
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 002 :: test suite 002                                      | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT                                                                 | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\ROBOT\logfiles\selftestlogfile_robot_002.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\ROBOT\logfiles\selftestlogfile_robot_002.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\ROBOT\logfiles\selftestlogfile_robot_002_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\ROBOT\logfiles\selftestlogfile_robot_002_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles/selftestlogfile_robot_002.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles/selftestlogfile_robot_002.xml"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/ROBOT/logfiles/selftestlogfile_robot_002.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (2/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml" --pytestcommandline "-k \"not _NOTME_\""
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _NOTME_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\PYTEST, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 2 items / 1 deselected / 1 selected
+
+selftestfiles\UC.002\PYTEST\test_002.py::Test_002::test_002[test_002 (2)] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.002\PYTEST\logfiles\selftestlogfile_pytest_002.xml -
+======================= 1 passed, 1 deselected in 0.05s =======================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.002/PYTEST/logfiles/selftestlogfile_pytest_002.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+
+All components tested and all test results written to database
+
+
+[selftest.py] : Test Trigger returned 0
+
+
+* Test Trigger self test usecase 3/23 : 003
+
+  several ROBOT and PYTEST test suites / with params / with global commandlines / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/testtrigger_selftest_config_uc_003.json" --params "pytestexclude=not _NOTME_;local_cmdline_var=local command line test string;robot2db_param_1=robot2db_param_1_value;robot2db_param_2=robot2db_param_2_value;pytest2db_param_1=pytest2db_param_1_value;pytest2db_param_2=pytest2db_param_2_value" --robotcommandline "--variable global_cmdline_var:\"global command line test string\"" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : --variable global_cmdline_var:"global command line test string"
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/testtrigger_selftest_config_uc_003.json
+                   PARAMS : {'pytestexclude': 'not _NOTME_', 'local_cmdline_var': 'local command line test string', 'robot2db_param_1': 'robot2db_param_1_value', 'robot2db_param_2': 'robot2db_param_2_value', 'pytest2db_param_1': 'pytest2db_param_1_value', 'pytest2db_param_2': 'pytest2db_param_2_value'}
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/executerobottest.py
+         LOCALCOMMANDLINE : --variable local_cmdline_var:"local command line test string"
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/executepytest.py
+         LOCALCOMMANDLINE : -k "not _NOTME_"
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/4) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml" --robotcommandline "--variable global_cmdline_var:\"global command line test string\""
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot --variable global_cmdline_var:"global command line test string" -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles -o selftestlogfile_robot_003_1.xml -l selftestlogfile_robot_003_1_log.html -r selftestlogfile_robot_003_1_report.html -b selftestlogfile_robot_003_1.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1"
+
+==============================================================================
+ROBOT 1                                                                       
+==============================================================================
+ROBOT 1.Test 003 1 :: test suite 003_1                                        
+==============================================================================
+robot_003_1 :: robot_003_1                                            Hello Test Trigger self test
+global commandline variable (global_cmdline_var): global command line test string
+local commandline variable (local_cmdline_var): local_cmdline_var initial value
+| PASS |
+------------------------------------------------------------------------------
+ROBOT 1.Test 003 1 :: test suite 003_1                                | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT 1                                                               | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_1\logfiles\selftestlogfile_robot_003_1.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_1\logfiles\selftestlogfile_robot_003_1.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_1\logfiles\selftestlogfile_robot_003_1_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_1\logfiles\selftestlogfile_robot_003_1_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml" "robot2db_param_1_value" "robot2db_param_2_value"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml'
+-> arg[2] = 'robot2db_param_1_value'
+-> arg[3] = 'robot2db_param_2_value'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (2/4) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml" --robotcommandline "--variable global_cmdline_var:\"global command line test string\" --variable local_cmdline_var:\"local command line test string\""
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot --variable global_cmdline_var:"global command line test string" --variable local_cmdline_var:"local command line test string" -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles -o selftestlogfile_robot_003_2.xml -l selftestlogfile_robot_003_2_log.html -r selftestlogfile_robot_003_2_report.html -b selftestlogfile_robot_003_2.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2"
+
+==============================================================================
+ROBOT 2                                                                       
+==============================================================================
+ROBOT 2.Test 003 2 :: test suite 003_2                                        
+==============================================================================
+robot_003_2 :: robot_003_2                                            Hello Test Trigger self test
+global commandline variable (global_cmdline_var): global command line test string
+local commandline variable (local_cmdline_var): local command line test string
+| PASS |
+------------------------------------------------------------------------------
+ROBOT 2.Test 003 2 :: test suite 003_2                                | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT 2                                                               | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_2\logfiles\selftestlogfile_robot_003_2.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_2\logfiles\selftestlogfile_robot_003_2.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_2\logfiles\selftestlogfile_robot_003_2_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\ROBOT_2\logfiles\selftestlogfile_robot_003_2_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml" "robot2db_param_1_value" "robot2db_param_2_value"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml'
+-> arg[2] = 'robot2db_param_1_value'
+-> arg[3] = 'robot2db_param_2_value'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (3/4) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml"
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _Linux_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\PYTEST_1, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 2 items
+
+selftestfiles\UC.003\PYTEST_1\test_003_1.py::Test_003_1::test_NOTME_003_1[test_NOTME_003_1 (1)] PASSED [ 50%]
+selftestfiles\UC.003\PYTEST_1\test_003_1.py::Test_003_1::test_003_1[test_003_1 (2)] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\PYTEST_1\logfiles\selftestlogfile_pytest_003_1.xml -
+============================== 2 passed in 0.05s ==============================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml" "pytest2db_param_1_value" "pytest2db_param_2_value"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml'
+-> arg[2] = 'pytest2db_param_1_value'
+-> arg[3] = 'pytest2db_param_2_value'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (4/4) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml" --pytestcommandline "-k \"not _NOTME_\""
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _NOTME_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\PYTEST_2, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 2 items / 1 deselected / 1 selected
+
+selftestfiles\UC.003\PYTEST_2\test_003_2.py::Test_003_2::test_003_2[test_003_2 (2)] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.003\PYTEST_2\logfiles\selftestlogfile_pytest_003_2.xml -
+======================= 1 passed, 1 deselected in 0.04s =======================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml" "pytest2db_param_1_value" "pytest2db_param_2_value"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.003/PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml'
+-> arg[2] = 'pytest2db_param_1_value'
+-> arg[3] = 'pytest2db_param_2_value'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+
+All components tested and all test results written to database
+
+
+[selftest.py] : Test Trigger returned 0
+
+
+* Test Trigger self test usecase 4/23 : 004
+
+  ROBOT and PYTEST test suite / with params / no commandlines / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/testtrigger_selftest_config_uc_004.json" --params "COMPONENTROOTPATH=.;FOLDERNAMEEXTENSION=TEST;EXECUTORPREFIX=execute;LOGFOLDERNAME=logfiles;USECASENUMBER=004;MOCKSFOLDER=mocks" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/testtrigger_selftest_config_uc_004.json
+                   PARAMS : {'COMPONENTROOTPATH': '.', 'FOLDERNAMEEXTENSION': 'TEST', 'EXECUTORPREFIX': 'execute', 'LOGFOLDERNAME': 'logfiles', 'USECASENUMBER': '004', 'MOCKSFOLDER': 'mocks'}
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles/selftestlogfile_robot_004.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles/selftestlogfile_robot_004.xml"
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles -o selftestlogfile_robot_004.xml -l selftestlogfile_robot_004_log.html -r selftestlogfile_robot_004_report.html -b selftestlogfile_robot_004.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST"
+
+==============================================================================
+ROBOT TEST                                                                    
+==============================================================================
+ROBOT TEST.Test 004 :: test suite 004                                         
+==============================================================================
+robot_004 :: robot_004                                                Hello Test Trigger self test
+| PASS |
+------------------------------------------------------------------------------
+ROBOT TEST.Test 004 :: test suite 004                                 | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT TEST                                                            | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\ROBOT_TEST\logfiles\selftestlogfile_robot_004.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\ROBOT_TEST\logfiles\selftestlogfile_robot_004.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\ROBOT_TEST\logfiles\selftestlogfile_robot_004_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\ROBOT_TEST\logfiles\selftestlogfile_robot_004_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles/selftestlogfile_robot_004.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles/selftestlogfile_robot_004.xml"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/ROBOT_TEST/logfiles/selftestlogfile_robot_004.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (2/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml"
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _Linux_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\PYTEST_TEST, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 1 item
+
+selftestfiles\UC.004\PYTEST_TEST\test_004.py::Test_004::test_004[test_004] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.004\PYTEST_TEST\logfiles\selftestlogfile_pytest_004.xml -
+============================== 1 passed in 0.04s ==============================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.004/PYTEST_TEST/logfiles/selftestlogfile_pytest_004.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+
+All components tested and all test results written to database
+
+
+[selftest.py] : Test Trigger returned 0
+
+
+* Test Trigger self test usecase 5/23 : 005
+
+  several ROBOT and PYTEST test suites / some tests failed / without params / without global commandlines / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/testtrigger_selftest_config_uc_005.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/testtrigger_selftest_config_uc_005.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles/selftestlogfile_robot_005.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles/selftestlogfile_pytest_005.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles/selftestlogfile_robot_005.xml"
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles -o selftestlogfile_robot_005.xml -l selftestlogfile_robot_005_log.html -r selftestlogfile_robot_005_report.html -b selftestlogfile_robot_005.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT"
+
+==============================================================================
+ROBOT                                                                         
+==============================================================================
+ROBOT.Test 005 1 Passed :: test suite 005 1 passed                            
+==============================================================================
+robot_005_1_passed :: robot_005_1_passed                              Hello Test Trigger self test
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 005 1 Passed :: test suite 005 1 passed                    | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT.Test 005 2 Failed :: test suite 005 2 failed                            
+==============================================================================
+robot_005_2_failed :: robot_005_2_failed                              Hello Test Trigger self test
+| FAIL |
+AssertionError
+------------------------------------------------------------------------------
+ROBOT.Test 005 2 Failed :: test suite 005 2 failed                    | FAIL |
+1 test, 0 passed, 1 failed, 0 unknown
+==============================================================================
+ROBOT.Test 005 3 Passed :: test suite 005 3 passed                            
+==============================================================================
+robot_005_3_passed :: robot_005_3_passed                              Hello Test Trigger self test
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 005 3 Passed :: test suite 005 3 passed                    | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT.Test 005 4 Failed :: test suite 005 4 failed                            
+==============================================================================
+robot_005_4_failed :: robot_005_4_failed                              Hello Test Trigger self test
+| FAIL |
+AssertionError
+------------------------------------------------------------------------------
+ROBOT.Test 005 4 Failed :: test suite 005 4 failed                    | FAIL |
+1 test, 0 passed, 1 failed, 0 unknown
+==============================================================================
+ROBOT                                                                 | FAIL |
+4 tests, 2 passed, 2 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\ROBOT\logfiles\selftestlogfile_robot_005.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\ROBOT\logfiles\selftestlogfile_robot_005.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\ROBOT\logfiles\selftestlogfile_robot_005_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\ROBOT\logfiles\selftestlogfile_robot_005_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 2
+
+
+
+[test trigger] : Subprocess ROBOT executor returned -2
+
+
+!!! ERROR !!!
+[CTestTrigger.Trigger] : Subprocess ROBOT executor has not returned expected value 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles/selftestlogfile_robot_005.xml"
+
+
+I am database access mock for tests of type ROBOT
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/robot2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/ROBOT/logfiles/selftestlogfile_robot_005.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+Starting test execution:
+
+* (2/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles/selftestlogfile_pytest_005.xml"
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _Linux_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles/selftestlogfile_pytest_005.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\PYTEST, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 4 items
+
+selftestfiles\UC.005\PYTEST\test_005_1_passed.py::Test_005_1_passed::test_005_1[test_005_1_passed] PASSED [ 25%]
+selftestfiles\UC.005\PYTEST\test_005_2_failed.py::Test_005_2_failed::test_005_2[test_005_2_failed] FAILED [ 50%]
+selftestfiles\UC.005\PYTEST\test_005_3_passed.py::Test_005_3_passed::test_005_3[test_005_3_passed] PASSED [ 75%]
+selftestfiles\UC.005\PYTEST\test_005_4_failed.py::Test_005_4_failed::test_005_4[test_005_4_failed] FAILED [100%]
+
+================================== FAILURES ===================================
+_______________ Test_005_2_failed.test_005_2[test_005_2_failed] _______________
+
+self = <test_005_2_failed.Test_005_2_failed object at 0x0000024A53FA71C0>
+Description = 'test_005_2_failed'
+
+    @pytest.mark.parametrize(
+        "Description", ["test_005_2_failed",]
+    )
+    def test_005_2(self, Description):
+        """pytest 'test_005_2'"""
+>       assert 1 == 2
+E       assert 1 == 2
+E         +1
+E         -2
+
+selftestfiles\UC.005\PYTEST\test_005_2_failed.py:41: AssertionError
+_______________ Test_005_4_failed.test_005_4[test_005_4_failed] _______________
+
+self = <test_005_4_failed.Test_005_4_failed object at 0x0000024A53FA7B50>
+Description = 'test_005_4_failed'
+
+    @pytest.mark.parametrize(
+        "Description", ["test_005_4_failed",]
+    )
+    def test_005_4(self, Description):
+        """pytest 'test_005_4'"""
+>       assert 1 == 2
+E       assert 1 == 2
+E         +1
+E         -2
+
+selftestfiles\UC.005\PYTEST\test_005_4_failed.py:41: AssertionError
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.005\PYTEST\logfiles\selftestlogfile_pytest_005.xml -
+=========================== short test summary info ===========================
+FAILED selftestfiles\UC.005\PYTEST\test_005_2_failed.py::Test_005_2_failed::test_005_2[test_005_2_failed]
+FAILED selftestfiles\UC.005\PYTEST\test_005_4_failed.py::Test_005_4_failed::test_005_4[test_005_4_failed]
+========================= 2 failed, 2 passed in 0.16s =========================
+
+[executepytest.py] : Subprocess PYTEST returned 1
+
+
+
+[test trigger] : Subprocess PYTEST executor returned -1
+
+
+!!! ERROR !!!
+[CTestTrigger.Trigger] : Subprocess PYTEST executor has not returned expected value 0
+
+Writing testresults to database
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles/selftestlogfile_pytest_005.xml"
+
+
+I am database access mock for tests of type PYTEST
+
+-> arg[0] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/mocks/pytest2db-mock.py'
+-> arg[1] = 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.005/PYTEST/logfiles/selftestlogfile_pytest_005.xml'
+
+
+[test trigger] : Subprocess database executor returned 0
+
+
+
+
+[selftest.py] : Test Trigger returned -2
+
+
+* Test Trigger self test usecase 6/23 : 006
+
+  ROBOT and PYTEST test suite / no params / no commandlines / database not active / good case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/testtrigger_selftest_config_uc_006.json"
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/testtrigger_selftest_config_uc_006.json
+                   PARAMS : None
+               RESULTS2DB : False
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/logfiles/selftestlogfile_robot_006.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/logfiles/selftestlogfile_pytest_006.xml
+
+
+Database access not active. Test results will not be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/logfiles/selftestlogfile_robot_006.xml"
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/logfiles -o selftestlogfile_robot_006.xml -l selftestlogfile_robot_006_log.html -r selftestlogfile_robot_006_report.html -b selftestlogfile_robot_006.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT"
+
+==============================================================================
+ROBOT                                                                         
+==============================================================================
+ROBOT.Test 006 :: test suite 006                                              
+==============================================================================
+robot_006 :: robot_006                                                Hello Test Trigger self test
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 006 :: test suite 006                                      | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT                                                                 | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\ROBOT\logfiles\selftestlogfile_robot_006.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\ROBOT\logfiles\selftestlogfile_robot_006.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\ROBOT\logfiles\selftestlogfile_robot_006_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\ROBOT\logfiles\selftestlogfile_robot_006_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/ROBOT/logfiles/selftestlogfile_robot_006.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+Starting test execution:
+
+* (2/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST' (PYTEST)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/executepytest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/logfiles/selftestlogfile_pytest_006.xml"
+
+
+executepytest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m pytest -k "not _Linux_" --show-capture=all --junitxml="C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/logfiles/selftestlogfile_pytest_006.xml" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST"
+
+============================= test session starts =============================
+platform win32 -- Python 3.9.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\PYTEST, configfile: pytest.ini
+plugins: cov-4.0.0, forked-1.4.0, mock-3.10.0, pythonpath-0.7.4, xdist-2.5.0
+collected 1 item
+
+selftestfiles\UC.006\PYTEST\test_006.py::Test_006::test_006[test_006] PASSED [100%]
+
+- generated xml file: C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.006\PYTEST\logfiles\selftestlogfile_pytest_006.xml -
+============================== 1 passed in 0.04s ==============================
+
+[executepytest.py] : Subprocess PYTEST returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.006/PYTEST/logfiles/selftestlogfile_pytest_006.xml'
+
+executepytest.py done
+
+
+[test trigger] : Subprocess PYTEST executor returned 0
+
+
+All components tested - but database access skipped
+
+
+[selftest.py] : Test Trigger returned 0
+
+
+* Test Trigger self test usecase 7/23 : 100
+
+  ROBOT and PYTEST test suite / no params / no commandlines / config file not found / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.100/testtrigger_selftest_config_NOTEXISTING.json" --results2db
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 8/23 : 101
+
+  ROBOT and PYTEST test suite / no params / no commandlines / COMPONENTROOTPATH not existing / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.101/testtrigger_selftest_config_uc_101.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.101/testtrigger_selftest_config_uc_101.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.101
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 9/23 : 102
+
+  ROBOT and PYTEST test suite / no params / no commandlines / TESTFOLDER not existing / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.102/testtrigger_selftest_config_uc_102.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.102/testtrigger_selftest_config_uc_102.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.102
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 10/23 : 103
+
+  ROBOT and PYTEST test suite / no params / no commandlines / TESTEXECUTOR not existing / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.103/testtrigger_selftest_config_uc_103.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.103/testtrigger_selftest_config_uc_103.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.103
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 11/23 : 104
+
+  ROBOT and PYTEST test suite / no params / no commandlines / invalid TESTTYPE in section 'COMPONENTS' / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.104/testtrigger_selftest_config_uc_104.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.104/testtrigger_selftest_config_uc_104.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.104
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 12/23 : 105
+
+  ROBOT and PYTEST test suite / no params / no commandlines / missing TESTTYPE definition in section 'TESTTYPES' / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/testtrigger_selftest_config_uc_105.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/testtrigger_selftest_config_uc_105.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+Configured tests:
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT
+                 TESTTYPE : ROBOT
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/executerobottest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/logfiles/selftestlogfile_robot_105.xml
+
+               TESTFOLDER : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/PYTEST
+                 TESTTYPE : PYTEST
+             TESTEXECUTOR : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/PYTEST/executepytest.py
+         LOCALCOMMANDLINE : None
+                  LOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/PYTEST/logfiles/selftestlogfile_pytest_105.xml
+
+
+Database access active. Test results will be written to database.
+
+Starting test execution:
+
+* (1/2) : 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT' (ROBOT)
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/executerobottest.py" --logfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/logfiles/selftestlogfile_robot_105.xml"
+
+
+executerobottest.py is running under Windows (nt)
+
+Folder 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/logfiles' already exists.
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" -m robot -d C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/logfiles -o selftestlogfile_robot_105.xml -l selftestlogfile_robot_105_log.html -r selftestlogfile_robot_105_report.html -b selftestlogfile_robot_105.log "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT"
+
+==============================================================================
+ROBOT                                                                         
+==============================================================================
+ROBOT.Test 105 :: test suite 105                                              
+==============================================================================
+robot_105 :: robot_105                                                Hello Test Trigger self test
+global commandline variable (global_cmdline_var): global_cmdline_var initial value
+| PASS |
+------------------------------------------------------------------------------
+ROBOT.Test 105 :: test suite 105                                      | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+ROBOT                                                                 | PASS |
+1 test, 1 passed, 0 failed, 0 unknown
+==============================================================================
+Debug:   C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.105\ROBOT\logfiles\selftestlogfile_robot_105.log
+Output:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.105\ROBOT\logfiles\selftestlogfile_robot_105.xml
+Log:     C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.105\ROBOT\logfiles\selftestlogfile_robot_105_log.html
+Report:  C:\RobotTest\projects\ROBFW_AIO\RobotFramework_AIO\test\aio-test-trigger\selftest\selftestfiles\UC.105\ROBOT\logfiles\selftestlogfile_robot_105_report.html
+
+[executerobottest.py] : Subprocess ROBOT returned 0
+
+Test results in 'C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.105/ROBOT/logfiles/selftestlogfile_robot_105.xml'
+
+executerobottest.py done
+
+
+[test trigger] : Subprocess ROBOT executor returned 0
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 13/23 : 106
+
+  ROBOT and PYTEST test suite / no params / no commandlines / invalid TESTTYPE definition in section 'TESTTYPES' / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.106/testtrigger_selftest_config_uc_106.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.106/testtrigger_selftest_config_uc_106.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.106
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 14/23 : 107
+
+  ROBOT and PYTEST test suite / no params / no commandlines / missing key DATABASEEXECUTOR / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.107/testtrigger_selftest_config_uc_107.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.107/testtrigger_selftest_config_uc_107.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.107
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 15/23 : 108
+
+  ROBOT and PYTEST test suite / no params / no commandlines / DATABASEEXECUTOR not existing / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.108/testtrigger_selftest_config_uc_108.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.108/testtrigger_selftest_config_uc_108.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.108
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 16/23 : 109
+
+  ROBOT and PYTEST test suite / no params / no commandlines / missing main key 'COMPONENTS' / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.109/testtrigger_selftest_config_uc_109.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.109/testtrigger_selftest_config_uc_109.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.109
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 17/23 : 110
+
+  ROBOT and PYTEST test suite / no params / no commandlines / missing main key 'TESTTYPES' / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.110/testtrigger_selftest_config_uc_110.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.110/testtrigger_selftest_config_uc_110.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.110
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 18/23 : 111
+
+  ROBOT and PYTEST test suite / no params / no commandlines / syntax error in configuration / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.111/testtrigger_selftest_config_uc_111.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.111/testtrigger_selftest_config_uc_111.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.111
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 19/23 : 112
+
+  ROBOT and PYTEST test suite / invalid command line parameter / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.112/testtrigger_selftest_config_uc_112.json" --invalidparam "no matter value" --results2db
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 20/23 : 113
+
+  ROBOT and PYTEST test suite / no commandlines / with params, but configuration parameter not defined / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.113/testtrigger_selftest_config_uc_113.json" --params "param1=value1;param2=value2" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.113/testtrigger_selftest_config_uc_113.json
+                   PARAMS : {'param1': 'value1', 'param2': 'value2'}
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.113
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 21/23 : 114
+
+  ROBOT and PYTEST test suite / no commandlines / no params and configuration parameter not defined / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.114/testtrigger_selftest_config_uc_114.json" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.114/testtrigger_selftest_config_uc_114.json
+                   PARAMS : None
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.114
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 22/23 : 115
+
+  ROBOT and PYTEST test suite / no commandlines / with params, but improper reference in configuration (1) / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.115/testtrigger_selftest_config_uc_115.json" --params "param1=value1;param2=value2" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.115/testtrigger_selftest_config_uc_115.json
+                   PARAMS : {'param1': 'value1', 'param2': 'value2'}
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.115
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+* Test Trigger self test usecase 23/23 : 116
+
+  ROBOT and PYTEST test suite / no commandlines / with params, but improper reference in configuration (2) / bad case
+
+Now executing command line:
+"D:/RobotFramework/python39/python.exe" "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py" --configfile "C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.116/testtrigger_selftest_config_uc_116.json" --params "param1=value1;param2=value2" --results2db
+
+
+                   WHOAMI : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/aio-test-trigger.py
+            REFERENCEPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger
+         EXECUTIONLOGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/ExecutionLogFile.log
+                     NAME : RobotFramework AIO Test Trigger
+                  VERSION : 0.5.0
+             VERSION_DATE : 03.11.2022
+         ROBOTCOMMANDLINE : None
+        PYTESTCOMMANDLINE : None
+    TESTTRIGGERCONFIGFILE : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.116/testtrigger_selftest_config_uc_116.json
+                   PARAMS : {'param1': 'value1', 'param2': 'value2'}
+               RESULTS2DB : True
+               CONFIGPATH : C:/RobotTest/projects/ROBFW_AIO/RobotFramework_AIO/test/aio-test-trigger/selftest/selftestfiles/UC.116
+                   PYTHON : D:/RobotFramework/python39/python.exe
+            PYTHONVERSION : 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)]
+           PLATFORMSYSTEM : Windows
+                   OSNAME : nt
+                  TMPPATH : C:/Users/qth2hi/AppData/Local/Temp
+
+
+
+
+[selftest.py] : Test Trigger returned 1
+
+
+Test Trigger self test passed (23/23 usecases executed)
+

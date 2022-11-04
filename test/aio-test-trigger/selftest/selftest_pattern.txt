@@ -1,0 +1,24 @@
+::
+All\scomponents\stested\s-\sbut\sdatabase\saccess\sskipped
+All\scomponents\stested\sand\sall\sresults\ssaved
+All\scomponents\stested\sand\sall\stest\sresults\swritten\sto\sdatabase
+Database\saccess\sactive\.\sTest\sresults\swill\sbe\swritten\sto\sdatabase\.
+Database\saccess\snot\sactive\.\sTest\sresults\swill\snot\sbe\swritten\sto\sdatabase\.
+done
+generated\sxml\sfile
+has\snot\sreturned\sexpected\svalue
+LOCALCOMMANDLINE\s:
+Now\sexecuting\scommand\sline
+Starting\stest\sexecution
+Subprocess\sdatabase\sexecutor\sreturned\s\d+
+Subprocess\sPYTEST\sreturned\s\d+
+Subprocess\sROBOT\sexecutor\sreturned\s\d+
+Subprocess\sROBOT\sreturned\s\d+
+TESTTYPE\s:
+Test\sresults\sin
+Test\sTrigger\sreturned\s\d+
+Test\sTrigger\sself\stest\spassed
+Writing\stestresults\sto\sdatabase
+\d+\s+test,\s+\d+\s+passed,\s+\d+\s+failed,\s+\d+\s+unknown
+\| FAIL \|
+\| PASS \|

@@ -1,0 +1,45 @@
+# **************************************************************************************************************
+#
+# Test Trigger configuration file
+#
+# 03.11.2022
+#
+# **************************************************************************************************************
+
+{
+
+# Section "COMPONENTS":
+# ---------------------
+
+   "COMPONENTS" : [
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "ROBOT",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "./ROBOT/logfiles/selftestlogfile_robot_106.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "PYTEST",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "./PYTEST/logfiles/selftestlogfile_pytest_106.xml"
+                    }
+                  ],
+
+# Section "TESTTYPES":
+# --------------------
+
+   "TESTTYPES" : {
+                  "ROBOT"  : {
+                               "DATABASEEXECUTOR" : "../../mocks/robot2db-mock.py"
+                             },
+                  "INVALIDTESTTYPE" : {
+                                        "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py"
+                                      },
+                  "PYTEST" : {
+                               "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py"
+                             }
+                }
+}

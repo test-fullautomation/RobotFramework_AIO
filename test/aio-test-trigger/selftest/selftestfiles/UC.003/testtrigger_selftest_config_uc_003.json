@@ -1,0 +1,60 @@
+# **************************************************************************************************************
+#
+# Test Trigger configuration file
+#
+# 03.11.2022
+#
+# **************************************************************************************************************
+
+{
+
+# Section "COMPONENTS":
+# ---------------------
+
+   "COMPONENTS" : [
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "ROBOT_1",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "./ROBOT_1/logfiles/selftestlogfile_robot_003_1.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "ROBOT_2",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOCALCOMMANDLINE"  : ["--variable local_cmdline_var:${local_cmdline_var}"],
+                       "LOGFILE"           : "./ROBOT_2/logfiles/selftestlogfile_robot_003_2.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "PYTEST_1",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "./PYTEST_1/logfiles/selftestlogfile_pytest_003_1.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : ".",
+                       "TESTFOLDER"        : "PYTEST_2",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["-k ${pytestexclude}"],
+                       "LOGFILE"           : "./PYTEST_2/logfiles/selftestlogfile_pytest_003_2.xml"
+                    }
+                  ],
+
+# Section "TESTTYPES":
+# --------------------
+
+   "TESTTYPES" : {
+                  "ROBOT"  : {
+                               "DATABASEEXECUTOR" : "../../mocks/robot2db-mock.py",
+                               "LOCALCOMMANDLINE" : ["${robot2db_param_1}", "${robot2db_param_2}"]
+                             },
+                  "PYTEST" : {
+                               "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py",
+                               "LOCALCOMMANDLINE" : ["${pytest2db_param_1}", "${pytest2db_param_2}"]
+                             }
+                }
+}
