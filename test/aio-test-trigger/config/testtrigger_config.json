@@ -29,7 +29,7 @@
                        "TESTFOLDER"        : "test",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "executerobottest.py",
-                       # "LOCALCOMMANDLINE"  : ["--variable config_file:\"${config_file}\""],
+                       # "LOCALCOMMANDLINE"  : ["--variable config_file:${config_file}"],
                        "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
