@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 04.11.2022
+# 08.11.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -58,12 +58,13 @@
 # A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
 # Finally (after internally the parameters are resolved) the LOCALCOMMANDLINE only contains parameter that are defined in the command line of the Test Trigger.
 # "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
-# The robot2db dryrun is activated by --params "dryrun=-dryrun" in command line of Test Trigger.
+# The robot2db 'append' mode is activated by --params "append=-append" in command line of Test Trigger.
+# The robot2db 'dryrun' mode is activated by --params "dryrun=-dryrun" in command line of Test Trigger.
 
    "TESTTYPES" : {
                   "ROBOT"  : {
                                "DATABASEEXECUTOR" : "%ROBOTPYTHONPATH%/Lib/site-packages/RobotResults2DB/robot2db.py",
-                               "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}", "-UUID ${UUID}", "--variant ${variant}", "--versions ${versions}", "--config ${config}", "${dryrun}"]
+                               "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}", "-UUID ${UUID}", "--variant ${variant}", "--versions ${versions}", "--config ${config}", "${append}", "${dryrun}"]
                              },
                   "PYTEST" : {
                                "DATABASEEXECUTOR" : "../mocks/pytest2db-mock.py"
