@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 08.11.2022
+# 10.11.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -38,6 +38,13 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../python-genpackagedoc",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../python-genpackagedoc/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
