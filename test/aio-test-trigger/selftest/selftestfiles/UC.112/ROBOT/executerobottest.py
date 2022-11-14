@@ -26,7 +26,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 04.10.2022
+# 09.11.2022
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -128,11 +128,11 @@ listCmdLineParts.append(f"\"{sPython}\"")
 listCmdLineParts.append("-m robot")
 if sRobotCommandLine is not None:
    listCmdLineParts.append(f"{sRobotCommandLine}")
-listCmdLineParts.append(f"-d {sLogFilePath}")
-listCmdLineParts.append(f"-o {sLogFileName}")
-listCmdLineParts.append(f"-l {sLogFileNameOnly}_log.html")
-listCmdLineParts.append(f"-r {sLogFileNameOnly}_report.html")
-listCmdLineParts.append(f"-b {sLogFileNameOnly}.log")
+listCmdLineParts.append(f"-d \"{sLogFilePath}\"")
+listCmdLineParts.append(f"-o \"{sLogFileName}\"")
+listCmdLineParts.append(f"-l \"{sLogFileNameOnly}_log.html\"")
+listCmdLineParts.append(f"-r \"{sLogFileNameOnly}_report.html\"")
+listCmdLineParts.append(f"-b \"{sLogFileNameOnly}.log\"")
 listCmdLineParts.append(f"\"{sThisScriptPath}\"")
 sCmdLine = " ".join(listCmdLineParts)
 del listCmdLineParts
