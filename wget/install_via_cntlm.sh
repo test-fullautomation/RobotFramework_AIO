@@ -17,14 +17,11 @@
 
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-wgetPath=$mypath/wget.exe
-proxyPath=$mypath/settings.ini
 sourceDir=$mypath/../download
 vscodeData=$mypath/../config/robotvscode/
 vscodeIcons=$mypath/../config/robotvscode/icons
 pythonTools=$mypath/../config/python
 destDir=$(realpath $mypath/../..)
-using_proxy=No
 
 
 UNAME=$(uname)
@@ -53,49 +50,6 @@ fi
 #
 . $mypath/../include/bash/common.sh
 
-function myini() {
-	git config -f $proxyPath --get $1;
-}
-
-function parse_setting () {
-	if [ ! -f "$proxyPath" ]; then
-		errormsg "ini-file: '$proxyPath' is not existing"
-	fi
-
-	using_proxy=$(myini proxy.enable)
-
-	if [ "$using_proxy" != "yes" ]; then
-		if [ "$using_proxy" != "no" ]; then
-			errormsg "./settings.ini proxy.enable can be either 'yes' or 'no'! Found: '$using_proxy'"
-		fi
-	fi
-
-	if [ ! -d "$sourceDir" ]; then
-		mkdir "$sourceDir"
-	else
-		rm -R -- "$sourceDir"/*
-	fi
-
-	if [ "$using_proxy" == "yes" ]; then
-		proxy=$(myini proxy.proxy)
-		if [ "$proxy" == "" ]; then
-			read -p "Please enter proxy address : " proxy
-		fi
-		shopt -s extglob
-		proxy="${proxy#http?(s)://}"
-		
-		proxy_user=$(myini proxy.username)
-		if [ "$proxy_user" == "" ]; then
-			read -p "Please enter proxy username : " proxy_user
-		fi
-		
-		proxy_pass=$(myini proxy.password)
-		if [ "$proxy_pass" == "" ]; then
-			read -s -p "Please  enter proxy password: " proxy_pass
-		fi
-	fi
-}
-
 #
 #  download packages function
 #
@@ -106,11 +60,6 @@ function download_package(){
 	package_name=$1
 	package_url=$2
 	package_out=$3
-
-	if [ "$using_proxy" == "yes" ]; then
-		echo "Using proxy to download package $package_name"
-		proxy_args="--proxy-ntlm -x $proxy -U $proxy_user:"$proxy_pass""
-	fi
 
 	echo curl $proxy_args "$package_url" -o "$package_out"
 	curl $proxy_args -L "$package_url" -o "$package_out"
@@ -191,11 +140,9 @@ function packaging_python_windows() {
 	echo "$PYDIR\\lib\\plat-win" >> "$destDir/python39/Python39._pth"
 	echo "$PYDIR\\lib\\site-packages" >> "$destDir/python39/Python39._pth"
 
-	if [ "$using_proxy" == "yes" ]; then
-		 $destDir/python39/python.exe "$sourceDir/get-pip.py" --proxy="http://$proxy_user:$proxy_pass@$proxy"
-	else
-		 $destDir/python39/python.exe "$sourceDir/get-pip.py" --proxy 127.0.0.1:3128
-	fi
+
+	$destDir/python39/python.exe "$sourceDir/get-pip.py" --proxy 127.0.0.1:3128
+
 	logresult "$?" "installed PIP (pip installs packages for python)" "install PIP (pip installs packages for python)"
 
 	# call pip to initialize pip
@@ -211,11 +158,8 @@ function packaging_python_windows() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	# 
-	if [ "$using_proxy" == "yes" ]; then
-		$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" --proxy="http://$proxy_user:$proxy_pass@$proxy"
-	else
-		$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" --proxy 127.0.0.1:3128
-	fi
+	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" --proxy 127.0.0.1:3128
+
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
 }
@@ -243,11 +187,7 @@ function packaging_python_linux() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	# 
-	# We meet some problems install mysql related packages
-	#if [ "$using_proxy" == "yes" ]; then
-	#    $destDir/python39lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt" --proxy="http://$proxy_user:$proxy_pass@$proxy"
-	#else
-		$destDir/python39lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
+	$destDir/python39lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
@@ -311,16 +251,12 @@ echo -e "${COL_GREEN}#          Creating VSCode and Python Repository from OSS .
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-
-parse_setting
 if [[ "$1" == "python" ]]; then
 	make_python
 elif [[ "$1" == "vscode" ]]; then
-    make_vscode
+	make_vscode
 elif [[ "$1" == "pandoc" ]]; then
-    make_pandoc
-elif [[ "$1" == "check" ]]; then
-    parse_setting
+	make_pandoc
 else
 	make_all
 fi
