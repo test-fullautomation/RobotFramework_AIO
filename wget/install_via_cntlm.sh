@@ -23,6 +23,10 @@ vscodeIcons=$mypath/../config/robotvscode/icons
 pythonTools=$mypath/../config/python
 destDir=$(realpath $mypath/../..)
 
+use_cntlm="No"
+python_only="No"
+vscode_only="No"
+pandoc_only="No"
 
 UNAME=$(uname)
 
@@ -50,13 +54,30 @@ fi
 #
 . $mypath/../include/bash/common.sh
 
+function parse_arg() {
+	while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-c) echo "Using cntlm";use_cntlm="Yes"; shift 1;;
+
+		--use-cntlm) echo "Using cntlm";use_cntlm="Yes"; shift;;
+		--python) echo "Create Python repo only";python_only="Yes"; shift;;
+		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
+		--pandoc) echo "Create vscode repo only";pandoc_only="Yes"; shift;;
+
+		-*) echo "unknown option: $1" >&2; exit 1;;
+	esac
+	done
+}
 #
 #  download packages function
 #
 ####################################################
 
 function download_package(){
-	proxy_args="--proxy-ntlm -x localhost:3128"
+	proxy_args=""
+	if [ "$use_cntlm" == "Yes" ]; then
+		proxy_args="--proxy-ntlm -x localhost:3128"
+	fi
 	package_name=$1
 	package_url=$2
 	package_out=$3
@@ -251,11 +272,13 @@ echo -e "${COL_GREEN}#          Creating VSCode and Python Repository from OSS .
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-if [[ "$1" == "python" ]]; then
+parse_arg "$@"
+
+if [[ "$python_only" == "Yes" ]]; then
 	make_python
-elif [[ "$1" == "vscode" ]]; then
+elif [[ "$vscode_only" == "Yes" ]]; then
 	make_vscode
-elif [[ "$1" == "pandoc" ]]; then
+elif [[ "$pandoc_only" == "Yes" ]]; then
 	make_pandoc
 else
 	make_all
