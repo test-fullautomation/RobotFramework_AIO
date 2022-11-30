@@ -86,9 +86,9 @@ else
    fi
    echo
     
-fi       
+fi
 
-read -n1 -r -p "Press space to continue..." key
+#read -n1 -r -p "Press space to continue..." key
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 echo -e "${COL_GREEN}#          Installing/Updating libraries                                           #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -217,6 +217,11 @@ function parse_config () {
 			if [ "$?" -ne 0 ]; then
 				exit 1
 			fi
+		elif [[ "$section" == "github" ]]; then
+			parse_github_repo $1
+			if [ "$?" -ne 0 ]; then
+				exit 1
+			fi
 		elif [[ "$section" == "proxy" ]]; then
 		    echo "TODO: Implement proxy config"
 		else
@@ -236,14 +241,7 @@ function parse_config () {
 				sec_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${sec_name}.git"
 			fi
 			
-			sec_prebuild=$(git config -f $1 --get ${section}.prebuild);
-			
 			cd "$sec_path"
-			if [ "$sec_prebuild" != "" ]; then
-				$CURDIR/config/repositories/prebuild/$sec_prebuild
-			fi
-
-			   #using pip instead of setup.py to overwrite old files
 			if [ -f "./setup.py" ]; then
 				PACKNAME=""
 				if grep -w setuptools ./setup.py | grep -w import; then
@@ -331,3 +329,11 @@ function build_windows() {
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
 }
+
+if [ "$UNAME" == "Linux" ] ; then
+	build_debian
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	build_windows
+else
+	errormsg "Operation system '$UNAME' is not supported."
+fi
