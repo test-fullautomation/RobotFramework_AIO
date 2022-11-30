@@ -24,6 +24,9 @@ echo -e "${COL_GREEN}###########################################################
 RobotFrameworkVersion=""
 SETUPVersion=""
 ITrackService="NONE"
+UNAME=$(uname)
+
+
 
 arguments=( "${@}" )
 
@@ -85,13 +88,23 @@ else
     
 fi       
 
-# read -n1 -r -p "Press space to continue..." key
+read -n1 -r -p "Press space to continue..." key
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 echo -e "${COL_GREEN}#          Installing/Updating libraries                                           #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+
 CURDIR=$(pwd)
-PYDIR=$(cd ../python39; pwd -W)
+if [ "$UNAME" == "Linux" ] ; then
+	PYDIR=$(cd ../python39lx; pwd)
+	PYBIN=${PYDIR}/install/bin/python3
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	PYDIR=$(cd ../python39; pwd -W)
+	PYBIN=${PYDIR}/python.exe
+else
+	errormsg "Operation system '$UNAME' is not supported."
+fi
 cd $CURDIR
+
 
 #
 # import common bash scripts
@@ -118,11 +131,11 @@ function parse_internal_repo () {
 		if [ -f "./setup.py" ]; then
 			PACKNAME=""
 			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
-				/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
+				/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
 				logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 			fi
-			${PYDIR}/python.exe ./setup.py clean --all install
+			${PYBIN} ./setup.py clean --all install
 			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
 		fi
@@ -145,14 +158,14 @@ function parse_github_repo () {
 		if [ -f "./setup.py" ]; then
 			PACKNAME=""
 			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
 				if [[ -n "$PACKNAME" ]]; then
-					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
 					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 				fi
 			fi
-			${PYDIR}/python.exe ./setup.py clean --all install
-			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
+			${PYBIN} ./setup.py clean --all install
+			# Avoid build egg: ${PYBIN}  -m pip install .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
 		fi
 		cd $CURDIR
@@ -174,14 +187,14 @@ function parse_gitlab_repo () {
 		if [ -f "./setup.py" ]; then
 			PACKNAME=""
 			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
+				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
 				if [[ -n "$PACKNAME" ]]; then
-					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					/usr/bin/yes | ${PYBIN}  -m pip uninstall ${PACKNAME}
 					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 				fi
 			fi
-			${PYDIR}/python.exe ./setup.py clean --all install
-			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
+			${PYBIN}  ./setup.py clean --all install
+			# Avoid build egg: ${PYBIN} -m pip install .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
 		fi
 		cd $CURDIR
@@ -223,15 +236,22 @@ function parse_config () {
 				sec_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${sec_name}.git"
 			fi
 			
+			sec_prebuild=$(git config -f $1 --get ${section}.prebuild);
+			
 			cd "$sec_path"
+			if [ "$sec_prebuild" != "" ]; then
+				$CURDIR/config/repositories/prebuild/$sec_prebuild
+			fi
+
+			   #using pip instead of setup.py to overwrite old files
 			if [ -f "./setup.py" ]; then
 				PACKNAME=""
 				if grep -w setuptools ./setup.py | grep -w import; then
-					PACKNAME=$(${PYDIR}/python.exe ./setup.py --name | tail -n 1)
-					/usr/bin/yes | ${PYDIR}/python.exe -m pip uninstall ${PACKNAME}
+					PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
+					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
 					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 				fi
-				${PYDIR}/python.exe ./setup.py clean --all install
+				${PYBIN} ./setup.py clean --all install
 				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
 			fi
 			cd $CURDIR
@@ -239,20 +259,75 @@ function parse_config () {
 	done
 }
 
-# Add pandoc to PATH env
-mypath=$(realpath $(dirname $0))
-export PATH=$PATH:$mypath/../pandoc/pandoc-2.18
-echo $PATH
-# parse_config ./config/repositories/repositories.conf
+function build_debian()
+{
+	parse_config ./config/repositories/repositories.conf
 
-cd $CURDIR
+	cd $CURDIR
+	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+	echo -e "${COL_GREEN}#          Executing dpkg to create installer...                                   #${COL_RESET}"
+	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+	# Build Robot Framework in Linux OSD5 enviroment
+	# read 2. line, from there return after 10th character
+	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
 
-echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
-echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
-echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-./scripts/precompile.bat
-./tools/InnoSetup5.5.1/ISCC "$arguments" ./scripts/RobotFrameworkSetup.iss
-logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
-./scripts/postcompile.bat
+	PACK_NAME=RobotFramework_AIO_${VERSION}
 
+	#first cleanup
+	rm -rf ./output_lx/${PACK_NAME}/
+
+	#now create package new
+	mkdir -p ./output_lx/${PACK_NAME}/opt/bosch/robfw
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	mkdir -p ./output_lx/${PACK_NAME}/usr/local/bin
+	mkdir -p ./output_lx/${PACK_NAME}/DEBIAN
+
+	cp ./config/build/dpkg_build/control ./output_lx/${PACK_NAME}/DEBIAN
+	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/DEBIAN/postinst
+	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/postinst
+	cp ./config/build/dpkg_build/prerm.sh ./output_lx/${PACK_NAME}/DEBIAN/prerm
+	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/prerm
+	cp ./config/build/dpkg_build/robot.ico ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	cp ./config/build/dpkg_build/robot.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
+	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
+
+	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
+	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
+	cp -R -a ../robotframework-tutorial/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
+	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
+	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
+	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
+
+
+	logresult "$?" "prepared package build" "prepare package build"
+
+	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PACK_NAME}-0_amd64.deb
+	logresult "$?" "built deb package" "build deb package"
+
+	dpkg -I ./output_lx/${PACK_NAME}-0_amd64.deb
+	goodmsg "done."
+}
+
+function build_windows() {
+	# Add pandoc to PATH env
+	mypath=$(realpath $(dirname $0))
+	export PATH=$PATH:$mypath/../pandoc/pandoc-2.18
+	echo $PATH
+	parse_config ./config/repositories/repositories.conf
+
+	cd $CURDIR
+
+	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+	echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
+	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
+
+	./scripts/precompile.bat
+	./tools/InnoSetup5.5.1/ISCC "$arguments" ./scripts/RobotFrameworkSetup.iss
+	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
+	./scripts/postcompile.bat
+}
