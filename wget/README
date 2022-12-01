@@ -1,8 +1,7 @@
-To use proxy:
-In the settings.ini, config:
+To use cntlm for proxy config:
 
-[proxy]
-enable=Yes
-proxy=<Your proxy server address, eg: rb-proxy-apac.bosch.com:8080>
-username=<Your proxy username>
-password=<Your proxy password>
+* For Windows:
+   - Download cntlm from http://cntlm.sourceforge.net/
+   - After download run setup.exe installer
+   - Afer installation, you have to locate the configuration file, in Windows it should be %PROGRAMFILES%\Cntlm\cntlm.ini (usually C:\Program Files\Cntlm\cntlm.ini).
+   - 
