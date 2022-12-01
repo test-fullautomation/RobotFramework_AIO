@@ -185,15 +185,22 @@ dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotResults2RQM"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotResults2RQM/version.py"
+dictComponent['NAME']           = "RobotLog2RQM"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotLog2RQM/version.py"
 dictComponent['VERSIONFORMAT']  = "FORMAT-1"
 dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotResults2DB"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotResults2DB/version.py"
+dictComponent['NAME']           = "RobotLog2DB"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotLog2DB/version.py"
+dictComponent['VERSIONFORMAT']  = "FORMAT-1"
+dictComponent['COMPAREVERSION'] = False
+listofdictComponents.append(dictComponent)
+
+dictComponent = {}
+dictComponent['NAME']           = "PyTestLog2DB"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/PyTestLog2DB/version.py"
 dictComponent['VERSIONFORMAT']  = "FORMAT-1"
 dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
