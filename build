@@ -99,7 +99,7 @@ if [ "$UNAME" == "Linux" ] ; then
 	PYBIN=${PYDIR}/install/bin/python3
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	PYDIR=$(cd ../python39; pwd -W)
-	PYBIN=${PYDIR}/python.exe
+	PYBIN=${PYDIR}/python.exe./
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -110,6 +110,51 @@ cd $CURDIR
 # import common bash scripts
 #
 . ./include/bash/common.sh
+
+
+function install_texlive_2022 () {
+	CDIR=$(pwd)
+	mkdir -p download
+	cd download
+	# Try this if the mirror.foobar.to can't be download
+	# wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+	if [ ! -f "install-tl-unx.tar.gz" ]; then
+		wget https://mirror.foobar.to/CTAN/systems/texlive/tlnet/install-tl-unx.tar.gz
+	fi
+	
+	zcat install-tl-unx.tar.gz | tar xf -
+	cd install-tl-20*
+	perl ./install-tl --no-interaction
+	cd $CDIR
+}
+
+function check_and_install_texlive () {
+
+	if [ ! -z "$GENDOC_LATEXPATH" ]; then
+		return 0
+	fi
+	echo "install texlive"
+	# get last word of pdflatex version text
+	
+	
+	# If pdflatex exist
+	ver=`pdflatex -v | head -n 1 | awk 'NF>1{print $NF}'`
+	if [ ! -z "$ver" ]; then
+		release_year=${ver:0:4}
+		if [ $release_year -lt 2020 ]; then
+			if [ -f "/usr/local/texlive/2022/bin/x86_64-linux/pdflatex" ]; then
+				export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
+				return 0
+			fi
+		else
+			export PDFLATEXPATH=`which pdflatex`
+			export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
+			return 0
+		fi
+	fi
+	install_texlive_2022
+	export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
+}
 
 function parse_internal_repo () {
 	internal_repo=($(git config -f $1 --list --name-only | grep internal.))
@@ -259,6 +304,7 @@ function parse_config () {
 
 function build_debian()
 {
+	check_and_install_texlive
 	parse_config ./config/repositories/repositories.conf
 
 	cd $CURDIR
