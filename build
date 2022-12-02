@@ -25,7 +25,7 @@ RobotFrameworkVersion=""
 SETUPVersion=""
 ITrackService="NONE"
 UNAME=$(uname)
-
+ConfigFile='./config/repositories/repositories.conf'
 
 
 arguments=( "${@}" )
@@ -69,7 +69,9 @@ else
               echo -e $COL_RED"build terminated."$COL_RESET
               exit 1
           fi
-          
+			 ;;
+          //DConfigFile=*)
+			 ConfigFile="${i#*=}"
           ;;
           *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
@@ -247,6 +249,10 @@ function parse_gitlab_repo () {
 }
 
 function parse_config () {
+	echo "Using config file $1"
+	if [ ! -f "$1" ]; then
+		errormsg "File '$1' is not exist."
+	fi
 	echo "git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq"
 	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
 	#echo $conf_section
@@ -305,7 +311,7 @@ function parse_config () {
 function build_debian()
 {
 	check_and_install_texlive
-	parse_config ./config/repositories/repositories.conf
+	parse_config $ConfigFile
 
 	cd $CURDIR
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -362,7 +368,7 @@ function build_windows() {
 	mypath=$(realpath $(dirname $0))
 	export PATH=$PATH:$mypath/../pandoc/pandoc-2.18
 	echo $PATH
-	parse_config ./config/repositories/repositories.conf
+	parse_config $ConfigFile
 
 	cd $CURDIR
 
