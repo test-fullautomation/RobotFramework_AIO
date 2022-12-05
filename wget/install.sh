@@ -163,8 +163,11 @@ function packaging_python_windows() {
 	echo "$PYDIR\\lib\\plat-win" >> "$destDir/python39/Python39._pth"
 	echo "$PYDIR\\lib\\site-packages" >> "$destDir/python39/Python39._pth"
 
-
-	$destDir/python39/python.exe "$sourceDir/get-pip.py" --proxy 127.0.0.1:3128
+	proxy_args=""
+	if [ "$use_cntlm" == "Yes" ]; then
+		proxy_args="--proxy localhost:3128"
+	fi
+	$destDir/python39/python.exe "$sourceDir/get-pip.py" $proxy_args
 
 	logresult "$?" "installed PIP (pip installs packages for python)" "install PIP (pip installs packages for python)"
 
