@@ -59,6 +59,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Support long path in git
+        run: git config --system core.longpaths true
+
       - name: Checkout source
         uses: actions/checkout@v2
 
@@ -67,7 +70,8 @@ jobs:
           choco install texlive
 
       - name: Clone repositories
-        run: gitbash.exe ./cloneall
+        shell: bash
+        run: ./cloneall
 
       # - name: Install
       #   run: |
