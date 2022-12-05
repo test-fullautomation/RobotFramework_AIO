@@ -45,8 +45,8 @@ jobs:
 
       - name: Build
         run: |
-          chmod +x ./build_linux
-          ./build_linux
+          chmod +x ./build
+          ./build
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
