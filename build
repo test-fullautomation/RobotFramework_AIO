@@ -101,7 +101,7 @@ if [ "$UNAME" == "Linux" ] ; then
 	PYBIN=${PYDIR}/install/bin/python3
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	PYDIR=$(cd ../python39; pwd -W)
-	PYBIN=${PYDIR}/python.exe./
+	PYBIN=${PYDIR}/python.exe
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
