@@ -310,7 +310,11 @@ function parse_config () {
 
 function build_debian()
 {
-	check_and_install_texlive
+	# texlive is installed in 'Install dependencies' step
+	# set $GENDOC_LATEXPATH var for building document
+	export PDFLATEXPATH=`which pdflatex`
+	export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
+
 	parse_config $ConfigFile
 
 	cd $CURDIR
@@ -370,8 +374,7 @@ function build_windows() {
 	echo $PATH
 
 	# set $GENDOC_LATEXPATH var for building document
-	export PDFLATEXPATH=`which pdflatex`
-	export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
+	export GENDOC_LATEXPATH="C:/texlive/2022/bin/win32"
 	
 	parse_config $ConfigFile
 
