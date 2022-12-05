@@ -184,7 +184,7 @@ function packaging_python_windows() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	# 
-	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" --proxy 127.0.0.1:3128
+	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
