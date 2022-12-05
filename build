@@ -368,6 +368,11 @@ function build_windows() {
 	mypath=$(realpath $(dirname $0))
 	export PATH=$PATH:$mypath/../pandoc/pandoc-2.18
 	echo $PATH
+
+	# set $GENDOC_LATEXPATH var for building document
+	export PDFLATEXPATH=`which pdflatex`
+	export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
+	
 	parse_config $ConfigFile
 
 	cd $CURDIR
