@@ -276,6 +276,12 @@ echo -e "${COL_GREEN}###########################################################
 
 parse_arg "$@"
 
+if [ ! -d "$sourceDir" ]; then
+	mkdir "$sourceDir"
+else
+	rm -R -- "$sourceDir"/*
+fi
+
 if [[ "$python_only" == "Yes" ]]; then
 	make_python
 elif [[ "$vscode_only" == "Yes" ]]; then
