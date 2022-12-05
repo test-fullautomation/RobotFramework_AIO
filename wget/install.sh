@@ -97,6 +97,8 @@ function packaging_vscode() {
 	logresult "$?" "unzipped Visual Studio Code" "unzip Visual Studio Code"
 
 	mkdir "$sourceDir/vscode/data"
+	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscode/data/"
+
 	echo "Install extension for visual code from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscode/bin/code"
 	for extfile in $vscodeData/extensions/*.vsix; do
