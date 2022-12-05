@@ -73,18 +73,16 @@ jobs:
         shell: bash
         run: ./cloneall
 
-      # - name: Install
-      #   run: |
-      #     chmod +x ./wget/install.sh
-      #     ./wget/install.sh
+      - name: Install
+        shell: bash
+        run: ./wget/install.sh
 
-      # - name: Build
-      #   run: |
-      #     chmod +x ./build
-      #     ./build
+      - name: Build
+        shell: bash
+        run: ./build
 
-      # - name: Upload built package
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: linux-package
-      #     path: output_lx/*.deb
+      - name: Upload built package
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-package
+          path: oOutput/
