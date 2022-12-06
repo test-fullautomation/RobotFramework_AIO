@@ -374,7 +374,9 @@ function build_windows() {
 	echo $PATH
 
 	# set $GENDOC_LATEXPATH var for building document
-	export GENDOC_LATEXPATH="C:/texlive/2022/bin/win32"
+	if [ -z "$GENDOC_LATEXPATH" ]; then
+		errormsg "Environment variable 'GENDOC_LATEXPATH' is not set."
+	fi
 	
 	parse_config $ConfigFile
 
