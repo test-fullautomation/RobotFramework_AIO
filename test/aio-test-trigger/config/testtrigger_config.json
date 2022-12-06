@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 05.12.2022
+# 06.12.2022
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -56,8 +56,8 @@
                     {
                        "COMPONENTROOTPATH" : "../../../../python-jsonpreprocessor",
                        "TESTFOLDER"        : "atest",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
