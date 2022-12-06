@@ -67,7 +67,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          choco install texlive --params "'/collections:latexextra,latexrecommended'" --execution-timeout 5400
+          choco install texlive --execution-timeout 5400 --params "'/collections:latexextra /extraPackages:wasysym'"
 
       - name: Clone repositories
         shell: bash
