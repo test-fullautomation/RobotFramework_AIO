@@ -67,7 +67,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          choco install texlive
+          choco install texlive --params "'/collections:latexextra'"
 
       - name: Clone repositories
         shell: bash
