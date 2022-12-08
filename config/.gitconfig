@@ -1,0 +1,8 @@
+[diff]
+	tool = bc3
+[difftool "bc3"]
+	cmd = \"c:/program files (x86)/beyond compare 3/bcompare.exe\" \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+[color]
+	ui = auto

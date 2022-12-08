@@ -2,7 +2,7 @@
 Comment=Visual Studio Code for RobotFramework AIO
 Terminal=false
 Name=Robot VsCode AIO
-Exec=bash -c "/opt/rfwaio/robotvscode/code ~/RobotTest/testcases"
+Exec=bash -c "/opt/rfwaio/robotvscode/code"
 Type=Application
 Icon=/opt/rfwaio/linux/icon/robot.ico
 

@@ -1,0 +1,58 @@
+{
+   "github" : {
+      "project" : "test-fullautomation",
+      "repos"   : {
+         "python-jsonpreprocessor": "",
+         "robotframework-testsuitesmanagement": "",
+         "robotframework-qconnect-base": "",
+         "testresultwebapp": "",
+         "robotframework-testresult2rqmtool": "",
+         "robotframework-documentation": "",
+         "python-extensions-collection": "",
+         "robotframework-selftest": "",
+         "robotframework": "",
+         "robotframework-extensions-collection": "",
+         "robotframework-testresultwebapptool": "",
+         "robotframework-tutorial": "",
+         "python-genpackagedoc": ""
+      }
+   },
+   "gitlab" : {
+      "base_url" : "https://gitlab-apertispro.boschdevcloud.com",
+      "project" : "robotframework-aio/main",
+      "repos"   : {
+         "ci-mirroring": "",
+         "config": "",
+         "python-genpackagedoc": "",
+         "python-extensions-collection": "",
+         "python-jsonpreprocessor": "",
+         "robotframework-daimlerciviclibs": "",
+         "robotframework-daimlercivicresources": "",
+         "robotframework-documentation": "",
+         "robotframework-extensions-collection": "",
+         "robotframework-qconnect-base": "",
+         "robotframework-qconnect-dlt": "",
+         "robotframework-selftest": "",
+         "robotframework-testresult2rqmtool": "",
+         "robotframework-testresultwebapptool": "",
+         "robotframework-testsuitesmanagement": "",
+         "robotframework-tmllog2robotlog": "",
+         "robotframework-tutorial": "",
+         "testresultwebapp": "",
+         "robotframework": "",
+         "robotframework-bits_platform_interface" : ""
+      }
+   },
+   "socialcoding" : {
+      "base_url" : "https://sourcecode.socialcoding.bosch.com",
+      "project" : "ROBFW",
+      "repos"   : {
+         "config": "",
+         "robotframework-daimlerciviclibs": "",
+         "robotframework-daimlercivicresources": "",
+         "robotframework-qconnect-dlt": "",
+         "robotframework-bits_platform_interface": "",
+         "robotframework-tmllog2robotlog": ""
+      }
+   }
+}
