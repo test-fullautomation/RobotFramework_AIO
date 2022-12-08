@@ -10,6 +10,8 @@
 
 # Robot Framework AIO  <!-- omit in toc -->
 
+[![License: BIOSL v4](http://bios.intranet.bosch.com/bioslv4-badge.svg)](#license)
+
 This respository holds the build tooling for a new Robot Framework AIO (All In One) setup for Windows (and later Linux).
 
 
@@ -92,7 +94,7 @@ There are 2 type runners for build pipeline:
 ## Bug/Feature implementation/Support Tracking<a name="tracking"></a>
 
 Robot Framework AIO Project
-
+https://rb-tracker.bosch.com/tracker01/secure/RapidBoard.jspa?rapidView=13300&view=planning.nodetail&epics=visible
 
 ## Contribution <a name="contribution-guidelines"></a>
 
@@ -102,25 +104,25 @@ We are always searching support and you are cordially invited to help to improve
 
 Please feel free to give any feedback to us via
 
-Email to: [Robot Framework Support Group](mailto:)
+Email to: [Robot Framework Support Group](mailto:RobotFrameworkSupportGroup@bcn.bosch.com)
 
-Community: [RobotFramework AIO community](https://)
+Community: [RobotFramework AIO community](https://connect.bosch.com/communities/community/ROBFW)
 
 
 ## About <a name="about"></a>
 
 ### Maintainers <a name="maintainers"></a>
 
-[Thomas Pollersp&ouml;ck]()
+[Thomas Pollersp&ouml;ck](https://connect.bosch.com/profiles/html/profileView.do?userid=CF5E6A27-460A-4D81-A3B2-6F1B66BA6812)
 
 ### Contributors <a name="contributors"></a>
-[Nguyen Huynh Tri **Cuong**]()
+[Nguyen Huynh Tri **Cuong**](https://connect.bosch.com/profiles/html/profileView.do?userid=C022F16C-EC4D-4701-BE51-5E743AAA9031#&tabinst=Updates)
 
-[Mai Dinh Nam **Son**](s)
+[Mai Dinh Nam **Son**](https://connect.bosch.com/profiles/html/profileView.do?userid=CA9FA391-8728-485D-A8B7-2DD840A777D4#&tabinst=Updates)
 
-[Tran Duy **Ngoan**]()
+[Tran Duy **Ngoan**](https://connect.bosch.com/profiles/html/profileView.do?key=8b91aa39-e896-4de7-bee1-32e5e03b5350#&tabinst=Updates)
 
-[**Nguyen** Tran Hoan]()
+[**Nguyen** Tran Hoan](https://connect.bosch.com/profiles/html/profileView.do?key=e4f7910a-e3c8-48c7-a6bb-8547060ee2eb#&tabinst=Updates)
 
 ### 3rd Party Licenses <a name="3rd-party-licenses"></a>
 
@@ -134,17 +136,21 @@ No encryption is used in this repository.
 
 ### License <a name="license"></a>
 
-Copyright 2020-2022 Robert Bosch GmbH
+[![License: BIOSL v4](http://bios.intranet.bosch.com/bioslv4-badge.svg)](#license)
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+> Copyright (c) 2020 Robert Bosch GmbH and its subsidiaries.
+> This program and the accompanying materials are made available under
+> the terms of the Bosch Internal Open Source License v4
+> which accompanies this distribution, and is available at
+> http://bios.intranet.bosch.com/bioslv4.txt
 
-     http://www.apache.org/licenses/LICENSE-2.0
+<!---
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+	Copyright (c) 2020 Robert Bosch GmbH and its subsidiaries.
+	This program and the accompanying materials are made available under
+	the terms of the Bosch Internal Open Source License v4
+	which accompanies this distribution, and is available at
+	http://bios.intranet.bosch.com/bioslv4.txt
+
+-->
 
