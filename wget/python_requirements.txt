@@ -59,7 +59,7 @@ pillow
 # pip                  
 # Pmw                  
 # progressbar          
-# psutil               
+psutil               
 # py                   
 pycparser            
 # pycrypto             
@@ -135,4 +135,5 @@ robotframework-robocop
 pylint
 #pandoc
 #pypandoc
-
+mobly
+pytest_mock

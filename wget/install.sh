@@ -2,6 +2,9 @@
 ########################################################################################
 #
 # this script 
+# 	- downloads Visual Studio Code
+#   - adds preconfigured workspace
+#   - puts all to the directory ./build/../robotdeveclipse
 #
 # - downloads python (embedded version)
 #   - adds pip (python paket manager)
@@ -39,11 +42,11 @@ if [ "$UNAME" == "Linux" ] ; then
 	archived_vscode_file=$sourceDir/VSCode-linux-x64.tar.gz
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	download_python_url=https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip
-	download_vscode_url=https://az764295.vo.msecnd.net/stable/3a6960b964327f0e3882ce18fcebd07ed191b316/VSCode-win32-x64-1.62.2.zip
+	download_vscode_url=https://az764295.vo.msecnd.net/stable/899d46d82c4c95423fb7e10e68eba52050e30ba3/VSCode-win32-x64-1.63.2.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/python-3.9.0-embed-amd64.zip
-	archived_vscode_file=$sourceDir/VSCode-win32-x64-1.62.2.zip
+	archived_vscode_file=$sourceDir/VSCode-win32-x64-1.63.2.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 else
 	errormsg "Operation system '$UNAME' is not supported."
