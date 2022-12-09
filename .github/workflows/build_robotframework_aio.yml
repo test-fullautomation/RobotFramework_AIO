@@ -24,8 +24,8 @@ jobs:
 
       - name: Install
         run: |
-          chmod +x ./wget/install.sh
-          ./wget/install.sh
+          chmod +x ./install/install.sh
+          ./install/install.sh
 
       - name: Build
         run: |
@@ -60,7 +60,7 @@ jobs:
 
       - name: Install
         shell: bash
-        run: ./wget/install.sh
+        run: ./install/install.sh
 
       - name: Build
         shell: bash
