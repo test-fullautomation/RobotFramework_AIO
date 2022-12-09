@@ -75,7 +75,7 @@ else
    if [ -d ${HOME}/RobotTest/tutorial ]; then
       rm -rf ${HOME}/RobotTest/tutorial/*
    fi
-   cp -R -a /opt/bosch/robfw/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
+   cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
 
    echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated only tutorial."
