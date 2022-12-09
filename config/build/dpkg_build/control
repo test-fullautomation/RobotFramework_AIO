@@ -5,5 +5,5 @@ Priority: optional
 Architecture: amd64
 Depends: libmariadb-dev-compat | libmariadb-dev | libmariadbclient18 | libmariadb3
 Maintainer: Thomas Pollerspöck (Thomas.Pollerspoeck@de.bosch.com)
-Description: Robot Framework AIO (All In One)
+Description: RobotFramework AIO (All In One)
 
