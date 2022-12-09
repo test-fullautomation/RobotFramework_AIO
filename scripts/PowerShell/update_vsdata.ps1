@@ -10,7 +10,7 @@ $PyBin  = "/python3"
 $PyExe  = "\\python.exe"
 
 
-$StoragePathFile = "$Env:RobotVsCode\data\user-data\storage.json"
+$StoragePathFile = "$Env:RobotVsCode\data\user-data\User\globalStorage\storage.json"
 $SettingsPathFile = "$Env:RobotVsCode\data\user-data\User\settings.json"
 
 $StorageContent = (Get-Content -Path $StoragePathFile)
