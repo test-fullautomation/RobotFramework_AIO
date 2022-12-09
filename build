@@ -273,8 +273,6 @@ function parse_config () {
 			if [ "$?" -ne 0 ]; then
 				exit 1
 			fi
-		elif [[ "$section" == "proxy" ]]; then
-		    echo "TODO: Implement proxy config"
 		else
 			sec_name=$(git config -f "$1" --get ${section}.name);
 			if [ "$sec_name" == "" ]; then

@@ -114,9 +114,6 @@ function parse_config () {
 	do 
 		if [ "$section" == "internal" ] || [ "$section" == "github" ] || [ "$section" == "gitlab" ]; then
 			parse_repo $1 $section
-		elif [ "$section" == "proxy" ]; then
-		    #TODO: Implement proxy config"
-			:;
 		else
 			sec_name=$(git config -f "$1" --get ${section}.name)
 			if [ "$sec_name" == "" ]; then
