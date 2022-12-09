@@ -6,16 +6,6 @@
 #
 . ./include/bash/common.sh
 
-# return gitlab url bases on provided authentication or not
-function gitlab_url () {
-	reponame=$1
-	GITLAB_PROJECT_URL="gitlab-apertispro.boschdevcloud.com/robotframework-aio/main"
-	repo_url="https://${GITLAB_PROJECT_URL}/${reponame}.git"
-	if [ -n "${GITLAB_BOT_USERNAME}" ] && [ -n "${GITLAB_BOT_PASSWORD}" ]; then
-		repo_url="https://${GITLAB_BOT_USERNAME}:${GITLAB_BOT_PASSWORD}@${GITLAB_PROJECT_URL}/${reponame}.git"
-	fi
-	echo $repo_url
-}
 # return github url bases on provided authentication or not
 function github_url () {
 	reponame=$1
@@ -26,16 +16,7 @@ function github_url () {
 	fi
 	echo $repo_url
 }
-# return socialcoding url bases on provided authentication or not
-function soco_url () {
-	reponame=$1
-	SOCO_URL="sourcecode.socialcoding.bosch.com"
-	repo_url="ssh://git@${SOCO_URL}:7999/robfw/${reponame}.git"
-	if [ -n "${SOCO_BOT_USERNAME}" ] && [ -n "${SOCO_BOT_PASSWORD}" ]; then
-		repo_url="https://${SOCO_BOT_USERNAME}:${SOCO_BOT_PASSWORD}@${SOCO_URL}/scm/robfw/${reponame}.git"
-	fi
-	echo $repo_url
-}
+
 # Clone or update repository
 # Arguments:
 #	$repo_path : location to clone repo into
@@ -80,12 +61,8 @@ function parse_repo () {
 		reponame=${repo#$repo_type.}
 		repo_url=$(git config -f $1 --get ${repo});
 		if [ "$repo_url" ==  "" ]; then
-			if [[ "$repo_type" == "gitlab" ]]; then
-				repo_url=$(gitlab_url ${reponame})
-			elif [[ "$repo_type" == "github" ]]; then
+			if [[ "$repo_type" == "github" ]]; then
 				repo_url=$(github_url ${reponame})
-			elif [[ "$repo_type" == "internal" ]]; then
-				repo_url=$(soco_url ${reponame})
 			else
 				errormsg "not supported repo type '$repo_type'"
 			fi
@@ -93,12 +70,6 @@ function parse_repo () {
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 		clone_update_repo "../$reponame" "$repo_url"
 
-		# switch repo to given released tag $CI_COMMIT_TAG by CI
-		if [ -n "$CI_COMMIT_TAG" ] && [ "$repo_type" == "gitlab" ]; then
-			echo "Checking out to '$CI_COMMIT_TAG' tag"
-			git -C "$repo_path" checkout $CI_COMMIT_TAG
-			logresult "$?" "switched to '$CI_COMMIT_TAG' tag" "checkout '$CI_COMMIT_TAG' tag from '$repo_url'"
-		fi
 	done
 	if [ "$?" -ne 0 ]; then
 		exit 1
@@ -112,7 +83,7 @@ function parse_config () {
 	#echo $conf_section
 	for section in "${conf_section[@]}"
 	do 
-		if [ "$section" == "internal" ] || [ "$section" == "github" ] || [ "$section" == "gitlab" ]; then
+		if [ "$section" == "github" ]; then
 			parse_repo $1 $section
 		else
 			sec_name=$(git config -f "$1" --get ${section}.name)
@@ -130,7 +101,7 @@ function parse_config () {
 			fi
 			sec_url=$(eval echo $(git config -f $1 --get ${section}.url))
 			if [ "$sec_url" == "" ]; then	
-				sec_url=$(gitlab_url ${sec_name})
+				sec_url=$(github_url ${sec_name})
 			fi
 			
 			clone_update_repo "$sec_path" "$sec_url"

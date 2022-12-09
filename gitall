@@ -20,12 +20,12 @@ else
  ARG="$(printf " %q " "${@}")"
 fi
 #echo ${ARG}
-function parse_gitlab_repo () {
+function parse_github_repo () {
 
-	gitlab_repo=($(git config -f $1 --list --name-only | grep gitlab))
-	for repo in "${gitlab_repo[@]}"
+	github_repo=($(git config -f $1 --list --name-only | grep github))
+	for repo in "${github_repo[@]}"
 	do
-	   reponame=${repo#gitlab.}
+	   reponame=${repo#github.}
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 
 		cd "../$reponame" 
@@ -42,65 +42,18 @@ function parse_gitlab_repo () {
 	done
 }
 
-function parse_gitlab_repo () {
-	gitlab_repo=($(git config -f $1 --list --name-only | grep gitlab.))
-	for repo in "${gitlab_repo[@]}"
-	do
-	    reponame=${repo#gitlab.}
-	    echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-
-	    cd "../$reponame" 
-	   
-	   # if script is called without commandline paramteters,
-	   # then print "git status", else handover command line parameters
-	   # to git call
-	   if [ $ARGNUM -eq 0 ]; then 
-		git status
-	   else 
-		bash -c "git ${ARG}"
- 	   fi
-		cd $CURDIR
-
-	done
-}
-
 function parse_config () {
 	echo "git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq"
 	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
 	for section in "${conf_section[@]}"
    
 	do 
-		if [[ "$section" == "gitlab" ]]; then
-			parse_gitlab_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "github" ]]; then
+		if [[ "$section" == "github" ]]; then
 			echo github parsing
 			parse_github_repo $1
 			if [ "$?" -ne 0 ]; then
 				exit 1
 			fi
-		elif [[ "$section" == "gitlab" ]]; then
-			echo gitlab parsing
-			parse_gitlab_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "github" ]]; then
-			echo github parsing
-			parse_github_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "gitlab" ]]; then
-			echo gitlab parsing
-			parse_gitlab_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "proxy" ]]; then
-		    echo "TODO: Implement proxy config"
 		else
 			sec_name=$(git config -f "$1" --get ${section}.name);
 			if [ "$sec_name" == "" ]; then
@@ -113,11 +66,6 @@ function parse_config () {
 			if [ "$sec_path" == "" ]; then
 				sec_path="../${sec_name}"
 			fi
-			sec_url=$(git config -f $1 --get ${section}.url);
-			if [ "$sec_url" == "" ]; then
-				sec_url="https://gitlab-apertispro.boschdevcloud.com/robotframework-aio/main/${sec_name}.git"
-			fi
-			#mkdir -p "$sec_path"
 			cd "$sec_path" 
 	   
 			# if script is called without commandline paramteters,
