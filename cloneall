@@ -70,6 +70,12 @@ function parse_repo () {
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 		clone_update_repo "../$reponame" "$repo_url"
 
+		# switch repo to given released tag $GITHUB_REF_NAME by CI
+		if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
+			echo "Checking out to '$GITHUB_REF_NAME' tag"
+			git -C "$repo_path" checkout $GITHUB_REF_NAME
+			logresult "$?" "switched to '$GITHUB_REF_NAME' tag" "checkout '$GITHUB_REF_NAME' tag from '$repo_url'"
+		fi
 	done
 	if [ "$?" -ne 0 ]; then
 		exit 1
