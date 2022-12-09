@@ -57,15 +57,15 @@ Then follow below steps for building process:
 	./cloneall
 	```
 
-2. Download and install python (include dependencies which are defined in `wget/python_requirements.txt`), vscode (include the extensions which defined in `wget/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
+2. Download and install python (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
 	```
-	./wget/install.sh
+	./install/install.sh
 	```
 	>Note: In case you are working behind the proxy, [cntlm authentication proxy](https://sourceforge.net/projects/cntlm/) should be installed and started first then
 	execute the `install.sh` with `--use-cntlm` argument as below command:
 	
 	```
-	./wget/install.sh --use-cntlm
+	./install/install.sh --use-cntlm
 	```
 
 3. Build the installer package

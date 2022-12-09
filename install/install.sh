@@ -150,6 +150,8 @@ function packaging_pandoc_windows() {
 function packaging_python_windows() {
 	/usr/bin/yes A | unzip "$archived_python_file" -d "$destDir/python39"
 	/usr/bin/yes A | unzip "$destDir/python39/python39.zip" -d "$destDir/python39/"
+	# tkinter and tcl are not available in using embedded python
+	# they are also not able to be installed via pip
 	cp -R -a "$pythonTools"/* "$destDir/python39" 
 	logresult "$?" "created Python repository" "create Python repository" 
 
