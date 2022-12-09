@@ -64,11 +64,11 @@ jobs:
         run: git config --system core.longpaths true
 
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
-          choco install texlive --version=2022.20221202 --execution-timeout 5400 --params "'/collections:latexextra,fontsrecommended'"
+          choco install texlive --version=2022.20221202 --params "'/extraPackages:multirow,booktabs,framed,fvextra,courier,efbox,grffile,pdfpages,tcolorbox,wasysym,wasy,fancyvrb,xcolor,etoolbox,upquote,lineno,eso-pic,lstaddons,pdflscape,infwarerr,pgf,environ,trimspaces,listings,pdfcol'"
 
       - name: Clone repositories
         shell: bash
