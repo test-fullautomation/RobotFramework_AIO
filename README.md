@@ -44,6 +44,8 @@ The full collection is recommended when installing texlive to avoid issue when g
 
 In case the full collection installation is not possible, at least 2 collections `texlive-latex-extra` and `texlive-fonts-recommended` should be installed together with the basic package.
 
+Please refer [requirements_linux.sh](./requirements_linux.sh) or [requirements_windows.sh](./requirements_windows.sh) for the dependency package for **Linux** and **Windows** environments.
+
 #### Execute build scripts
 Clone this [RobotFramework_AIO](https://github.com/test-fullautomation/RobotFramework_AIO) repository first
 ```
@@ -73,8 +75,12 @@ Then follow below steps for building process:
 	./build
 	```
 
-The new generated RobotFramework AIO setup can found under `Output/` folder on
-Windows and `output_lx` on Linux machine.
+Build the RobotFramework AIO package with all related libraries (defined in `config/repositories/repositories.conf` file).
+
+Build script will detect the Operation System (**Windows** or **Linux**) automatically to run the appropriate steps for building installer package.
+
+The new generated RobotFramework AIO setup file can found under `Output/` folder 
+on Windows and `output_lx` on Linux machine.
 
 ### Github Actions
 
@@ -131,9 +137,7 @@ please don\'t hesitate to raise a ticket
 
 ### 3rd Party Licenses
 
-Please refer to
-
-* ./InnoSetup5.5.1/licence.txt
+Please refer to [./tools/InnoSetup5.5.1/license.txt](./tools/InnoSetup5.5.1/license.txt)
 
 ### License
 
