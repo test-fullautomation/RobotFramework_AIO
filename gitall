@@ -1,0 +1,103 @@
+#!/bin/bash
+#This script helps to clone all repositories
+#set -x
+#
+# import common bash scripts
+#
+. ./include/bash/common.sh
+
+CURDIR=$(pwd)
+
+ARGNUM=$#
+# Because $@ is an array, if we assign it to a variables, the space can be break.
+# Therefore, we can't just assigned it to a variable and pass to the function
+# Below is the trick that we store variables and their space character
+# Then pass to git via bash -c command
+if [ "$#" -lt 1 ]; then
+ ARG=$@
+else
+ # handle quoted input
+ ARG="$(printf " %q " "${@}")"
+fi
+#echo ${ARG}
+function parse_github_repo () {
+
+	github_repo=($(git config -f $1 --list --name-only | grep github))
+	for repo in "${github_repo[@]}"
+	do
+	   reponame=${repo#github.}
+		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+
+		cd "../$reponame" 
+	   
+	   # if script is called without commandline paramteters,
+	   # then print "git status", else handover command line parameters
+	   # to git call
+		if [ $ARGNUM -eq 0 ]; then 
+			git status
+		else 
+			bash -c "git ${ARG}"
+		fi
+		cd $CURDIR
+	done
+}
+
+function parse_config () {
+	echo "git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq"
+	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
+	for section in "${conf_section[@]}"
+   
+	do 
+		if [[ "$section" == "github" ]]; then
+			echo github parsing
+			parse_github_repo $1
+			if [ "$?" -ne 0 ]; then
+				exit 1
+			fi
+		else
+			sec_name=$(git config -f "$1" --get ${section}.name);
+			if [ "$sec_name" == "" ]; then
+				sec_name=${section}
+			fi
+			
+			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
+			
+			sec_path=$(git config -f $1 --get ${section}.path);
+			if [ "$sec_path" == "" ]; then
+				sec_path="../${sec_name}"
+			fi
+			cd "$sec_path" 
+	   
+			# if script is called without commandline paramteters,
+			# then print "git status", else handover command line parameters
+			# to git call
+			if [ $ARGNUM -eq 0 ]; then 
+				git status
+			else 
+				bash -c "git ${ARG}"
+			fi
+			cd $CURDIR
+		fi
+	done
+}
+
+function myini() {
+	git config -f ./config/repositories/repositories.conf --get $1;
+}
+
+using_proxy=$(myini Proxy.enable)
+
+if [ "$using_proxy" != "yes" ]; then
+	echo " WARNING: ./repositories.conf proxy.enable not enabled"
+else
+	proxy_url=$(myini Proxy.proxy)
+	shopt -s extglob
+	proxy_url="http://${proxy_url#http?(s)://}"
+	git config --global http.proxy $proxy_url
+	goodmsg "Proxy enabled"
+fi
+
+parse_config ./config/repositories/repositories.conf
+
+
+
