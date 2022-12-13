@@ -79,7 +79,7 @@ function parse_arg() {
 function download_package(){
 	proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
-		proxy_args="--proxy-ntlm -x localhost:3128"
+		proxy_args="--proxy-ntlm -x 127.0.0.1:3128"
 	fi
 	package_name=$1
 	package_url=$2
@@ -170,7 +170,7 @@ function packaging_python_windows() {
 
 	proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
-		proxy_args="--proxy localhost:3128"
+		proxy_args="--proxy 127.0.0.1:3128"
 	fi
 	$destDir/python39/python.exe "$sourceDir/get-pip.py" $proxy_args
 

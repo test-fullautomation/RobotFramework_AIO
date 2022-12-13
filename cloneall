@@ -20,34 +20,6 @@ function get_url () {
 	echo $repo_url
 }
 
-# Clone or update repository
-# Arguments:
-#	$repo_path : location to clone repo into
-#	$repo_url  : repo url
-function clone_update_repo () {
-	repo_path=$1
-	repo_url=$2
-
-	if [ -d "$repo_path" ]; then
-		echo "Cleaning and updating repo $repo_path"
-		git -C "$repo_path" reset --hard HEAD
-		git -C "$repo_path" clean -f -d
-		git -C "$repo_path" pull
-
-		# try to remove existing directory and clone repo again
-		if [ "$?" -ne 0 ]; then
-			echo "Cloning $repo_url again"
-			rm -rf "$repo_path"
-			git clone "$repo_url" "$repo_path"
-		fi
-	else
-		echo "Cloning $repo_url"
-		git clone "$repo_url" "$repo_path"
-	fi
-	if [ "$?" -ne 0 ]; then
-		exit 1
-	fi
-}
 
 function get_server_url()
 {
