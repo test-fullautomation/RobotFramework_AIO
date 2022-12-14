@@ -148,7 +148,7 @@ function check_and_install_texlive () {
 	ver=`pdflatex -v | head -n 1 | awk 'NF>1{print $NF}'`
 	if [ ! -z "$ver" ]; then
 		release_year=${ver:0:4}
-		if [ $release_year -lt 2020 ]; then
+		if [ $release_year -lt 2019 ]; then
 			if [ -f "/usr/local/texlive/2022/bin/x86_64-linux/pdflatex" ]; then
 				export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
 				return 0
@@ -222,12 +222,12 @@ function parse_config () {
 			fi
 			
 			sec_prebuild=$(git config -f $1 --get ${section}.prebuild);
+
 			cd "$sec_path"
 			if [ "$sec_prebuild" != "" ]; then
 				$CURDIR/config/repositories/prebuild/$sec_prebuild
 			fi
 
-			cd "$sec_path"
 			if [ -f "./setup.py" ]; then
 				PACKNAME=""
 				if grep -w setuptools ./setup.py | grep -w import; then
@@ -245,11 +245,7 @@ function parse_config () {
 
 function build_debian()
 {
-	# texlive is installed in 'Install dependencies' step
-	# set $GENDOC_LATEXPATH var for building document
-	export PDFLATEXPATH=`which pdflatex`
-	export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
-
+	check_and_install_texlive
 	parse_config $ConfigFile
 
 	cd $CURDIR
