@@ -113,15 +113,20 @@ cd $CURDIR
 #
 . ./include/bash/common.sh
 
+function get_server_url()
+{
+	conf_file=$1
+	echo $(git config -f $conf_file --get supported-server.$2)
+	return
+}
 
 function install_texlive_2022 () {
 	CDIR=$(pwd)
 	mkdir -p download
 	cd download
 	# Try this if the mirror.foobar.to can't be download
-	# wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 	if [ ! -f "install-tl-unx.tar.gz" ]; then
-		wget https://mirror.foobar.to/CTAN/systems/texlive/tlnet/install-tl-unx.tar.gz
+		curl -L https://mirror.foobar.to/CTAN/systems/texlive/tlnet/install-tl-unx.tar.gz -o ./install-tl-unx.tar.gz
 	fi
 	
 	zcat install-tl-unx.tar.gz | tar xf -
@@ -158,43 +163,12 @@ function check_and_install_texlive () {
 	export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
 }
 
-function parse_internal_repo () {
-	internal_repo=($(git config -f $1 --list --name-only | grep internal.))
-	for repo in "${internal_repo[@]}"
+function parse_repo () {
+	repo_type=$2
+	list_repo=($(git config -f $1 --list --name-only | grep "${repo_type}."))
+	for repo in "${list_repo[@]}"
 	do
-	    reponame=${repo#internal.}
-		repo_url=$(git config -f $1 --get ${repo});
-		if [[ "$repo_url" ==  "" ]]; then
-			repo_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${reponame}.git"
-		fi
-		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-
-		cd "../$reponame" 
-	   
-	   # if script is called without commandline paramteters,
-	   # then print "git status", else handover command line parameters
-	   # to git call
-		   #using force option setup.py to overwrite old files
-		if [ -f "./setup.py" ]; then
-			PACKNAME=""
-			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
-				/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
-				logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-			fi
-			${PYBIN} ./setup.py clean --all install
-			# Avoid build egg: ${PYDIR}/python.exe -m pip install .
-			logresult "$?" "installed ${reponame}" "install ${reponame}"
-		fi
-		cd $CURDIR
-	done
-}
-
-function parse_github_repo () {
-	github_repo=($(git config -f $1 --list --name-only | grep github.))
-	for repo in "${github_repo[@]}"
-	do
-	    reponame=${repo#github.}
+	   reponame=${repo#${repo_type}.}
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 		cd "../$reponame" 
 	   
@@ -219,35 +193,6 @@ function parse_github_repo () {
 	done
 }
 
-function parse_gitlab_repo () {
-	gitlab_repo=($(git config -f $1 --list --name-only | grep gitlab.))
-	for repo in "${gitlab_repo[@]}"
-	do
-	    reponame=${repo#gitlab.}
-		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		cd "../$reponame" 
-	   
-	   # if script is called without commandline paramteters,
-	   # then print "git status", else handover command line parameters
-	   # to git call
-		   #using force option setup.py to overwrite old files
-		if [ -f "./setup.py" ]; then
-			PACKNAME=""
-			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
-				if [[ -n "$PACKNAME" ]]; then
-					/usr/bin/yes | ${PYBIN}  -m pip uninstall ${PACKNAME}
-					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-				fi
-			fi
-			${PYBIN}  ./setup.py clean --all install
-			# Avoid build egg: ${PYBIN} -m pip install .
-			logresult "$?" "installed ${reponame}" "install ${reponame}"
-		fi
-		cd $CURDIR
-	done
-}
-
 function parse_config () {
 	echo "Using config file $1"
 	if [ ! -f "$1" ]; then
@@ -258,38 +203,30 @@ function parse_config () {
 	#echo $conf_section
 	for section in "${conf_section[@]}"
 	do 
-		if [[ "$section" == "internal" ]]; then
-			parse_internal_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "gitlab" ]]; then
-			parse_gitlab_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		elif [[ "$section" == "github" ]]; then
-			parse_github_repo $1
-			if [ "$?" -ne 0 ]; then
-				exit 1
-			fi
-		else
+		section_server=$(get_server_url "$1" "$section")
+		echo "section server is $section_server"
+		if [ "$section_server" != "" ]; then
+			echo "Parsing $section"
+			parse_repo $1 $section
+		elif [ "$section" != "supported-server" ]; then
 			sec_name=$(git config -f "$1" --get ${section}.name);
 			if [ "$sec_name" == "" ]; then
 				sec_name=${section}
 			fi
-			
+		
 			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 			
 			sec_path=$(git config -f $1 --get ${section}.path);
 			if [ "$sec_path" == "" ]; then
 				sec_path="../${sec_name}"
 			fi
-			sec_url=$(git config -f $1 --get ${section}.url);
-			if [ "$sec_url" == "" ]; then
-				sec_url="ssh://git@sourcecode.socialcoding.bosch.com:7999/robfw/${sec_name}.git"
-			fi
 			
+			sec_prebuild=$(git config -f $1 --get ${section}.prebuild);
+			cd "$sec_path"
+			if [ "$sec_prebuild" != "" ]; then
+				$CURDIR/config/repositories/prebuild/$sec_prebuild
+			fi
+
 			cd "$sec_path"
 			if [ -f "./setup.py" ]; then
 				PACKNAME=""
@@ -301,8 +238,8 @@ function parse_config () {
 				${PYBIN} ./setup.py clean --all install
 				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
 			fi
-			cd $CURDIR
 		fi
+		cd $CURDIR
 	done
 }
 

@@ -7,12 +7,14 @@
 . ./include/bash/common.sh
 
 # return github url bases on provided authentication or not
-function github_url () {
-	reponame=$1
-	GITHUB_PROJECT_URL="github.com/test-fullautomation"
-	repo_url="https://${GITHUB_PROJECT_URL}/${reponame}.git"
+function get_url () {
+	
+	reponame=$2
+	PROJECT_URL=`echo  "$1" | sed 's~http[s]*://~~g'`
+
+	repo_url="https://${PROJECT_URL}/${reponame}.git"
 	if [ -n "${GITHUB_BOT_USERNAME}" ] && [ -n "${GITHUB_BOT_PASSWORD}" ]; then
-		repo_url="https://${GITHUB_BOT_USERNAME}:${GITHUB_BOT_PASSWORD}@${GITHUB_PROJECT_URL}/${reponame}.git"
+		repo_url="https://${GITHUB_BOT_USERNAME}:${GITHUB_BOT_PASSWORD}@${PROJECT_URL}/${reponame}.git"
 	fi
 	echo $repo_url
 }
@@ -46,6 +48,13 @@ function clone_update_repo () {
 	fi
 }
 
+function get_server_url()
+{
+	conf_file=$1
+	echo $(git config -f $conf_file --get supported-server.$2)
+	return
+}
+
 # Parse repo information for cloning/updating
 # Arguments:
 #	$conf_file : repo configuration file
@@ -58,11 +67,12 @@ function parse_repo () {
 	list_repos=($(git config -f $conf_file --list --name-only | grep $repo_type.))
 	for repo in "${list_repos[@]}"
 	do
-		reponame=${repo#$repo_type.}
+		reponame=${repo#${repo_type}.}
 		repo_url=$(git config -f $1 --get ${repo});
-		if [ "$repo_url" ==  "" ]; then
-			if [[ "$repo_type" == "github" ]]; then
-				repo_url=$(github_url ${reponame})
+		if [ "$repo_url" == "" ]; then
+			server_url=$(get_server_url "${conf_file}" "${repo_type}")
+			if [[ "$server_url" != "" ]]; then
+				repo_url=$(get_url ${server_url} ${reponame})
 			else
 				errormsg "not supported repo type '$repo_type'"
 			fi
@@ -89,9 +99,10 @@ function parse_config () {
 	#echo $conf_section
 	for section in "${conf_section[@]}"
 	do 
-		if [ "$section" == "github" ]; then
+		section_server=$(get_server_url "$1" "$section")
+		if [ "$section_server" != "" ]; then
 			parse_repo $1 $section
-		else
+		elif [ "$section" != "supported-server" ]; then
 			sec_name=$(git config -f "$1" --get ${section}.name)
 			if [ "$sec_name" == "" ]; then
 				sec_name=${section}
@@ -106,12 +117,11 @@ function parse_config () {
 				sec_path="../${sec_name}"
 			fi
 			sec_url=$(eval echo $(git config -f $1 --get ${section}.url))
-			if [ "$sec_url" == "" ]; then	
-				sec_url=$(github_url ${sec_name})
+			if [ "$sec_url" == "" ]; then
+				sec_url=$(get_url "github" ${sec_name})
 			fi
 			
 			clone_update_repo "$sec_path" "$sec_url"
-
 			echo
 			echo
 		fi
