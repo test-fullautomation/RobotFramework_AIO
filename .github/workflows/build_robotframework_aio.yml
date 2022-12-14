@@ -1,11 +1,18 @@
 name: Build RobotFramework AIO packages
 
 on:
-  push
+  push:
+    tags:
+      - "rel/aio/*.*.*.*"
+      - "dev/aio/*.*.*.*"
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build-linux:
     name: Build Linux package
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +47,7 @@ jobs:
 
   build-windows:
     name: Build Windows package
+    if: github.event.pull_request.merged == true
     runs-on: windows-latest
     env:
       GENDOC_LATEXPATH: C:/texlive/2022/bin/win32
