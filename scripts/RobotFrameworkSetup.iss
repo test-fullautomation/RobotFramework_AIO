@@ -32,7 +32,7 @@
 #endif
 
 #define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
-#define MyAppFileName "RobotFramework_setup_" + RobotFrameworkVersion
+#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion.
 #define MyAppPublisher "Robert Bosch GmbH"
 
 [Setup]
