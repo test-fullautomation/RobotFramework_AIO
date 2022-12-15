@@ -58,7 +58,7 @@ function clone_update_repo () {
 
 	if [ -d "$repo_path" ]; then
 		echo "Cleaning and updating repo $repo_path"
-		git -C "$repo_path" reset --hard HEAD
+		git -C "$repo_path" reset --hard
 		git -C "$repo_path" clean -f -d
 		git -C "$repo_path" pull
 

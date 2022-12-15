@@ -9,13 +9,19 @@
 config_file="./config/repositories/repositories.conf"
 # return github url bases on provided authentication or not
 function get_url () {
-	
-	reponame=$2
-	PROJECT_URL=`echo  "$1" | sed 's~http[s]*://~~g'`
+	repo_type=$1
+	repo_name=$3
+	PROJECT_URL=`echo  "$2" | sed 's~http[s]*://~~g'`
 
-	repo_url="https://${PROJECT_URL}/${reponame}.git"
-	if [ -n "${GITHUB_BOT_USERNAME}" ] && [ -n "${GITHUB_BOT_PASSWORD}" ]; then
-		repo_url="https://${GITHUB_BOT_USERNAME}:${GITHUB_BOT_PASSWORD}@${PROJECT_URL}/${reponame}.git"
+	var_usr=$(echo ${repo_type^^}_BOT_USERNAME)
+	var_pw=$(echo ${repo_type^^}_BOT_PASSWORD)
+
+	bot_usr=${!var_usr}
+	bot_pw=${!var_pw}
+
+	repo_url="https://${PROJECT_URL}/${repo_name}.git"
+	if [ -n "${bot_usr}" ] && [ -n "${bot_pw}" ]; then
+		repo_url="https://${bot_usr}:${bot_pw}@${PROJECT_URL}/${repo_name}.git"
 	fi
 	echo $repo_url
 }
@@ -40,18 +46,18 @@ function parse_repo () {
 	list_repos=($(git config -f $conf_file --list --name-only | grep $repo_type.))
 	for repo in "${list_repos[@]}"
 	do
-		reponame=${repo#${repo_type}.}
+		repo_name=${repo#${repo_type}.}
 		repo_url=$(git config -f $1 --get ${repo});
 		if [ "$repo_url" == "" ]; then
 			server_url=$(get_server_url "${conf_file}" "${repo_type}")
 			if [[ "$server_url" != "" ]]; then
-				repo_url=$(get_url ${server_url} ${reponame})
+				repo_url=$(get_url ${repo_type} ${server_url} ${repo_name})
 			else
 				errormsg "not supported repo type '$repo_type'"
 			fi
 		fi
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		clone_update_repo "../$reponame" "$repo_url"
+		clone_update_repo "../$repo_name" "$repo_url"
 
 		# switch repo to given released tag $GITHUB_REF_NAME by CI
 		if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
