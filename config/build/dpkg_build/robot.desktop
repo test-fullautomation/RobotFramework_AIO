@@ -1,7 +1,7 @@
 [Desktop Entry]
-Comment=Visual Studio Code for RobotFramework AIO
+Comment=VSCodium for RobotFramework AIO
 Terminal=false
-Name=Robot VsCode AIO
+Name=Robot VSCodium AIO
 Exec=bash -c "/opt/rfwaio/robotvscode/code"
 Type=Application
 Icon=/opt/rfwaio/linux/icon/robot.ico
