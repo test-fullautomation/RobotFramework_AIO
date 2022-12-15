@@ -2,7 +2,7 @@
 ########################################################################################
 #
 # this script 
-# 	- downloads Visual Studio Code
+# 	- downloads VSCodium
 #   - adds preconfigured workspace
 #   - puts all to the directory ./build/../robotdeveclipse
 #
