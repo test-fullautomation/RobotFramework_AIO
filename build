@@ -1,13 +1,7 @@
 #!/bin/bash
 
 #Commandline argument 
-#iscc /DRobotFrameworkVersion=version /DSETUPVersion=version
-#allows to set a RobotFramework- and Setup version 
-#If nothing is provided, then use an empty string. The resulting
-#installer will be called __RobotFramework_setup__.exe in this case
-#otherwise it is called   __RobotFramework_setup_RobotFrameworkVersion__SETUPVersion.exe
-
-#set -x
+#build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
 
 #
 # import common bash scripts
@@ -22,45 +16,28 @@ echo -e "${COL_GREEN}#                                                          
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 RobotFrameworkVersion=""
-SETUPVersion=""
 ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 
 
-arguments=( "${@}" )
+arguments=""
 
 if [ "$#" -eq 0 ]; then
-   # for Github Actions workflow
-   if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
-	  RobotFrameworkVersion=`echo $GITHUB_REF_NAME | sed -E -e "s/(rel|dev)\/aio\///g"`
-   elif [ "$GITHUB_REF_TYPE" == "branch" ]; then
-	  RobotFrameworkVersion=`echo dev_$GITHUB_REF_NAME | sed -e "s/\//-/g"`
-   else
-	  RobotFrameworkVersion="unknown_version"
-   fi
-
-   arguments=`echo "//DRobotFrameworkVersion=$RobotFrameworkVersion"`
-
-   echo -e $COL_GREEN"RobotFrameworkVersion   = $RobotFrameworkVersion"$COL_RESET
-   echo -e $COL_GREEN"SETUPVersion = $SETUPVersion"$COL_RESET
-
-   echo you can  provide versions with arguments 
-   echo ./build //DRobotFrameworkVersion=version //DSETUPVersion=version //DITrackService=URL \(attention: use double backslash instead of slashes!\)
-   echo versions will be part of resulting installer executable and
+   echo you can run the build with optional arguments 
+   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
+   echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
+   echo repo_config_file contains the repository for building.
    echo
 else
    for i in "$@"
    do
       case $i in
-          --robotframework_version=*)
+          --robotframework-version=*)
           RobotFrameworkVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ;;
-          --setup_version=*)
-          SETUPVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
-          ;;
-          --itrack_service=*)
+          --itrack-service=*)
           ITrackService=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ITrackService=`echo $ITrackService | sed -e  's/\\\\/\//g'`
           curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null 
@@ -80,15 +57,27 @@ else
           ;;
       esac
    done
-   
-   echo -e $COL_GREEN"RobotFrameworkVersion    = $RobotFrameworkVersion"$COL_RESET
-   echo -e $COL_GREEN"SETUPVersion  = $SETUPVersion"$COL_RESET
-   if [ "$ITrackService" != "NONE" ]; then
-      echo -e $COL_GREEN"ITrackService = $ITrackService"$COL_RESET
-   fi
-   echo
-    
 fi
+
+if [ "$ITrackService" != "NONE" ]; then
+	echo -e $COL_GREEN"ITrackService         = $ITrackService"$COL_RESET
+	arguments+="//ITrackService=$ITrackService"
+fi
+
+if [ "$RobotFrameworkVersion" == "" ]; then
+	# for Github Actions workflow
+	if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
+		RobotFrameworkVersion=`echo $GITHUB_REF_NAME | sed -E -e "s/(rel|dev)\/aio\///g"`
+	elif [ "$GITHUB_REF_TYPE" == "branch" ]; then
+		RobotFrameworkVersion=`echo dev_$GITHUB_REF_NAME | sed -e "s/\//-/g"`
+	else
+		RobotFrameworkVersion="unknown_version"
+	fi
+fi
+
+echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
+arguments+="//RobotFrameworkVersion=$RobotFrameworkVersion"
+echo
 
 #read -n1 -r -p "Press space to continue..." key
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"

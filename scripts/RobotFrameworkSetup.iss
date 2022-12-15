@@ -13,11 +13,11 @@
 #define MyAppName "RobotFramework AIO (All In One)"
 
 ;Commandline argument 
-;iscc /DRobotFrameworkVersion=version /DSETUPVersion=version
+;iscc /DRobotFrameworkVersion=version /ITrackService=URL
 ;allows to set a RobotFramework- and Setup version 
 ;If nothing is provided, then use an empty string. The resulting
-;installer will be called __RobotFramework_setup__.exe in this case
-;otherwise it is called   __RobotFramework_setup_RobotFrameworkVersion__SETUPVersion.exe
+;installer will be called RobotFramework_setup__.exe in this case
+;otherwise it is called   RobotFramework_setup_RobotFrameworkVersion.exe
 #ifndef RobotFrameworkVersion
    #define RobotFrameworkVersion ""
 #endif
