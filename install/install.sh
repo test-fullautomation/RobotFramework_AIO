@@ -36,17 +36,17 @@ UNAME=$(uname)
 download_getpip_url=https://bootstrap.pypa.io/get-pip.py
 if [ "$UNAME" == "Linux" ] ; then
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	download_vscode_url=https://az764295.vo.msecnd.net/stable/899d46d82c4c95423fb7e10e68eba52050e30ba3/code-stable-x64-1639562789.tar.gz
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
 
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	archived_vscode_file=$sourceDir/VSCode-linux-x64.tar.gz
+	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	download_python_url=https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip
-	download_vscode_url=https://az764295.vo.msecnd.net/stable/899d46d82c4c95423fb7e10e68eba52050e30ba3/VSCode-win32-x64-1.63.2.zip
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/python-3.9.0-embed-amd64.zip
-	archived_vscode_file=$sourceDir/VSCode-win32-x64-1.63.2.zip
+	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 else
 	errormsg "Operation system '$UNAME' is not supported."
@@ -92,24 +92,25 @@ function download_package(){
 
 function packaging_vscode() {
 	if [ "$UNAME" == "Linux" ] ; then
-		tar -xvvf "$archived_vscode_file" -C "$sourceDir" && mv "$sourceDir/VSCode-linux-x64" "$sourceDir/vscode"
+		mkdir -p "$sourceDir/vscodium"
+		tar -xvvf "$archived_vscode_file" -C "$sourceDir/vscodium"
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscode"
+		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
 	fi
 	
-	logresult "$?" "unzipped Visual Studio Code" "unzip Visual Studio Code"
+	logresult "$?" "unzipped Visual Studio Codium" "unzip Visual Studio Codium"
 
-	mkdir "$sourceDir/vscode/data"
-	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscode/data/"
+	mkdir "$sourceDir/vscodium/data"
+	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
 
-	echo "Install extension for visual code from *.vsix files under config/robotvscode/extensions folder"
-	chmod +x "$sourceDir/vscode/bin/code"
+	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
+	chmod +x "$sourceDir/vscodium/bin/codium"
 	for extfile in $vscodeData/extensions/*.vsix; do
-		"$sourceDir/vscode/bin/code" --install-extension "$extfile" --user-data-dir "$sourceDir/vscode/data"
+		"$sourceDir/vscodium/bin/codium" --install-extension "$extfile" --user-data-dir "$sourceDir/vscodium/data"
 		logresult "$?" "installed ${extfile#$vscodeData/extensions/} Extension" "install ${extfile#$vscodeData/extensions/} Extension"
 	done
 
-	echo "Install extension for visual code defined in $mypath/vscode_requirement.csv"
+	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
 	while IFS=, read -r publisher name version dump
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
@@ -120,16 +121,16 @@ function packaging_vscode() {
 				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix"
 			fi
 			
-			"$sourceDir/vscode/bin/code" --install-extension "${sourceDir}/${name}-${version}.vsix" --user-data-dir "$sourceDir/vscode/data"
+			"$sourceDir/vscodium/bin/codium" --install-extension "${sourceDir}/${name}-${version}.vsix" --user-data-dir "$sourceDir/vscodium/data"
 			logresult "$?" "installed ${name}-${version}.vsix Extension" "install ${name}-${version}.vsix Extension"
 		fi
 	done < "$mypath/vscode_requirement.csv"
 	
-	echo "Creating preconfigured VSCode repository ..."
-	#unzip "$vscodeData/data.zip" -d "$sourceDir/vscode/"
-	cp -R -a "$vscodeIcons/." "$sourceDir/vscode/icons"
+	echo "Creating preconfigured VSCodium repository ..."
+	cp -R -a "$vscodeIcons/." "$sourceDir/vscodium/icons"
 
-	cp -R -a "$sourceDir/vscode/." "$destDir/robotvscode/"
+
+	cp -R -a "$sourceDir/vscodium/." "$destDir/robotvscode/"
 	cp -R -a "$vscodeData/data/user-data/User/workspaceStorage" "$destDir/robotvscode/data/user-data/User"
 	logresult "$?" "created Robot Visual Code repository" "create Robot Visual Code repository" 
 }

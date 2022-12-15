@@ -112,14 +112,14 @@ Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\Visual Code for RobotFramework"; Filename: {app}\robotvscode\Code.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
+Name: "{commondesktop}\Visual Code for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ Visual Code for RobotFramework"; Filename: {app}\robotvscode\Code.exe; WorkingDir: {code:GetUsrDataDir}; 
+Name: "{group}\ Visual Code for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases; 
 Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial; 
