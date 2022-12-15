@@ -128,8 +128,11 @@ do
       esac
 done
 
-echo -e "${COL_GREEN}#          Cloning repositories with config in $config_file                        #${COL_RESET}"
-
+if [ -f $config_file ]; then
+	echo -e "${COL_GREEN}#          Cloning repositories with config in $config_file                        #${COL_RESET}"
+else
+	errormsg "Repo configuration '$config_file' is not existing"
+fi
 parse_config $config_file
 
 goodmsg "Cloning repositories successfully done"
