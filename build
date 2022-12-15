@@ -54,13 +54,13 @@ else
    for i in "$@"
    do
       case $i in
-          //DRobotFrameworkVersion=*)
+          --robotframework_version=*)
           RobotFrameworkVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ;;
-          //DSETUPVersion=*)
+          --setup_version=*)
           SETUPVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ;;
-          //DITrackService=*)
+          --itrack_service=*)
           ITrackService=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ITrackService=`echo $ITrackService | sed -e  's/\\\\/\//g'`
           curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null 
@@ -70,7 +70,7 @@ else
               exit 1
           fi
 			 ;;
-          //DConfigFile=*)
+          --config-file=*)
 			 ConfigFile="${i#*=}"
           ;;
           *)

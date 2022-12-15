@@ -6,6 +6,7 @@
 #
 . ./include/bash/common.sh
 
+config_file="./config/repositories/repositories.conf"
 # return github url bases on provided authentication or not
 function get_url () {
 	
@@ -135,6 +136,22 @@ echo -e "${COL_GREEN}#                                                          
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 #iterate over all repositories and apply now the clone command                    
-parse_config ./config/repositories/repositories.conf
+for i in "$@"
+do
+   case $i in
+          --config-file=*)
+			 config_file="${i#*=}"
+          ;;
+          *)
+              echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
+              echo -e $COL_RED"build terminated."$COL_RESET
+              exit 1
+          ;;
+      esac
+done
+
+echo -e "${COL_GREEN}#          Cloning repositories with config in $config_file                        #${COL_RESET}"
+
+parse_config $config_file
 
 goodmsg "Cloning repositories successfully done"
