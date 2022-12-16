@@ -67,7 +67,7 @@ fi
 
 if [ "$ITrackService" != "NONE" ]; then
 	echo -e $COL_GREEN"ITrackService         = $ITrackService"$COL_RESET
-	arguments+="//ITrackService=$ITrackService"
+	arguments+="//DITrackService=$ITrackService"
 fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
@@ -85,7 +85,7 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
-arguments+="//RobotFrameworkVersion=$RobotFrameworkVersion"
+arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion"
 echo
 
 #read -n1 -r -p "Press space to continue..." key
@@ -316,7 +316,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 	./scripts/precompile.bat
-	./tools/InnoSetup5.5.1/ISCC "$arguments" ./scripts/RobotFrameworkSetup.iss
+	./tools/InnoSetup5.5.1/ISCC "${arguments}" ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
 }
