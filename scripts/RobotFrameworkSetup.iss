@@ -72,7 +72,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ;;;
 ;;; will be unchanged after inital installation
 ;;;
-;write hello world visual code project
+;write hello world VSCodium project
 Source: ..\config\RobotTest\testcases\*; DestDir: {code:GetUsrDataDir}\testcases; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Permissions: users-full;
 ;Manually add the launch.json file in hidden folder .vscode
 Source: ..\config\RobotTest\testcases\.vscode\*; DestDir: {code:GetUsrDataDir}\testcases\.vscode; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Permissions: users-full;
@@ -112,14 +112,14 @@ Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\Visual Code for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
+Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ Visual Code for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
+Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases; 
 Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial; 

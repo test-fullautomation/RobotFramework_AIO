@@ -71,25 +71,16 @@ if [ "$ITrackService" != "NONE" ]; then
 fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
-	RobotFrameworkVersion = "unkown_version"
-	# for Github Actions workflow
-	if [ -n "$GITHUB_REF_TYPE"]; then
-		if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
-			RobotFrameworkVersion=`echo $GITHUB_REF_NAME | sed -E -e "s/(rel|dev)\/aio\///g"`
-		elif [ "$GITHUB_REF_NAME" == "$GITHUB_BASE_REF" ]; then
-			RobotFrameworkVersion=`echo merged_$GITHUB_REF_NAME | sed -e "s/\//-/g"`
-		elif [ "$GITHUB_REF_TYPE" == "branch" ]; then
-			RobotFrameworkVersion=`echo dev_$GITHUB_REF_NAME | sed -e "s/\//-/g"`
+	if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
+		RobotFrameworkVersion=`echo $TAG_NAME | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g"`
+	elif [ -n "$REF_NAME" ]; then
+		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
+			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
+		else
+			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
 		fi
-	# for Gitlab CI
-	elif [ -n "$CI_COMMIT_REF_NAME"]; then
-		if [ -n "$CI_COMMIT_TAG" ] ; then
-			RobotFrameworkVersion=`echo $CI_COMMIT_TAG | sed -E -e "s/(rel|dev)\///g"`
-		elif [ "$CI_COMMIT_REF_NAME" == "$CI_DEFAULT_BRANCH" ]; then
-			RobotFrameworkVersion=`echo merged_$CI_COMMIT_REF_NAME | sed -e "s/\//-/g"`
-		elif [ -n "$CI_COMMIT_REF_NAME" ]; then
-			RobotFrameworkVersion=`echo dev_$CI_COMMIT_REF_NAME | sed -e "s/\//-/g"`
-		fi
+	else
+		RobotFrameworkVersion="manual_version"
 	fi
 fi
 

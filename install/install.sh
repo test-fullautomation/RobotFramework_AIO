@@ -132,7 +132,7 @@ function packaging_vscode() {
 
 	cp -R -a "$sourceDir/vscodium/." "$destDir/robotvscode/"
 	cp -R -a "$vscodeData/data/user-data/User/workspaceStorage" "$destDir/robotvscode/data/user-data/User"
-	logresult "$?" "created Robot Visual Code repository" "create Robot Visual Code repository" 
+	logresult "$?" "created Robot VSCodium repository" "create Robot VSCodium repository" 
 }
 
 function packaging_pandoc_windows() {

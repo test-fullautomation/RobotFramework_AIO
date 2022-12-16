@@ -12,6 +12,12 @@ on:
       - develop
   workflow_dispatch:
 
+env:
+  TRIGGER_BY: $GITHUB_REF_TYPE
+  TAG_NAME: $GITHUB_REF_NAME
+  REF_NAME: $GITHUB_REF_NAME
+  DEFAULT_REF: $GITHUB_BASE_REF
+
 jobs:
   build-linux:
     name: Build Linux package

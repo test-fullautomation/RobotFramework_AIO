@@ -57,19 +57,13 @@ function parse_repo () {
 			fi
 		fi
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		clone_update_repo "../$repo_name" "$repo_url"
+		
 
-		# switch repo to given released tag $GITHUB_REF_NAME by CI - github
-		if [ "$GITHUB_REF_TYPE" == "tag" ] && [ -n "$GITHUB_REF_NAME" ]; then
-			echo "Checking out to '$GITHUB_REF_NAME' tag"
-			git -C "$repo_path" checkout $GITHUB_REF_NAME
-			logresult "$?" "switched to '$GITHUB_REF_NAME' tag" "checkout '$GITHUB_REF_NAME' tag from '$repo_url'"
-		fi
-		# switch repo to given released tag $CI_COMMIT_TAG by CI - gitlab
-		if [ -n "$CI_COMMIT_TAG" ] && [ "$repo_type" == "gitlab" ]; then
-			echo "Checking out to '$CI_COMMIT_TAG' tag"
-			git -C "$repo_path" checkout $CI_COMMIT_TAG
-			logresult "$?" "switched to '$CI_COMMIT_TAG' tag" "checkout '$CI_COMMIT_TAG' tag from '$repo_url'"
+		# switch repo to given released tag $TAG_NAME
+		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
+			clone_update_repo "../$repo_name" "$repo_url" "$TAG_NAME"
+		else
+			clone_update_repo "../$repo_name" "$repo_url"
 		fi
 
 	done
