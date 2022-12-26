@@ -33,7 +33,6 @@ pandoc_only="No"
 
 UNAME=$(uname)
 
-download_getpip_url=https://bootstrap.pypa.io/get-pip.py
 if [ "$UNAME" == "Linux" ] ; then
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
@@ -41,11 +40,11 @@ if [ "$UNAME" == "Linux" ] ; then
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-	download_python_url=https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip
+	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221002/cpython-3.9.14+20221002-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
-	archived_python_file=$sourceDir/python-3.9.0-embed-amd64.zip
+	archived_python_file=$sourceDir/cpython-3.9.14+20221002-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 else
@@ -148,8 +147,10 @@ function packaging_pandoc_windows() {
 #
 ####################################################
 function packaging_python_windows() {
-	/usr/bin/yes A | unzip "$archived_python_file" -d "$destDir/python39"
-	/usr/bin/yes A | unzip "$destDir/python39/python39.zip" -d "$destDir/python39/"
+	tar -xzf "$archived_python_file" -C "$sourceDir"
+	rm -rf "$destDir/python39"
+	mv "$sourceDir/python" "$destDir/python39"
+
 	# tkinter and tcl are not available in using embedded python
 	# they are also not able to be installed via pip
 	cp -R -a "$pythonTools"/* "$destDir/python39" 
@@ -163,27 +164,14 @@ function packaging_python_windows() {
 	CURDIR=$(pwd)
 	PYDIR=$(cd $destDir/python39; pwd -W)
 	cd $CURDIR
-	echo "$PYDIR" >> "$destDir/python39/Python39._pth"
-	echo "$PYDIR\\DLLs" >> "$destDir/python39/Python39._pth"
-	echo "$PYDIR\\lib" >> "$destDir/python39/Python39._pth"
-	echo "$PYDIR\\lib\\plat-win" >> "$destDir/python39/Python39._pth"
-	echo "$PYDIR\\lib\\site-packages" >> "$destDir/python39/Python39._pth"
 
 	proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
 		proxy_args="--proxy 127.0.0.1:3128"
 	fi
-	$destDir/python39/python.exe "$sourceDir/get-pip.py" $proxy_args
-
-	logresult "$?" "installed PIP (pip installs packages for python)" "install PIP (pip installs packages for python)"
 
 	# call pip to initialize pip
 	$destDir/python39/python.exe -m pip
-	# remove pip workaround
-	# If file exists after installation of RobotFramework AIO, then "import robot" will fail.
-	# most likely all imports will fail (not tried).
-	#remove pth to avoid bokeh build fail
-	rm $destDir/python39/Python39._pth
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
@@ -205,14 +193,6 @@ function packaging_python_linux() {
 	rm -rf "$destDir/python39lx"
 	mv "$sourceDir/python" "$destDir/python39lx"
 	logresult "$?" "created Python repository" "create Python repository" 
-
-	# !! ATTENTION !!
-	# embedded python has problems with to recognize a PIP installation.
-	CURDIR=$(pwd)
-	cd $CURDIR
-	$destDir/python39lx/install/bin/python3 "$sourceDir/get-pip.py"
-
-	logresult "$?" "installed PIP (pip installs packages for python)" "install PIP (pip installs packages for python)"
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
@@ -246,7 +226,6 @@ function make_vscode() {
 function make_python() {
 	if [ ! -f "$archived_python_file" ]; then
 		download_package "Python" "$download_python_url" "$archived_python_file"
-		download_package "PIP (pip installs packages for python)" "$download_getpip_url" "$sourceDir/get-pip.py"
 	fi
 
 	if [ "$UNAME" == "Linux" ] ; then
