@@ -171,7 +171,7 @@ function packaging_python_windows() {
 	fi
 
 	# call pip to initialize pip
-	$destDir/python39/python.exe -m pip
+	$destDir/python39/python.exe -m pip install --upgrade pip
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
