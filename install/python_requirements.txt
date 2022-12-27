@@ -2,6 +2,7 @@
 # See atest/README.rst for more information.
 
 #Appium-Python-Client 
+wheel
 Sphinx
 aenum
 attrs                
