@@ -61,9 +61,10 @@ function clone_update_repo () {
 
 	if [ -d "$repo_path" ]; then
 		echo "Cleaning and updating repo $repo_path"
-		git -C "$repo_path" reset --hard
-		git -C "$repo_path" clean -f -d
-		git -C "$repo_path" pull
+		git -C "$repo_path" remote set-url origin "$repo_url" &&
+		git -C "$repo_path" fetch &&
+		git -C "$repo_path" reset --hard @{u} &&
+		git -C "$repo_path" clean -f -d -x
 
 		# try to remove existing directory and clone repo again
 		if [ "$?" -ne 0 ]; then
