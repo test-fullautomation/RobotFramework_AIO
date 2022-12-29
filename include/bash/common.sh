@@ -62,7 +62,8 @@ function clone_update_repo () {
 	if [ -d "$repo_path" ]; then
 		echo "Cleaning and updating repo $repo_path"
 		git -C "$repo_path" remote set-url origin "$repo_url" &&
-		git -C "$repo_path" fetch --all --tags --force &&
+		git -C "$repo_path" fetch origin --tags --force &&
+		git -C "$repo_path" checkout $(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') &&
 		git -C "$repo_path" reset --hard @{u} &&
 		git -C "$repo_path" clean -f -d -x
 
