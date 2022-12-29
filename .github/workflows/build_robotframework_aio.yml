@@ -13,10 +13,10 @@ on:
   workflow_dispatch:
 
 env:
-  TRIGGER_BY: $GITHUB_REF_TYPE
-  TAG_NAME: $GITHUB_REF_NAME
-  REF_NAME: $GITHUB_REF_NAME
-  DEFAULT_REF: $GITHUB_BASE_REF
+  TRIGGER_BY: ${{ github.ref_type }}
+  TAG_NAME: ${{ github.ref_name }}
+  REF_NAME: ${{ github.ref_name }}
+  DEFAULT_REF: ${{ github.base_ref }}
 
 jobs:
   build-linux:

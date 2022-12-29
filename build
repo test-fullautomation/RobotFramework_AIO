@@ -80,7 +80,7 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
 		fi
 	else
-		RobotFrameworkVersion="manual_version"
+		RobotFrameworkVersion="manual_build"
 	fi
 fi
 
