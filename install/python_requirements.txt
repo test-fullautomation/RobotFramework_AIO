@@ -137,3 +137,4 @@ pylint
 #pypandoc
 mobly
 pytest_mock
+odxtools

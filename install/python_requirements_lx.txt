@@ -142,3 +142,4 @@ pandoc
 pypandoc
 mobly
 pytest_mock
+odxtools
