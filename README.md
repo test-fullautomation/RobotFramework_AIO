@@ -101,7 +101,7 @@ the building jobs contains following main steps:
 #### Runners
 Currently, there are 2 available runners (GitHub-hosted) for build pipeline:
 - Windows runner: [Windows Server 2022](https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md) with label `windows-latest` for Windows job.
-- Ubuntu runner: [Ubuntu 20.04](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md) with label `ubuntu-latest` for Linux job.
+- Ubuntu runner: [Ubuntu 22.04.1 LTS](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md) with label `ubuntu-latest` for Linux job.
 
 ## Contribution
 
