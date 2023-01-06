@@ -1,8 +1,0 @@
-To use proxy:
-In the settings.ini, config:
-
-[proxy]
-enable=Yes
-proxy=<Your proxy server address, eg: rb-proxy-apac.bosch.com:8080>
-username=<Your proxy username>
-password=<Your proxy password>

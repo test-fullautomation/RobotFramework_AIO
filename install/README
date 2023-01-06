@@ -1,0 +1,7 @@
+To use cntlm for proxy config:
+
+* For Windows:
+   - Download cntlm from http://cntlm.sourceforge.net/
+   - After download run setup.exe installer
+   - Afer installation, you have to locate the configuration file, in Windows it should be %PROGRAMFILES%\Cntlm\cntlm.ini (usually C:\Program Files\Cntlm\cntlm.ini).
+   - 

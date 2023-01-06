@@ -6,45 +6,32 @@
 #
 . ./include/bash/common.sh
 
-
+config_file="./config/repositories/repositories.conf"
 # return github url bases on provided authentication or not
-function github_url () {
-	reponame=$1
-	GITHUB_PROJECT_URL="github.com/test-fullautomation"
-	repo_url="https://${GITHUB_PROJECT_URL}/${reponame}.git"
-	if [ -n "${GITHUB_BOT_USERNAME}" ] && [ -n "${GITHUB_BOT_PASSWORD}" ]; then
-		repo_url="https://${GITHUB_BOT_USERNAME}:${GITHUB_BOT_PASSWORD}@${GITHUB_PROJECT_URL}/${reponame}.git"
+function get_url () {
+	repo_type=$1
+	repo_name=$3
+	PROJECT_URL=`echo  "$2" | sed 's~http[s]*://~~g'`
+
+	var_usr=$(echo ${repo_type^^}_BOT_USERNAME)
+	var_pw=$(echo ${repo_type^^}_BOT_PASSWORD)
+
+	bot_usr=${!var_usr}
+	bot_pw=${!var_pw}
+
+	repo_url="https://${PROJECT_URL}/${repo_name}.git"
+	if [ -n "${bot_usr}" ] && [ -n "${bot_pw}" ]; then
+		repo_url="https://${bot_usr}:${bot_pw}@${PROJECT_URL}/${repo_name}.git"
 	fi
 	echo $repo_url
 }
 
-# Clone or update repository
-# Arguments:
-#	$repo_path : location to clone repo into
-#	$repo_url  : repo url
-function clone_update_repo () {
-	repo_path=$1
-	repo_url=$2
 
-	if [ -d "$repo_path" ]; then
-		echo "Cleaning and updating repo $repo_path"
-		git -C "$repo_path" reset --hard HEAD
-		git -C "$repo_path" clean -f -d
-		git -C "$repo_path" pull
-
-		# try to remove existing directory and clone repo again
-		if [ "$?" -ne 0 ]; then
-			echo "Cloning $repo_url again"
-			rm -rf "$repo_path"
-			git clone "$repo_url" "$repo_path"
-		fi
-	else
-		echo "Cloning $repo_url"
-		git clone "$repo_url" "$repo_path"
-	fi
-	if [ "$?" -ne 0 ]; then
-		exit 1
-	fi
+function get_server_url()
+{
+	conf_file=$1
+	echo $(git config -f $conf_file --get supported-server.$2)
+	return
 }
 
 # Parse repo information for cloning/updating
@@ -59,21 +46,26 @@ function parse_repo () {
 	list_repos=($(git config -f $conf_file --list --name-only | grep $repo_type.))
 	for repo in "${list_repos[@]}"
 	do
-	    reponame=${repo#$repo_type.}
+		repo_name=${repo#${repo_type}.}
 		repo_url=$(git config -f $1 --get ${repo});
-		if [ "$repo_url" ==  "" ]; then
-			if [[ "$repo_type" == "gitlab" ]]; then
-				repo_url=$(gitlab_url ${reponame})
-			elif [[ "$repo_type" == "github" ]]; then
-				repo_url=$(github_url ${reponame})
-			elif [[ "$repo_type" == "internal" ]]; then
-				repo_url=$(soco_url ${reponame})
+		if [ "$repo_url" == "" ]; then
+			server_url=$(get_server_url "${conf_file}" "${repo_type}")
+			if [[ "$server_url" != "" ]]; then
+				repo_url=$(get_url ${repo_type} ${server_url} ${repo_name})
 			else
 				errormsg "not supported repo type '$repo_type'"
 			fi
 		fi
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		clone_update_repo "../$reponame" "$repo_url"
+		
+
+		# switch repo to given released tag $TAG_NAME
+		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
+			clone_update_repo "../$repo_name" "$repo_url" "$TAG_NAME"
+		else
+			clone_update_repo "../$repo_name" "$repo_url"
+		fi
+
 	done
 	if [ "$?" -ne 0 ]; then
 		exit 1
@@ -87,12 +79,10 @@ function parse_config () {
 	#echo $conf_section
 	for section in "${conf_section[@]}"
 	do 
-		if [ "$section" == "internal" ] || [ "$section" == "github" ] || [ "$section" == "gitlab" ]; then
+		section_server=$(get_server_url "$1" "$section")
+		if [ "$section_server" != "" ]; then
 			parse_repo $1 $section
-		elif [ "$section" == "proxy" ]; then
-		    #TODO: Implement proxy config"
-			:;
-		else
+		elif [ "$section" != "supported-server" ]; then
 			sec_name=$(git config -f "$1" --get ${section}.name)
 			if [ "$sec_name" == "" ]; then
 				sec_name=${section}
@@ -107,12 +97,11 @@ function parse_config () {
 				sec_path="../${sec_name}"
 			fi
 			sec_url=$(eval echo $(git config -f $1 --get ${section}.url))
-			if [ "$sec_url" == "" ]; then	
-				sec_url=$(gitlab_url ${sec_name})
+			if [ "$sec_url" == "" ]; then
+				sec_url=$(get_url "github" ${sec_name})
 			fi
 			
 			clone_update_repo "$sec_path" "$sec_url"
-
 			echo
 			echo
 		fi
@@ -126,6 +115,25 @@ echo -e "${COL_GREEN}#                                                          
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 #iterate over all repositories and apply now the clone command                    
-parse_config ./config/repositories/repositories.conf
+for i in "$@"
+do
+   case $i in
+          --config-file=*)
+			 config_file="${i#*=}"
+          ;;
+          *)
+              echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
+              echo -e $COL_RED"build terminated."$COL_RESET
+              exit 1
+          ;;
+      esac
+done
+
+if [ -f $config_file ]; then
+	echo -e "${COL_GREEN}#          Cloning repositories with config in $config_file                        #${COL_RESET}"
+else
+	errormsg "Repo configuration '$config_file' is not existing"
+fi
+parse_config $config_file
 
 goodmsg "Cloning repositories successfully done"

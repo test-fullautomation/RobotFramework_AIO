@@ -10,14 +10,14 @@
 #pragma message "SETUPVersion is : " + SETUPVersion
 ;Change History
 
-#define MyAppName "RobotFramework AIO (All in one)"
+#define MyAppName "RobotFramework AIO (All In One)"
 
 ;Commandline argument 
-;iscc /DRobotFrameworkVersion=version /DSETUPVersion=version
+;iscc /DRobotFrameworkVersion=version /ITrackService=URL
 ;allows to set a RobotFramework- and Setup version 
 ;If nothing is provided, then use an empty string. The resulting
-;installer will be called __RobotFramework_setup__.exe in this case
-;otherwise it is called   __RobotFramework_setup_RobotFrameworkVersion__SETUPVersion.exe
+;installer will be called RobotFramework_setup__.exe in this case
+;otherwise it is called   RobotFramework_setup_RobotFrameworkVersion.exe
 #ifndef RobotFrameworkVersion
    #define RobotFrameworkVersion ""
 #endif
@@ -31,8 +31,8 @@
    #pragma message "ITrackService is: not defined"
 #endif
 
-#define MyAppVersion "RobotFramework " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
-#define MyAppFileName "RobotFramework_setup_" + RobotFrameworkVersion
+#define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
+#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
 
 [Setup]
@@ -72,7 +72,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ;;;
 ;;; will be unchanged after inital installation
 ;;;
-;write hello world visual code project
+;write hello world VSCodium project
 Source: ..\config\RobotTest\testcases\*; DestDir: {code:GetUsrDataDir}\testcases; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Permissions: users-full;
 ;Manually add the launch.json file in hidden folder .vscode
 Source: ..\config\RobotTest\testcases\.vscode\*; DestDir: {code:GetUsrDataDir}\testcases\.vscode; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Permissions: users-full;
@@ -112,14 +112,14 @@ Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\Visual Code for RobotFramework"; Filename: {app}\robotvscode\Code.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
+Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ Visual Code for RobotFramework"; Filename: {app}\robotvscode\Code.exe; WorkingDir: {code:GetUsrDataDir}; 
+Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases; 
 Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial; 
@@ -157,7 +157,7 @@ Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string;
 ;Environment variables
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonPath; ValueData: {app}\python39;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotScriptPath; ValueData: {app}\python39\scripts;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode; 
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotToolsPath; ValueData: {app}\tools;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTestPath; ValueData: {code:GetUsrDataDir}\testcases;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotLogPath; ValueData: {code:GetUsrDataDir}\logfiles;
@@ -322,7 +322,51 @@ begin
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
 end;
 
+{ ///////////////////////////////////////////////////////////////////// }
+function GetUninstallString(): String;
+var
+  sUnInstPath: String;
+  sUnInstallString: String;
+begin
+  sUnInstPath := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+  sUnInstallString := '';
+  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+    RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString);
+  Result := sUnInstallString;
+end;
 
+
+{ ///////////////////////////////////////////////////////////////////// }
+function IsUpgrade(): Boolean;
+begin
+  Result := (GetUninstallString() <> '');
+end;
+
+{ ///////////////////////////////////////////////////////////////////// }
+function UnInstallOldVersion(): Integer;
+var
+  sUnInstallString: String;
+  iResultCode: Integer;
+begin
+{ Return Values: }
+{ 1 - uninstall string is empty }
+{ 2 - error executing the UnInstallString }
+{ 3 - successfully executed the UnInstallString }
+
+  { default return value }
+  Result := 0;
+
+  { get the uninstall string of the old app }
+  sUnInstallString := GetUninstallString();
+  if sUnInstallString <> '' then begin
+    sUnInstallString := RemoveQuotes(sUnInstallString);
+    if Exec(sUnInstallString, '/SILENT /NORESTART /SUPPRESSMSGBOXES','', SW_HIDE, ewWaitUntilTerminated, iResultCode) then
+      Result := 3
+    else
+      Result := 2;
+  end else
+    Result := 1;
+end;
 //
 // Called after each SetupStep
 //////////////////////////////////////////////////////////////////////////////////
@@ -346,6 +390,7 @@ var
 begin
   sNewInstallation:='True';  
 
+
   //directly before installation validate if Files are already existing.
   //If yes, call uninstaller to avoid mixed versions.
   if CurStep=ssInstall then
@@ -353,9 +398,16 @@ begin
       //check if this is a new installation
       //idea is to check if the RobotFramework environment variables exist. If not, then RobotFramework was
       //most likely never installed - or properly uninstalled before installation
-//      sRobotFrameworkPath:=ExpandConstant('{%RobotTestPath|False}');
-//      if sRobotFrameworkPath<>'False' then
-//         sNewInstallation:='False'
+      // sRobotFrameworkPath:=ExpandConstant('{%RobotTestPath|False}');
+      // if sRobotFrameworkPath<>'False' then
+	  try
+		if (IsUpgrade()) then
+		begin
+			sNewInstallation:='False';
+			UnInstallOldVersion();
+		end;
+	  except
+	  end;
              
       //uninstaller can be 001,002,003... This loop is to hit the proper number
 //      for i:=0 to 9 do
@@ -568,7 +620,12 @@ begin
 end;
 
 [UninstallDelete]
-
+Name: {app}\robotvscode\*; Type: filesandordirs;
+Name: {app}\python39\*; Type: filesandordirs;
+Name: {app}\tools\*; Type: filesandordirs;
+Name: {app}\selftest\*; Type: filesandordirs;
+;Name: {app}\devtools\*; Type: filesandordirs;
+Name: {code:GetUsrDataDir}\tutorial; Type: filesandordirs;
 
 [InstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;

@@ -25,6 +25,8 @@ BG_WHITE='\033[47m'
 
 mypath=$(realpath $(dirname $0))
 
+TAG_REGEX="^(rel|dev)(\/aio)?\/[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$"
+
 function errormsg(){
    echo -e "${COL_RED}>>>> ERROR: $1!${COL_RESET}"
    echo
@@ -45,5 +47,43 @@ function logresult(){
 	    goodmsg "Successfully $2"
 	else
 		errormsg "FATAL: Could not $3"
+	fi
+}
+
+# Clone or update repository
+# Arguments:
+#	$repo_path : location to clone repo into
+#	$repo_url  : repo url
+function clone_update_repo () {
+	repo_path=$1
+	repo_url=$2
+	target_commit=$3
+
+	if [ -d "$repo_path" ]; then
+		echo "Cleaning and updating repo $repo_path"
+		git -C "$repo_path" remote set-url origin "$repo_url" &&
+		git -C "$repo_path" fetch origin --tags --force &&
+		git -C "$repo_path" checkout $(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') &&
+		git -C "$repo_path" reset --hard @{u} &&
+		git -C "$repo_path" clean -f -d -x
+
+		# try to remove existing directory and clone repo again
+		if [ "$?" -ne 0 ]; then
+			echo "Cloning $repo_url again"
+			rm -rf "$repo_path"
+			git clone "$repo_url" "$repo_path"
+		fi
+	else
+		echo "Cloning $repo_url"
+		git clone "$repo_url" "$repo_path"
+	fi
+	if [ "$?" -ne 0 ]; then
+		exit 1
+	fi
+
+	if [ -n "$target_commit" ]; then
+		echo "Checking out to '$target_commit' tag"
+		git -C "$repo_path" checkout $target_commit
+		logresult "$?" "switched to '$target_commit' tag" "checkout '$target_commit' tag from '$repo_url'"
 	fi
 }

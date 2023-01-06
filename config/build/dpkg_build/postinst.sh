@@ -36,7 +36,7 @@ MSG_ERR="${COL_RED}[ERR]${COL_RESET} "
 
 
 chown -R "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/robotvscode/data
-chmod -R 0775 "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/robotvscode/data
+chmod -R 0775 /opt/rfwaio/robotvscode/data
 echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/robotvscode/data"
    
 if [ ! -d "${HOME}/RobotTest" ]; then
@@ -72,7 +72,9 @@ else
    # update tutorial
    #
    ###########################################################################
-   rm -r ${HOME}/RobotTest/tutorial/*
+   if [ -d ${HOME}/RobotTest/tutorial ]; then
+      rm -rf ${HOME}/RobotTest/tutorial/*
+   fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
 
@@ -133,4 +135,4 @@ PyPath=/opt/rfwaio/python39/install/bin
 TestPath=${HOME}/RobotTest/testcases
 WpPath=`echo $TestPath | perl -MURI::file -e 'print URI::file->new(<STDIN>)."\n"'`
 sed -i "s|{RobotPythonPath}|$PyPath|g" /opt/rfwaio/robotvscode/data/user-data/User/settings.json
-sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
+sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json

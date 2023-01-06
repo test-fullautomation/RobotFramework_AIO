@@ -1,0 +1,88 @@
+name: Build RobotFramework AIO packages
+
+on:
+  push:
+    tags:
+      - "rel/aio/*.*.*.*"
+      - "dev/aio/*.*.*.*"
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - develop
+  workflow_dispatch:
+
+env:
+  TRIGGER_BY: ${{ github.ref_type }}
+  TAG_NAME: ${{ github.ref_name }}
+  REF_NAME: ${{ github.ref_name }}
+  DEFAULT_REF: ${{ github.base_ref }}
+
+jobs:
+  build-linux:
+    name: Build Linux package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          chmod +x ./requirements_linux.sh
+          ./requirements_linux.sh
+
+      - name: Clone repositories
+        run: |
+          chmod +x ./cloneall
+          ./cloneall
+
+      - name: Install
+        run: |
+          chmod +x ./install/install.sh
+          ./install/install.sh
+
+      - name: Build
+        run: |
+          chmod +x ./build
+          ./build
+
+      - name: Upload built package
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-package
+          path: output_lx/*.deb
+
+  build-windows:
+    name: Build Windows package
+    runs-on: windows-latest
+    env:
+      GENDOC_LATEXPATH: C:/texlive/2022/bin/win32
+    steps:
+      - name: Support long path in git
+        run: git config --system core.longpaths true
+
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        shell: bash
+        run: ./requirements_windows.sh
+
+      - name: Clone repositories
+        shell: bash
+        run: ./cloneall
+
+      - name: Install
+        shell: bash
+        run: ./install/install.sh
+
+      - name: Build
+        shell: bash
+        run: ./build
+
+      - name: Upload built package
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-package
+          path: Output/

@@ -17,134 +17,141 @@ This respository holds the build tooling for a new Robot Framework AIO (All In O
 
 - [Getting Started](#getting-started)
   - [Manual build](#manual-build)
-  - [Gitlab CI/CD pipeline](#auto-build)
-    - [Preconditions](#preconditions)
-    - [Jobs](#jobs)
+	 - [Preconditions](#preconditions)
+	 - [Execute build scripts](#execute-build-scripts)
+  - [Github Actions](#github-actions)
+    - [Workflow](#workflow)
     - [Runners](#runners)
-- [Contribution](#contribution-guidelines)
-- [Bug/Feature implementation/Support Tracking](#tracking)
+- [Contribution](#contribution)
 - [Feedback](#feedback)
 - [About](#about)
   - [Maintainers](#maintainers)
   - [Contributors](#contributors)
   - [3rd Party Licenses](#3rd-party-licenses)
-  - [Used Encryption](#used-encryption)
   - [License](#license)
 
-## Getting Started <a name="getting-started"></a>
+## Getting Started
 
-### Manual build <a name="manual-build"></a>
-Clone this build repository with git bash then follow below steps for building process:
+### Manual build
+Currently, RobotFramework AIO is supported to build with both **Windows** and **Linux** environments.
+
+#### Preconditions
+When building RobotFramework AIO package, the document is also generated with [GenPackageDoc](https://github.com/test-fullautomation/python-genpackagedoc)
+using [TeX Live](https://www.tug.org/texlive/) tool.
+
+So, Tex Live should be installed first.
+The full collection is recommended when installing texlive to avoid issue when generating document but it will take long time for the installation. 
+
+In case the full collection installation is not possible, at least 2 collections `texlive-latex-extra` and `texlive-fonts-recommended` should be installed together with the basic package.
+
+Please refer [requirements_linux.sh](./requirements_linux.sh) or [requirements_windows.sh](./requirements_windows.sh) for the dependency package for **Linux** and **Windows** environments.
+
+#### Execute build scripts
+Clone this [RobotFramework_AIO](https://github.com/test-fullautomation/RobotFramework_AIO) repository first
+```
+git clone https://github.com/test-fullautomation/RobotFramework_AIO.git
+```
+
+Then follow below steps for building process:
 
 1. Clone all related repositories with is configured `config/repositories/repositories.conf` file
 	```
-	./cloneall		#for both Windows and Linux
+	./cloneall
 	```
-	>Note: git bash will use the existing authentication to Gitlab, Github, Soco for cloning resources.
 
-	>In case the authentication(s) is not existing or access to restricted repo(s), the authentication (user & password/PAT) should be provided as environment variables. Please refer [Preconditions in Gitlab CI/CD pipeline](#preconditions).
+2. Download and install python (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
+	```
+	./install/install.sh
+	```
+	>Note: In case you are working behind the proxy, [cntlm authentication proxy](https://sourceforge.net/projects/cntlm/) should be installed and started first then
+	execute the `install.sh` with `--use-cntlm` argument as below command:
+	
+	```
+	./install/install.sh --use-cntlm
+	```
 
-2. Download and install python (include dependencies which are defined in `wget/python_requirements.txt`), vscode (include the extensions which defined in `wget/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
+3. Build the installer package
 	```
-	./wget/install_via_cntlm.sh		#for Windows
+	./build
 	```
-	or 
-	```
-	./wget/install_linux_ntlm.sh	#for Linux
-	```
-	>Note: **cntlm should be started before execute above command**
-3. Setup and install python package from cloned repos
-4. Build the installer package
-	```
-	./build				#for Windows
-	```
-	or
-	```
-	./build_linux		#for Linux
-	```
-The new generated Robot Framework AIO setup can found under `output/` folder
 
-### Gitlab CI/CD pipeline <a name="auto-build"></a>
-#### Preconditions <a name="preconditions"></a>
-Below environment variables should be set (**Settings > CI/CD > Variables**) for:
-- Authentication to Gitlab (if required):
-	- `$GITLAB_BOT_USERNAME`
-	- `$GITLAB_BOT_PASSWORD`
-- Authentication to Github (if required):
-	- `$GITHUB_BOT_USERNAME`
-	- `$GITHUB_BOT_PASSWORD`
-- Authentication to Socialcoding (if required):
-	- `$SOCO_BOT_USERNAME`
-	- `$SOCO_BOT_PASSWORD`
+Build the RobotFramework AIO package with all related libraries (defined in `config/repositories/repositories.conf` file).
 
-#### Jobs <a name="jobs"></a>
-Regarding to the automatical build with GitLab CI/CD, the building pipeline contains following stages:
-- `mirror`: mirror latest sourcecode from other source version control (Soco, Github)
-- `clone` : clone all repos to building runner
-- `install` : install python, vscode and their dependencies
-- `build` : build the package installer
-- `test` : run selftest
+Build script will detect the Operation System (**Windows** or **Linux**) automatically to run the appropriate steps for building installer package.
 
-#### Runners <a name="runners"></a>
-There are 2 type runners for build pipeline:
-- Windows runner with tag `windows` for Windows jobs.
-- Apertis docker image which run on the shared runner with tag `internal` for Linux jobs.
-## Bug/Feature implementation/Support Tracking<a name="tracking"></a>
+The new generated RobotFramework AIO setup file can found under `Output/` folder 
+on Windows and `output_lx` on Linux machine.
 
-Robot Framework AIO Project
+### Github Actions
 
+#### Workflow
+The workflow to build RobotFramework AIO package is available in Github Actions
+os this repo as below:
 
-## Contribution <a name="contribution-guidelines"></a>
+[![Build RobotFramework AIO packages](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml/badge.svg)](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml)
+
+There are 2 build jobs for both environment **Windows** and **Linux**, 
+the building jobs contains following main steps:
+- `Install dependencies`: install dependency packages for build job
+- `Clone repositories` : clone all related repos to build runner
+- `Install` : install python, vscode and their dependencies
+- `Build` : build the package installer
+- `Upload built package` : save the built package as workflow artifactory 
+
+#### Runners
+Currently, there are 2 available runners (GitHub-hosted) for build pipeline:
+- Windows runner: [Windows Server 2022](https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md) with label `windows-latest` for Windows job.
+- Ubuntu runner: [Ubuntu 22.04.1 LTS](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md) with label `ubuntu-latest` for Linux job.
+
+## Contribution
 
 We are always searching support and you are cordially invited to help to improve Robot Framework AIO.
 
-## Feedback <a name="feedback"></a>
+## Feedback
 
-Please feel free to give any feedback to us via
+To give us a feedback, you can send an email to [Thomas
+Pollerspöck](mailto:Thomas.Pollerspoeck@de.bosch.com)
 
-Email to: [Robot Framework Support Group](mailto:)
+In case you want to report a bug or request any interesting feature,
+please don\'t hesitate to raise a ticket
 
-Community: [RobotFramework AIO community](https://)
+
+## About
+
+### Maintainers
+
+[Thomas Pollerspöck](mailto:Thomas.Pollerspoeck@de.bosch.com)
+
+[Tran Duy Ngoan](mailto:Ngoan.TranDuy@vn.bosch.com)
+
+[Tran Hoang Nguyen](mailto:Nguyen.TranHoang@vn.bosch.com)
+
+### Contributors
+
+[Holger Queckenstedt](mailto:Holger.Queckenstedt@de.bosch.com)
+
+[Nguyen Huynh Tri Cuong](mailto:Cuong.NguyenHuynhTri@vn.bosch.com)
+
+[Mai Dinh Nam Son](mailto:Son.MaiDinhNam@vn.bosch.com)
 
 
-## About <a name="about"></a>
+### 3rd Party Licenses
 
-### Maintainers <a name="maintainers"></a>
+Please refer to [./tools/InnoSetup5.5.1/license.txt](./tools/InnoSetup5.5.1/license.txt)
 
-[Thomas Pollersp&ouml;ck]()
-
-### Contributors <a name="contributors"></a>
-[Nguyen Huynh Tri **Cuong**]()
-
-[Mai Dinh Nam **Son**](s)
-
-[Tran Duy **Ngoan**]()
-
-[**Nguyen** Tran Hoan]()
-
-### 3rd Party Licenses <a name="3rd-party-licenses"></a>
-
-Please refer to
-
-* ./InnoSetup5.5.1/licence.txt
-
-### Used Encryption <a name="used-encryption"></a>
-
-No encryption is used in this repository.
-
-### License <a name="license"></a>
+### License
 
 Copyright 2020-2022 Robert Bosch GmbH
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the \"License\"); you
+may not use this file except in compliance with the License. You may
+obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+> [![License: Apache
+> v2](https://img.shields.io/pypi/l/robotframework.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+distributed under the License is distributed on an \"AS IS\" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
