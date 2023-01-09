@@ -3,7 +3,7 @@
 
 #Appium-Python-Client 
 Sphinx
-sphinxcontrib.applehelp=1.0.2
+sphinxcontrib.applehelp==1.0.2
 aenum
 attrs                
 # autobahn             
