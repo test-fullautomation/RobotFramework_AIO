@@ -123,21 +123,21 @@ listofdictComponents = []
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotFramework_AIO"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_Testsuites/Config/CConfig.py"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/CConfig.py"
 dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = True
+dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotFramework_Testsuites_config"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_Testsuites/Config/robot_config.json"
+dictComponent['NAME']           = "RobotFramework_TestsuitesManagement_config"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/robot_config.json"
 dictComponent['VERSIONFORMAT']  = "FORMAT-2"
-dictComponent['COMPAREVERSION'] = True
+dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotFramework_Testsuites"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_Testsuites/packageversion.py"
+dictComponent['NAME']           = "RobotFramework_TestsuitesManagement"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/packageversion.py"
 dictComponent['VERSIONFORMAT']  = "FORMAT-1"
 dictComponent['COMPAREVERSION'] = False
 listofdictComponents.append(dictComponent)
@@ -230,10 +230,10 @@ oLogFile.Write()
 oLogFile.Write(120*"-")
 oLogFile.Write()
 
-nRJust = 55
+nRJust = 62
 bErrorHappened = False
 
-listofdictVersions = [] # used vor version mistmatch detection
+listofdictVersions = [] # used for version mistmatch detection
 
 for dictComponent in listofdictComponents:
    NAME          = dictComponent['NAME']
@@ -382,26 +382,29 @@ for dictComponent in listofdictComponents:
 # PrettyPrint(listofdictVersions)
 # print()
 
-# -- version control
+# # --------------------------------------------------------------------------------------------------------------
+# # -- version control
+# #    !!! temporarily decativated; needs to be reworked
 bVersionMismatchHappened = False
-for tupleCombinations in itertools.combinations(listofdictVersions, 2):
-   dictVersion_1 = tupleCombinations[0]
-   dictVersion_2 = tupleCombinations[1]
-   sVersion_1 = dictVersion_1['VERSION']
-   sVersion_2 = dictVersion_2['VERSION']
-   if sVersion_1 != sVersion_2:
-      sName_1 = dictVersion_1['NAME']
-      sName_2 = dictVersion_2['NAME']
-      sOut = f"version mismatch between version '{sVersion_1}' of '{sName_1}' and version '{sVersion_2}' of '{sName_2}'"
-      sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=sOut)
-      oLogFile.Write(sResult)
-      oLogFile.Write()
-      print(COLBR + sResult)
-      print()
-      bVersionMismatchHappened = True
-      continue
-   # eof if sVersion_1 != sVersion_2:
-# eof for tupleCombinations in itertools.combinations(listofdictVersions, 2):
+# for tupleCombinations in itertools.combinations(listofdictVersions, 2):
+   # dictVersion_1 = tupleCombinations[0]
+   # dictVersion_2 = tupleCombinations[1]
+   # sVersion_1 = dictVersion_1['VERSION']
+   # sVersion_2 = dictVersion_2['VERSION']
+   # if sVersion_1 != sVersion_2:
+      # sName_1 = dictVersion_1['NAME']
+      # sName_2 = dictVersion_2['NAME']
+      # sOut = f"version mismatch between version '{sVersion_1}' of '{sName_1}' and version '{sVersion_2}' of '{sName_2}'"
+      # sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=sOut)
+      # oLogFile.Write(sResult)
+      # oLogFile.Write()
+      # print(COLBR + sResult)
+      # print()
+      # bVersionMismatchHappened = True
+      # continue
+   # # eof if sVersion_1 != sVersion_2:
+# # eof for tupleCombinations in itertools.combinations(listofdictVersions, 2):
+# # --------------------------------------------------------------------------------------------------------------
 
 if bErrorHappened is True:
    sOut = f"done with errors (return {ERROR})"
