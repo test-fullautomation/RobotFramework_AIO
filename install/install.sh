@@ -23,7 +23,6 @@ mypath=$(realpath $(dirname $0))
 sourceDir=$mypath/../download
 vscodeData=$mypath/../config/robotvscode/
 vscodeIcons=$mypath/../config/robotvscode/icons
-pythonTools=$mypath/../config/python
 destDir=$(realpath $mypath/../..)
 
 use_cntlm="No"
@@ -151,10 +150,6 @@ function packaging_python_windows() {
 	rm -rf "$destDir/python39"
 	mv "$sourceDir/python" "$destDir/python39"
 
-	# tkinter and tcl are not available in using embedded python
-	# they are also not able to be installed via pip
-	cp -R -a "$pythonTools"/* "$destDir/python39" 
-	logresult "$?" "created Python repository" "create Python repository" 
 
 	# !! ATTENTION !!
 	# embedded python has problems with to recognize a PIP installation.
