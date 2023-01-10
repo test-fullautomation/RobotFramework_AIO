@@ -2,6 +2,7 @@
 # See atest/README.rst for more information.
 
 #Appium-Python-Client 
+sphinxcontrib.applehelp==1.0.2
 aenum
 attrs                
 # autobahn             

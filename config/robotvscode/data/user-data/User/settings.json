@@ -37,6 +37,7 @@
     "editor.renderWhitespace": "all",
     "robot.language-server.python": "${env:RobotPythonPath}/python3",
     "robot.python.executable": "${env:RobotPythonPath}/python3",
+	"robot.lint.robocop.enabled ": true,
     "robot.python.env": {
     
     },
