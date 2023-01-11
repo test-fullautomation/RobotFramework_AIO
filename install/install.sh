@@ -166,20 +166,18 @@ function packaging_python_windows() {
 	fi
 
 	# call pip to initialize pip
-	#$destDir/python39/python.exe -m pip install --upgrade pip
-	#$destDir/python39/python.exe -m pip install --upgrade setuptools
-	#$destDir/python39/python.exe -m pip install wheel
-	# Workaround for pyfranca
-	cd $destDir
-	powershell.exe "python.exe -m pip install pyfranca"
-	cd $CURDIR
-
+	$destDir/python39/python.exe -m pip install --upgrade pip
+	$destDir/python39/python.exe -m pip install --upgrade setuptools
+	$destDir/python39/python.exe -m pip install wheel
+	
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	# 
 	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	# Workaround for pyfranca
+	$destDir/python39/python.exe -m pip install pyfranca
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
