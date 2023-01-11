@@ -101,12 +101,18 @@ chown -R "${CURRENT_USER}:${sGROUP}" /home/${CURRENT_USER}/.local/share/applicat
 # configure login/non login shells
 #
 ###############################################################################    
+
+# Delete old version environment setup
+if grep -q "/opt/bosch/robfw/linux/set_robotenv.sh" ${HOME}/.bashrc; then
+   sed -i '/\/opt\/bosch\/robfw\/linux\/set_robotenv.sh/d' ~/.bashrc
+fi
+
 if grep -q "/opt/rfwaio/linux/set_robotenv.sh" ${HOME}/.bashrc; then
    echo -e "${MSG_INFO} Robot configuration for .bashrc found, nothing to do. "
 else 
    echo -e "${MSG_DONE} Add Robot configuration to .bashrc"
    echo "#configure environment for Robot" >> ${HOME}/.bashrc
-   echo ". /opt/rfwaio/linux/set_robotenv.sh" >> ${HOME}/.bashrc
+   echo ". /opt/rfwaio/linux/set_robotenv.sh || export rfwaio_set_env=-1" >> ${HOME}/.bashrc
 fi
 
 if grep -q "/opt/rfwaio/linux/set_robotenv.sh" ${HOME}/.profile; then
