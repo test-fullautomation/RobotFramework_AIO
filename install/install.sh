@@ -167,6 +167,7 @@ function packaging_python_windows() {
 
 	# call pip to initialize pip
 	$destDir/python39/python.exe -m pip install --upgrade pip
+	$destDir/python39/python.exe -m pip install --upgrade setuptools
 	$destDir/python39/python.exe -m pip install wheel
 
 	# !! ATTENTION !!
