@@ -169,6 +169,8 @@ function packaging_python_windows() {
 	$destDir/python39/python.exe -m pip install --upgrade pip
 	$destDir/python39/python.exe -m pip install --upgrade setuptools
 	$destDir/python39/python.exe -m pip install wheel
+	# Workaround for pyfranca
+	$destDir/python39/python.exe -m pip install --no-use-pep517 pyfranca
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
