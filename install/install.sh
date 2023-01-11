@@ -171,7 +171,7 @@ function packaging_python_windows() {
 	#$destDir/python39/python.exe -m pip install wheel
 	# Workaround for pyfranca
 	cd $destDir
-	powershell.exe "python39/python.exe -m pip install pyfranca"
+	powershell.exe "python.exe -m pip install pyfranca"
 	cd $CURDIR
 
 	# !! ATTENTION !!
