@@ -1,9 +1,8 @@
 # External Python modules required to be installed for RobotFramework AIO
 # See atest/README.rst for more information.
 
-#Appium-Python-Client 
+#Appium-Python-Client
 Sphinx
-sphinxcontrib.applehelp==1.0.2
 aenum
 attrs                
 # autobahn             
@@ -70,7 +69,6 @@ pycparser
 # pyHook               
 pyodbc  
 pycparser
-pyfranca
 PyNaCl             
 # pyOpenSSL            
 pyparsing            

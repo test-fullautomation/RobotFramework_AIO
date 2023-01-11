@@ -39,11 +39,11 @@ if [ "$UNAME" == "Linux" ] ; then
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221002/cpython-3.9.14+20221002-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
-	archived_python_file=$sourceDir/cpython-3.9.14+20221002-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 else
@@ -167,14 +167,17 @@ function packaging_python_windows() {
 
 	# call pip to initialize pip
 	$destDir/python39/python.exe -m pip install --upgrade pip
+	$destDir/python39/python.exe -m pip install --upgrade setuptools
 	$destDir/python39/python.exe -m pip install wheel
-
+	
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	# 
 	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	# Workaround for pyfranca
+	$destDir/python39/python.exe -m pip install pyfranca
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
