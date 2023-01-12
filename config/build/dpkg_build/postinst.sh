@@ -107,6 +107,10 @@ if grep -q "/opt/bosch/robfw/linux/set_robotenv.sh" ${HOME}/.bashrc; then
    sed -i '/\/opt\/bosch\/robfw\/linux\/set_robotenv.sh/d' ~/.bashrc
 fi
 
+if grep -q "/opt/bosch/robfw/linux/set_robotenv.sh" ${HOME}/.profile; then
+   sed -i '/\/opt\/bosch\/robfw\/linux\/set_robotenv.sh/d' ~/.profile
+fi
+
 if grep -q "/opt/rfwaio/linux/set_robotenv.sh" ${HOME}/.bashrc; then
    echo -e "${MSG_INFO} Robot configuration for .bashrc found, nothing to do. "
 else 
