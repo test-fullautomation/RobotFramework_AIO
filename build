@@ -273,6 +273,7 @@ function build_debian()
 	cp ./config/build/dpkg_build/prerm.sh ./output_lx/${PACK_NAME}/DEBIAN/prerm
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/prerm
 	cp ./config/build/dpkg_build/robot.ico ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	cp ./config/build/dpkg_build/codium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/robot.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
