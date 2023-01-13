@@ -4,5 +4,5 @@ Terminal=false
 Name=Robot VSCodium AIO
 Exec=bash -c "/opt/rfwaio/robotvscode/codium"
 Type=Application
-Icon=/opt/rfwaio/linux/icon/robot.ico
+Icon=/opt/rfwaio/linux/icon/codium.png
 
