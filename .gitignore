@@ -1,3 +1,6 @@
 download/
 Output/
 output_lx/
+__pycache__/
+logfiles/
+ExecutionLogFile.log
