@@ -5,5 +5,5 @@ Documentation     test Trigger self test resource
 Library           Collections
 Library           BuiltIn
 
-Library    RobotFramework_Testsuites    WITH NAME    testsuites
+Library    RobotFramework_TestsuitesManagement    WITH NAME    testsuites
 Library    RobotframeworkExtensions.Collection    WITH NAME    rf.extensions
