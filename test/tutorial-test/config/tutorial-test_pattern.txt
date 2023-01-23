@@ -1,0 +1,13 @@
+START\sSUITE:\sExercise-\d+
+(CfgFile\sPath:\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
+(Local\sconfig\sfile:\s).+(exercise-\d+).(localconfig).(exercise-\d+.+\.json)
+(Parameters\sloaded\sfrom\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
+(Selected\sconfiguration\sfile\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
+(Suite\sPath:\s).+(exercise-\d+)
+Running\swith\sconfiguration\slevel\s\d+
+Suite\sCount:\s\d+
+Total\stestcases\sin.+
+teststring\s:.+
+teststring_common\s:.+
+teststring_variant\s:.+
+teststring_bench\s:.+

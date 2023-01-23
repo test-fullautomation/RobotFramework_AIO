@@ -1,0 +1,23 @@
+==============================================================================
+20230118 14:34:08.250 - INFO - + START SUITE: Exercise-02 [ ]
+==============================================================================
+20230118 14:34:08.277 - INFO - +- START SETUP: tm.Testsuite Setup [ ]
+20230118 14:34:08.277 - WARN - Running with configuration level 1! 
+Selected configuration file 'C:\RobotTest\tutorial\900_building_testsuites\exercise-02\config\exercise-02_config_variant1.json'
+20230118 14:34:08.278 - INFO - Running with configuration level 1
+20230118 14:34:08.278 - INFO - Suite Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-02\
+20230118 14:34:08.278 - INFO - CfgFile Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-02\config\exercise-02_config_variant1.json
+20230118 14:34:08.278 - INFO - Suite Count: 1
+20230118 14:34:08.278 - INFO - Total testcases in TestSuite Exercise-02 is: 1
+20230118 14:34:08.278 - INFO - +- END SETUP: tm.Testsuite Setup (1)
+------------------------------------------------------------------------------
+20230118 14:34:08.278 - INFO - +- START TEST: Test Case exercise-02 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:08.280 - INFO - +-- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:08.280 - INFO - teststring : I am the 'variant1' configuration of exercise 02
+20230118 14:34:08.282 - INFO - +-- END KEYWORD: BuiltIn.Log (0)
+------------------------------------------------------------------------------
+20230118 14:34:08.284 - INFO - +- END TEST: Test Case exercise-02 (5)
+------------------------------------------------------------------------------
+20230118 14:34:08.291 - INFO - + END SUITE: Exercise-02 (131)
+==============================================================================
