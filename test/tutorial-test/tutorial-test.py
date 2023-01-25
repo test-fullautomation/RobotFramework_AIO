@@ -23,7 +23,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 23.01.2023
+# 25.01.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -70,13 +70,11 @@ sPythonPath     = CString.NormalizePath(os.path.dirname(sys.executable))
 sPython         = CString.NormalizePath(sys.executable)
 sPythonVersion  = sys.version
 
-sFilter = None
+sTutorialRootPath = None
 if sPlatformSystem == "Windows":
-   # currently nothing to do
-   pass
+   sTutorialRootPath = CString.NormalizePath("%RobotTutorialPath%")
 elif sPlatformSystem == "Linux":
-   # currently nothing to do
-   pass
+   sTutorialRootPath = CString.NormalizePath("${RobotTutorialPath}")
 else:
    bSuccess = False
    sResult  = f"Operating system {sPlatformSystem} ({sOSName}) not supported"
@@ -86,8 +84,6 @@ else:
 print()
 print(f"{sThisScriptName} is running under {sPlatformSystem} ({sOSName})")
 print()
-
-sTutorialRootPath = CString.NormalizePath("%ROBOTTUTORIALPATH%")
 
 if os.path.isdir(sTutorialRootPath) is False:
    bSuccess = False
@@ -114,33 +110,6 @@ if os.path.isfile(PATTERNFILE) is False:
 #TM***
 
 listofdictUsecases = []
-
-# --------------------------------------------------------------------------------------------------------------
-
-# # # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-01.xml -l exercise-01_log.html -r exercise-01_report.html -b exercise-01.log ./exercise-01.robot
-
-# # # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-02.xml -l exercise-02_log.html -r exercise-02_report.html -b exercise-02.log "./exercise-02-B.robot"
-# # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-02.xml -l exercise-02_log.html -r exercise-02_report.html -b exercise-02.log --variable config_file:"./config/exercise-02_config_variant1.json" "./exercise-02.robot"
-# # ?? "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-02.xml -l exercise-02_log.html -r exercise-02_report.html -b exercise-02.log "./exercise-02-B.robot"
-# # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-02.xml -l exercise-02_log.html -r exercise-02_report.html -b exercise-02.log --variable variant:"variant2" "./exercise-02-B.robot"
-
-# # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-03.xml -l exercise-03_log.html -r exercise-03_report.html -b exercise-03.log "./exercise-03.robot"
-# # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-03.xml -l exercise-03_log.html -r exercise-03_report.html -b exercise-03.log "./exercise-03-A.robot"
-# # "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-03.xml -l exercise-03_log.html -r exercise-03_report.html -b exercise-03.log "./exercise-03-B.robot"
-
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-04.xml -l exercise-04_log.html -r exercise-04_report.html -b exercise-04.log --variable variant:"variant2" "./testsuites"
-
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-05.xml -l exercise-05_log.html -r exercise-05_report.html -b exercise-05.log "./exercise-05.robot"
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-05.xml -l exercise-05_log.html -r exercise-05_report.html -b exercise-05.log --variable variant:"variant1" "./exercise-05.robot"
-
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log "./exercise-06.robot"
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log --variable variant:"variant1" "./exercise-06.robot"
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log --variable local_config:"./localconfig/exercise-06_localconfig_bench1.json" "./exercise-06.robot"
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log --variable variant:"variant2" --variable local_config:"./localconfig/exercise-06_localconfig_bench1.json" "./exercise-06.robot"
-# set ROBOT_LOCAL_CONFIG=C:/RobotTest/projects//ROBFW_AIO/robotframework-tutorial/900_building_testsuites/exercise-06/localconfig/exercise-06_localconfig_bench1.json
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log --variable variant:"variant1" "./exercise-06.robot"
-# err "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-06.xml -l exercise-06_log.html -r exercise-06_report.html -b exercise-06.log --variable variant:"variant1" --variable config_file:"./config/exercise-06_config_variant2.json" "./exercise-06-err.robot"
-# "%RobotPythonPath%/python.exe" -m robot -d ./logfiles -o exercise-07.xml -l exercise-07_log.html -r exercise-07_report.html -b exercise-07.log --variable teststring:"command line test string" --variable local_config:"./localconfig/exercise-07_localconfig_bench1.json" --variable config_file:"./config/exercise-07_config_variant1.json" "./exercise-07.robot"
 
 # --------------------------------------------------------------------------------------------------------------
 #TM***
