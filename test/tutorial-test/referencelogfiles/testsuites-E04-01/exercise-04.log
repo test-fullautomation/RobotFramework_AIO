@@ -1,0 +1,100 @@
+==============================================================================
+20230118 14:34:11.004 - INFO - + START SUITE: Testsuites [ ]
+==============================================================================
+20230118 14:34:11.011 - INFO - +- START SETUP: tm.Testsuite Setup [ ../config/exercise-04_variants.json ]
+20230118 14:34:11.031 - INFO - Set suite metadata 'project' to value 'RobotFramework Testsuites'.
+20230118 14:34:11.032 - INFO - Set suite metadata 'version_sw' to value ''.
+20230118 14:34:11.032 - INFO - Set suite metadata 'version_hw' to value ''.
+20230118 14:34:11.032 - INFO - Set suite metadata 'version_test' to value ''.
+20230118 14:34:11.032 - INFO - Set suite metadata 'machine' to value 'HI7-C-0005Y'.
+20230118 14:34:11.033 - INFO - Set suite metadata 'tester' to value 'Queckenstedt Holger (XC-CT/ECA3)'.
+20230118 14:34:11.033 - INFO - Set suite metadata 'testtool' to value 'Robot Framework 4.1.3 (Python 3.9.16 on win32)'.
+20230118 14:34:11.034 - INFO - Set suite metadata 'version' to value '0.6.0'.
+20230118 14:34:11.034 - INFO - ${teststring} = I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.035 - INFO - ${CONFIG} = {'WelcomeString': 'Hello... Robot Framework is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'Project': 'RobotFramework Testsuites', 'TargetName': 'Device_01', 'params': {}}
+20230118 14:34:11.035 - INFO - Running with configuration level 2
+20230118 14:34:11.035 - INFO - Parameters loaded from 'C:\RobotTest\tutorial\900_building_testsuites\exercise-04\config\exercise-04_config_variant2.json'
+20230118 14:34:11.035 - INFO - Suite Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-04\testsuites
+20230118 14:34:11.035 - INFO - CfgFile Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-04\config\exercise-04_config_variant2.json
+20230118 14:34:11.035 - INFO - Suite Count: 1
+20230118 14:34:11.035 - INFO - Total testcases in TestSuite Testsuites is: 5
+20230118 14:34:11.035 - INFO - +- END SETUP: tm.Testsuite Setup (24)
+==============================================================================
+20230118 14:34:11.037 - INFO - +- START SUITE: Testsuites.001 [ ]
+==============================================================================
+20230118 14:34:11.040 - INFO - +-- START SUITE: Testsuites.001.001-01 [ ]
+==============================================================================
+20230118 14:34:11.048 - INFO - +--- START SUITE: Testsuites.001.001-01.001-01-01 [ ]
+==============================================================================
+20230118 14:34:11.050 - INFO - +---- START SUITE: Testsuites.001.001-01.001-01-01.Exercise-04-001-01-01 [ ]
+==============================================================================
+20230118 14:34:11.052 - INFO - +----- START TEST: Test Case exercise-04-001-01-01 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:11.053 - INFO - +------ START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:11.053 - INFO - teststring : I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.057 - INFO - +------ END KEYWORD: BuiltIn.Log (0)
+------------------------------------------------------------------------------
+20230118 14:34:11.058 - INFO - +----- END TEST: Test Case exercise-04-001-01-01 (5)
+------------------------------------------------------------------------------
+20230118 14:34:11.061 - INFO - +---- END SUITE: Testsuites.001.001-01.001-01-01.Exercise-04-001-01-01 (9)
+==============================================================================
+20230118 14:34:11.063 - INFO - +--- END SUITE: Testsuites.001.001-01.001-01-01 (15)
+==============================================================================
+20230118 14:34:11.065 - INFO - +--- START SUITE: Testsuites.001.001-01.Exercise-04-001-01 [ ]
+==============================================================================
+20230118 14:34:11.065 - INFO - +---- START TEST: Test Case exercise-04-001-01 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:11.068 - INFO - +----- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:11.068 - INFO - teststring : I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.072 - INFO - +----- END KEYWORD: BuiltIn.Log (0)
+------------------------------------------------------------------------------
+20230118 14:34:11.073 - INFO - +---- END TEST: Test Case exercise-04-001-01 (7)
+------------------------------------------------------------------------------
+20230118 14:34:11.075 - INFO - +--- END SUITE: Testsuites.001.001-01.Exercise-04-001-01 (10)
+==============================================================================
+20230118 14:34:11.077 - INFO - +-- END SUITE: Testsuites.001.001-01 (37)
+==============================================================================
+20230118 14:34:11.078 - INFO - +-- START SUITE: Testsuites.001.Exercise-04-001 [ ]
+==============================================================================
+20230118 14:34:11.079 - INFO - +--- START TEST: Test Case exercise-04-001 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:11.080 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:11.080 - INFO - teststring : I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.081 - INFO - +---- END KEYWORD: BuiltIn.Log (0)
+------------------------------------------------------------------------------
+20230118 14:34:11.086 - INFO - +--- END TEST: Test Case exercise-04-001 (2)
+------------------------------------------------------------------------------
+20230118 14:34:11.089 - INFO - +-- END SUITE: Testsuites.001.Exercise-04-001 (9)
+==============================================================================
+20230118 14:34:11.091 - INFO - +- END SUITE: Testsuites.001 (54)
+==============================================================================
+20230118 14:34:11.092 - INFO - +- START SUITE: Testsuites.002 [ ]
+==============================================================================
+20230118 14:34:11.095 - INFO - +-- START SUITE: Testsuites.002.Exercise-04-002 [ ]
+==============================================================================
+20230118 14:34:11.096 - INFO - +--- START TEST: Test Case exercise-04-002 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:11.096 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:11.096 - INFO - teststring : I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.100 - INFO - +---- END KEYWORD: BuiltIn.Log (0)
+------------------------------------------------------------------------------
+20230118 14:34:11.107 - INFO - +--- END TEST: Test Case exercise-04-002 (6)
+------------------------------------------------------------------------------
+20230118 14:34:11.109 - INFO - +-- END SUITE: Testsuites.002.Exercise-04-002 (14)
+==============================================================================
+20230118 14:34:11.111 - INFO - +- END SUITE: Testsuites.002 (18)
+==============================================================================
+20230118 14:34:11.113 - INFO - +- START SUITE: Testsuites.Exercise-04 [ ]
+==============================================================================
+20230118 14:34:11.115 - INFO - +-- START TEST: Test Case exercise-04 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:11.118 - INFO - +--- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:11.119 - INFO - teststring : I am the 'variant2' configuration of exercise 04
+20230118 14:34:11.119 - INFO - +--- END KEYWORD: BuiltIn.Log (1)
+------------------------------------------------------------------------------
+20230118 14:34:11.121 - INFO - +-- END TEST: Test Case exercise-04 (5)
+------------------------------------------------------------------------------
+20230118 14:34:11.123 - INFO - +- END SUITE: Testsuites.Exercise-04 (10)
+==============================================================================
+20230118 14:34:11.125 - INFO - + END SUITE: Testsuites (213)
+==============================================================================

@@ -1,0 +1,24 @@
+==============================================================================
+20230118 14:34:14.836 - INFO - + START SUITE: Exercise-07 [ ]
+==============================================================================
+20230118 14:34:14.867 - INFO - +- START SETUP: tm.Testsuite Setup [ ]
+20230118 14:34:14.867 - WARN - Running with configuration level 1! 
+Selected configuration file 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\config\exercise-07_config_variant1.json'
+20230118 14:34:14.869 - INFO - Running with configuration level 1
+20230118 14:34:14.869 - INFO - Suite Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-07\
+20230118 14:34:14.869 - INFO - CfgFile Path: C:\RobotTest\tutorial\900_building_testsuites\exercise-07\config\exercise-07_config_variant1.json
+20230118 14:34:14.869 - INFO - Local config file: C:\RobotTest\tutorial\900_building_testsuites\exercise-07\localconfig\exercise-07_localconfig_bench1.json
+20230118 14:34:14.869 - INFO - Suite Count: 1
+20230118 14:34:14.869 - INFO - Total testcases in TestSuite Exercise-07 is: 1
+20230118 14:34:14.869 - INFO - +- END SETUP: tm.Testsuite Setup (2)
+------------------------------------------------------------------------------
+20230118 14:34:14.869 - INFO - +- START TEST: Test Case exercise-07 [ ]
+------------------------------------------------------------------------------
+20230118 14:34:14.870 - INFO - +-- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230118 14:34:14.871 - INFO - teststring : command line test string
+20230118 14:34:14.874 - INFO - +-- END KEYWORD: BuiltIn.Log (1)
+------------------------------------------------------------------------------
+20230118 14:34:14.874 - INFO - +- END TEST: Test Case exercise-07 (5)
+------------------------------------------------------------------------------
+20230118 14:34:14.886 - INFO - + END SUITE: Exercise-07 (135)
+==============================================================================

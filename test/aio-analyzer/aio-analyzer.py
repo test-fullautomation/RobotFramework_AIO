@@ -54,10 +54,70 @@ VERSION_MISMATCH = 2
 # --------------------------------------------------------------------------------------------------------------
 
 def printerror(sMsg):
-   sys.stderr.write(COLBR + f"Error: {sMsg}!\n")
+   sys.stderr.write(COLBR + f"{sMsg}!\n")
 
-def printexception(sMsg):
-   sys.stderr.write(COLBR + f"Exception: {sMsg}!\n")
+class enVersionType:
+   current_version  = "current_version"
+   required_version = "required_version"
+
+class enVersionFormatType:
+   format_1 = "format_1"
+   format_2 = "format_2"
+
+def get_version_as_int(sVersion=None, oLogFile=None):
+   """Converts a version number from format
+   "major_number.minor_number.patch_number" (type: str)
+   to
+   version_number (type: int)
+   with:
+   version_number = (major_number*900) + (minor_number*30) + patch_number
+   This format (single integer) is suitable for version number checks.
+   """
+   version_number = None
+   if sVersion is None:
+      return sVersion
+   sVersion = sVersion.strip()
+   if sVersion == "":
+      return None
+
+   sPattern_Versions = r"^(\d+)\.(\d+)\.(\d+)$"
+   regex_Versions    = re.compile(sPattern_Versions)
+   listVersions = regex_Versions.findall(sVersion)
+   # debug
+   # PrettyPrint(listVersions)
+   # pattern has to be found once in string and has to contain three positions
+   if len(listVersions) != 1:
+      sResult = f"Invalid format of version string: '{sVersion}'"
+      printerror(sResult)
+      print()
+      if oLogFile is not None:
+         oLogFile.Write(sResult)
+         oLogFile.Write()
+      return None
+   tupleVersions = listVersions[0]
+   if len(tupleVersions) != 3:
+      sResult = f"Invalid format of version string: '{sVersion}'"
+      printerror(sResult)
+      print()
+      if oLogFile is not None:
+         oLogFile.Write(sResult)
+         oLogFile.Write()
+      return None
+
+   #                 30^2                     30^1                   30^0       
+   version_number = (int(tupleVersions[0])*900) + (int(tupleVersions[1])*30) + int(tupleVersions[2])
+
+   # debug
+   # print(f"---> int(major): {int(tupleVersions[0])}")
+   # print(f"---> int(minor): {int(tupleVersions[1])}")
+   # print(f"---> int(patch): {int(tupleVersions[2])}")
+   # print(f"---> version_number: {version_number}")
+   # print()
+
+   return version_number
+
+# eof def get_version_as_int(sVersion=None):
+
 
 # --------------------------------------------------------------------------------------------------------------
 # ENVIRONMENT
@@ -84,6 +144,7 @@ else:
    bSuccess = False
    sResult  = f"Operating system {sPlatformSystem} ({sOSName}) not supported"
    printerror(CString.FormatResult(sThisScriptName, bSuccess, sResult))
+   print()
    sys.exit(ERROR)
 
 print()
@@ -97,7 +158,7 @@ print()
 
 # -- version and date formats
 
-# "FORMAT-1"
+# enVersionFormatType.format_1
 # VERSION      = "0.2.2"
 # VERSION_DATE = "18.07.2022"
 
@@ -107,7 +168,7 @@ regex_version_format_1    = re.compile(sPattern_version_format_1)
 sPattern_version_date_format_1 = r"VERSION_DATE\s*=\s*[\"'](.+?)[\"']"
 regex_version_date_format_1    = re.compile(sPattern_version_date_format_1)
 
-# "FORMAT-2"
+# enVersionFormatType.format_2
 # "Maximum_version": "0.5.1",
 # "Minimum_version": "0.4.10",
 
@@ -124,92 +185,92 @@ listofdictComponents = []
 dictComponent = {}
 dictComponent['NAME']           = "RobotFramework_AIO"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/CConfig.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = enVersionType.current_version
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotFramework_TestsuitesManagement_config"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/robot_config.json"
-dictComponent['VERSIONFORMAT']  = "FORMAT-2"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_2
+dictComponent['VERSIONTYPE']    = enVersionType.required_version
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotFramework_TestsuitesManagement"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/packageversion.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "GenPackageDoc"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/GenPackageDoc/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotframeworkExtensions"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotframeworkExtensions/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "PythonExtensionsCollection"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/PythonExtensionsCollection/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "JsonPreprocessor"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/JsonPreprocessor/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "QConnectBase"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/QConnectBase/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "QConnectionDLTLibrary"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/QConnectionDLTLibrary/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotLog2RQM"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotLog2RQM/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotLog2DB"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotLog2DB/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "PyTestLog2DB"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/PyTestLog2DB/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "TMLLog2RobotLog"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/TMLLog2RobotLog/version.py"
-dictComponent['VERSIONFORMAT']  = "FORMAT-1"
-dictComponent['COMPAREVERSION'] = False
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 # Debug:
@@ -233,30 +294,37 @@ oLogFile.Write()
 nRJust = 62
 bErrorHappened = False
 
-listofdictVersions = [] # used for version mistmatch detection
+dictVersionControl = {}
+dictVersionControl['CURRENT_VERSION']      = None
+dictVersionControl['REQUIRED_MAX_VERSION'] = None
+dictVersionControl['REQUIRED_MIN_VERSION'] = None
 
 for dictComponent in listofdictComponents:
    NAME          = dictComponent['NAME']
    VERSIONFILE   = dictComponent['VERSIONFILE']
    VERSIONFORMAT = dictComponent['VERSIONFORMAT']
+   VERSIONTYPE   = dictComponent['VERSIONTYPE']
    if os.path.isfile(VERSIONFILE) is False:
       bSuccess = False
       sResult = f"Version file '{VERSIONFILE}' not found (component '{NAME}')"
-      print(COLBR + CString.FormatResult(sThisScriptName, bSuccess, sResult))
+      printerror(CString.FormatResult(sThisScriptName, bSuccess, sResult))
       print()
+      oLogFile.Write(sResult)
+      oLogFile.Write()
       bErrorHappened = True
-      continue
+      continue # for dictComponent in listofdictComponents:
 
    sOut = f"* '{VERSIONFILE}'"
    print(sOut)
    oLogFile.Write(sOut)
 
-   if VERSIONFORMAT == "FORMAT-1":
+   if VERSIONFORMAT == enVersionFormatType.format_1:
       oFile = CFile(VERSIONFILE)
       listLines, bSuccess, sResult = oFile.ReadLines(
                                                       bCaseSensitive  = True,
                                                       bSkipBlankLines = True,
-                                                      sContains       = "VERSION",
+                                                      sComment        = "#",
+                                                      sContains       = "VERSION", # this includes 'VERSION_DATE'
                                                       bLStrip         = True,
                                                       bRStrip         = True,
                                                       bToScreen       = False
@@ -265,13 +333,13 @@ for dictComponent in listofdictComponents:
       if bSuccess is not True:
          sResult = CString.FormatResult(sThisScriptName, bSuccess, sResult)
          oLogFile.Write(sResult)
-         print()
-         print(COLBR + sResult)
+         oLogFile.Write()
+         printerror(sResult)
          print()
          PrettyPrint(listLines)
          print()
          bErrorHappened = True
-         continue
+         continue # for dictComponent in listofdictComponents:
 
       listVersions = []
       listVersionDates = []
@@ -286,11 +354,21 @@ for dictComponent in listofdictComponents:
       print()
       oLogFile.Write()
       sTopic = f"{NAME} > VERSION"
-      sOut = sTopic.rjust(nRJust, ' ') + " : " + sVersion
+      if sVersion == "":
+         sResult = "'VERSION' not defined"
+      else:
+         sResult = f"{sVersion}"
+         if VERSIONTYPE == enVersionType.current_version:
+            dictVersionControl['CURRENT_VERSION'] = sVersion
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
       sTopic = f"{NAME} > VERSION_DATE"
-      sOut = sTopic.rjust(nRJust, ' ') + " : " + sVersionDate
+      if sVersionDate == "":
+         sResult = "'VERSION_DATE' not defined"
+      else:
+         sResult = f"{sVersionDate}"
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
       oLogFile.Write()
@@ -299,20 +377,18 @@ for dictComponent in listofdictComponents:
       if ( (sVersion == "") or (sVersionDate == "") ):
          sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult="Not able to parse content from file")
          oLogFile.Write(sResult)
-         print(COLBR + sResult)
+         oLogFile.Write()
+         printerror(sResult)
          print()
          bErrorHappened = True
-         continue
+         continue # for dictComponent in listofdictComponents:
 
-      if dictComponent['COMPAREVERSION'] is True:
-         dictComponent['VERSION'] = sVersion
-         listofdictVersions.append(dictComponent)
-
-   elif VERSIONFORMAT == "FORMAT-2":
+   elif VERSIONFORMAT == enVersionFormatType.format_2:
       oFile = CFile(VERSIONFILE)
       listLines, bSuccess, sResult = oFile.ReadLines(
                                                       bCaseSensitive  = True,
                                                       bSkipBlankLines = True,
+                                                      sComment        = "//",
                                                       sContains       = "Maximum_version;Minimum_version",
                                                       bLStrip         = True,
                                                       bRStrip         = True,
@@ -322,13 +398,14 @@ for dictComponent in listofdictComponents:
       if bSuccess is not True:
          sResult = CString.FormatResult(sThisScriptName, bSuccess, sResult)
          oLogFile.Write(sResult)
+         oLogFile.Write()
          print()
-         print(COLBR + sResult)
+         printerror(sResult)
          print()
          PrettyPrint(listLines)
          print()
          bErrorHappened = True
-         continue
+         continue # for dictComponent in listofdictComponents:
 
       listMaximumVersions = []
       listMinimumVersions = []
@@ -341,96 +418,151 @@ for dictComponent in listofdictComponents:
       sMaximumVersion = "; ".join(listMaximumVersions)
       sMinimumVersion = "; ".join(listMinimumVersions)
 
+      # -- both Maximum_version and Minimum_version are optional
+
       print()
       oLogFile.Write()
       sTopic = f"{NAME} > Maximum_version"
-      sOut = sTopic.rjust(nRJust, ' ') + " : " + sMaximumVersion
+      if sMaximumVersion == "":
+         sResult = "'Maximum_version' not defined"
+      else:
+         sResult = f"{sMaximumVersion}"
+         if VERSIONTYPE == enVersionType.required_version:
+            dictVersionControl['REQUIRED_MAX_VERSION'] = sMaximumVersion
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
       sTopic = f"{NAME} > Minimum_version"
-      sOut = sTopic.rjust(nRJust, ' ') + " : " + sMinimumVersion
+      if sMinimumVersion == "":
+         sResult = "'Minimum_version' not defined"
+      else:
+         sResult = f"{sMinimumVersion}"
+         if VERSIONTYPE == enVersionType.required_version:
+            dictVersionControl['REQUIRED_MIN_VERSION'] = sMinimumVersion
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
       print()
       oLogFile.Write()
-
-      if ( (sMaximumVersion == "") or (sMinimumVersion == "") ):
-         sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult="Not able to parse content from file")
-         oLogFile.Write(sResult)
-         print(COLBR + sResult)
-         print()
-         bErrorHappened = True
-         continue
-
-      if dictComponent['COMPAREVERSION'] is True:
-         dictComponent['VERSION'] = sMaximumVersion
-         listofdictVersions.append(dictComponent)
 
    else:
       sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=f"Version format '{VERSIONFORMAT}' not supported")
       oLogFile.Write(sResult)
-      print()
-      print(COLBR + sResult)
+      oLogFile.Write()
+      printerror(sResult)
       print()
       bErrorHappened = True
-      continue
+      continue # for dictComponent in listofdictComponents:
 
+   # eof else - if VERSIONFORMAT == enVersionFormatType.format_1:
 # eof for dictComponent in listofdictComponents:
+
+# -- version check (between current bundle version defined in Python code of component RobotFramework_TestsuitesManagement
+#    and optional maximum and minimum version defined in JSON configuration file of component RobotFramework_TestsuitesManagement)
 
 # debug
 # print()
-# PrettyPrint(listofdictVersions)
+# PrettyPrint(dictVersionControl)
 # print()
 
-# # --------------------------------------------------------------------------------------------------------------
-# # -- version control
-# #    !!! temporarily decativated; needs to be reworked
-bVersionMismatchHappened = False
-# for tupleCombinations in itertools.combinations(listofdictVersions, 2):
-   # dictVersion_1 = tupleCombinations[0]
-   # dictVersion_2 = tupleCombinations[1]
-   # sVersion_1 = dictVersion_1['VERSION']
-   # sVersion_2 = dictVersion_2['VERSION']
-   # if sVersion_1 != sVersion_2:
-      # sName_1 = dictVersion_1['NAME']
-      # sName_2 = dictVersion_2['NAME']
-      # sOut = f"version mismatch between version '{sVersion_1}' of '{sName_1}' and version '{sVersion_2}' of '{sName_2}'"
-      # sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=sOut)
-      # oLogFile.Write(sResult)
-      # oLogFile.Write()
-      # print(COLBR + sResult)
-      # print()
-      # bVersionMismatchHappened = True
-      # continue
-   # # eof if sVersion_1 != sVersion_2:
-# # eof for tupleCombinations in itertools.combinations(listofdictVersions, 2):
-# # --------------------------------------------------------------------------------------------------------------
+CURRENT_VERSION      = dictVersionControl['CURRENT_VERSION']
+REQUIRED_MAX_VERSION = dictVersionControl['REQUIRED_MAX_VERSION']
+REQUIRED_MIN_VERSION = dictVersionControl['REQUIRED_MIN_VERSION']
+
+bVersionMismatch      = False
+bVersionCheckExecuted = False
+
+if CURRENT_VERSION is None:
+   bErrorHappened = True
+   print()
+   print(COLBY + "Version check not possible because of missing Robot Framework AIO version")
+   print()
+else:
+   if ( (REQUIRED_MAX_VERSION is None) and (REQUIRED_MIN_VERSION is None) ):
+      print()
+      print(COLBY + "Version check skipped because 'Maximum_version' and 'Minimum_version' are not defined")
+      print()
+   else:
+      nCurrentVersion = get_version_as_int(CURRENT_VERSION, oLogFile)
+      if nCurrentVersion is None:
+         bErrorHappened = True
+      else:
+         # current version available => version check is possible in general
+         nRequiredMaxVersion = None
+         if REQUIRED_MAX_VERSION is not None:
+            nRequiredMaxVersion = get_version_as_int(REQUIRED_MAX_VERSION, oLogFile)
+            if nRequiredMaxVersion is None:
+               bErrorHappened = True
+         nRequiredMinVersion = None
+         if REQUIRED_MIN_VERSION is not None:
+            nRequiredMinVersion = get_version_as_int(REQUIRED_MIN_VERSION, oLogFile)
+            if nRequiredMinVersion is None:
+               bErrorHappened = True
+         bVersionCheckPossible = True
+         if ( (nRequiredMaxVersion is not None) and (nRequiredMinVersion is not None) ):
+            if nRequiredMaxVersion < nRequiredMinVersion:
+               sResult = f"Invalid version numbers: The required maximum version {REQUIRED_MAX_VERSION} is smaller than the required minimum version {REQUIRED_MIN_VERSION}."
+               oLogFile.Write(sResult)
+               oLogFile.Write()
+               printerror(sResult)
+               print()
+               bErrorHappened = True
+               bVersionCheckPossible = False
+         if bVersionCheckPossible is True:
+            if nRequiredMaxVersion is not None:
+               # max version check
+               if nCurrentVersion > nRequiredMaxVersion:
+                  sResult = f"Version mismatch: Current Robot Framework bundle version {CURRENT_VERSION} is bigger than the allowed maximum version {REQUIRED_MAX_VERSION}."
+                  oLogFile.Write(sResult)
+                  oLogFile.Write()
+                  printerror(sResult)
+                  print()
+                  bVersionMismatch = True
+               bVersionCheckExecuted = True
+            if nRequiredMinVersion is not None:
+               # min version check
+               if nCurrentVersion < nRequiredMinVersion:
+                  sResult = f"Version mismatch: Current Robot Framework bundle version {CURRENT_VERSION} is smaller than the allowed minimum version {REQUIRED_MIN_VERSION}."
+                  oLogFile.Write(sResult)
+                  oLogFile.Write()
+                  printerror(sResult)
+                  print()
+                  bVersionMismatch = True
+               bVersionCheckExecuted = True
+
+# eof else ... if CURRENT_VERSION is None:
 
 if bErrorHappened is True:
-   sOut = f"done with errors (return {ERROR})"
-   sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=sOut)
+   sResult = f"Done with errors (return {ERROR})"
    oLogFile.Write(sResult)
    oLogFile.Write()
-   print(COLBR + sResult)
+   printerror(sResult)
    print()
    del oLogFile
    sys.exit(ERROR)
-elif bVersionMismatchHappened is True:
-   sOut = f"done with version mismatch (return {VERSION_MISMATCH})"
-   sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=sOut)
+
+if bVersionMismatch is True:
+   sResult = f"Done with version mismatch (return {VERSION_MISMATCH})"
    oLogFile.Write(sResult)
    oLogFile.Write()
-   print(COLBR + sResult)
+   printerror(sResult)
    print()
    del oLogFile
    sys.exit(VERSION_MISMATCH)
-else:
-   oLogFile.Write("done")
+
+if ( (bVersionCheckExecuted is True) and (bVersionMismatch is False) ):
+   sResult = "Version check passed"
+   oLogFile.Write(sResult)
    oLogFile.Write()
-   print(COLBG + "done")
+   print(COLBG + sResult)
    print()
-   del oLogFile
-   sys.exit(SUCCESS)
+
+oLogFile.Write("Done")
+oLogFile.Write()
+print(COLBG + "Done")
+print()
+del oLogFile
+sys.exit(SUCCESS)
 
 # --------------------------------------------------------------------------------------------------------------
 
