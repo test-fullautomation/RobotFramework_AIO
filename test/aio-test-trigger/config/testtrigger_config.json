@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 02.02.2023
+# 03.02.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -61,6 +61,34 @@
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
+                       "COMPONENTROOTPATH" : "../../../../python-pytestlog2db",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../python-pytestlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-robotlog2db",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../robotframework-robotlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-robotlog2rqm",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-tmllog2robotlog",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../robotframework-tmllog2robotlog/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
                        "COMPONENTROOTPATH" : "../../tutorial-test",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
@@ -68,6 +96,7 @@
                        "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
+
 
 # Section "TESTTYPES":
 # --------------------
