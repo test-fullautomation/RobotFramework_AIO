@@ -64,6 +64,7 @@
     "security.workspace.trust.emptyWindow": true,
     "timeline.excludeSources": [],
     "extensions.autoUpdate": false,
+    "update.mode": "none",
     "rst.preview.pythonPath": "{RobotPythonPath}/python3",
     // Other specific settings
 }
