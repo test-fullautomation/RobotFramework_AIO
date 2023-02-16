@@ -82,13 +82,6 @@
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-tmllog2robotlog",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOGFILE"           : "../../../../robotframework-tmllog2robotlog/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
                        "COMPONENTROOTPATH" : "../../tutorial-test",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
