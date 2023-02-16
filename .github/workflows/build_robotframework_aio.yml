@@ -20,39 +20,39 @@ env:
   DOCBUILDER_ARGUMENTS: --configfile "./maindoc_configs/maindoc_config_OSS.json"
 
 jobs:
-  build-linux:
-    name: Build Linux package
-    runs-on: ubuntu-latest
+  # build-linux:
+  #   name: Build Linux package
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout source
+  #       uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          chmod +x ./requirements_linux.sh
-          ./requirements_linux.sh
+  #     - name: Install dependencies
+  #       run: |
+  #         chmod +x ./requirements_linux.sh
+  #         ./requirements_linux.sh
 
-      - name: Clone repositories
-        run: |
-          chmod +x ./cloneall
-          ./cloneall
+  #     - name: Clone repositories
+  #       run: |
+  #         chmod +x ./cloneall
+  #         ./cloneall
 
-      - name: Install
-        run: |
-          chmod +x ./install/install.sh
-          ./install/install.sh
+  #     - name: Install
+  #       run: |
+  #         chmod +x ./install/install.sh
+  #         ./install/install.sh
 
-      - name: Build
-        run: |
-          chmod +x ./build
-          ./build
+  #     - name: Build
+  #       run: |
+  #         chmod +x ./build
+  #         ./build
 
-      - name: Upload built package
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux-package
-          path: output_lx/*.deb
+  #     - name: Upload built package
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: linux-package
+  #         path: output_lx/*.deb
 
   build-windows:
     name: Build Windows package
@@ -87,3 +87,66 @@ jobs:
         with:
           name: windows-package
           path: Output/
+
+  install-test-windows:
+    name: Build Windows package
+    runs-on: windows-latest
+    needs: build-windows
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v2
+
+    - name: Download Windows installer package
+      uses: actions/download-artifact@v2
+      with:
+        name: windows-package
+
+    - name: Install on Windows
+      shell: cmd
+      run: |
+        tar -xf windows-package.zip
+        ./scripts/install-windows.bat
+
+    - name: Run tests on Windows
+      shell: cmd
+      run: python test/aio-test-trigger/aio-test-trigger.py
+
+
+  # install-test-linux:
+  #   name: Build Linux package
+  #   runs-on: ubuntu-latest
+  #   needs: build-linux
+
+  #   steps:
+  #   - name: Download Linux installer package
+  #   - name: Install on Linux
+  #   - name: Run tests on Linux
+
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: [install-test-windows, install-test-linux]
+
+  #   steps:
+  #   - name: Download artifact from build workflow
+  #     uses: actions/download-artifact@v2
+  #     # with:
+  #     #   name: windows-package
+  #     #   path: windows
+
+  #   - name: Unzip artifact
+  #     run: |
+  #       unzip artifact-from-build-workflow/artifact-from-build-workflow.zip -d artifact-from-build-workflow
+
+  #   - name: Create Release
+  #     uses: actions/create-release@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+  #     with:
+  #       tag_name: v${{ env.TAG_NAME }}
+  #       release_name: Release v${{ env.TAG_NAME }}
+  #       draft: false
+  #       prerelease: false
+  #       assets:
+  #       - name: artifact-from-build-workflow
+  #         path: artifact-from-build-workflow          path: Output/
