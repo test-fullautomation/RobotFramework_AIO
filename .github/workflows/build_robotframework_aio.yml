@@ -20,39 +20,39 @@ env:
   DOCBUILDER_ARGUMENTS: --configfile "./maindoc_configs/maindoc_config_OSS.json"
 
 jobs:
-  # build-linux:
-  #   name: Build Linux package
-  #   runs-on: ubuntu-latest
+  build-linux:
+    name: Build Linux package
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout source
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
 
-  #     - name: Install dependencies
-  #       run: |
-  #         chmod +x ./requirements_linux.sh
-  #         ./requirements_linux.sh
+      - name: Install dependencies
+        run: |
+          chmod +x ./requirements_linux.sh
+          ./requirements_linux.sh
 
-  #     - name: Clone repositories
-  #       run: |
-  #         chmod +x ./cloneall
-  #         ./cloneall
+      - name: Clone repositories
+        run: |
+          chmod +x ./cloneall
+          ./cloneall
 
-  #     - name: Install
-  #       run: |
-  #         chmod +x ./install/install.sh
-  #         ./install/install.sh
+      - name: Install
+        run: |
+          chmod +x ./install/install.sh
+          ./install/install.sh
 
-  #     - name: Build
-  #       run: |
-  #         chmod +x ./build
-  #         ./build
+      - name: Build
+        run: |
+          chmod +x ./build
+          ./build
 
-  #     - name: Upload built package
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: linux-package
-  #         path: output_lx/*.deb
+      - name: Upload built package
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-package
+          path: output_lx/*.deb
 
   build-windows:
     name: Build Windows package
@@ -89,7 +89,7 @@ jobs:
           path: Output/
 
   install-test-windows:
-    name: Build Windows package
+    name: Test Windows package
     runs-on: windows-latest
     needs: build-windows
 
@@ -113,15 +113,25 @@ jobs:
       run: python test/aio-test-trigger/aio-test-trigger.py
 
 
-  # install-test-linux:
-  #   name: Build Linux package
-  #   runs-on: ubuntu-latest
-  #   needs: build-linux
+  install-test-linux:
+    name: Test Linux package
+    runs-on: ubuntu-latest
+    needs: build-linux
 
-  #   steps:
-  #   - name: Download Linux installer package
-  #   - name: Install on Linux
-  #   - name: Run tests on Linux
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v2
+
+    - name: Download Linux installer package
+      uses: actions/download-artifact@v2
+      with:
+        name: linux-package
+
+    - name: Install on Linux
+      run: unzip -q linux-package.zip && sudo apt-get install linux-package/*.deb
+
+    - name: Run tests on Linux
+      run: python test/aio-test-trigger/aio-test-trigger.py
 
   # release:
   #   runs-on: ubuntu-latest
