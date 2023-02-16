@@ -94,6 +94,9 @@ jobs:
     needs: build-windows
 
     steps:
+    - name: Support long path in git
+      run: git config --system core.longpaths true
+
     - name: Checkout source
       uses: actions/checkout@v2
 
@@ -108,7 +111,9 @@ jobs:
 
     - name: Run tests on Windows
       shell: cmd
-      run: python test/aio-test-trigger/aio-test-trigger.py
+      run: |
+        set Robot
+        ${{ env.RobotPythonPath }}/python test/aio-test-trigger/aio-test-trigger.py
 
 
   install-test-linux:
@@ -129,7 +134,9 @@ jobs:
       run: sudo apt-get install ./*.deb
 
     - name: Run tests on Linux
-      run: $RobotPythonPath/python test/aio-test-trigger/aio-test-trigger.py
+      run: |
+        printenv | grep Robot
+        ${{ env.RobotPythonPath }}/python test/aio-test-trigger/aio-test-trigger.py
 
   # release:
   #   runs-on: ubuntu-latest
