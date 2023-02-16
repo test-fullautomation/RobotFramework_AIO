@@ -113,7 +113,7 @@ jobs:
       shell: cmd
       run: |
         set Robot
-        ${{ env.RobotPythonPath }}/python test/aio-test-trigger/aio-test-trigger.py
+        "C:\Program Files\RobotFramework\python39\python" test/aio-test-trigger/aio-test-trigger.py
 
 
   install-test-linux:
