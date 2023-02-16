@@ -24,6 +24,7 @@ texlive_packages=(
 "trimspaces"
 "listings"
 "pdfcol"
+"tikz*"
 )
 extra_packages=""
 for package in ${texlive_packages[@]}; do

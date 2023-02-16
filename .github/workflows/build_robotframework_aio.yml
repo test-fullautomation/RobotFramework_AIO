@@ -128,7 +128,10 @@ jobs:
         name: linux-package
 
     - name: Install on Linux
-      run: unzip -q linux-package.zip && sudo apt-get install linux-package/*.deb
+      run: |
+        pwd
+        ls -alh
+        unzip -q ./linux-package.zip  && sudo apt-get install *.deb
 
     - name: Run tests on Linux
       run: python test/aio-test-trigger/aio-test-trigger.py
