@@ -136,7 +136,7 @@ jobs:
     - name: Run tests on Linux
       run: |
         printenv | grep Robot
-        ${{ env.RobotPythonPath }}/python test/aio-test-trigger/aio-test-trigger.py
+        /opt/rfwaio/python39/install/bin/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
   # release:
   #   runs-on: ubuntu-latest
