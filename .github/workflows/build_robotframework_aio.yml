@@ -144,6 +144,7 @@ jobs:
 
     - name: Run tests on Linux
       run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
         printenv | grep Robot
         /opt/rfwaio/python39/install/bin/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
