@@ -91,7 +91,7 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 Source: "A:\robotframework-tutorial\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "A:\robotframework-documentation\book\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-documentation\book\Roboframework-reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "A:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
