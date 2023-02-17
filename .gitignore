@@ -4,3 +4,6 @@ output_lx/
 __pycache__/
 logfiles/
 ExecutionLogFile.log
+test/**/*.html
+test/**/*.xml
+test/**/*.log
