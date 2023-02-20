@@ -23,7 +23,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 02.02.2023
+# 15.02.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 # TM***
@@ -84,12 +84,12 @@ print(COLBY + f"* Reference path: '{sReferencePath}'")
 LOGNAME = "PlaygroundLog"
 
 # without variant configuration
-sRobotFile_1    = CString.NormalizePath("./exercise-pg-1.robot", sReferencePath)
+sRobotFile_1    = CString.NormalizePath("./exercise-pg-1.robot", sReferencePathAbs=sReferencePath)
 # with variant configuration
-sRobotFile_2    = CString.NormalizePath("./exercise-pg-2.robot", sReferencePath)
+sRobotFile_2    = CString.NormalizePath("./exercise-pg-2.robot", sReferencePathAbs=sReferencePath)
 # with variant configuration
-sRobotFile_3    = CString.NormalizePath("./testsuites/exercise-pg-ts.robot", sReferencePath)
-sTestsuitesPath = CString.NormalizePath("./testsuites", sReferencePath)
+sRobotFile_3    = CString.NormalizePath("./testsuites/exercise-pg-ts.robot", sReferencePathAbs=sReferencePath)
+sTestsuitesPath = CString.NormalizePath("./testsuites", sReferencePathAbs=sReferencePath)
 
 sSource = sRobotFile_2
 
@@ -115,26 +115,49 @@ listCmdLineParts.append(f"\"{sThisScriptPath}/playgroundlogfiles/{LOGNAME}.log\"
 #
 # TM***
 #
+METADATA     = None
+VARIABLE     = None
+VARIANT      = None
+CONFIG_FILE  = None
+LOCAL_CONFIG = None
+#
+# METADATA    = "--metadata version_sw:1.2.3"
+# METADATA    = "--metadata version_Hw:2.3.4"
+# METADATA    = "--metadata version_test:3.4.5"
+# METADATA    = "--metadata version_sw:1.2.3 --metadata version_Hw:2.3.4 --metadata version_test:3.4.5"
+# METADATA    = "--metadata my_cmdline_metadata:my_cmdline_metadata_value"
+# METADATA    = "--metadata my_test_local_metadata:my_test_local_metadata_cmdline_value"
 # VARIABLE     = "--variable teststring:\"command line test string\""
 # VARIABLE     = "--variable teststring_common:\"command line test string common\""
 # VARIABLE     = "--variable teststring_variant:\"command line test string variant\""
 # VARIABLE     = "--variable teststring_bench:\"command line test string bench\""
+# VARIABLE     = "--variable teststring_common:\"command line test string common\" --variable teststring_variant:\"command line test string variant\" --variable teststring_bench:\"command line test string bench\""
 # VARIANT      = "--variable variant:\"variant1\""
 # VARIANT      = "--variable variant:\"variant2\""
-# VARIANT      = "--variable variant:\"invalid\""
-CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant1.json\""          # path relative to position of robot file
+# VARIANT      = "--variable variant:\"inv/alid\""
+# VARIANT      = "--variable variant:\"    \""
+# VARIANT      = "--variable variant:\"SälfTest.ß.€.考.𠼭.𠼭\""
+# VARIANT      = "--variable variant:\".\localconfig\exercise-pg_localconfig_bench1.json\""
+# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant1.json\""          # path relative to position of robot file
 # CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant2.json\""          # path relative to position of robot file
 # CONFIG_FILE  = "--variable config_file:\"./config/not_existing.json\""                         # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./localconfig/exercise-pg_localconfig_bench1.json\""  # path relative to position of robot file
 # LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench1.json\"" # path relative to position of robot file
-LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench2.json\"" # path relative to position of robot file
+# LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench2.json\"" # path relative to position of robot file
 # LOCAL_CONFIG = "--variable local_config:\"./localconfig/not_existing.json\""                   # path relative to position of robot file
 #
 # TM***
 #
-# listCmdLineParts.append(VARIABLE)
-# listCmdLineParts.append(VARIANT)
-listCmdLineParts.append(CONFIG_FILE)
-listCmdLineParts.append(LOCAL_CONFIG)
+if METADATA is not None:
+   listCmdLineParts.append(METADATA)
+if VARIABLE is not None:
+   listCmdLineParts.append(VARIABLE)
+if VARIANT is not None:
+   listCmdLineParts.append(VARIANT)
+if CONFIG_FILE is not None:
+   listCmdLineParts.append(CONFIG_FILE)
+if LOCAL_CONFIG is not None:
+   listCmdLineParts.append(LOCAL_CONFIG)
 #
 listCmdLineParts.append(f"\"{sSource}\"")
 
