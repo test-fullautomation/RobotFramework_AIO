@@ -107,12 +107,10 @@
    "TESTTYPES" : {
                   "ROBOT"  : {
                                "DATABASEEXECUTOR" : "%RobotPythonPath%/Lib/site-packages/RobotLog2DB/robotlog2db.py",
-                              //  "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}", "-UUID ${UUID}", "--variant ${variant}", "--versions ${versions}", "--config ${config}", "${append}", "${dryrun}"]
                                "LOCALCOMMANDLINE" : ["-h"]
                              },
                   "PYTEST" : {
                                "DATABASEEXECUTOR" : "%RobotPythonPath%/Lib/site-packages/PyTestLog2DB/pytestlog2db.py",
-                              //  "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}", "--UUID ${UUID}", "--config ${config}", "${append}", "${dryrun}"]
                                "LOCALCOMMANDLINE" : ["-h"]
                              }
                 }
