@@ -3,7 +3,7 @@ Version: 0.6.0.5
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: libmariadb-dev-compat | libmariadb-dev | libmariadbclient18 | libmariadb3
+Depends: libmariadb-dev-compat | libmariadb-dev | libmariadbclient18 | libmariadb3, pandoc
 Maintainer: Thomas Pollerspöck (Thomas.Pollerspoeck@de.bosch.com)
 Description: RobotFramework AIO (All In One)
 

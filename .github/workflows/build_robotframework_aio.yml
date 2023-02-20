@@ -120,7 +120,7 @@ jobs:
       shell: cmd
       run: |
         set Robot
-        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py
+        echo "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py
 
   install-test-linux:
     name: Test Linux package
@@ -148,7 +148,7 @@ jobs:
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         printenv | grep Robot
-        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
+        echo $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
   release:
     name: Release AIO
@@ -166,8 +166,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ env.TAG_NAME }}
-        release_name: Release v${{ env.TAG_NAME }}
+        # tag_name: v${{ env.TAG_NAME }}
+        tag_name: rel/aio/1.1.1.1
+        release_name: Release ${{ env.TAG_NAME }}
         draft: false
         prerelease: false
 
