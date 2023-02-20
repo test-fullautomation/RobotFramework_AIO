@@ -112,14 +112,19 @@ jobs:
       with:
         name: windows-package
 
-    - name: Install on Windows
+    - name: Install RobotFramework AIO on Windows
       shell: cmd
       run: ./scripts/install-windows.bat
 
-    - name: Run tests on Windows
+    - name: Install pandoc on Windows
       shell: cmd
+      run: choco install pandoc
+
+    - name: Run tests on Windows
+      shell: bash
       run: |
         set Robot
+        echo $(where pandoc)
         echo "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py
 
   install-test-linux:
@@ -148,6 +153,7 @@ jobs:
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         printenv | grep Robot
+        echo $(where pandoc)
         echo $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
   release:
