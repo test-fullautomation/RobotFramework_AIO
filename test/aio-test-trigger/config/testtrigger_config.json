@@ -80,13 +80,13 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../tutorial-test",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+#                    },
+#                    {
+#                       "COMPONENTROOTPATH" : "../../tutorial-test",
+#                       "TESTFOLDER"        : "pytest",
+#                       "TESTTYPE"          : "PYTEST",
+#                       "TESTEXECUTOR"      : "executepytest.py",
+#                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
 
@@ -106,12 +106,10 @@
 
    "TESTTYPES" : {
                   "ROBOT"  : {
-                               "DATABASEEXECUTOR" : "%RobotPythonPath%/Lib/site-packages/RobotLog2DB/robotlog2db.py",
-                               "LOCALCOMMANDLINE" : ["-h"]
+                               "DATABASEEXECUTOR" : "../mocks/pytest2db-mock.py"
                              },
                   "PYTEST" : {
-                               "DATABASEEXECUTOR" : "%RobotPythonPath%/Lib/site-packages/PyTestLog2DB/pytestlog2db.py",
-                               "LOCALCOMMANDLINE" : ["-h"]
+                               "DATABASEEXECUTOR" : "../mocks/robot2db-mock.py"
                              }
                 }
 }

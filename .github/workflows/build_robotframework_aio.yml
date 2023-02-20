@@ -121,11 +121,10 @@ jobs:
       run: choco install pandoc
 
     - name: Run tests on Windows
-      shell: bash
+      shell: cmd
       run: |
         set Robot
-        echo $(where pandoc)
-        echo "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py
+        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py
 
   install-test-linux:
     name: Test Linux package
@@ -153,8 +152,8 @@ jobs:
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         printenv | grep Robot
-        echo $(where pandoc)
-        echo $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
+        echo $(which pandoc)
+        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
   release:
     name: Release AIO
@@ -170,7 +169,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         # tag_name: v${{ env.TAG_NAME }}
         tag_name: rel/aio/1.1.1.1
