@@ -34,6 +34,7 @@
 #define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
+#include '..\Output\Include\install_projects.iss';
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -125,7 +126,9 @@ Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode
 Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases; 
-Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial; 
+Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial\100_variables_and_datatypes; WorkingDir: {code:GetUsrDataDir}\tutorial;
+Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial\900_building_testsuites; WorkingDir: {code:GetUsrDataDir}\tutorial;
+Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; WorkingDir: {code:GetUsrDataDir}\tutorial;
 
 
 [Types]
