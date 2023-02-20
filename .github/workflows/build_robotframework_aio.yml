@@ -173,7 +173,7 @@ jobs:
       with:
         # tag_name: v${{ env.TAG_NAME }}
         tag_name: rel/aio/1.1.1.1
-        release_name: Release ${{ env.TAG_NAME }}
+        release_name: RobotFramework AIO version ${{ env.TAG_NAME }}
         draft: false
         prerelease: false
 
@@ -184,7 +184,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./*.exe
-        # asset_name: setup_RobotFramework_AIO_Win_${{ env.TAG_NAME }}.exe
+        asset_name: setup_RobotFramework_AIO_Win_${{ env.TAG_NAME }}.exe
         asset_content_type: application/octet-stream
 
     - name: Upload Linux Release Asset
@@ -194,5 +194,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./*.deb
-        # asset_name: setup_RobotFramework_AIO_Linux_${{ env.TAG_NAME }}.deb
+        asset_name: setup_RobotFramework_AIO_Linux_${{ env.TAG_NAME }}.deb
         asset_content_type: application/vnd.debian.binary-package
