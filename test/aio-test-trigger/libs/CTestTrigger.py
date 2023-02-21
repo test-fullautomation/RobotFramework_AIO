@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 03.11.2022
+# 20.02.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -139,6 +139,7 @@ class CTestTrigger():
       listofdictComponents = self.__oTestTriggerConfig.Get('COMPONENTS')
       nNrOfComponents = len(listofdictComponents)
       nCntComponent = 0
+      bAppendDB = False
       for dictComponent in listofdictComponents:
          nCntComponent = nCntComponent + 1
 
@@ -246,11 +247,19 @@ class CTestTrigger():
 
          listCmdLineParts = []
          listCmdLineParts.append(f"\"{PYTHON}\"")
-         listCmdLineParts.append(f"\"{DATABASEEXECUTOR}\"")
+         listCmdLineParts.append(f"{DATABASEEXECUTOR}")
          listCmdLineParts.append(f"\"{LOGFILE}\"")
 
          if LOCALCOMMANDLINE is not None:
             listCmdLineParts.append(LOCALCOMMANDLINE)
+
+         UUID = self.__oTestTriggerConfig.Get('UUID')
+         listCmdLineParts.append(f"--UUID {UUID}")
+
+         if bAppendDB is True:
+            listCmdLineParts.append(f"--append")
+         else:
+            bAppendDB = True
 
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts

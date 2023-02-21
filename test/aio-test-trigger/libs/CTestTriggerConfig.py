@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 02.11.2022
+# 20.02.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -30,6 +30,8 @@
 # --------------------------------------------------------------------------------------------------------------
 
 import os, sys, time, platform, json, argparse, re
+import uuid
+
 import colorama as col
 
 from version import NAME
@@ -83,6 +85,7 @@ class CTestTriggerConfig():
       self.__dictTestTriggerConfig['NAME']             = NAME
       self.__dictTestTriggerConfig['VERSION']          = VERSION
       self.__dictTestTriggerConfig['VERSION_DATE']     = VERSION_DATE
+      self.__dictTestTriggerConfig['UUID']             = str(uuid.uuid4()) # Test Trigger defines this, not the database application
 
       bSuccess, sResult = self.__GetCommandLine()
       if bSuccess is not True:
@@ -306,15 +309,6 @@ class CTestTriggerConfig():
             bSuccess = None
             sResult  = f"Missing key 'DATABASEEXECUTOR' in file {sTestTriggerConfigFile}, section 'TESTTYPES', test type '{TESTTYPE}'"
             raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         DATABASEEXECUTOR = CString.NormalizePath(self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['DATABASEEXECUTOR'], sReferencePathAbs=sConfigPath)
-         DATABASEEXECUTOR, bSuccess, sResult = self.__ResolveParameters(DATABASEEXECUTOR)
-         if bSuccess is False:
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         if os.path.isfile(DATABASEEXECUTOR) is False:
-            bSuccess = None
-            sResult  = f"Database Executor '{DATABASEEXECUTOR}' does not exist"
-            raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-         self.__dictTestTriggerConfig['TESTTYPES'][TESTTYPE]['DATABASEEXECUTOR'] = DATABASEEXECUTOR
 
          # optional
          LOCALCOMMANDLINE = None # caution: same name like in section "COMPONENTS"

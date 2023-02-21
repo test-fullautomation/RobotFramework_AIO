@@ -21,12 +21,19 @@
 *** Settings ***
 
 Library    RobotFramework_TestsuitesManagement    WITH NAME    tm
+Library    RobotframeworkExtensions.Collection    WITH NAME    rf.extensions
 
 Suite Setup    tm.testsuite_setup
 
+Metadata    version_hw    metadata_version_hw
+Metadata    my_test_local_metadata    my_test_local_metadata_value
+
 *** Test Cases ***
 Test Case exercise-pg-1
-    [documentation]    exercise-pg-1
-    Log    teststring_common : ${teststring_common} (exercise-pg-1.robot)   console=yes
-    Log    teststring_variant : ${teststring_variant} (exercise-pg-1.robot)    console=yes
-    Log    teststring_bench : ${teststring_bench} (exercise-pg-1.robot)    console=yes
+   [documentation]    exercise-pg-1
+   Log    teststring_common : ${teststring_common} (exercise-pg-1.robot)   console=yes
+   Log    teststring_variant : ${teststring_variant} (exercise-pg-1.robot)    console=yes
+   Log    teststring_bench : ${teststring_bench} (exercise-pg-1.robot)    console=yes
+
+   rf.extensions.pretty_print    ${SUITE METADATA}
+

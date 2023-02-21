@@ -1,0 +1,14 @@
+{
+   "component"  : {
+                     "PyExColl"   : ["Comparison", "File", "Folder", "String", "Utils"],
+                     "RoExtColl"  : "robotframework-extensions-collection",
+                     "TeSuitMa"   : "robotframework-testsuitesmanagement",
+                     "JPrePro"    : "jsonpreprocessor",
+                     "GenPkgDoc"  : "GenPackageDoc",
+                     "RobLog2DB"  : "robotframework-robotlog2db",
+                     "RobLog2RQM" : "robotframework-robotlog2rqm",
+                     "TML2RobLog" : "robotframework-tmllog2robotlog"
+                  },
+   "version_sw" : "tt-version-004",
+   "variant"    : "tt-variant-004"
+}
