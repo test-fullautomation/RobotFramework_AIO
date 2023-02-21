@@ -69,6 +69,16 @@ function parse_arg() {
 	esac
 	done
 }
+function restart_cntlm(){
+	if [ "$UNAME" == "Linux" ] ; then
+		sudo systemctl restart cntlm
+	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+		net stop cntlm
+		sleep 3
+		net start cntlm
+	fi
+	sleep 1
+}
 #
 #  download packages function
 #
@@ -83,9 +93,30 @@ function download_package(){
 	package_url=$2
 	package_out=$3
 
+	retry_counter=0
+	max_retries=5
+	success=false
+
 	echo curl $proxy_args "$package_url" -o "$package_out"
-	curl $proxy_args -L "$package_url" -o "$package_out"
-	logresult "$?" "downloaded $package_name" "download $package_name"
+	while [[ "$retry_counter" -lt "$max_retries" && "$success" == "false" ]];do
+		curl $proxy_args -L "$package_url" -o "$package_out"
+
+		if [ $? -eq 0 ]; then
+			success=true
+			goodmsg "Successfully downloaded $package_name"
+		else
+			((retry_counter++))
+			echo "Failed to download $package_url (attempt: $retry_counter)"
+			sleep 1
+			if [ "$use_cntlm" == "Yes" ]; then
+				restart_cntlm
+			fi
+		fi
+	done
+
+	if [ "$success" == "false" ]; then
+		errormsg "FATAL: Could not download $package_url after $max_retries attempts"
+	fi
 }
 
 function packaging_vscode() {
