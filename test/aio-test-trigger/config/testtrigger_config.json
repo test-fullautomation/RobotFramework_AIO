@@ -80,13 +80,13 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
-#                    },
-#                    {
-#                       "COMPONENTROOTPATH" : "../../tutorial-test",
-#                       "TESTFOLDER"        : "pytest",
-#                       "TESTTYPE"          : "PYTEST",
-#                       "TESTEXECUTOR"      : "executepytest.py",
-#                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../tutorial-test",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
 

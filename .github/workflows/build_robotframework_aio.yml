@@ -177,7 +177,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ env.TAG_NAME }}
+        tag_name: ${{ env.TAG_NAME }}
         release_name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
         draft: false
         prerelease: false
