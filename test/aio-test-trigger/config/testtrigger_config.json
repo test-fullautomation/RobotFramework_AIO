@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 03.02.2023
+# 21.02.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -29,7 +29,7 @@
                        "TESTFOLDER"        : "test",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "executerobottest.py",
-                       # "LOCALCOMMANDLINE"  : ["--variable config_file:${config_file}"],
+                       # "LOCALCOMMANDLINE"  : "...",
                        "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
@@ -80,14 +80,15 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../tutorial-test",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     }
+                    # to be restored after reference is adapted:
+                    # {
+                       # "COMPONENTROOTPATH" : "../../tutorial-test",
+                       # "TESTFOLDER"        : "pytest",
+                       # "TESTTYPE"          : "PYTEST",
+                       # "TESTEXECUTOR"      : "executepytest.py",
+                       # "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    # }
                   ],
 
 
@@ -101,15 +102,30 @@
 # A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
 # Finally (after internally the parameters are resolved) the LOCALCOMMANDLINE only contains parameter that are defined in the command line of the Test Trigger.
 # "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
-# The robot2db 'append' mode is activated by --params "append=-append" in command line of Test Trigger.
-# The robot2db 'dryrun' mode is activated by --params "dryrun=-dryrun" in command line of Test Trigger.
+#
+# The robot2db 'dryrun' mode is activated by --params "dryrun=--dryrun" in command line of Test Trigger.
+#
+# UUID and append mode are handled Test Trigger internally (the first test result is written 'as new' to database, all follow up results are
+# written in append mode).
+#
+# Database access has to be activated explicitely in command line of Test Trigger by '--results2db'
 
    "TESTTYPES" : {
                   "ROBOT"  : {
-                               "DATABASEEXECUTOR" : "../mocks/pytest2db-mock.py"
+                               "DATABASEEXECUTOR" : "-m RobotLog2DB",
+                               "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}",
+                                                      # "--variant ${variant}",
+                                                      # "--versions ${versions}",
+                                                      "--config ${dbapp_config}",
+                                                      "${dryrun}"]
                              },
                   "PYTEST" : {
-                               "DATABASEEXECUTOR" : "../mocks/robot2db-mock.py"
+                               "DATABASEEXECUTOR" : "-m PyTestLog2DB",
+                               "LOCALCOMMANDLINE" : ["${server}", "${user}", "${password}", "${database}",
+                                                     # "--variant ${variant}",    https://github.com/test-fullautomation/python-pytestlog2db/issues/14
+                                                     # "--versions ${versions}",  https://github.com/test-fullautomation/python-pytestlog2db/issues/14
+                                                     "--config ${dbapp_config}",
+                                                     "${dryrun}"]
                              }
                 }
 }
