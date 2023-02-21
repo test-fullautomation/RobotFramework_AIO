@@ -90,7 +90,9 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 
 ;Tutorial installation
 
-Source: "A:\robotframework-tutorial\???_*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-tutorial\100_variables_and_datatypes"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-tutorial\900_building_testsuites"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-tutorial\901_static_code_analysis"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
 Source: "A:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
