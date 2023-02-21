@@ -49,6 +49,7 @@ else
 			 ;;
           --config-file=*)
 			 ConfigFile="${i#*=}"
+			;;
           --project-config-file=*)
 			 ProjectConfigFile=`cygpath -wa "${i#*=}"`
           ;;

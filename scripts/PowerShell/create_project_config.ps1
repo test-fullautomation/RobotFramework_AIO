@@ -1,12 +1,9 @@
-# Read JSON from config.json file
-$scriptPath = $MyInvocation.MyCommand.Path
-$scriptFolder = Split-Path $scriptPath -Parent
-Param(
-    [string]$configFile = "$scriptFolder\..\..\config\projects\project.json"
+param(
+    [string]$configFile = "$((Split-Path $MyInvocation.MyCommand.Path -Parent) + '\..\..\config\projects\project.json')"
 )
 
 $json = Get-Content -Path $configFile -Raw | ConvertFrom-Json
-Write-Host "Config path: $configFile"
+Write-Host "Project config path: $configFile"
 
 # Convert JSON back to InnoSetup file section
 $i = 0
