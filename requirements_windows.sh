@@ -30,4 +30,4 @@ for package in ${texlive_packages[@]}; do
   extra_packages+="$package,"
 done
 
-choco install texlive --version=2022.20221202 --params "'/extraPackages:${extra_packages::-1}'"
+choco install texlive --version=2022.20221202 --params "'/collections:pictures,latex /extraPackages:${extra_packages::-1}'"
