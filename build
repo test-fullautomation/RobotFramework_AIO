@@ -49,6 +49,9 @@ else
 			 ;;
           --config-file=*)
 			 ConfigFile="${i#*=}"
+			;;
+          --project-config-file=*)
+			 ProjectConfigFile=`cygpath -wa "${i#*=}"`
           ;;
           *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
@@ -317,7 +320,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-	./scripts/precompile.bat
+	./scripts/precompile.bat $ProjectConfigFile
 	./tools/InnoSetup5.5.1/ISCC "${arguments}" ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
