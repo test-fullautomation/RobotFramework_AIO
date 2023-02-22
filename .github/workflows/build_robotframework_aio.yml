@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
@@ -101,14 +101,14 @@ jobs:
       run: git config --system core.longpaths true
 
     - name: Checkout source
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Clone repositories
       shell: bash
       run: ./cloneall
 
     - name: Download Windows installer package
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: windows-package
 
@@ -133,7 +133,7 @@ jobs:
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Clone repositories
       run: |
@@ -141,7 +141,7 @@ jobs:
         ./cloneall
 
     - name: Download Linux installer package
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: linux-package
 
@@ -163,7 +163,7 @@ jobs:
 
     steps:
     - name: Download artifact from build workflow
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
 
     - name: Get released file names
       run: |
