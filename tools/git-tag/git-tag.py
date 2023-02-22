@@ -37,6 +37,7 @@ import os
 
 PREFIX_INTERMEDIATE_TAG = "dev/"
 PREFIX_RELEASED_TAG = "rel/"
+INSERTED_STR_TAG = "aio/"
 
 USAGE = """Usage: git-tag.py <tag_name> <tag_repos.json>
 
@@ -44,7 +45,7 @@ git-tag tool helps to tag git repos via REST APIs of git server.
 Currently, tool support 3 types of git server: Github, Gitlab and Bitbucket.
 Due to security, the credentials (PAT: Personal Access Token) to access the 
 repos should be set as environment variables: <git-server-type>_PAT (upper case).
-E.g: GITHUB_PAT, GITLAB_PAT
+E.g: GITHUB_PAT, GITLAB_PAT and BITBUCKET_PAT
 
 positional arguments:
    <tag_name>         tag name which is used for tagging repos. E.g: rel/0.5.2.1.
@@ -406,15 +407,13 @@ if __name__=="__main__":
                           PAT=PAT, base_url=base_url)
 
          released_tag = tag_name
-         # change tag name to <rel|dev>/aio/<version> for other than gitlab repos
 
-         # No additional aio/ is required for oss version 
-         # because this tool is triggered by <rel|dev>/aio/<version> tag
-
-         # if git_type != "gitlab":
-         #    released_tag = tag_name.replace(
-         #                                     PREFIX_INTERMEDIATE_TAG, f"{PREFIX_INTERMEDIATE_TAG}aio/"
-         #                                   ).replace(
-         #                                     PREFIX_RELEASED_TAG, f"{PREFIX_RELEASED_TAG}aio/")
+         # Change tag name to <rel|dev>/aio/<version>
+         # Inserted string INSERTED_STR_TAG into tag for git servers other than gitlab
+         if (git_type != "gitlab") and (INSERTED_STR_TAG not in tag_name):
+            released_tag = tag_name.replace(
+                                    PREFIX_INTERMEDIATE_TAG, f"{PREFIX_INTERMEDIATE_TAG}{INSERTED_STR_TAG}"
+                                  ).replace(
+                                    PREFIX_RELEASED_TAG, f"{PREFIX_RELEASED_TAG}{INSERTED_STR_TAG}")
 
          git.tag(released_tag, commit_sha)
