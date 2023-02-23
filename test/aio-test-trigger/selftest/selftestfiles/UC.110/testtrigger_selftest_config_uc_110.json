@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 03.11.2022
+# 23.02.2023
 #
 # **************************************************************************************************************
 
@@ -33,10 +33,10 @@
 
    "INVALIDMAINKEY" : {
                   "ROBOT"  : {
-                               "DATABASEEXECUTOR" : "../../mocks/robot2db-mock.py"
+                               "DATABASEEXECUTOR" : "./mocks/robot2db-mock.py"
                              },
                   "PYTEST" : {
-                               "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py"
+                               "DATABASEEXECUTOR" : "./mocks/pytest2db-mock.py"
                              }
                 }
 }
