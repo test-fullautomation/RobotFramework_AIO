@@ -108,6 +108,7 @@ Source: "A:\robotvscode\*"; Excludes: ".git"; DestDir: {app}\robotvscode; Flags:
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\test\aio-analyzer\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools\aio-analyzer; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Android related
 ;Source: "..\..\devtools\Windows\Android\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Android; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
