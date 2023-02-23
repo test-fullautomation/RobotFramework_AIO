@@ -3,6 +3,7 @@ param(
 )
 
 $json = Get-Content -Path $configFile -Raw | ConvertFrom-Json
+$ScriptPath = Split-Path $MyInvocation.MyCommand.Path -Parent
 Write-Host "Project config path: $configFile"
 
 # Convert JSON back to InnoSetup file section
@@ -52,5 +53,5 @@ $innoSetupCodeOutput
 "@
 
 # Save InnoSetup file to inno_new.iss file
-New-Item -ItemType Directory -Force -Path "..\..\Output\Include"
-$innoSetupFilesOutput | Out-File -Encoding Default -FilePath '..\..\Output\Include\install_projects.iss'
+New-Item -ItemType Directory -Force -Path "$ScriptPath\..\..\Output\Include"
+$innoSetupFilesOutput | Out-File -Encoding Default -FilePath "$ScriptPath\..\..\Output\Include\install_projects.iss"
