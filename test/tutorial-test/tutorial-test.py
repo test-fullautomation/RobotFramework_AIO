@@ -23,7 +23,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 25.01.2023
+# 21.02.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -414,6 +414,7 @@ for dictUsecase in listofdictUsecases:
 
    print(f"(1) Test log file      : {TESTLOGFILE}")
    print(f"(2) Reference log file : {REFERENCELOGFILE}")
+   print(f"(3) Pattern file       : {PATTERNFILE}")
 
    if bSuccess is True:
       if bIdentical is True:

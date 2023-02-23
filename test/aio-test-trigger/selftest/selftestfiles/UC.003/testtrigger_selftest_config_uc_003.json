@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 03.11.2022
+# 23.02.2023
 #
 # **************************************************************************************************************
 
@@ -49,11 +49,11 @@
 
    "TESTTYPES" : {
                   "ROBOT"  : {
-                               "DATABASEEXECUTOR" : "../../mocks/robot2db-mock.py",
+                               "DATABASEEXECUTOR" : "./mocks/robot2db-mock.py",
                                "LOCALCOMMANDLINE" : ["${robot2db_param_1}", "${robot2db_param_2}"]
                              },
                   "PYTEST" : {
-                               "DATABASEEXECUTOR" : "../../mocks/pytest2db-mock.py",
+                               "DATABASEEXECUTOR" : "./mocks/pytest2db-mock.py",
                                "LOCALCOMMANDLINE" : ["${pytest2db_param_1}", "${pytest2db_param_2}"]
                              }
                 }

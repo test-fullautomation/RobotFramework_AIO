@@ -33,10 +33,10 @@
 # A usecase is passed or failed depending on the return value of the Test Trigger fits to the expected value or not.
 #
 # Every relative path is relative to the position of the file that contains the relative path.
-
+#
 # --------------------------------------------------------------------------------------------------------------
 #
-# 03.11.2022
+# 23.02.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -160,7 +160,7 @@ dictUsecase = {}
 dictUsecase['NAME']              = "004"
 dictUsecase['DESCRIPTION']       = "ROBOT and PYTEST test suite / with params / no commandlines / good case"
 dictUsecase['CONFIGFILE']        = "./selftestfiles/UC.004/testtrigger_selftest_config_uc_004.json"
-dictUsecase['PARAMS']            = "COMPONENTROOTPATH=.;FOLDERNAMEEXTENSION=TEST;EXECUTORPREFIX=execute;LOGFOLDERNAME=logfiles;USECASENUMBER=004;MOCKSFOLDER=mocks"
+dictUsecase['PARAMS']            = "COMPONENTROOTPATH=.;FOLDERNAMEEXTENSION=TEST;EXECUTORPREFIX=execute;LOGFOLDERNAME=logfiles;USECASENUMBER=004"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
 dictUsecase['RESULTS2DB']        = True
@@ -309,7 +309,7 @@ dictUsecase['PARAMS']            = None
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
 dictUsecase['RESULTS2DB']        = True
-dictUsecase['EXPECTEDRETURN']    = 1
+dictUsecase['EXPECTEDRETURN']    = -1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 
@@ -414,7 +414,7 @@ dictUsecase['PARAMS']            = "param1=value1;param2=value2"
 dictUsecase['ROBOTCOMMANDLINE']  = None
 dictUsecase['PYTESTCOMMANDLINE'] = None
 dictUsecase['RESULTS2DB']        = True
-dictUsecase['EXPECTEDRETURN']    = 1
+dictUsecase['EXPECTEDRETURN']    = -1
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 

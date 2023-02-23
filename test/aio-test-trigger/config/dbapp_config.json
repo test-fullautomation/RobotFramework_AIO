@@ -1,14 +1,17 @@
 {
    "component"  : {
-                     "PyExColl"   : ["Comparison", "File", "Folder", "String", "Utils"],
-                     "RoExtColl"  : "robotframework-extensions-collection",
-                     "TeSuitMa"   : "robotframework-testsuitesmanagement",
-                     "JPrePro"    : "jsonpreprocessor",
-                     "GenPkgDoc"  : "GenPackageDoc",
-                     "RobLog2DB"  : "robotframework-robotlog2db",
-                     "RobLog2RQM" : "robotframework-robotlog2rqm",
-                     "TML2RobLog" : "robotframework-tmllog2robotlog"
+                     "PyExColl"      : ["Comparison", "File", "Folder", "String", "Utils", "PythonExtensionsCollection"],
+                     "GenPkgDoc"     : "GenPackageDoc",
+                     "JPrePro"       : ["jsonpreprocessor", "JsonPreprocessor"],
+                     "MicrSrvBase"   : "MicroserviceBase",
+                     "MicrSrvCleSwi" : "MicroserviceClewareSwitch",
+                     "PyTstLog2DB"   : "PyTestLog2DB",
+                     "TutTest"       : "TutorialTest",
+                     "RoExtColl"     : "robotframework-extensions-collection",
+                     "RobLog2DB"     : "robotframework-robotlog2db",
+                     "RobLog2RQM"    : "robotframework-robotlog2rqm",
+                     "TeSuitMa"      : "robotframework-testsuitesmanagement"
                   },
-   "version_sw" : "tt-version-004",
-   "variant"    : "tt-variant-004"
+   "version_sw" : "tt-version-201",
+   "variant"    : "tt-variant-201"
 }

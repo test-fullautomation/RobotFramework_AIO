@@ -271,12 +271,12 @@ class CTestTriggerConfig():
             # With this command line string (together with the global command line) the Test Executor is called.
             # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
             # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
-            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # is not handled as error (like in other parts of the Test Trigger configuration (by __ResolveParameters()).
             # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
             # under the responsibility of the Test Executor to react on missing parameters properly.
             # But in the following code no valuation of command line parameters will happen.
             LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveCommandLine(LOCALCOMMANDLINE)
-            if bSuccess is False:
+            if bSuccess is not True:
                raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          # eof if "LOCALCOMMANDLINE" in dictComponent:
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
@@ -320,7 +320,7 @@ class CTestTriggerConfig():
             # With this command line string (together with the global command line) the Database Executor is called.
             # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
             # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
-            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # is not handled as error (like in other parts of the Test Trigger configuration (by __ResolveParameters()).
             # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
             # under the responsibility of the Database Executor to react on missing parameters properly.
             # But in the following code no valuation of command line parameters will happen.
@@ -388,6 +388,11 @@ class CTestTriggerConfig():
 
       sMethod = "CTestTriggerConfig.__ResolveCommandLine"
 
+      if not isinstance(LOCALCOMMANDLINE, (tuple, list)):
+         bSuccess = None
+         sResult  = "Invalid type of LOCALCOMMANDLINE. Expected 'tuple' or 'list'."
+         return LOCALCOMMANDLINE, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
       sLocalCommandLine = None
       bSuccess = None
       sResult  = "unknown"
@@ -413,6 +418,8 @@ class CTestTriggerConfig():
       # eof if dictParams is not None:
       if len(listLocalCommandLineParts) > 0:
          sLocalCommandLine = " ".join(listLocalCommandLineParts)
+      else:
+         sLocalCommandLine = " ".join(LOCALCOMMANDLINE)
 
       bSuccess = True
       sResult  = "Done"

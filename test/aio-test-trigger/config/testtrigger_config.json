@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 21.02.2023
+# 23.02.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -20,18 +20,23 @@
 # "TESTTYPE" has to be one of ['ROBOT', 'PYTEST']
 # It is assumed that "COMPONENTROOTPATH" does exist.
 # The complete path of "LOGFILE" is being created by the test executors.
-# "LOCALCOMMANDLINE" is optional; other keys of section "COMPONENTS" are required.
-# Meaning of "LOCALCOMMANDLINE" is: command line part that is only valid for this single test folder
+#
+# The key "LOCALCOMMANDLINE" is optional; other keys of section "COMPONENTS" are mandatory.
+# The meaning of "LOCALCOMMANDLINE" is: Command line part that is only valid for a certain test folder, but not for all test executions.
+# The content of "LOCALCOMMANDLINE" is a list. Elements of this list can be parameters (${...}).
+# Values for parameters that are part of the "LOCALCOMMANDLINE" list, have to be defined in command line of Test Trigger (with --params).
+# Example: --params "param1=value1;param2=value2;...". This is optional.
+# Parameters of "LOCALCOMMANDLINE" that are not defined in command line, are skipped and therefore are not considered for test execution.
+# Finally (after internally the parameters are resolved) the "LOCALCOMMANDLINE" only contains parameters that are defined in the command line.
+#
+# In case of the "LOCALCOMMANDLINE" of a component contains a relative path, this path has to be relative to the position of the component,
+# who works with this path (and not relative to the position of the Test Trigger or this config file). The Test Triger does not resolve
+# relative paths inside "LOCALCOMMANDLINE".
+#
+# It is assumed that every value inside --params can be a string containing blanks. Nevertheless it is not necessary to encapsulate values in quotes.
+# The Test Trigger does this internally. Using also quotes inside --params most probably causes invalid command lines.
 
    "COMPONENTS" : [
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       # "LOCALCOMMANDLINE"  : "...",
-                       "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
-                    },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-extensions-collection",
                        "TESTFOLDER"        : "pytest",
@@ -47,18 +52,25 @@
                        "LOGFILE"           : "../../../../python-genpackagedoc/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
                        "COMPONENTROOTPATH" : "../../../../python-jsonpreprocessor",
                        "TESTFOLDER"        : "atest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../python-microservice-base",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-pytestlog2db",
@@ -67,6 +79,23 @@
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-pytestlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
+                    # to be restored after test is adapted to latest changes in testsuites management:
+                    # {
+                       # "COMPONENTROOTPATH" : "../../tutorial-test",
+                       # "TESTFOLDER"        : "pytest",
+                       # "TESTTYPE"          : "PYTEST",
+                       # "TESTEXECUTOR"      : "executepytest.py",
+                       # "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    # },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
+                       "TESTFOLDER"        : "test",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    # conditions to be clarified: robotframework-qconnect-base\atest
+                    # conditions to be clarified: robotframework-qconnect-dlt\atest
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-robotlog2db",
                        "TESTFOLDER"        : "pytest",
@@ -80,15 +109,23 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       # to be removed after merge with atest folder in same repository
+                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
+                       "TESTFOLDER"        : "test",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
+                       "TESTFOLDER"        : "atest",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
+                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     }
-                    # to be restored after reference is adapted:
-                    # {
-                       # "COMPONENTROOTPATH" : "../../tutorial-test",
-                       # "TESTFOLDER"        : "pytest",
-                       # "TESTTYPE"          : "PYTEST",
-                       # "TESTEXECUTOR"      : "executepytest.py",
-                       # "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    # }
                   ],
 
 
@@ -96,17 +133,31 @@
 # --------------------
 #
 # Defines for every test type:
-# - the path and name of the database executor
+# - the related database executor (as Python module call)
 # - the command line of the database executor (except the test log file containing the test results - is considered internally)
 # The log file ("LOGFILE") is taken over from setion "COMPONENTS" and must not be defined here!
 # A global command line (similar to --robotcommandline and --pytestcommandline) is not available for database executors (only "LOCALCOMMANDLINE").
-# Finally (after internally the parameters are resolved) the LOCALCOMMANDLINE only contains parameter that are defined in the command line of the Test Trigger.
-# "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are required.
+#
+# The key "LOCALCOMMANDLINE" is optional; other keys of section "TESTTYPES" are mandatory.
+# The meaning of "LOCALCOMMANDLINE" is: Command line part that is only valid for a certain database access, but not for all database accesses.
+# The content of "LOCALCOMMANDLINE" is a list. Elements of this list can be parameters (${...}).
+# Values for parameters that are part of the "LOCALCOMMANDLINE" list, have to be defined in command line of Test Trigger (with --params).
+# Example: --params "param1=value1;param2=value2;...". This is optional.
+# Parameters of "LOCALCOMMANDLINE" that are not defined in command line, are skipped and therefore are not considered for test execution.
+# Finally (after internally the parameters are resolved) the "LOCALCOMMANDLINE" only contains parameters that are defined in the command line.
+# It is assumed that every value inside --params can be a string containing blanks. Nevertheless it is not necessary to encapsulate values in quotes.
+# The Test Trigger does this internally. Using also quotes inside --params most probably causes invalid command lines.
 #
 # The robot2db 'dryrun' mode is activated by --params "dryrun=--dryrun" in command line of Test Trigger.
 #
 # UUID and append mode are handled Test Trigger internally (the first test result is written 'as new' to database, all follow up results are
 # written in append mode).
+#
+# The "LOCALCOMMANDLINE" of "DATABASEEXECUTOR" defines path and name of a database configuration file (containing the components mapping table)
+# in this way: "--config ${dbapp_config}".
+# A value for 'dbapp_config' has to be provided in command line of the Test Trigger (--params). In case of the path to 'dbapp_config'
+# is a relative one, the Test Trigger converts the relative path to an absolute one internally. The reference is the position
+# of the Test Trigger (aio-test-trigger.py).
 #
 # Database access has to be activated explicitely in command line of Test Trigger by '--results2db'
 
