@@ -24,9 +24,11 @@ Library    RobotFramework_TestsuitesManagement    WITH NAME    tm
 Library    RobotframeworkExtensions.Collection    WITH NAME    rf.extensions
 
 Suite Setup    tm.testsuite_setup    ./config/exercise-pg_variants.json
+Test Setup    tm.testcase_setup
+Test Teardown    tm.testcase_teardown
 
-Metadata    version_hw    metadata_version_hw
-Metadata    my_test_local_metadata    my_test_local_metadata_value
+Metadata    version_hw    metadata_version_hw_within_file
+Metadata    my_test_local_metadata    my_test_local_metadata_value_within_file
 
 *** Test Cases ***
 Test Case exercise-pg-2
