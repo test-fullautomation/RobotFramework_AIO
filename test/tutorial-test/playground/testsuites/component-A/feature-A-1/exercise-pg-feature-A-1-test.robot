@@ -20,6 +20,11 @@
 
 *** Settings ***
 
+Metadata    metadata-pg-feature-A-1    metadata-pg-feature-A-1-value
+
+Test Setup     tm.testcase_setup
+Test Teardown    tm.testcase_teardown
+
 *** Test Cases ***
 Test Case exercise-pg-feature-A-1-test
     [documentation]    exercise-pg-feature-A-1-test

@@ -20,6 +20,12 @@
 
 *** Settings ***
 
+Metadata    metadata-pg-ts    metadata-pg-ts-value-top-level-robot-file
+
+Test Setup     tm.testcase_setup
+Test Teardown    tm.testcase_teardown
+
+
 *** Test Cases ***
 Test Case exercise-pg-ts
     [documentation]    exercise-pg-ts
