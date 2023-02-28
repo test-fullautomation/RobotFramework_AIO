@@ -106,7 +106,7 @@ robotframework-mqttlibrary
 robotframework-pythonlibcore  
 robotframework-requests       
 robotframework-sshlibrary
-robotframework-excellibrary-xwfintech
+robotframework-excellib
 schedule
 scp
 # scapy
