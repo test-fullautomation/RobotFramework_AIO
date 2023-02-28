@@ -1,5 +1,5 @@
 {
-   "component"  : {
+   "components"  : {
                      "PyExColl"      : ["Comparison", "File", "Folder", "String", "Utils", "PythonExtensionsCollection"],
                      "GenPkgDoc"     : "GenPackageDoc",
                      "JPrePro"       : ["jsonpreprocessor", "JsonPreprocessor"],
@@ -11,7 +11,7 @@
                      "RobLog2DB"     : "robotframework-robotlog2db",
                      "RobLog2RQM"    : "robotframework-robotlog2rqm",
                      "TeSuitMa"      : "robotframework-testsuitesmanagement"
-                  },
-   "version_sw" : "tt-version-207",
-   "variant"    : "tt-variant-207"
+                   },
+   "version_sw" : "tt-version-211",
+   "variant"    : "tt-variant-211"
 }
