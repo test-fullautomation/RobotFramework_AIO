@@ -20,6 +20,11 @@
 
 *** Settings ***
 
+Metadata    metadata-pg-feature-B-2    metadata-pg-feature-B-2-value
+
+Test Setup     tm.testcase_setup
+Test Teardown    tm.testcase_teardown
+
 *** Test Cases ***
 Test Case exercise-pg-feature-B-2-test
     [documentation]    exercise-pg-feature-B-2-test

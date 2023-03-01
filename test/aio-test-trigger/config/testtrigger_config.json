@@ -79,14 +79,13 @@
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOGFILE"           : "../../../../python-pytestlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    # to be restored after test is adapted to latest changes in testsuites management:
-                    # {
-                       # "COMPONENTROOTPATH" : "../../tutorial-test",
-                       # "TESTFOLDER"        : "pytest",
-                       # "TESTTYPE"          : "PYTEST",
-                       # "TESTEXECUTOR"      : "executepytest.py",
-                       # "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    # },
+                    {
+                       "COMPONENTROOTPATH" : "../../tutorial-test",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
                        "TESTFOLDER"        : "test",
