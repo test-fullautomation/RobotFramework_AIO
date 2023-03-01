@@ -11,7 +11,5 @@
                      "RobLog2DB"     : "robotframework-robotlog2db",
                      "RobLog2RQM"    : "robotframework-robotlog2rqm",
                      "TeSuitMa"      : "robotframework-testsuitesmanagement"
-                   },
-   "version_sw" : "tt-version-211",
-   "variant"    : "tt-variant-211"
+                   }
 }
