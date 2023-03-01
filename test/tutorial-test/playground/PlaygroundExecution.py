@@ -95,7 +95,7 @@ sRobotFile_3    = CString.NormalizePath("./testsuites/exercise-pg-ts.robot", sRe
 sRobotFile_4    = CString.NormalizePath("./00000/exercise-pg-00000.robot", sReferencePathAbs=sReferencePath)
 sTestsuitesPath = CString.NormalizePath(r"./00000", sReferencePathAbs=sReferencePath)
 
-sSource = sRobotFile_1
+sSource = sRobotFile_2
 
 # local config
 # os.environ['ROBOT_LOCAL_CONFIG'] = f"..."
