@@ -146,7 +146,9 @@ jobs:
         name: linux-package
 
     - name: Install on Linux
-      run: sudo apt-get install ./*.deb
+      run: |
+        sudo apt-get update
+        sudo apt-get install ./*.deb --fix-missing
 
     - name: Run tests on Linux
       run: |
