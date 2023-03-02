@@ -139,7 +139,7 @@ robotframework-robocop
 pylint
 Sphinx
 pandoc
-pypandoc
+pypandoc_binary
 mobly
 pytest_mock
 odxtools
