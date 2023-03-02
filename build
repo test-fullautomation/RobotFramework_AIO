@@ -236,7 +236,8 @@ function parse_config () {
 					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
 					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 				fi
-				${PYBIN} ./setup.py clean --all install
+				${PYBIN} ./setup.py install
+				${PYBIN} ./setup.py clean --all
 				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
 			fi
 		fi
