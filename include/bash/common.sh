@@ -54,17 +54,37 @@ function logresult(){
 # Arguments:
 #	$repo_path : location to clone repo into
 #	$repo_url  : repo url
+#	$commit_branch_tag  : target commit, branch or tag to point to
 function clone_update_repo () {
 	repo_path=$1
 	repo_url=$2
-	target_commit=$3
+	commit_branch_tag=$3
+
+	# 1. Check is repo folder is existing or not
+	# 2. Ensure the repo url is correct
+	# 3. Fetch all from git server
+	# 4. Ensure the default branch change (from git server)
+	# 5. Discard all user changes includes untracked files
+	# 6. Checkout to target branch/commit/tag
 
 	if [ -d "$repo_path" ]; then
 		echo "Cleaning and updating repo $repo_path"
-		git -C "$repo_path" remote set-url origin "$repo_url" &&
-		git -C "$repo_path" fetch origin --tags --force &&
-		git -C "$repo_path" checkout $(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') &&
-		git -C "$repo_path" reset --hard @{u} &&
+
+		current_url=$(git -C "$repo_path" remote get-url origin)
+		if [ "$current_url" != "$repo_url" ]; then
+			echo "Repo URL has changed, update remote origin to ${repo_url}"
+			git -C "$repo_path" remote set-url origin "$repo_url"
+		fi
+
+		git -C "$repo_path" fetch --all
+
+		default_branch=$(git -C "$repo_path" remote show origin | grep "HEAD branch" | cut -d " " -f 5)
+		if [ "$(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')" != "$default_branch" ]; then
+			echo "Default branch has changed, updating to $default_branch"
+			git -C "$repo_path" checkout "$default_branch" -f
+		fi
+
+		git -C "$repo_path" reset --hard origin/$default_branch &&
 		git -C "$repo_path" clean -f -d -x
 
 		# try to remove existing directory and clone repo again
@@ -81,9 +101,9 @@ function clone_update_repo () {
 		exit 1
 	fi
 
-	if [ -n "$target_commit" ]; then
-		echo "Checking out to '$target_commit' tag"
-		git -C "$repo_path" checkout $target_commit
-		logresult "$?" "switched to '$target_commit' tag" "checkout '$target_commit' tag from '$repo_url'"
+	if [ -n "$commit_branch_tag" ]; then
+		echo "Checking out to '$commit_branch_tag'"
+		git -C "$repo_path" checkout $commit_branch_tag
+		logresult "$?" "switched to '$commit_branch_tag'" "checkout to '$commit_branch_tag' from '$repo_url'"
 	fi
 }
