@@ -6,4 +6,4 @@ logfiles/
 ExecutionLogFile.log
 test/**/*.html
 test/**/*.xml
-test/**/*.log
+test/tutorial-test/tutoriallogfiles/**/*.log

@@ -31,7 +31,7 @@
 ==============================================================================
 20230227 15:09:56.803 - INFO - +----- START TEST: Test Case exercise-04-001-01-01 [ ]
 ------------------------------------------------------------------------------
-20230227 15:09:56.808 - INFO - +------ START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230227 15:09:56.808 - INFO - +------ START KEYWORD: BuiltIn.Log [ teststring : ${teststring} (exercise-04-001-01-01.robot) | console=yes ]
 20230227 15:09:56.808 - INFO - teststring : I am the 'variant2' configuration of exercise 04
 20230227 15:09:56.809 - INFO - +------ END KEYWORD: BuiltIn.Log (0)
 ------------------------------------------------------------------------------
@@ -45,7 +45,7 @@
 ==============================================================================
 20230227 15:09:56.817 - INFO - +---- START TEST: Test Case exercise-04-001-01 [ ]
 ------------------------------------------------------------------------------
-20230227 15:09:56.818 - INFO - +----- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230227 15:09:56.818 - INFO - +----- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} (exercise-04-001-01.robot) | console=yes ]
 20230227 15:09:56.818 - INFO - teststring : I am the 'variant2' configuration of exercise 04
 20230227 15:09:56.824 - INFO - +----- END KEYWORD: BuiltIn.Log (2)
 ------------------------------------------------------------------------------
@@ -59,7 +59,7 @@
 ==============================================================================
 20230227 15:09:56.832 - INFO - +--- START TEST: Test Case exercise-04-001 [ ]
 ------------------------------------------------------------------------------
-20230227 15:09:56.832 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230227 15:09:56.832 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} (exercise-04-001.robot) | console=yes ]
 20230227 15:09:56.833 - INFO - teststring : I am the 'variant2' configuration of exercise 04
 20230227 15:09:56.838 - INFO - +---- END KEYWORD: BuiltIn.Log (2)
 ------------------------------------------------------------------------------
@@ -75,7 +75,7 @@
 ==============================================================================
 20230227 15:09:56.858 - INFO - +--- START TEST: Test Case exercise-04-002 [ ]
 ------------------------------------------------------------------------------
-20230227 15:09:56.858 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} | console=yes ]
+20230227 15:09:56.858 - INFO - +---- START KEYWORD: BuiltIn.Log [ teststring : ${teststring} (exercise-04-002.robot) | console=yes ]
 20230227 15:09:56.858 - INFO - teststring : I am the 'variant2' configuration of exercise 04
 20230227 15:09:56.859 - INFO - +---- END KEYWORD: BuiltIn.Log (0)
 ------------------------------------------------------------------------------
