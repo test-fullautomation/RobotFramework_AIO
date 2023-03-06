@@ -8,6 +8,9 @@ echo "Creating/Updating RobotFramework AIO runtime environment"
 echo "----------------------------------------"
 
 CURRENT_USER=${SUDO_USER}
+if [ -z ${CURRENT_USER} ]; then
+   CURRENT_USER=$(whoami)
+fi
 HOME=/home/${CURRENT_USER}
 DLTCONNECTOR_PATH="/opt/rfwaio/python39/install/lib/python3.9/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
@@ -16,7 +19,7 @@ DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
 #in osd5 group name is "domain users". Therefore
 #look if a group wi th the user name exists, if not
 #then we assume that we are on OSD5
-sGROUP=${SUDO_USER}
+sGROUP=$(id -G)
 if ! getent group "${sGROUP}" | grep "${sGROUP}" ; then
    sGROUP='domain users'
    echo -e "Assuming OSD5 and using group 'domain users' as user group for private files"
