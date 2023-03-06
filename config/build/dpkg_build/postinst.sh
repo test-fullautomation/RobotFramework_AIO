@@ -7,7 +7,10 @@
 echo "Creating/Updating RobotFramework AIO runtime environment"
 echo "----------------------------------------"
 
-CURRENT_USER=$(whoami)
+CURRENT_USER=${SUDO_USER}
+if [ -z ${CURRENT_USER} ]; then
+   CURRENT_USER=$(whoami)
+fi
 HOME=/home/${CURRENT_USER}
 DLTCONNECTOR_PATH="/opt/rfwaio/python39/install/lib/python3.9/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
