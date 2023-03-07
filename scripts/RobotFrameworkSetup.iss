@@ -537,8 +537,7 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
   if ((CurPageID = UsrDataDirPage.ID) and not (CompareText(ExpandConstant(''), PreviousUserDataDir) = 0)and not  	 (CompareText(UsrDataDirPage.Values[0], PreviousUserDataDir) = 0)) then
-    Result := Msgbox('You selected new folder for Workspace. Old working files need to be add to vscodium workspace manually.' + #13#10 + 
-      'Are you sure you want to continue ?', mbInformation, MB_YESNO) = IDYES;
+    Result := Msgbox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO) = IDYES;
 end;
 
 //
