@@ -281,6 +281,10 @@ class CTestTriggerConfig():
          # eof if "LOCALCOMMANDLINE" in dictComponent:
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
 
+         # optional
+         if "EXECUTION" not in dictComponent:
+            dictComponent['EXECUTION'] = None
+
          # short summary
          dictTestExecution = {}
          dictTestExecution['TESTFOLDER']       = dictComponent['TESTFOLDER']
@@ -288,6 +292,7 @@ class CTestTriggerConfig():
          dictTestExecution['TESTEXECUTOR']     = dictComponent['TESTEXECUTOR']
          dictTestExecution['LOCALCOMMANDLINE'] = dictComponent['LOCALCOMMANDLINE']
          dictTestExecution['LOGFILE']          = dictComponent['LOGFILE']
+         dictTestExecution['EXECUTION']        = dictComponent['EXECUTION']
          self.__listofdictTestExecutions.append(dictTestExecution)
 
       # eof for dictComponent in listofdictComponents:
@@ -402,18 +407,31 @@ class CTestTriggerConfig():
       regex_Parameters = self.__dictTestTriggerConfig['regex_Parameters']
       dictParams = self.__dictTestTriggerConfig['PARAMS']
       if dictParams is not None:
-         # resolve all possible parameters
+         # resolve all possible parameters:
+         # 1. parameter in LOCALCOMMANDLINE may contain ${...} or not (it's an option only)
+         # 2. Test Trigger command line may contain value for ${...} or not (if not: parameter is not required)
          for sParameter in LOCALCOMMANDLINE:
-            for sName, sValue in dictParams.items():
-               # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
-               if sName == "config":
-                  sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
-               sPlaceholder = "${" + sName + "}"
-               if sPlaceholder in sParameter:
-                  sValue = "\"" + sValue + "\"" # assuming that all command line parameters can contain blanks
-                  sParameter = sParameter.replace(sPlaceholder, sValue)
+            # anything ${...} to resolve ?
+            listParameters = regex_Parameters.findall(sParameter)
+            if len(listParameters) == 0:
+               # nothing to resolve; take over content unchanged
+               listLocalCommandLineParts.append(sParameter)
+            else:
+               # found ${...}, but resolving depends on corresponding content of --params of test Trigger command line (because LOCALCOMMANDLINE are handled as optional)
+               bSomethingResolved = False
+               for sName, sValue in dictParams.items():
+                  # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
+                  if sName == "config":
+                     sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+                  sPlaceholder = "${" + sName + "}"
+                  if sPlaceholder in sParameter:
+                     sValue = "\"" + sValue + "\"" # assuming that all command line parameters can contain blanks
+                     sParameter = sParameter.replace(sPlaceholder, sValue)
+                     bSomethingResolved = True
+               # eof for sName, sValue in dictParams.items():
+               if bSomethingResolved is True:
                   listLocalCommandLineParts.append(sParameter)
-            # eof for sName, sValue in dictParams.items():
+            # eof else - if len(listParameters) == 0:
          # eof for sParameter in LOCALCOMMANDLINE:
       # eof if dictParams is not None:
       if len(listLocalCommandLineParts) > 0:
@@ -565,6 +583,9 @@ class CTestTriggerConfig():
          print("TESTEXECUTOR".rjust(nJust, ' ')     + " : " + str(dictTestExecution['TESTEXECUTOR']))
          print("LOCALCOMMANDLINE".rjust(nJust, ' ') + " : " + str(dictTestExecution['LOCALCOMMANDLINE']))
          print("LOGFILE".rjust(nJust, ' ')          + " : " + str(dictTestExecution['LOGFILE']))
+         EXECUTION = dictTestExecution['EXECUTION']
+         if EXECUTION is not None:
+            print("EXECUTION".rjust(nJust, ' ') + " : " + str(EXECUTION))
          print()
    # eof def PrintConfig(self):
 
