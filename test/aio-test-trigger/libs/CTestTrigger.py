@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.02.2023
+# 08.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -270,7 +270,10 @@ class CTestTrigger():
 
          print(COLBY + "Writing testresults to database")
          print()
-         print(f"Now executing command line:\n{sCmdLine}")
+         # sCmdLine contains database credentials, therefore is not printed
+         # print(f"Now executing command line:\n{sCmdLine}")
+         # alternative:
+         print(f"Now executing: {DATABASEEXECUTOR}")
          print()
 
          listCmdLineParts = shlex.split(sCmdLine)
