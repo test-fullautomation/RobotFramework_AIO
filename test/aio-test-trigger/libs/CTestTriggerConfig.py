@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.02.2023
+# 08.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -545,7 +545,9 @@ class CTestTriggerConfig():
       nJust = 25
       print()
       for sKey in self.__dictTestTriggerConfig:
-         print(sKey.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sKey]))
+         # "PARAMS" can contain database credentials, therefore this key is excluded from print
+         if sKey != "PARAMS":
+            print(sKey.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sKey]))
       print()
    # eof def PrintConfig(self):
 
