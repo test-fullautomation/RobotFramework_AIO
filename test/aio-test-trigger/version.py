@@ -19,6 +19,6 @@
 # Version and date of aio-test-trigger
 #
 NAME         = "RobotFramework AIO Test Trigger"
-VERSION      = "0.13.0"
+VERSION      = "0.14.0"
 VERSION_DATE = "08.03.2023"
 
