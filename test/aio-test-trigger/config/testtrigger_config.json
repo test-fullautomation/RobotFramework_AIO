@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 01.03.2023
+# 08.03.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -124,6 +124,15 @@
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "C:/RobotTest/projects/ROBFW_AIO/robotframework",
+                       "TESTFOLDER"        : "atest",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "run.py",
+                       "LOCALCOMMANDLINE"  : ["${PYTHONINTERPRETER}", "-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot\""],
+                       "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
+                       "EXECUTION"         : "RAW"
                     }
                   ],
 
