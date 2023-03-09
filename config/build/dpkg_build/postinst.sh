@@ -11,7 +11,9 @@ CURRENT_USER=${SUDO_USER}
 if [ -z ${CURRENT_USER} ]; then
    CURRENT_USER=$(whoami)
 fi
-# HOME=/home/${CURRENT_USER}
+if [ ${CURRENT_USER} != 'root' ]; then
+   HOME=/home/${CURRENT_USER}
+fi
 DLTCONNECTOR_PATH="/opt/rfwaio/python39/install/lib/python3.9/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
 
@@ -69,7 +71,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
    chmod 0775 ${HOME}/RobotTest
-   echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
+   echo -e "${MSG_DONE} Creating initial workspace in ${HOME}/RobotTest"
 else
    #
    # update tutorial
