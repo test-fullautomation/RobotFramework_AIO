@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# 08.03.2023
+# 09.03.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -130,7 +130,7 @@
                        "TESTFOLDER"        : "atest",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "run.py",
-                       "LOCALCOMMANDLINE"  : ["${PYTHONINTERPRETER}", "-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot\""],
+                       "LOCALCOMMANDLINE"  : ["${PYTHONINTERPRETER}", "-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "--exclude manual", "\"./atest/robot\""],
                        "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
                        "EXECUTION"         : "RAW"
                     }
