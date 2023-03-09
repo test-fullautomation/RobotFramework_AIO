@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 08.03.2023
+# 09.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -162,8 +162,7 @@ class CTestTrigger():
 
             # -- execution of own test executors
 
-            listCmdLineParts.append("--logfile")
-            listCmdLineParts.append(f"\"{LOGFILE}\"")
+            listCmdLineParts.append(f"--logfile=\"{LOGFILE}\"")
 
             if LOCALCOMMANDLINE is not None:
                # recover the masking of nested quotes
@@ -172,23 +171,42 @@ class CTestTrigger():
 
             if TESTTYPE == "ROBOT":
                if ( (ROBOTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"--robotcommandline")
                   if ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
-                     listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--robotcommandline=\"{ROBOTCOMMANDLINE}\"")
                   elif ( (ROBOTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
-                     listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--robotcommandline=\"{LOCALCOMMANDLINE}\"")
                   elif ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
-                     listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--robotcommandline=\"{ROBOTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
 
             if TESTTYPE == "PYTEST":
+
+               PLATFORMSYSTEM = self.__oTestTriggerConfig.Get('PLATFORMSYSTEM')
+               # Took over the filter mechanism (not _Linux_/not _Windows_) from PYTEST TESTEXECUTOR executepytest.py.
+               # This was necessary because of the Test Trigger now also uses the PYTEST LOCALCOMMANDLINE (--junit-prefix)
+               # and therefore is now fully responsible for the TESTEXECUTOR command line. But the filter depends on
+               # the operating system. To keep the Test Trigger configuration file operating system independent, the filter
+               # is set here in the code, but not in the configuration file.
+               # Background: Some of the pytests depend on the operating system.
+               sFilter = None
+               if PLATFORMSYSTEM == "Windows":
+                   sFilter = "not _Linux_"
+               elif PLATFORMSYSTEM == "Linux":
+                   sFilter = "not _Windows_"
+               if sFilter is not None:
+                  if LOCALCOMMANDLINE is None:
+                     LOCALCOMMANDLINE = f"-k \"{sFilter}\""
+                  else:
+                     LOCALCOMMANDLINE = f"{LOCALCOMMANDLINE} -k \"{sFilter}\""
+                  # once again recover the masking of nested quotes (sFilter)
+                  LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
+
                if ( (PYTESTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"--pytestcommandline")
                   if ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
-                     listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--pytestcommandline=\"{PYTESTCOMMANDLINE}\"")
                   elif ( (PYTESTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
-                     listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--pytestcommandline=\"{LOCALCOMMANDLINE}\"")
                   elif ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
-                     listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+                     listCmdLineParts.append(f"--pytestcommandline=\"{PYTESTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
 
          else:
 
@@ -199,7 +217,7 @@ class CTestTrigger():
             #
             # !!! ROBOTCOMMANDLINE and PYTESTCOMMANDLINE are not considered !!!
             #
-            # LOCALCOMMANDLINE (if available) is passed unmodified to the TESTEXECUTOR (= without possible command line extensions like '--logfile')
+            # LOCALCOMMANDLINE (if available) is passed unmodified to the foreign TESTEXECUTOR (= without possible command line extensions like '--logfile')
 
             if LOCALCOMMANDLINE is not None:
                listCmdLineParts.append(f"{LOCALCOMMANDLINE}")

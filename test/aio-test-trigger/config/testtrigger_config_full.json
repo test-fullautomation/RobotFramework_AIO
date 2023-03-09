@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# Standard version without robotframework/atest
+# Full version including robotframework/atest
 #
 # 09.03.2023
 #
@@ -135,6 +135,15 @@
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "C:/RobotTest/projects/ROBFW_AIO/robotframework",
+                       "TESTFOLDER"        : "atest",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "run.py",
+                       "LOCALCOMMANDLINE"  : ["${PYTHONINTERPRETER}", "-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "--exclude manual", "\"./atest/robot\""],
+                       "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
+                       "EXECUTION"         : "RAW"
                     }
                   ],
 
