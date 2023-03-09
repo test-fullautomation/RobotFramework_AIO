@@ -124,7 +124,8 @@ jobs:
       shell: cmd
       run: |
         set Robot
-        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py --params "PYTHONINTERPRETER='%RobotPythonPath%/python.exe'"
+        "%RobotPythonPath%/python" -m pip install -r ../robotframework/atest/requirements-run.txt
+        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py --params "PYTHONINTERPRETER=%RobotPythonPath%/python.exe"
 
   install-test-linux:
     name: Test Linux package
@@ -155,9 +156,7 @@ jobs:
         . /opt/rfwaio/linux/set_robotenv.sh
         printenv | grep Robot
         echo $(which pandoc)
-        echo $HOME
-        ls -alh $HOME
-        ls -alh $RobotTutorialPath
+        $RobotPythonPath/python3.9 -m pip install -r ../robotframework/atest/requirements-run.txt
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py --params "PYTHONINTERPRETER=$RobotPythonPath/python3.9"
 
   release:
