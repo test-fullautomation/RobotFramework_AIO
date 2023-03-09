@@ -137,7 +137,7 @@
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
-                       "COMPONENTROOTPATH" : "C:/RobotTest/projects/ROBFW_AIO/robotframework",
+                       "COMPONENTROOTPATH" : "../../../../robotframework",
                        "TESTFOLDER"        : "atest",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "run.py",
