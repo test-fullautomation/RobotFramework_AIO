@@ -107,6 +107,7 @@ robotframework-pythonlibcore
 robotframework-requests       
 robotframework-sshlibrary
 robotframework-excellib
+robotframework-imagecompare
 schedule
 scp
 # scapy
