@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 08.03.2023
+# 09.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -150,44 +150,97 @@ class CTestTrigger():
          TESTEXECUTOR      = dictComponent['TESTEXECUTOR']
          LOCALCOMMANDLINE  = dictComponent['LOCALCOMMANDLINE']
          LOGFILE           = dictComponent['LOGFILE']
+         EXECUTION         = dictComponent['EXECUTION']
 
          # -- prepare the command line for the test execution
 
          listCmdLineParts = []
          listCmdLineParts.append(f"\"{PYTHON}\"")
          listCmdLineParts.append(f"\"{TESTEXECUTOR}\"")
-         listCmdLineParts.append("--logfile")
-         listCmdLineParts.append(f"\"{LOGFILE}\"")
 
-         if LOCALCOMMANDLINE is not None:
-            # recover the masking of nested quotes
-            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
-            LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("'", r"\"")
+         if EXECUTION is None:
 
-         if TESTTYPE == "ROBOT":
-            if ( (ROBOTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
-               listCmdLineParts.append(f"--robotcommandline")
-               if ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
-                  listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE}\"")
-               elif ( (ROBOTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
-               elif ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"\"{ROBOTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+            # -- execution of own test executors
 
-         if TESTTYPE == "PYTEST":
-            if ( (PYTESTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
-               listCmdLineParts.append(f"--pytestcommandline")
-               if ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
-                  listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE}\"")
-               elif ( (PYTESTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"\"{LOCALCOMMANDLINE}\"")
-               elif ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
-                  listCmdLineParts.append(f"\"{PYTESTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+            listCmdLineParts.append(f"--logfile=\"{LOGFILE}\"")
+
+            if LOCALCOMMANDLINE is not None:
+               # recover the masking of nested quotes
+               LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
+               LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("'", r"\"")
+
+            if TESTTYPE == "ROBOT":
+               if ( (ROBOTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
+                  if ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
+                     listCmdLineParts.append(f"--robotcommandline=\"{ROBOTCOMMANDLINE}\"")
+                  elif ( (ROBOTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
+                     listCmdLineParts.append(f"--robotcommandline=\"{LOCALCOMMANDLINE}\"")
+                  elif ( (ROBOTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
+                     listCmdLineParts.append(f"--robotcommandline=\"{ROBOTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+
+            if TESTTYPE == "PYTEST":
+
+               PLATFORMSYSTEM = self.__oTestTriggerConfig.Get('PLATFORMSYSTEM')
+               # Took over the filter mechanism (not _Linux_/not _Windows_) from PYTEST TESTEXECUTOR executepytest.py.
+               # This was necessary because of the Test Trigger now also uses the PYTEST LOCALCOMMANDLINE (--junit-prefix)
+               # and therefore is now fully responsible for the TESTEXECUTOR command line. But the filter depends on
+               # the operating system. To keep the Test Trigger configuration file operating system independent, the filter
+               # is set here in the code, but not in the configuration file.
+               # Background: Some of the pytests depend on the operating system.
+               sFilter = None
+               if PLATFORMSYSTEM == "Windows":
+                   sFilter = "not _Linux_"
+               elif PLATFORMSYSTEM == "Linux":
+                   sFilter = "not _Windows_"
+               if sFilter is not None:
+                  if LOCALCOMMANDLINE is None:
+                     LOCALCOMMANDLINE = f"-k \"{sFilter}\""
+                  else:
+                     LOCALCOMMANDLINE = f"{LOCALCOMMANDLINE} -k \"{sFilter}\""
+                  # once again recover the masking of nested quotes (sFilter)
+                  LOCALCOMMANDLINE = LOCALCOMMANDLINE.replace("\"", r"\"")
+
+               if ( (PYTESTCOMMANDLINE is not None) or (LOCALCOMMANDLINE is not None) ):
+                  if ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is None) ):
+                     listCmdLineParts.append(f"--pytestcommandline=\"{PYTESTCOMMANDLINE}\"")
+                  elif ( (PYTESTCOMMANDLINE is None) and (LOCALCOMMANDLINE is not None) ):
+                     listCmdLineParts.append(f"--pytestcommandline=\"{LOCALCOMMANDLINE}\"")
+                  elif ( (PYTESTCOMMANDLINE is not None) and (LOCALCOMMANDLINE is not None) ):
+                     listCmdLineParts.append(f"--pytestcommandline=\"{PYTESTCOMMANDLINE} {LOCALCOMMANDLINE}\"")
+
+         else:
+
+            # -- execution of foreign test executors
+            #
+            # EXECUTION is not None, the value currently doesn't matter (but value "RAW" assumed; other values maybe later);
+            # nothing more to distinguish between here, therefore 'else' only.
+            #
+            # !!! ROBOTCOMMANDLINE and PYTESTCOMMANDLINE are not considered !!!
+            #
+            # LOCALCOMMANDLINE (if available) is passed unmodified to the foreign TESTEXECUTOR (= without possible command line extensions like '--logfile')
+
+            if LOCALCOMMANDLINE is not None:
+               listCmdLineParts.append(f"{LOCALCOMMANDLINE}")
+
+         # eof else - if EXECUTION is None:
+
+         # currently hard coded handover here (and not taken out of the configuration file); let's see if this is future proof
+         # (and suitable for all kind of executions)
+         CWD = COMPONENTROOTPATH
 
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
-         self.__oExecutionLogFile.Write(sCmdLine)
+         # -- delete previous log file
+
+         oLogFile = CFile(LOGFILE)
+         bSuccess, sResult = oLogFile.Delete(bConfirmDelete=False)
+         del oLogFile
+         if bSuccess is not True:
+            sResult = CString.FormatResult(sMethod, bSuccess, sResult)
+            self.__oExecutionLogFile.Write(sResult)
+            printerror(sResult)
+            continue # for dictComponent in listofdictComponents:
 
          # -- execute the tests
 
@@ -196,19 +249,29 @@ class CTestTrigger():
          print(f"* ({nCntComponent}/{nNrOfComponents}) : '{TESTFOLDER}' ({TESTTYPE})")
          print()
 
-         print(f"Now executing command line:\n{sCmdLine}")
+         self.__oExecutionLogFile.Write(sCmdLine)
+
+         if EXECUTION is None:
+            print(f"Now executing command line:\n{sCmdLine}")
+         else:
+            print(f"Now executing '{EXECUTION}' command line:\n{sCmdLine}")
          print()
 
          listCmdLineParts = shlex.split(sCmdLine)
 
          nReturn = ERROR
+         sCurrentWorkingDirectory = os.getcwd()
          try:
+            if CWD is not None:
+               os.chdir(CWD)
             nReturn = subprocess.call(listCmdLineParts)
+            os.chdir(sCurrentWorkingDirectory)
             # Executor may return negative values; must be converted back to negative value after received here
             nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess {TESTTYPE} executor returned {nReturn}")
          except Exception as ex:
+            os.chdir(sCurrentWorkingDirectory)
             nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
@@ -264,15 +327,15 @@ class CTestTrigger():
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
 
-         self.__oExecutionLogFile.Write(sCmdLine)
-
          # -- execute the database application
 
          print(COLBY + "Writing testresults to database")
          print()
          # sCmdLine contains database credentials, therefore is not printed
+         # self.__oExecutionLogFile.Write(sCmdLine)
          # print(f"Now executing command line:\n{sCmdLine}")
          # alternative:
+         self.__oExecutionLogFile.Write(f"Now executing: {DATABASEEXECUTOR}")
          print(f"Now executing: {DATABASEEXECUTOR}")
          print()
 
