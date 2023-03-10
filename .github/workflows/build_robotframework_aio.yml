@@ -116,10 +116,6 @@ jobs:
       shell: cmd
       run: ./scripts/install-windows.bat
 
-    - name: Install pandoc on Windows
-      shell: cmd
-      run: choco install pandoc
-
     - name: Run tests on Windows
       shell: cmd
       run: |
