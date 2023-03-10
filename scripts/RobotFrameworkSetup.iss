@@ -222,6 +222,7 @@ var
   UsrDataDirPage: TInputDirWizardPage;
   ProjectPage : TWizardPage;
   ProjectListBox: TNewListBox;
+  PreviousUserDataDir: String;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -528,7 +529,15 @@ begin
   
   //initialize user data directory page with last directory
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
+  PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if ((CurPageID = UsrDataDirPage.ID) and not (CompareText(ExpandConstant(''), PreviousUserDataDir) = 0)and not  	 (CompareText(UsrDataDirPage.Values[0], PreviousUserDataDir) = 0)) then
+    Result := Msgbox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO) = IDYES;
 end;
 
 //
