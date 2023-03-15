@@ -63,9 +63,10 @@ function clone_update_repo () {
 	# 1. Check is repo folder is existing or not
 	# 2. Ensure the repo url is correct
 	# 3. Fetch all from git server
-	# 4. Ensure the default branch change (from git server)
-	# 5. Discard all user changes includes untracked files
+	# 4. Discard all user changes includes untracked files
+	# 5. Ensure the default branch change (from git server)
 	# 6. Checkout to target branch/commit/tag
+	# 7. Ensure branch/commit/tag is up-to-date with remote
 
 	if [ -d "$repo_path" ]; then
 		echo "Cleaning and updating repo $repo_path"
@@ -77,15 +78,16 @@ function clone_update_repo () {
 		fi
 
 		git -C "$repo_path" fetch --all
-
-		default_branch=$(git -C "$repo_path" remote show origin | grep "HEAD branch" | cut -d " " -f 5)
-		if [ "$(git -C "$repo_path" symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')" != "$default_branch" ]; then
-			echo "Default branch has changed, updating to $default_branch"
-			git -C "$repo_path" checkout "$default_branch" -f
-		fi
-
-		git -C "$repo_path" reset --hard origin/$default_branch &&
+		echo "Clean all local changes/commits"
+		git -C "$repo_path" reset --hard HEAD
 		git -C "$repo_path" clean -f -d -x
+
+		if [ -z "$commit_branch_tag" ]; then
+			default_branch=$(git -C "$repo_path" remote show origin | grep "HEAD branch" | cut -d " " -f 5)
+			git -C "$repo_path" checkout $default_branch
+			git -C "$repo_path" reset --hard origin/$default_branch
+			logresult "$?" "switched to '$default_branch'" "checkout to '$default_branch' from '$repo_url'"
+		fi
 
 		# try to remove existing directory and clone repo again
 		if [ "$?" -ne 0 ]; then
@@ -104,6 +106,10 @@ function clone_update_repo () {
 	if [ -n "$commit_branch_tag" ]; then
 		echo "Checking out to '$commit_branch_tag'"
 		git -C "$repo_path" checkout $commit_branch_tag
+		if [ "$?" -ne 0 ]; then
+			errormsg	"Given tag/branch '$commit_branch_tag' is not existing" 
+		fi
+		git -C "$repo_path" pull origin $commit_branch_tag
 		logresult "$?" "switched to '$commit_branch_tag'" "checkout to '$commit_branch_tag' from '$repo_url'"
 	fi
 }
