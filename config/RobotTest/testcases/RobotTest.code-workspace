@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../documentation"
+		},
+		{
+			"path": "../testcases"
+		},
+		{
+			"path": "../logfiles"
+		},
+		{
+			"path": "../tutorial"
+		}
+	],
+	"settings": {}
+}
