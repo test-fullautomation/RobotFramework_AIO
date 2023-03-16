@@ -1,10 +1,9 @@
 $Env:RobotTestPath=[System.Environment]::GetEnvironmentVariable("RobotTestPath","Machine")
-$Env:RobotParentTest=(get-item $Env:RobotTestPath).Parent.FullName
 $Env:RobotVsCode=[System.Environment]::GetEnvironmentVariable("RobotVsCode","Machine")
 $Env:RobotToolsPath=[System.Environment]::GetEnvironmentVariable("RobotToolsPath","Machine")
 $Env:RobotPythonPath=[System.Environment]::GetEnvironmentVariable("RobotPythonPath","Machine")
 
-$WpPath = ([System.Uri]$Env:RobotParentTest).AbsoluteUri
+$WpPath = ([System.Uri]$Env:RobotTestPath).AbsoluteUri
 $ToolsPath = ($Env:RobotToolsPath) -replace [RegEx]::Escape("\"),"\\"
 $PyPath = ($Env:RobotPythonPath) -replace [RegEx]::Escape("\"),"\\"
 $PyBin  = "/python3"  
