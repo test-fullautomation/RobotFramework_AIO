@@ -58,7 +58,7 @@ jobs:
     name: Build Windows package
     runs-on: windows-latest
     env:
-      GENDOC_LATEXPATH: C:/texlive/2022/bin/win32
+      GENDOC_LATEXPATH: C:/texlive/aio/bin/win32
     steps:
       - name: Support long path in git
         run: git config --system core.longpaths true
