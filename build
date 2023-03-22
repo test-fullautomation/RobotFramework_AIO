@@ -290,6 +290,8 @@ function build_debian()
 	cp -R -a ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
 	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
+	cp -R -a ../test/aio-analyzer/* ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
+
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 
