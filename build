@@ -286,11 +286,13 @@ function build_debian()
 
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
-	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
-	cp -R -a ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
+	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial/
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
+	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation/
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
 	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
-	cp -R -a ../test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
+	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
 
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
