@@ -90,6 +90,8 @@ else
    echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated only tutorial."
 fi
    cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
+   mkdir -p ${HOME}/RobotTest/documentation
+   cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/documentation/* ${HOME}/RobotTest/documentation
 
 # Set schedule for installing DLTConnector (will active in future)
 #
