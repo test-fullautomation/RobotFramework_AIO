@@ -61,6 +61,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    ##############################################################################
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
+   cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
    
    
    #
@@ -72,6 +73,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/localconfig
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
+   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/documentation
    chmod 0775 ${HOME}/RobotTest
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
