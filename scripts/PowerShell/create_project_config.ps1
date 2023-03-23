@@ -10,7 +10,6 @@ Write-Host "Project config path: $configFile"
 $i = 0
 $innoSetupFilesOutput = $json | ForEach-Object {
     "Source: `"$($_.Source)`"; DestDir: `{app`}`\python39`\Lib`\site-packages`\RobotFramework_TestsuitesManagement`\Config`\ ; DestName: robot_config.json ; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall recursesubdirs createallsubdirs;"
-    "Source: `"$($_.Source)`"; DestDir: `{code:GetUsrDataDir`}`\testcases`\config`\; DestName: robot_config_template.json; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall;"
     "Source: `"$($_.Source)`"; DestDir: `{code:GetUsrDataDir`}`\testcases`\config`\; DestName: robot_config.json; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall;"
     $i = $i+1
 } | Out-String

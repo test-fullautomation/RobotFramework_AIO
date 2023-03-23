@@ -2,17 +2,22 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
+  "version"        : "0.2.0",
+  "configurations" : [
     {
-      "type": "robotframework-lsp",
-      "name": "Robot Framework: Launch .robot file",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "target": "${file}",
-      "terminal": "none",
-      "env": {},
-      "args": []
+      "type"     : "robotframework-lsp",
+      "name"     : "Robot Framework: Launch .robot file",
+      "request"  : "launch",
+      "cwd"      : "${workspaceFolder}",
+      "target"   : "${file}",
+      "terminal" : "integrated",
+      "env"      : {},
+      "args"     : ["-T",
+                    "-d", "${workspaceFolder}${pathSeparator}..${pathSeparator}logfiles",
+                    "-b", "debug${pathSeparator}${fileBasenameNoExtension}.log",
+                    "-l", "htmllog${pathSeparator}${fileBasenameNoExtension}_log.html",
+                    "-o", "xmloutput${pathSeparator}${fileBasenameNoExtension}_output.xml",
+                    "-r", "htmlreport${pathSeparator}${fileBasenameNoExtension}_report.html"]
     }
   ]
 }
