@@ -57,8 +57,6 @@ jobs:
   build-windows:
     name: Build Windows package
     runs-on: windows-latest
-    env:
-      GENDOC_LATEXPATH: C:/texlive/aio/bin/win32
     steps:
       - name: Support long path in git
         run: git config --system core.longpaths true
@@ -68,7 +66,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: ./requirements_windows.sh
+        run: |
+          . ./requirements_windows.sh
+          echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
 
       - name: Clone repositories
         shell: bash
