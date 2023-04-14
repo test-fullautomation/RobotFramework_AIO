@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 09.03.2023
+# 27.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -224,9 +224,16 @@ class CTestTrigger():
 
          # eof else - if EXECUTION is None:
 
-         # currently hard coded handover here (and not taken out of the configuration file); let's see if this is future proof
-         # (and suitable for all kind of executions)
-         CWD = COMPONENTROOTPATH
+         # Currently hard coded handover here (and not taken out of the configuration file); let's see if this is future proof
+         # (and suitable for all kind of executions).
+         # Addendum: The atest of Robot Framework requires this, but in case of AIO components the local repositories are tested, and not the
+         # installed version of the applications.
+         # TODO: This needs to be clarified in more detail.
+         # The below CWD handling depending on EXECUTION is only a workaround, that is not really nice.
+
+         CWD = None
+         if EXECUTION is not None:
+            CWD = COMPONENTROOTPATH
 
          sCmdLine = " ".join(listCmdLineParts)
          del listCmdLineParts
@@ -265,13 +272,15 @@ class CTestTrigger():
             if CWD is not None:
                os.chdir(CWD)
             nReturn = subprocess.call(listCmdLineParts)
-            os.chdir(sCurrentWorkingDirectory)
+            if CWD is not None:
+               os.chdir(sCurrentWorkingDirectory)
             # Executor may return negative values; must be converted back to negative value after received here
             nReturn = ctypes.c_int32(nReturn).value
             print()
             print(f"[test trigger] : Subprocess {TESTTYPE} executor returned {nReturn}")
          except Exception as ex:
-            os.chdir(sCurrentWorkingDirectory)
+            if CWD is not None:
+               os.chdir(sCurrentWorkingDirectory)
             nReturn  = ERROR
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))

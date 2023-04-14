@@ -4,7 +4,7 @@
 #
 # Standard version without robotframework/atest
 #
-# 09.03.2023
+# 24.03.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -121,12 +121,12 @@
                        "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
-                       # to be removed after merge with atest folder in same repository
                        "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/aiotestlogfiles/aiotestlogfile.xml"
+                       "TESTFOLDER"        : "test/pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["--junit-prefix=TestsuitesManagement"],
+                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
