@@ -49,6 +49,9 @@ else
 			 ;;
           --config-file=*)
 			 ConfigFile="${i#*=}"
+			;;
+          --project-config-file=*)
+			 ProjectConfigFile=`cygpath -wa "${i#*=}"`
           ;;
           *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
@@ -233,7 +236,8 @@ function parse_config () {
 					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
 					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
 				fi
-				${PYBIN} ./setup.py clean --all install
+				${PYBIN} ./setup.py install
+				${PYBIN} ./setup.py clean --all
 				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
 			fi
 		fi
@@ -282,10 +286,14 @@ function build_debian()
 
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
-	cp -R -a ../robotframework-tutorial/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
-	cp -R -a ../robotframework-documentation/book ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
+	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial/
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
+	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation/
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
 	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
+	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
+
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 
@@ -317,7 +325,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-	./scripts/precompile.bat
+	./scripts/precompile.bat $ProjectConfigFile
 	./tools/InnoSetup5.5.1/ISCC "${arguments}" ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat

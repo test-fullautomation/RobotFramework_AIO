@@ -78,8 +78,6 @@ jobs:
     runs-on: windows-latest
     needs: tag-repos
     if: ${{ ! failure() && ! cancelled() }}
-    env:
-      GENDOC_LATEXPATH: C:/texlive/2022/bin/win32
 
     steps:
       - name: Support long path in git
@@ -90,7 +88,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: ./requirements_windows.sh
+        run: |
+          . ./requirements_windows.sh
+          echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
 
       - name: Clone repositories
         shell: bash
@@ -138,10 +138,6 @@ jobs:
       shell: cmd
       run: ./scripts/install-windows.bat
 
-    - name: Install pandoc on Windows
-      shell: cmd
-      run: choco install pandoc
-
     - name: Run tests on Windows
       shell: cmd
       run: |
@@ -168,7 +164,9 @@ jobs:
         name: linux-package
 
     - name: Install on Linux
-      run: sudo apt-get install ./*.deb
+      run: |
+        sudo apt-get update
+        sudo apt-get install ./*.deb --fix-missing
 
     - name: Run tests on Linux
       run: |

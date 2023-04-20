@@ -89,7 +89,11 @@ sRobotFile_1    = CString.NormalizePath("./exercise-pg-1.robot", sReferencePathA
 sRobotFile_2    = CString.NormalizePath("./exercise-pg-2.robot", sReferencePathAbs=sReferencePath)
 # with variant configuration
 sRobotFile_3    = CString.NormalizePath("./testsuites/exercise-pg-ts.robot", sReferencePathAbs=sReferencePath)
-sTestsuitesPath = CString.NormalizePath("./testsuites", sReferencePathAbs=sReferencePath)
+
+# sTestsuitesPath = CString.NormalizePath("./testsuites", sReferencePathAbs=sReferencePath)
+
+sRobotFile_4    = CString.NormalizePath("./00000/exercise-pg-00000.robot", sReferencePathAbs=sReferencePath)
+sTestsuitesPath = CString.NormalizePath(r"./00000", sReferencePathAbs=sReferencePath)
 
 sSource = sRobotFile_2
 
@@ -122,10 +126,11 @@ CONFIG_FILE  = None
 LOCAL_CONFIG = None
 #
 # METADATA    = "--metadata project:pg_variant2"
-# METADATA    = "--metadata version_sw:1.2.3"
-# METADATA    = "--metadata version_Hw:2.3.4"
+# METADATA    = "--metadata cmd_line_metadata:\"cmd_line_metadata_test_value\""
+# METADATA    = "--metadata version_sw:\"metadata_version_sw_in_command_line\""
+# METADATA    = "--metadata version_hw:2.3.4"
 # METADATA    = "--metadata version_test:3.4.5"
-# METADATA    = "--metadata version_sw:1.2.3 --metadata version_Hw:2.3.4 --metadata version_test:3.4.5"
+# METADATA    = "--metadata version_sw:1.2.3 --metadata version_hw:2.3.4 --metadata version_test:3.4.5"
 # METADATA    = "--metadata my_cmdline_metadata:my_cmdline_metadata_value"
 # METADATA    = "--metadata my_test_local_metadata:my_test_local_metadata_cmdline_value"
 # VARIABLE     = "--variable project:pg_variant2"
@@ -135,7 +140,7 @@ LOCAL_CONFIG = None
 # VARIABLE     = "--variable teststring_bench:\"command line test string bench\""
 # VARIABLE     = "--variable teststring_common:\"command line test string common\" --variable teststring_variant:\"command line test string variant\" --variable teststring_bench:\"command line test string bench\""
 # VARIANT      = "--variable variant:\"variant1\""
-VARIANT      = "--variable variant:\"variant2\""
+# VARIANT      = "--variable variant:\"variant2\""
 # VARIANT      = "--variable variant:\"inv/alid\""
 # VARIANT      = "--variable variant:\"    \""
 # VARIANT      = "--variable variant:\"SälfTest.ß.€.考.𠼭.𠼭\""
@@ -144,6 +149,7 @@ VARIANT      = "--variable variant:\"variant2\""
 # CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant2.json\""          # path relative to position of robot file
 # CONFIG_FILE  = "--variable config_file:\"./config/not_existing.json\""                         # path relative to position of robot file
 # CONFIG_FILE  = "--variable config_file:\"./localconfig/exercise-pg_localconfig_bench1.json\""  # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_SälfTest.ß.€.考.𠼭.𠼭.json\""  # path relative to position of robot file
 # LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench1.json\"" # path relative to position of robot file
 # LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench2.json\"" # path relative to position of robot file
 # LOCAL_CONFIG = "--variable local_config:\"./localconfig/not_existing.json\""                   # path relative to position of robot file

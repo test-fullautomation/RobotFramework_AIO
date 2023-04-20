@@ -35,6 +35,7 @@
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
 
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -88,14 +89,17 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 ;;;
 
 ;Tutorial installation
-Source: "A:\robotframework-tutorial\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+
+Source: "A:\robotframework-tutorial\100_variables_and_datatypes\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\100_variables_and_datatypes; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\900_building_testsuites; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "A:\robotframework-documentation\book\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "A:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "A:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
- 
+
 ;selftest installation
 Source: "A:\robotframework-selftest\*"; Excludes: ".git"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
@@ -104,11 +108,14 @@ Source: "A:\robotvscode\*"; Excludes: ".git"; DestDir: {app}\robotvscode; Flags:
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\test\aio-analyzer\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools\aio-analyzer; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Android related
 ;Source: "..\..\devtools\Windows\Android\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Android; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
 ;Source: "..\..\devtools\Windows\Appium\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Appium; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
 ;Source: "..\..\devtools\Windows\nodejs\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\nodejs; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
+
+#include '..\Output\Include\install_projects.iss';
 
 [Icons]
 ;
@@ -124,9 +131,9 @@ Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode
 ;                  up before Android links
 Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
-Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases; 
-Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial; 
+Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases;
 
+Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial;
 
 [Types]
 Name: Standard; Description: "Standard Installation"; 
@@ -208,13 +215,6 @@ Filename: "powershell.exe"; \
 // selected free to be free in the order of the displayed list.
 // Inno scripts don't support own classes and THashStringList is not
 // existing. Therefore use a record to store the data.
-type
-  TProjectHash = record
-     Name  : TStringList;         // name of the project
-     Index : TStringList;         // index which is forever fix 
-                                  // for the initial project name.
-     ListPosition : TStringList;  // Free list position must be unique.
-  end;
 
 var
   //MsgPage1: TOutputMsgWizardPage;
@@ -224,35 +224,7 @@ var
   UsrDataDirPage: TInputDirWizardPage;
   ProjectPage : TWizardPage;
   ProjectListBox: TNewListBox;
-  //holds the Project / Project Index Hash
-  ProjectHash : TProjectHash;  
-  
-
-//
-// Initialize the Project / Project Index Hash
-// !!! The Name/Index releationship must be forever fix !!!
-//     Otherwise wrong Project will be installed on update
-//     of RobotFramework.
-//////////////////////////////////////////////////////////////////
-procedure InitProjectHash();
-begin
-   //Initialize lists
-   ProjectHash.Name  := TStringList.Create();
-   ProjectHash.Index := TStringList.Create();
-   ProjectHash.ListPosition := TStringList.Create();
-   
-   ProjectHash.Index.Add('0');  ProjectHash.Name.Add('Generic');                          
-   ProjectHash.ListPosition.Add('0');
-   
-   //ProjectHash.Index.Add('11');  ProjectHash.Name.Add('G3g');                                           
-   //ProjectHash.ListPosition.Add('1');
-   
-   // don't display from here onwards
-   //ProjectHash.Index.Add('8');  ProjectHash.Name.Add('Volvo ICM MCA');                                  
-   //ProjectHash.ListPosition.Add('-1'); //don't display this
-   
-end;
-
+  PreviousUserDataDir: String;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -547,7 +519,7 @@ begin
         end;
      end;
   
-  //set focus to previous project or "unknown" in case of first installation
+  //set focus to previous project or "Generic" in case of first installation
   ProjectListbox.ItemIndex:=GetListPositionByIndex(StrToInt(GetPreviousData('SelectedProject','0')))
     
   //create user data directory page
@@ -559,7 +531,15 @@ begin
   
   //initialize user data directory page with last directory
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
+  PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if ((CurPageID = UsrDataDirPage.ID) and not (CompareText(ExpandConstant(''), PreviousUserDataDir) = 0)and not  	 (CompareText(UsrDataDirPage.Values[0], PreviousUserDataDir) = 0)) then
+    Result := Msgbox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO) = IDYES;
 end;
 
 //

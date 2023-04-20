@@ -106,7 +106,8 @@ robotframework-mqttlibrary
 robotframework-pythonlibcore  
 robotframework-requests       
 robotframework-sshlibrary
-robotframework-excellibrary-xwfintech
+robotframework-excellib
+robotframework-imagecompare
 schedule
 scp
 # scapy
@@ -139,7 +140,7 @@ robotframework-robocop
 pylint
 Sphinx
 pandoc
-pypandoc
+pypandoc_binary
 mobly
 pytest_mock
 odxtools

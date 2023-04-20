@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 20.02.2023
+# 08.03.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -271,15 +271,19 @@ class CTestTriggerConfig():
             # With this command line string (together with the global command line) the Test Executor is called.
             # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
             # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
-            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # is not handled as error (like in other parts of the Test Trigger configuration (by __ResolveParameters()).
             # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
             # under the responsibility of the Test Executor to react on missing parameters properly.
             # But in the following code no valuation of command line parameters will happen.
             LOCALCOMMANDLINE, bSuccess, sResult = self.__ResolveCommandLine(LOCALCOMMANDLINE)
-            if bSuccess is False:
+            if bSuccess is not True:
                raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
          # eof if "LOCALCOMMANDLINE" in dictComponent:
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
+
+         # optional
+         if "EXECUTION" not in dictComponent:
+            dictComponent['EXECUTION'] = None
 
          # short summary
          dictTestExecution = {}
@@ -288,6 +292,7 @@ class CTestTriggerConfig():
          dictTestExecution['TESTEXECUTOR']     = dictComponent['TESTEXECUTOR']
          dictTestExecution['LOCALCOMMANDLINE'] = dictComponent['LOCALCOMMANDLINE']
          dictTestExecution['LOGFILE']          = dictComponent['LOGFILE']
+         dictTestExecution['EXECUTION']        = dictComponent['EXECUTION']
          self.__listofdictTestExecutions.append(dictTestExecution)
 
       # eof for dictComponent in listofdictComponents:
@@ -320,7 +325,7 @@ class CTestTriggerConfig():
             # With this command line string (together with the global command line) the Database Executor is called.
             # In case of a parameter used in the command line list LOCALCOMMANDLINE, is not defined in the command line
             # of the test Trigger, it is assumed that this parameter is an optional one - and therefore the missing parameter
-            # is not handled as error (like in  other parts of the Test Trigger configuration (by __ResolveParameters()).
+            # is not handled as error (like in other parts of the Test Trigger configuration (by __ResolveParameters()).
             # It is under the reponsibility of the one who calls the Test Trigger, to provide all required parameters, and it is
             # under the responsibility of the Database Executor to react on missing parameters properly.
             # But in the following code no valuation of command line parameters will happen.
@@ -388,6 +393,11 @@ class CTestTriggerConfig():
 
       sMethod = "CTestTriggerConfig.__ResolveCommandLine"
 
+      if not isinstance(LOCALCOMMANDLINE, (tuple, list)):
+         bSuccess = None
+         sResult  = "Invalid type of LOCALCOMMANDLINE. Expected 'tuple' or 'list'."
+         return LOCALCOMMANDLINE, bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
+
       sLocalCommandLine = None
       bSuccess = None
       sResult  = "unknown"
@@ -397,22 +407,37 @@ class CTestTriggerConfig():
       regex_Parameters = self.__dictTestTriggerConfig['regex_Parameters']
       dictParams = self.__dictTestTriggerConfig['PARAMS']
       if dictParams is not None:
-         # resolve all possible parameters
+         # resolve all possible parameters:
+         # 1. parameter in LOCALCOMMANDLINE may contain ${...} or not (it's an option only)
+         # 2. Test Trigger command line may contain value for ${...} or not (if not: parameter is not required)
          for sParameter in LOCALCOMMANDLINE:
-            for sName, sValue in dictParams.items():
-               # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
-               if sName == "config":
-                  sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
-               sPlaceholder = "${" + sName + "}"
-               if sPlaceholder in sParameter:
-                  sValue = "\"" + sValue + "\"" # assuming that all command line parameters can contain blanks
-                  sParameter = sParameter.replace(sPlaceholder, sValue)
+            # anything ${...} to resolve ?
+            listParameters = regex_Parameters.findall(sParameter)
+            if len(listParameters) == 0:
+               # nothing to resolve; take over content unchanged
+               listLocalCommandLineParts.append(sParameter)
+            else:
+               # found ${...}, but resolving depends on corresponding content of --params of test Trigger command line (because LOCALCOMMANDLINE are handled as optional)
+               bSomethingResolved = False
+               for sName, sValue in dictParams.items():
+                  # TODO: not nice exception here: we assume that 'config' is a path that must be normalized; find better solution
+                  if sName == "config":
+                     sValue = CString.NormalizePath(sValue, sReferencePathAbs=self.__dictTestTriggerConfig['REFERENCEPATH'])
+                  sPlaceholder = "${" + sName + "}"
+                  if sPlaceholder in sParameter:
+                     sValue = "\"" + sValue + "\"" # assuming that all command line parameters can contain blanks
+                     sParameter = sParameter.replace(sPlaceholder, sValue)
+                     bSomethingResolved = True
+               # eof for sName, sValue in dictParams.items():
+               if bSomethingResolved is True:
                   listLocalCommandLineParts.append(sParameter)
-            # eof for sName, sValue in dictParams.items():
+            # eof else - if len(listParameters) == 0:
          # eof for sParameter in LOCALCOMMANDLINE:
       # eof if dictParams is not None:
       if len(listLocalCommandLineParts) > 0:
          sLocalCommandLine = " ".join(listLocalCommandLineParts)
+      else:
+         sLocalCommandLine = " ".join(LOCALCOMMANDLINE)
 
       bSuccess = True
       sResult  = "Done"
@@ -538,7 +563,9 @@ class CTestTriggerConfig():
       nJust = 25
       print()
       for sKey in self.__dictTestTriggerConfig:
-         print(sKey.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sKey]))
+         # "PARAMS" can contain database credentials, therefore this key is excluded from print
+         if sKey != "PARAMS":
+            print(sKey.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sKey]))
       print()
    # eof def PrintConfig(self):
 
@@ -556,6 +583,9 @@ class CTestTriggerConfig():
          print("TESTEXECUTOR".rjust(nJust, ' ')     + " : " + str(dictTestExecution['TESTEXECUTOR']))
          print("LOCALCOMMANDLINE".rjust(nJust, ' ') + " : " + str(dictTestExecution['LOCALCOMMANDLINE']))
          print("LOGFILE".rjust(nJust, ' ')          + " : " + str(dictTestExecution['LOGFILE']))
+         EXECUTION = dictTestExecution['EXECUTION']
+         if EXECUTION is not None:
+            print("EXECUTION".rjust(nJust, ' ') + " : " + str(EXECUTION))
          print()
    # eof def PrintConfig(self):
 

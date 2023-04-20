@@ -1,14 +1,16 @@
 {
-   "component"  : {
-                     "PyExColl"   : ["Comparison", "File", "Folder", "String", "Utils"],
-                     "RoExtColl"  : "robotframework-extensions-collection",
-                     "TeSuitMa"   : "robotframework-testsuitesmanagement",
-                     "JPrePro"    : "jsonpreprocessor",
-                     "GenPkgDoc"  : "GenPackageDoc",
-                     "RobLog2DB"  : "robotframework-robotlog2db",
-                     "RobLog2RQM" : "robotframework-robotlog2rqm",
-                     "TML2RobLog" : "robotframework-tmllog2robotlog"
-                  },
-   "version_sw" : "tt-version-004",
-   "variant"    : "tt-variant-004"
+   "components"  : {
+                     "Py Ext Coll"      : "PythonExtensionsCollection",
+                     "Gen Pkg Doc"      : "GenPackageDoc",
+                     "J Pre Pro"        : "JsonPreprocessor",
+                     "Micr Srv Base"    : "MicroserviceBase",
+                     "Micr Srv Cle Swi" : "MicroserviceClewareSwitch",
+                     "PyTest Log 2 DB"  : "PyTestLog2DB",
+                     "Tut Test"         : "TutorialTest",
+                     "RF Ext Coll"      : "robotframework-extensions-collection",
+                     "RF Log 2 DB"      : "RobotLog2DB",
+                     "RF Log 2 RQM"     : "RobotLog2RQM",
+                     "RF TSM"           : ["robotframework-testsuitesmanagement", "TestsuitesManagement"],
+                     "RF atest"         : "atest"
+                   }
 }
