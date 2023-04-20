@@ -148,8 +148,12 @@ jobs:
       if: success() || failure()
       uses: actions/upload-artifact@v3
       with:
-        name: Windows-aiotestlogfiles
-        path: ${{ runner.workspace }}/**/*/aiotestlogfiles/*
+        name: windows-aiotestlogfiles
+        # long path issue on Windows when upload artifact 
+        # https://github.com/actions/upload-artifact/issues/240
+        path: |
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/aiotestlogfiles/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
 
   install-test-linux:
     name: Test Linux package
@@ -186,7 +190,7 @@ jobs:
       if: success() || failure()
       uses: actions/upload-artifact@v3
       with:
-        name: Linux-aiotestlogfiles
+        name: linux-aiotestlogfiles
         path: ${{ runner.workspace }}/**/*/aiotestlogfiles/*
 
   release:
