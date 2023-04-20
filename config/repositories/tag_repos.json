@@ -1,0 +1,23 @@
+{
+   "github" : {
+      "project" : "test-fullautomation",
+      "repos"   : {
+         "python-extensions-collection": "",
+         "python-genpackagedoc": "",
+         "python-jsonpreprocessor": "",
+         "python-pytestlog2db": "",
+         "python-microservice-base": "",
+         "python-microservice-cleware-switch": "",
+         "robotframework": "",
+         "robotframework-documentation": "",
+         "robotframework-extensions-collection": "",
+         "robotframework-qconnect-base": "",
+         "robotframework-robotlog2db": "",
+         "robotframework-robotlog2rqm": "",
+         "robotframework-selftest": "",
+         "robotframework-testsuitesmanagement": "",
+         "robotframework-tutorial": "",
+         "testresultwebapp": ""
+      }
+   }
+}
