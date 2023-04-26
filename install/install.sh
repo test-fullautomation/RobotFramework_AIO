@@ -23,6 +23,7 @@ mypath=$(realpath $(dirname $0))
 sourceDir=$mypath/../download
 vscodeData=$mypath/../config/robotvscode/
 vscodeIcons=$mypath/../config/robotvscode/icons
+vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
 destDir=$(realpath $mypath/../..)
 
 use_cntlm="No"
@@ -63,7 +64,7 @@ function parse_arg() {
 		--use-cntlm) echo "Using cntlm";use_cntlm="Yes"; shift;;
 		--python) echo "Create Python repo only";python_only="Yes"; shift;;
 		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
-		--pandoc) echo "Create vscode repo only";pandoc_only="Yes"; shift;;
+		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
 
 		-*) echo "unknown option: $1" >&2; exit 1;;
 	esac
@@ -139,6 +140,14 @@ function packaging_vscode() {
 		logresult "$?" "installed ${extfile#$vscodeData/extensions/} Extension" "install ${extfile#$vscodeData/extensions/} Extension"
 	done
 
+	if [ -f ${vscode_jsonp} ]; then
+		jsonp_ext_pathfile=$(ls ${vscode_jsonp})
+		json_ext_filename=$(basename $jsonp_ext_pathfile)
+		echo "Install ${json_ext_filename} extension from vscode-jsonp repo"
+		"$sourceDir/vscodium/bin/codium" --install-extension "${jsonp_ext_pathfile}" --user-data-dir "$sourceDir/vscodium/data"
+		logresult "$?" "installed ${jsonp_ext_file} Extension" "install ${jsonp_ext_file} Extension"
+	fi
+
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
 	while IFS=, read -r publisher name version dump
 	do
@@ -154,7 +163,7 @@ function packaging_vscode() {
 			logresult "$?" "installed ${name}-${version}.vsix Extension" "install ${name}-${version}.vsix Extension"
 		fi
 	done < "$mypath/vscode_requirement.csv"
-	
+
 	echo "Creating preconfigured VSCodium repository ..."
 	cp -R -a "$vscodeIcons/." "$sourceDir/vscodium/icons"
 

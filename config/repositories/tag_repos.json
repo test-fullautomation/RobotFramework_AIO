@@ -17,7 +17,8 @@
          "robotframework-selftest": "",
          "robotframework-testsuitesmanagement": "",
          "robotframework-tutorial": "",
-         "testresultwebapp": ""
+         "testresultwebapp": "",
+         "vscode-jsonp": ""
       }
    }
 }
