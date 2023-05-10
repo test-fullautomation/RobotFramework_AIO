@@ -1,6 +1,7 @@
 {
    "github" : {
       "project" : "test-fullautomation",
+      "infix_tag" : "aio/",
       "repos"   : {
          "python-extensions-collection": "",
          "python-genpackagedoc": "",
