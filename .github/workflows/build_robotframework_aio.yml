@@ -256,4 +256,6 @@ jobs:
       run: python -m pip install -r ./tools/git-tag/requirements.txt
 
     - name: Tag repositories
-      run: ./tools/git-tag/tag_repos_with_their_version_file.sh ./tools/git-tag/publish_pypi_repo.txt
+      run: |
+        chmod +x ./tools/git-tag/tag_repos_with_their_version_file.sh
+        ./tools/git-tag/tag_repos_with_their_version_file.sh ./tools/git-tag/publish_pypi_repo.txt
