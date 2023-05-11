@@ -258,4 +258,4 @@ jobs:
     - name: Tag repositories
       run: |
         chmod +x ./tools/git-tag/tag_repos_with_their_version_file.sh
-        ./tools/git-tag/tag_repos_with_their_version_file.sh ./tools/git-tag/publish_pypi_repo.txt
+        ./tools/git-tag/tag_repos_with_their_version_file.sh ./config/repositories/publish_pypi_repos.txt
