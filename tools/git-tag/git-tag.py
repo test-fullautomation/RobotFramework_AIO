@@ -25,6 +25,10 @@
 # 
 # Jan 2023:
 #  - initial OSS version
+#
+# May 2023:
+#  - add configurable information `infix_tag` for string to be inserted into tag
+#  - implement commandline arguments verifications
 # 
 # ******************************************************************************
 
@@ -32,58 +36,59 @@ from abc import ABCMeta, abstractmethod
 import requests
 import urllib.parse
 import json
-import sys
+from jsonschema import validate
 import os
+import argparse
+
+VERSION = "0.1.0"
+VERSION_DATE = "10.05.2023"
 
 PREFIX_INTERMEDIATE_TAG = "dev/"
 PREFIX_RELEASED_TAG = "rel/"
-INSERTED_STR_TAG = "aio/"
 
-USAGE = """Usage: git-tag.py <tag_name> <tag_repos.json>
-
-git-tag tool helps to tag git repos via REST APIs of git server.
-Currently, tool support 3 types of git server: Github, Gitlab and Bitbucket.
-Due to security, the credentials (PAT: Personal Access Token) to access the 
-repos should be set as environment variables: <git-server-type>_PAT (upper case).
-E.g: GITHUB_PAT, GITLAB_PAT and BITBUCKET_PAT
-
-positional arguments:
-   <tag_name>         tag name which is used for tagging repos. E.g: rel/0.5.2.1.
-   <tag_repos.json>   config *.json file which contains the repos information.
-
-                      Schema for config *.json file:
-                      {
-                         "<repo-type>" : {
-                            "base_url" : "<base-git-server-url>",  //not require for Github
-                            "project"  : "<project-space>",
-                            "repos"    : {
-                               "<repo-name-1>" : "<sha-commit-for-reference>",
-                               "<repo-name-2>" : "<sha-commit-for-reference>"
-                               ...
-                            }
-                         }
-                         ...
-                      }
-                      
-                      Example:
-                      {
-                         "github" : {
-                            "project" : "test-fullautomation",
-                            "repos"   : {
-                               "python-jsonpreprocessor": "85ac674b0de60629b8860acd6810bc7b679967ab",
-                               "robotframework": "" //tag will refer to latest commit on default branch
-                            }
-                         },
-                         "gitlab" : {
-                            "base_url" : "https://gitlab.com",
-                            "project" : "robotframework-aio",
-                            "repos"   : {
-                               "build": "", //tag will refer to latest commit on default branch
-                               "config": "09fa34e57cc09a227b68b11a4a89f6b2d52cec33"
-                            }
-                         }
-                      }
-"""
+CONFIG_SCHEMA = {
+   "type": "object",
+   "properties": {
+      "github": {
+         "$ref": "#/$defs/git-server"
+      },
+      "gitlab": {
+         "$ref": "#/$defs/git-server",
+         "required" : ["base_url"]
+      },
+      "bitbucket": {
+         "$ref": "#/$defs/git-server",
+         "required" : ["base_url"]
+      },
+   },
+   "$defs" : {
+      "git-server" : {
+         "type": "object",
+         "properties" : {
+            "project": {
+               "type": "string"
+            },
+            "repos": {
+               "type": "object"
+            },
+            "base_url": {
+               "type" : "string"
+            },
+            "infix_tag": {
+               "type" : "string"
+            }
+         },
+         "required" : ["project", "repos"],
+         "additionalProperties": False,
+      }
+   },
+   "additionalProperties": False,
+   "anyOf": [
+      {"required": ["github"]},
+      {"required": ["gitlab"]},
+      {"required": ["bitbucket"]}
+   ],
+}
 
 def log_msg(msg=""):
    print(msg)
@@ -373,20 +378,88 @@ class Bitbucket(GitServer):
    def _commit_sha_from_reponse(self, res_data):
       return json.loads(res_data)['id']
 
-if __name__=="__main__":
-   repo_conf = dict()
+def __process_commandline():
 
-   if len(sys.argv) < 3:
-      err_msg(f"Please provide tag-name and config *.json file.\n{USAGE}")
-   tag_name=sys.argv[1]
-   conf_file=sys.argv[2]
+   str_desc = """git-tag tool helps to tag git repos via REST APIs of git server.
+Tool support 3 types of git server: Github, Gitlab and Bitbucket.
+Due to security, the credentials (PAT: Personal Access Token) to access the 
+repos should be set as environment variables: <git-server-type>_PAT (upper case).
+E.g: GITHUB_PAT, GITLAB_PAT and BITBUCKET_PAT"""
+
+   str_sample_config="""
+Schema for config *.json file:
+{
+   "<repo-type>" : {
+      "base_url" : "<base-git-server-url>",  //not require for Github
+      "project"  : "<project-space>",
+      "infix_tag": "<string-to-be-inserted-into-tag>",  // optional
+      "repos"    : {
+         "<repo-name-1>" : "<sha-commit-for-reference>",
+         "<repo-name-2>" : "<sha-commit-for-reference>"
+         ...
+      }
+   }
+   ...
+}
+
+Example:
+{
+   "github" : {
+      "project" : "test-fullautomation",
+      "repos"   : {
+         "python-jsonpreprocessor": "85ac674b0de60629b8860acd6810bc7b679967ab",
+         "robotframework": "" //tag will refer to latest commit on default branch
+      }
+   },
+   "gitlab" : {
+      "base_url" : "https://gitlab.com",
+      "project" : "robotframework-aio",
+      "infix_tag": "aio/"  // 'rel/0.0.0.1' tag will be transformed to 'rel/aio/0.0.0.1'
+      "repos"   : {
+         "build": "", //tag will refer to latest commit on default branch
+         "config": "09fa34e57cc09a227b68b11a4a89f6b2d52cec33"
+      }
+   }
+}
+   """
+
+   cmdlineparser=argparse.ArgumentParser(prog="git-tag", description=str_desc,
+                                         formatter_class=argparse.RawTextHelpFormatter)
+   cmdlineparser.add_argument('-v', '--version', action='version', 
+                              version=f'v{VERSION} ({VERSION_DATE})',
+                              help='version of git-tag tool')
+   cmdlineparser.add_argument('tag_name', type=str, 
+                              help='tag name which is used for tagging repos.'+\
+                              '\nE.g: rel/0.5.2.1.')
+   cmdlineparser.add_argument('config_file', type=str,
+                              help='config *.json file which contains the repos information.'+\
+                              str_sample_config)
+   return cmdlineparser.parse_args()
+
+if __name__=="__main__":
+   repo_conf = None
+
+   args = __process_commandline()
+   tag_name  = args.tag_name
+   conf_file = args.config_file
+
+   if (not tag_name.startswith(PREFIX_RELEASED_TAG)) and (not tag_name.startswith(PREFIX_INTERMEDIATE_TAG)):
+      err_msg(f"Only tag with prefix '{PREFIX_RELEASED_TAG}' or '{PREFIX_INTERMEDIATE_TAG}' is allowed for tagging")
 
    with open(conf_file) as f:
       repo_conf = json.load(f)
 
+   try:
+      validate(repo_conf, CONFIG_SCHEMA)
+   except Exception as reason:
+      err_msg(f"Given config *.json file '{conf_file}' is not valid.\n{reason}")
+
    for git_type, repo_data in repo_conf.items():
       base_url = "https://api.github.com"
       PAT = None
+      infix_tag = ""
+      if 'infix_tag' in repo_data:
+         infix_tag = repo_data['infix_tag']
 
       try:
          PAT = os.environ[f"{git_type.upper()}_PAT"]
@@ -406,14 +479,11 @@ if __name__=="__main__":
          git = GitCommand(git_type, repo=repo, project=repo_data['project'], 
                           PAT=PAT, base_url=base_url)
 
-         released_tag = tag_name
-
-         # Change tag name to <rel|dev>/aio/<version>
-         # Inserted string INSERTED_STR_TAG into tag for git servers other than gitlab
-         if (git_type != "gitlab") and (INSERTED_STR_TAG not in tag_name):
-            released_tag = tag_name.replace(
-                                    PREFIX_INTERMEDIATE_TAG, f"{PREFIX_INTERMEDIATE_TAG}{INSERTED_STR_TAG}"
-                                  ).replace(
-                                    PREFIX_RELEASED_TAG, f"{PREFIX_RELEASED_TAG}{INSERTED_STR_TAG}")
+         # Change tag name to <rel|dev>/<infix_tag>/<version> if configured
+         # Inserted infix_tag string into tag due to information in config file
+         released_tag = tag_name.replace(
+                                 PREFIX_INTERMEDIATE_TAG, f"{PREFIX_INTERMEDIATE_TAG}{infix_tag}"
+                                 ).replace(
+                                 PREFIX_RELEASED_TAG, f"{PREFIX_RELEASED_TAG}{infix_tag}")
 
          git.tag(released_tag, commit_sha)
