@@ -3,3 +3,5 @@ robocorp,robotframework-lsp,1.7.3
 xabikos,JavaScriptSnippets,1.8.0
 redhat,vscode-xml,0.18.1
 tomoki1207,pdf,1.2.2
+jebbs,plantuml,2.17.5
+hediet,vscode-drawio,1.6.6

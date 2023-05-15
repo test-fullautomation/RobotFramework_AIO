@@ -248,16 +248,16 @@ function parse_config () {
 function build_debian()
 {
 	check_and_install_texlive
+	# Build Robot Framework in Linux OSD5 enviroment
+	# read 2. line, from there return after 10th character
+	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
+	overwrite_testsuitmanagement_version $VERSION
 	parse_config $ConfigFile
 
 	cd $CURDIR
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 	echo -e "${COL_GREEN}#          Executing dpkg to create installer...                                   #${COL_RESET}"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
-	# Build Robot Framework in Linux OSD5 enviroment
-	# read 2. line, from there return after 10th character
-	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
-
 
 	PACK_NAME=RobotFramework_AIO_${VERSION}
 
@@ -316,7 +316,10 @@ function build_windows() {
 	if [ -z "$GENDOC_LATEXPATH" ]; then
 		errormsg "Environment variable 'GENDOC_LATEXPATH' is not set."
 	fi
-	
+
+	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
+	overwrite_testsuitmanagement_version $VERSION
+
 	parse_config $ConfigFile
 
 	cd $CURDIR

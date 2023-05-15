@@ -34,7 +34,7 @@
 #define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
-
+#include '..\Output\Include\install_projects.iss';
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -99,7 +99,7 @@ Source: "A:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; 
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "A:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
-
+ 
 ;selftest installation
 Source: "A:\robotframework-selftest\*"; Excludes: ".git"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
@@ -114,8 +114,6 @@ Source: "..\test\aio-analyzer\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools\a
 ;Source: "..\..\devtools\Windows\Android\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Android; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
 ;Source: "..\..\devtools\Windows\Appium\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Appium; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
 ;Source: "..\..\devtools\Windows\nodejs\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\nodejs; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
-
-#include '..\Output\Include\install_projects.iss';
 
 [Icons]
 ;
@@ -172,6 +170,8 @@ Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTestPath; ValueData: {code:GetUsrDataDir}\testcases;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotLogPath; ValueData: {code:GetUsrDataDir}\logfiles;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTutorialPath; ValueData: {code:GetUsrDataDir}\tutorial;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5-universal;
+
 
 ; ROBFW Doesn't change ANDROID_HOME
 ; The idea is that the ROBFW Frameworks sets ANDRDOID_HOME locally for the ROBFW process(es) where ever required to the android sdk delivered with ROBFW Framework

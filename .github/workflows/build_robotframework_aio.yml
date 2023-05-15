@@ -118,6 +118,7 @@ jobs:
     env:
       RobotPythonPath: "C:/Program Files/RobotFramework/python39"
       RobotTutorialPath: "C:/RobotTest/tutorial"
+      GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5-universal"
 
     steps:
     - name: Support long path in git

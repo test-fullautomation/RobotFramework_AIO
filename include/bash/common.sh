@@ -50,6 +50,21 @@ function logresult(){
 	fi
 }
 
+function overwrite_testsuitmanagement_version(){
+	#!/bin/bash
+
+	if [ ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py ]
+	then
+		export DATE=`date +%m.%4Y`
+		export VERSION_DATE="VERSION_DATE    = \"$DATE\""
+		export VERSION="VERSION         = \"$1\""
+		sed -ie '/AIO_BUNDLE_NAME/{n;N;d}' ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
+
+		sed -i "/AIO_BUNDLE_NAME/a$VERSION_DATE" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
+
+		sed -i "/AIO_BUNDLE_NAME/a$VERSION" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
+	fi
+}
 # Clone or update repository
 # Arguments:
 #	$repo_path : location to clone repo into
