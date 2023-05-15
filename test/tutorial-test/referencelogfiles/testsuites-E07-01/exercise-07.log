@@ -5,8 +5,8 @@
 20230227 15:10:01.208 - INFO - Running with configuration level 1
 20230227 15:10:01.208 - INFO - Robot Framework AIO version check passed!
 20230227 15:10:01.208 - INFO - Suite Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\'
-20230227 15:10:01.208 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\config\exercise-07_config_variant1.json'
-20230227 15:10:01.208 - INFO - Local config file: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\localconfig\exercise-07_localconfig_bench1.json'
+20230227 15:10:01.208 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\config\exercise-07_config_variant1.jsonp'
+20230227 15:10:01.208 - INFO - Local config file: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-07\localconfig\exercise-07_localconfig_bench1.jsonp'
 20230227 15:10:01.208 - INFO - Number of test suites: 1
 20230227 15:10:01.208 - INFO - Total number of testcases: 1
 20230227 15:10:01.208 - INFO - +- END SETUP: tm.Testsuite Setup (0)

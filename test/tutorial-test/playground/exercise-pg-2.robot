@@ -23,7 +23,7 @@
 Library    RobotFramework_TestsuitesManagement    WITH NAME    tm
 Library    RobotframeworkExtensions.Collection    WITH NAME    rf.extensions
 
-Suite Setup    tm.testsuite_setup    ./config/exercise-pg_variants.json
+Suite Setup    tm.testsuite_setup    ./config/exercise-pg_variants.jsonp
 Test Setup    tm.testcase_setup
 Test Teardown    tm.testcase_teardown
 
