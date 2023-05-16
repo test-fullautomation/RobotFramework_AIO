@@ -63,22 +63,22 @@
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-microservice-base",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceBase"],
-                       "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceClewareSwitch"],
-                       "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
+                  //   {
+                  //      "COMPONENTROOTPATH" : "../../../../python-microservice-base",
+                  //      "TESTFOLDER"        : "pytest",
+                  //      "TESTTYPE"          : "PYTEST",
+                  //      "TESTEXECUTOR"      : "executepytest.py",
+                  //      "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceBase"],
+                  //      "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                  //   },
+                  //   {
+                  //      "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
+                  //      "TESTFOLDER"        : "pytest",
+                  //      "TESTTYPE"          : "PYTEST",
+                  //      "TESTEXECUTOR"      : "executepytest.py",
+                  //      "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceClewareSwitch"],
+                  //      "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                  //   },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-pytestlog2db",
                        "TESTFOLDER"        : "pytest",

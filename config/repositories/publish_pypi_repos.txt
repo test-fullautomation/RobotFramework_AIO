@@ -2,8 +2,6 @@ python-extensions-collection
 python-genpackagedoc
 python-jsonpreprocessor
 python-pytestlog2db
-python-microservice-base
-python-microservice-cleware-switch
 robotframework-extensions-collection
 robotframework-qconnect-base
 robotframework-testsuitesmanagement
