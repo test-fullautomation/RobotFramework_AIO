@@ -55,9 +55,9 @@ function overwrite_testsuitmanagement_version(){
 
 	if [ ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py ]
 	then
-		export DATE=`date +%m.%4Y`
-		export VERSION_DATE="VERSION_DATE    = \"$DATE\""
-		export VERSION="VERSION         = \"$1\""
+		DATE=`date +%m.%4Y`
+		VERSION_DATE="VERSION_DATE    = \"$DATE\""
+		VERSION="VERSION         = \"$1\""
 		sed -ie '/AIO_BUNDLE_NAME/{n;N;d}' ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
 
 		sed -i "/AIO_BUNDLE_NAME/a$VERSION_DATE" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
