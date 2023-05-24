@@ -170,7 +170,7 @@ Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTestPath; ValueData: {code:GetUsrDataDir}\testcases;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotLogPath; ValueData: {code:GetUsrDataDir}\logfiles;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTutorialPath; ValueData: {code:GetUsrDataDir}\tutorial;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5-universal;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5;
 
 
 ; ROBFW Doesn't change ANDROID_HOME

@@ -36,5 +36,3 @@ TEXLIVE_DIR="C:/texlive/aio"
 choco install texlive --params "'/collections:pictures,latex /InstallationPath:${TEXLIVE_DIR} /extraPackages:${extra_packages}'"
 
 export GENDOC_LATEXPATH="${TEXLIVE_DIR}/bin/windows"
-export RobotPlantUMLPath="../robotvscode/data/extensions/jebbs.plantuml-2.17.5-universal"
-export GENDOC_PLANTUML_PATH="${RobotPlantUMLPath}"

@@ -20,6 +20,7 @@ env:
   DEFAULT_REF: ${{ github.base_ref }}
   MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS.json"
   BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+  GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
 
 jobs:
   tag-repos:
@@ -123,7 +124,7 @@ jobs:
     env:
       RobotPythonPath: "C:/Program Files/RobotFramework/python39"
       RobotTutorialPath: "C:/RobotTest/tutorial"
-      GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5-universal"
+      GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
 
     steps:
     - name: Support long path in git
@@ -190,8 +191,7 @@ jobs:
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        printenv | grep Robot
-        echo $(which pandoc)
+        export GENDOC_PLANTUML_PATH=$RobotVsCode/data/extensions/jebbs.plantuml-2.17.5
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
     - name: Upload test result as artifact
