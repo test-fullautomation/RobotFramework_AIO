@@ -85,7 +85,7 @@ Then follow below steps for building process:
 Build the RobotFramework AIO package with all related libraries 
 (defined in `config/repositories/repositories.conf` file).
 
-Build script will detect the Operation System (**Windows** or **Linux**) 
+Build script will detect the operating system (**Windows** or **Linux**) 
 automatically to run the appropriate steps for building installer package.
 
 The new generated RobotFramework AIO setup file can found under `Output/` folder 
