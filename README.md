@@ -10,7 +10,8 @@
 
 # Robot Framework AIO  <!-- omit in toc -->
 
-This respository holds the build tooling for a new Robot Framework AIO (All In One) setup for Windows (and later Linux).
+This respository holds the build tooling for a new Robot Framework AIO (All In 
+One) setup for both Windows and Linux.
 
 
 ## Table of Contents  <!-- omit in toc -->
@@ -33,18 +34,21 @@ This respository holds the build tooling for a new Robot Framework AIO (All In O
 ## Getting Started
 
 ### Manual build
-Currently, RobotFramework AIO is supported to build with both **Windows** and **Linux** environments.
+Currently, RobotFramework AIO is supported to build with both **Windows** and 
+**Linux** environments.
 
 #### Preconditions
-When building RobotFramework AIO package, the document is also generated with [GenPackageDoc](https://github.com/test-fullautomation/python-genpackagedoc)
-using [TeX Live](https://www.tug.org/texlive/) tool.
+Building a RobotFramework AIO installer includes rendering the documentation. 
+This requires the availability of some additional applications that have to be 
+installed at first.
 
-So, Tex Live should be installed first.
-The full collection is recommended when installing texlive to avoid issue when generating document but it will take long time for the installation. 
-
+[TeX Live](https://www.tug.org/texlive/) is used for rendering the documentation and need to be installed first.
+The full collection is recommended to avoid issue when generating document but it will take long time for the installation. 
 In case the full collection installation is not possible, at least 2 collections `texlive-latex-extra` and `texlive-fonts-recommended` should be installed together with the basic package.
 
-Please refer [requirements_linux.sh](./requirements_linux.sh) or [requirements_windows.sh](./requirements_windows.sh) for the dependency package for **Linux** and **Windows** environments.
+Please refer [requirements_linux.sh](./requirements_linux.sh) or 
+[requirements_windows.sh](./requirements_windows.sh) for the dependency packages 
+for **Linux** and **Windows** environments.
 
 #### Execute build scripts
 Clone this [RobotFramework_AIO](https://github.com/test-fullautomation/RobotFramework_AIO) repository first
@@ -59,11 +63,13 @@ Then follow below steps for building process:
 	./cloneall
 	```
 
-2. Download and install python (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
+2. Download and install Python 3.9 (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
 	```
 	./install/install.sh
 	```
-	>Note: In case you are working behind the proxy, [cntlm authentication proxy](https://sourceforge.net/projects/cntlm/) should be installed and started first then
+	>Note: In case you are working behind the proxy, 
+	[cntlm authentication proxy](https://sourceforge.net/projects/cntlm/) 
+	should be installed and started first then
 	execute the `install.sh` with `--use-cntlm` argument as below command:
 	
 	```
@@ -75,9 +81,11 @@ Then follow below steps for building process:
 	./build
 	```
 
-Build the RobotFramework AIO package with all related libraries (defined in `config/repositories/repositories.conf` file).
+Build the RobotFramework AIO package with all related libraries 
+(defined in `config/repositories/repositories.conf` file).
 
-Build script will detect the Operation System (**Windows** or **Linux**) automatically to run the appropriate steps for building installer package.
+Build script will detect the Operation System (**Windows** or **Linux**) 
+automatically to run the appropriate steps for building installer package.
 
 The new generated RobotFramework AIO setup file can found under `Output/` folder 
 on Windows and `output_lx` on Linux machine.
@@ -85,27 +93,26 @@ on Windows and `output_lx` on Linux machine.
 ### Github Actions
 
 #### Workflow
-The workflow to build RobotFramework AIO package is available in Github Actions
-os this repo as below:
+The workflow to build RobotFramework AIO package is available in 
+"Github Actions" of this repository.
 
-[![Build RobotFramework AIO packages](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml/badge.svg)](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml)
-
-There are 2 build jobs for both environment **Windows** and **Linux**, 
-the building jobs contains following main steps:
+There are build jobs available for both environments **Windows** and **Linux**. 
+These build jobs contain the following main steps: 
 - `Install dependencies`: install dependency packages for build job
 - `Clone repositories` : clone all related repos to build runner
 - `Install` : install python, vscode and their dependencies
 - `Build` : build the package installer
-- `Upload built package` : save the built package as workflow artifactory 
+- `Upload build package` : save the build package as workflow artifactory 
 
 #### Runners
-Currently, there are 2 available runners (GitHub-hosted) for build pipeline:
+Currently, there are two runners (GitHub-hosted) available for build pipelines:
 - Windows runner: [Windows Server 2022](https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md) with label `windows-latest` for Windows job.
 - Ubuntu runner: [Ubuntu 22.04.1 LTS](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md) with label `ubuntu-latest` for Linux job.
 
 ## Contribution
 
-We are always searching support and you are cordially invited to help to improve Robot Framework AIO.
+We are always interested in support and you are cordially invited helping us to 
+improve the Robot Framework AIO.
 
 ## Feedback
 
