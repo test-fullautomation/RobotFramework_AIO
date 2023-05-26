@@ -8,6 +8,4 @@ export RobotToolsPath=/opt/rfwaio/tools
 export RobotTestPath=~/RobotTest/testcases
 export RobotLogPath=~/RobotTest/logfiles
 export RobotTutorialPath=~/RobotTest/tutorial
-
-
-
+export GENDOC_PLANTUML_PATH=$RobotVsCode/data/extensions/jebbs.plantuml-2.17.5
