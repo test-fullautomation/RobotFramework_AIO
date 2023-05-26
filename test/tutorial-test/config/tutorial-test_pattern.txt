@@ -1,8 +1,8 @@
 START\sSUITE:\sExercise-\d+
-(CfgFile\sPath:\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
-(Local\sconfig\sfile:\s).+(exercise-\d+).(localconfig).(exercise-\d+.+\.json)
-(Parameters\sloaded\sfrom\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
-(Selected\sconfiguration\sfile\s).+(exercise-\d+).(config).(exercise-\d+.+\.json)
+(CfgFile\sPath:\s).+(exercise-\d+).(config).(exercise-\d+.+\.jsonp)
+(Local\sconfig\sfile:\s).+(exercise-\d+).(localconfig).(exercise-\d+.+\.jsonp)
+(Parameters\sloaded\sfrom\s).+(exercise-\d+).(config).(exercise-\d+.+\.jsonp)
+(Selected\sconfiguration\sfile\s).+(exercise-\d+).(config).(exercise-\d+.+\.jsonp)
 (Suite\sPath:\s).+(exercise-\d+)
 Running\swith\sconfiguration\slevel\s\d+
 Suite\sCount:\s\d+

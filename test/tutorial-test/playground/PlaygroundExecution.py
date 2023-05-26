@@ -144,15 +144,15 @@ LOCAL_CONFIG = None
 # VARIANT      = "--variable variant:\"inv/alid\""
 # VARIANT      = "--variable variant:\"    \""
 # VARIANT      = "--variable variant:\"SälfTest.ß.€.考.𠼭.𠼭\""
-# VARIANT      = "--variable variant:\".\localconfig\exercise-pg_localconfig_bench1.json\""
-# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant1.json\""          # path relative to position of robot file
-# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant2.json\""          # path relative to position of robot file
-# CONFIG_FILE  = "--variable config_file:\"./config/not_existing.json\""                         # path relative to position of robot file
-# CONFIG_FILE  = "--variable config_file:\"./localconfig/exercise-pg_localconfig_bench1.json\""  # path relative to position of robot file
-# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_SälfTest.ß.€.考.𠼭.𠼭.json\""  # path relative to position of robot file
-# LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench1.json\"" # path relative to position of robot file
-# LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench2.json\"" # path relative to position of robot file
-# LOCAL_CONFIG = "--variable local_config:\"./localconfig/not_existing.json\""                   # path relative to position of robot file
+# VARIANT      = "--variable variant:\".\localconfig\exercise-pg_localconfig_bench1.jsonp\""
+# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant1.jsonp\""          # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_variant2.jsonp\""          # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./config/not_existing.jsonp\""                         # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./localconfig/exercise-pg_localconfig_bench1.jsonp\""  # path relative to position of robot file
+# CONFIG_FILE  = "--variable config_file:\"./config/exercise-pg_config_SälfTest.ß.€.考.𠼭.𠼭.jsonp\""  # path relative to position of robot file
+# LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench1.jsonp\"" # path relative to position of robot file
+# LOCAL_CONFIG = "--variable local_config:\"./localconfig/exercise-pg_localconfig_bench2.jsonp\"" # path relative to position of robot file
+# LOCAL_CONFIG = "--variable local_config:\"./localconfig/not_existing.jsonp\""                   # path relative to position of robot file
 #
 # TM***
 #

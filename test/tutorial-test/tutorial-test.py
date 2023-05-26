@@ -23,7 +23,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# 21.02.2023
+# 15.05.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 #TM***
@@ -132,7 +132,7 @@ dictUsecase['EXERCISENAME']     = "exercise-02"
 dictUsecase['DESCRIPTION']      = "Variant specific parameter configuration file directly in command line"
 dictUsecase['TESTFILENAME']     = "exercise-02.robot"
 dictUsecase['TESTFOLDERNAME']   = None
-dictUsecase['ADDITIONALPARAMS'] = f"--variable config_file:\"./config/exercise-02_config_variant1.json\"" # path relative to position of robot file
+dictUsecase['ADDITIONALPARAMS'] = f"--variable config_file:\"./config/exercise-02_config_variant1.jsonp\"" # path relative to position of robot file
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 # --------------------------------------------------------------------------------------------------------------
@@ -253,7 +253,7 @@ dictUsecase['EXERCISENAME']     = "exercise-06"
 dictUsecase['DESCRIPTION']      = "Local parameter configuration in command line"
 dictUsecase['TESTFILENAME']     = "exercise-06.robot"
 dictUsecase['TESTFOLDERNAME']   = None
-dictUsecase['ADDITIONALPARAMS'] = f"--variable local_config:\"./localconfig/exercise-06_localconfig_bench1.json\"" # path relative to position of robot file
+dictUsecase['ADDITIONALPARAMS'] = f"--variable local_config:\"./localconfig/exercise-06_localconfig_bench1.jsonp\"" # path relative to position of robot file
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 # --------------------------------------------------------------------------------------------------------------
@@ -264,7 +264,7 @@ dictUsecase['EXERCISENAME']     = "exercise-06"
 dictUsecase['DESCRIPTION']      = "Local parameter configuration with variant 2 in command line"
 dictUsecase['TESTFILENAME']     = "exercise-06.robot"
 dictUsecase['TESTFOLDERNAME']   = None
-dictUsecase['ADDITIONALPARAMS'] = f"--variable variant:\"variant2\" --variable local_config:\"./localconfig/exercise-06_localconfig_bench1.json\"" # path relative to position of robot file
+dictUsecase['ADDITIONALPARAMS'] = f"--variable variant:\"variant2\" --variable local_config:\"./localconfig/exercise-06_localconfig_bench1.jsonp\"" # path relative to position of robot file
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 # --------------------------------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ dictUsecase['EXERCISENAME']     = "exercise-07"
 dictUsecase['DESCRIPTION']      = "Priority of configuration parameters"
 dictUsecase['TESTFILENAME']     = "exercise-07.robot"
 dictUsecase['TESTFOLDERNAME']   = None
-dictUsecase['ADDITIONALPARAMS'] = f"--variable teststring:\"command line test string\" --variable local_config:\"./localconfig/exercise-07_localconfig_bench1.json\" --variable config_file:\"./config/exercise-07_config_variant1.json\"" # path relative to position of robot file
+dictUsecase['ADDITIONALPARAMS'] = f"--variable teststring:\"command line test string\" --variable local_config:\"./localconfig/exercise-07_localconfig_bench1.jsonp\" --variable config_file:\"./config/exercise-07_config_variant1.jsonp\"" # path relative to position of robot file
 listofdictUsecases.append(dictUsecase)
 del dictUsecase
 # --------------------------------------------------------------------------------------------------------------
@@ -353,7 +353,7 @@ for dictUsecase in listofdictUsecases:
    # --------------------------------------------------------------------------------------------------------------
    # !!! exception in test execution !!!
    if TESTNAME == "testsuites-E06-05":
-      os.environ['ROBOT_LOCAL_CONFIG'] = f"{sTutorialRootPath}/{dictUsecase['TUTORIALNAME']}/{dictUsecase['EXERCISENAME']}/localconfig/exercise-06_localconfig_bench1.json"
+      os.environ['ROBOT_LOCAL_CONFIG'] = f"{sTutorialRootPath}/{dictUsecase['TUTORIALNAME']}/{dictUsecase['EXERCISENAME']}/localconfig/exercise-06_localconfig_bench1.jsonp"
    else:
       if 'ROBOT_LOCAL_CONFIG' in os.environ:
          del os.environ['ROBOT_LOCAL_CONFIG']

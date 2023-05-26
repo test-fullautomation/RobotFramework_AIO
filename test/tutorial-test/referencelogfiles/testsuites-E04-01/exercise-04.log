@@ -1,7 +1,7 @@
 ==============================================================================
 20230306 02:42:03.273 - INFO - + START SUITE: Testsuites [ ]
 ==============================================================================
-20230306 02:42:03.287 - INFO - +- START SETUP: tm.Testsuite Setup [ ../config/exercise-04_variants.json ]
+20230306 02:42:03.287 - INFO - +- START SETUP: tm.Testsuite Setup [ ../config/exercise-04_variants.jsonp ]
 20230306 02:42:03.317 - INFO - Set suite metadata 'project' to value 'RobotFramework Testsuites'.
 20230306 02:42:03.317 - INFO - Set suite metadata 'machine' to value 'HC1-V-0002Y'.
 20230306 02:42:03.318 - INFO - Set suite metadata 'tester' to value 'gitlab-runner'.
@@ -13,10 +13,10 @@
 20230306 02:42:03.321 - INFO - ${teststring} = I am the 'variant2' configuration of exercise 04
 20230306 02:42:03.323 - INFO - ${CONFIG} = {'WelcomeString': 'Hello... Robot Framework is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'Project': 'RobotFramework Testsuites', 'TargetName': 'Device_01', 'params': {}}
 20230306 02:42:03.323 - INFO - Running with configuration level 2
-20230306 02:42:03.323 - INFO - Parameters loaded from '/home/gitlab-runner/RobotTest/tutorial/900_building_testsuites/exercise-04/config/exercise-04_config_variant2.json'
+20230306 02:42:03.323 - INFO - Parameters loaded from '/home/gitlab-runner/RobotTest/tutorial/900_building_testsuites/exercise-04/config/exercise-04_config_variant2.jsonp'
 20230306 02:42:03.324 - INFO - Robot Framework AIO version check passed!
 20230306 02:42:03.324 - INFO - Suite Path: '/home/gitlab-runner/RobotTest/tutorial/900_building_testsuites/exercise-04/testsuites'
-20230306 02:42:03.324 - INFO - CfgFile Path: '/home/gitlab-runner/RobotTest/tutorial/900_building_testsuites/exercise-04/config/exercise-04_config_variant2.json'
+20230306 02:42:03.324 - INFO - CfgFile Path: '/home/gitlab-runner/RobotTest/tutorial/900_building_testsuites/exercise-04/config/exercise-04_config_variant2.jsonp'
 20230306 02:42:03.324 - INFO - Number of test suites: 1
 20230306 02:42:03.324 - INFO - Total number of testcases: 5
 20230306 02:42:03.325 - INFO - +- END SETUP: tm.Testsuite Setup (38)

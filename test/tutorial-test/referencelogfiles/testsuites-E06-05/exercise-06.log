@@ -1,7 +1,7 @@
 ==============================================================================
 20230227 15:10:00.624 - INFO - + START SUITE: Exercise-06 [ ]
 ==============================================================================
-20230227 15:10:00.635 - INFO - +- START SETUP: tm.Testsuite Setup [ ./config/exercise-06_variants.json ]
+20230227 15:10:00.635 - INFO - +- START SETUP: tm.Testsuite Setup [ ./config/exercise-06_variants.jsonp ]
 20230227 15:10:00.665 - INFO - Set suite metadata 'project' to value 'RobotFramework Testsuites'.
 20230227 15:10:00.665 - INFO - Set suite metadata 'machine' to value 'HI7-C-0005Y'.
 20230227 15:10:00.667 - INFO - Set suite metadata 'tester' to value 'Queckenstedt Holger (XC-CT/ECA3)'.
@@ -16,11 +16,11 @@
 20230227 15:10:00.670 - INFO - ${CONFIG} = {'WelcomeString': 'Hello... Robot Framework is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'Project': 'RobotFramework Testsuites', 'TargetName': 'Device_01', 'params': {}}
 20230227 15:10:00.670 - INFO - The parameter 'params['global']['teststring_bench']' is updated
 20230227 15:10:00.670 - INFO - Running with configuration level 2
-20230227 15:10:00.670 - INFO - Parameters loaded from 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_variant2.json'
+20230227 15:10:00.670 - INFO - Parameters loaded from 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_variant2.jsonp'
 20230227 15:10:00.670 - INFO - Robot Framework AIO version check passed!
 20230227 15:10:00.670 - INFO - Suite Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\'
-20230227 15:10:00.670 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_variant2.json'
-20230227 15:10:00.670 - INFO - Local config file: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\localconfig\exercise-06_localconfig_bench1.json'
+20230227 15:10:00.670 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_variant2.jsonp'
+20230227 15:10:00.670 - INFO - Local config file: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\localconfig\exercise-06_localconfig_bench1.jsonp'
 20230227 15:10:00.670 - INFO - Number of test suites: 1
 20230227 15:10:00.670 - INFO - Total number of testcases: 1
 20230227 15:10:00.670 - INFO - +- END SETUP: tm.Testsuite Setup (35)

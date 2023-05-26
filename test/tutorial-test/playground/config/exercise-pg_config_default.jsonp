@@ -24,7 +24,7 @@
 
   "params" : {
               "global" : {
-                          "[import]"           : "./exercise-pg_config_common.json",
+                          "[import]"           : "./exercise-pg_config_common.jsonp",
                           "teststring_variant" : "I am the 'default' variant configuration of exercise pg"
                          }
              }

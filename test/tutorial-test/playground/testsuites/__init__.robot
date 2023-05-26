@@ -22,6 +22,6 @@
 
 Library    RobotFramework_TestsuitesManagement    WITH NAME    tm
 
-Suite Setup    tm.testsuite_setup    ../config/exercise-pg_variants.json
+Suite Setup    tm.testsuite_setup    ../config/exercise-pg_variants.jsonp
 
 

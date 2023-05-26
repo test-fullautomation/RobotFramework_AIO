@@ -24,8 +24,8 @@
 
   "params" : {
               "global" : {
-                          "[import]"           : "./exercise-pg_config_common.json",
-                          "teststring_variant" : "I am the 'SälfTest.ß.€.考.𠼭.𠼭' configuration of exercise pg"
+                          "[import]"           : "./exercise-pg_config_common.jsonp",
+                          "teststring_variant" : "I am the 'variant2' configuration of exercise pg"
                          }
              }
 }
