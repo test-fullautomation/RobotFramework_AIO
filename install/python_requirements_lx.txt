@@ -144,3 +144,4 @@ pypandoc_binary
 mobly
 pytest_mock
 odxtools
+xmlschema
