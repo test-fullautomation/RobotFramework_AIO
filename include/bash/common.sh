@@ -54,8 +54,8 @@ function create_testsuitmanagement_package_context_file(){
    package_context='{
 		"installer_location" : "'"${INSTALLER_LOCATION}"'",
 		"bundle_name"        : "'"${AIO_NAME}"'",
-		"bundle_version"     : "'"${BUNDLE_VERSION}"'",
-		"bundle_version_date": "'"${BUNDLE_VERSION_DATE}"'"
+		"bundle_version"     : "'"${AIO_VERSION}"'",
+		"bundle_version_date": "'"${AIO_VERSION_DATE}"'"
    }'
 
 	package_context_pathfile="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"

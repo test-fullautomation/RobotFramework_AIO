@@ -54,6 +54,8 @@ jobs:
         run: |
           chmod +x ./requirements_linux.sh
           ./requirements_linux.sh
+          echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
+          echo "AIO_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#rel/aio/}\"" >> $GITHUB_ENV
 
@@ -96,6 +98,8 @@ jobs:
         run: |
           . ./requirements_windows.sh
           echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
+          echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
+          echo "AIO_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#rel/aio/}\"" >> $GITHUB_ENV
 
