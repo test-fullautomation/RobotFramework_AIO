@@ -50,20 +50,21 @@ function logresult(){
 	fi
 }
 
-function overwrite_testsuitmanagement_version(){
-	#!/bin/bash
+function create_testsuitmanagement_package_context_file(){
+   package_context='{
+		"installer_location" : "'"${INSTALLER_LOCATION}"'",
+		"bundle_name"        : "'"${AIO_NAME}"'",
+		"bundle_version"     : "'"${BUNDLE_VERSION}"'",
+		"bundle_version_date": "'"${BUNDLE_VERSION_DATE}"'"
+   }'
 
-	if [ ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py ]
-	then
-		DATE=`date +%m.%4Y`
-		VERSION_DATE="VERSION_DATE    = \"$DATE\""
-		VERSION="VERSION         = \"$1\""
-		sed -ie '/AIO_BUNDLE_NAME/{n;N;d}' ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
-
-		sed -i "/AIO_BUNDLE_NAME/a$VERSION_DATE" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
-
-		sed -i "/AIO_BUNDLE_NAME/a$VERSION" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
+	package_context_pathfile="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"
+	if [ -f "$package_context_pathfile" ]; then
+		rm "$package_context_pathfile"
 	fi
+	echo "Creating 'package_context.json' file for RobotFramework_TestsuitesManagement ..."
+	echo "$package_context" > "$package_context_pathfile"
+	logresult "$?" "created '$package_context_pathfile'" "create '$package_context_pathfile'"
 }
 # Clone or update repository
 # Arguments:

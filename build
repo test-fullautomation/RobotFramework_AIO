@@ -251,8 +251,7 @@ function build_debian()
 	# Build Robot Framework in Linux OSD5 enviroment
 	# read 2. line, from there return after 10th character
 	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
-	overwrite_testsuitmanagement_version $VERSION
-	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
+	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
 
 	cd $CURDIR
@@ -318,10 +317,7 @@ function build_windows() {
 		errormsg "Environment variable 'GENDOC_LATEXPATH' is not set."
 	fi
 
-	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
-	overwrite_testsuitmanagement_version $VERSION
-	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
-
+	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
 
 	cd $CURDIR

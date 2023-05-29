@@ -19,9 +19,10 @@ env:
   REF_NAME: ${{ github.ref_name }}
   DEFAULT_REF: ${{ github.base_ref }}
   MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS.json"
-  BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+  AIO_NAME: "RobotFramework AIO"
+  BUNDLE_NAME: --bundle_name "$AIO_NAME"
   GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
-
+  INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
 jobs:
   tag-repos:
     name: Tag all related repositories
