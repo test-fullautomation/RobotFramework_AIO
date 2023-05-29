@@ -248,9 +248,6 @@ function parse_config () {
 function build_debian()
 {
 	check_and_install_texlive
-	# Build Robot Framework in Linux OSD5 enviroment
-	# read 2. line, from there return after 10th character
-	VERSION=`sed '2q;d' ./config/build/dpkg_build/control | cut -c 10-`
 	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
 
