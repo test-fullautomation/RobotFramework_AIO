@@ -19,9 +19,10 @@ env:
   REF_NAME: ${{ github.ref_name }}
   DEFAULT_REF: ${{ github.base_ref }}
   MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS.json"
+  AIO_NAME: "RobotFramework AIO"
   BUNDLE_NAME: --bundle_name "RobotFramework AIO"
   GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
-
+  INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
 jobs:
   tag-repos:
     name: Tag all related repositories
@@ -53,6 +54,8 @@ jobs:
         run: |
           chmod +x ./requirements_linux.sh
           ./requirements_linux.sh
+          echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
+          echo "AIO_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#rel/aio/}\"" >> $GITHUB_ENV
 
@@ -95,6 +98,8 @@ jobs:
         run: |
           . ./requirements_windows.sh
           echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
+          echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
+          echo "AIO_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#rel/aio/}\"" >> $GITHUB_ENV
 

@@ -26,6 +26,14 @@ BG_WHITE='\033[47m'
 mypath=$(realpath $(dirname $0))
 
 TAG_REGEX="^(rel|dev)(\/aio)?\/[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$"
+VERSION_REGEX="^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$"
+# Get version information from control file of linux package
+# read 2. line, from there return after 10th character
+# relative path from build script (caller)
+control_pathfile="./config/build/dpkg_build/control"
+if [ -f $control_pathfile ]; then
+	VERSION=`sed '2q;d' $control_pathfile | cut -c 10-`
+fi
 
 function errormsg(){
    echo -e "${COL_RED}>>>> ERROR: $1!${COL_RESET}"
@@ -50,20 +58,27 @@ function logresult(){
 	fi
 }
 
-function overwrite_testsuitmanagement_version(){
-	#!/bin/bash
-
-	if [ ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py ]
-	then
-		DATE=`date +%m.%4Y`
-		VERSION_DATE="VERSION_DATE    = \"$DATE\""
-		VERSION="VERSION         = \"$1\""
-		sed -ie '/AIO_BUNDLE_NAME/{n;N;d}' ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
-
-		sed -i "/AIO_BUNDLE_NAME/a$VERSION_DATE" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
-
-		sed -i "/AIO_BUNDLE_NAME/a$VERSION" ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/CConfig.py
+function create_testsuitmanagement_package_context_file(){
+	if [[ ! "$AIO_VERSION" =~ $VERSION_REGEX ]]; then
+		echo "get bundle version from control file"
+		AIO_VERSION=$VERSION
 	fi
+
+   package_context='{
+		"installer_location" : "'"${INSTALLER_LOCATION}"'",
+		"bundle_name"        : "'"${AIO_NAME}"'",
+		"bundle_version"     : "'"${AIO_VERSION}"'",
+		"bundle_version_date": "'"${AIO_VERSION_DATE}"'"
+   }'
+
+	# relative path from build script
+	package_context_pathfile="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"
+	if [ -f "$package_context_pathfile" ]; then
+		rm "$package_context_pathfile"
+	fi
+	echo "Creating 'package_context.json' file for RobotFramework_TestsuitesManagement ..."
+	echo "$package_context" > "$package_context_pathfile"
+	logresult "$?" "created '$package_context_pathfile'" "create '$package_context_pathfile'"
 }
 # Clone or update repository
 # Arguments:
