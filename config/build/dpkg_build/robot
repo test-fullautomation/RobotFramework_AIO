@@ -10,7 +10,7 @@ elif [ "${1}" = "-v" ] || [ "${1}" = "--version" ]; then
   ${ROBFWPython} -m robot --version
 elif [ "${1}" = "-aio" ] || [ "${1}" = "--version_aio" ]; then
   # robot framework aio version
-  ${ROBFWPython} -m RobotFramework_TestsuitesManagement.version
+  ${ROBFWPython} -m RobotFramework_TestsuitesManagement.Config.CConfig
 elif [ -f ${1} ]; then
   # execute robot test file directly 
   ${ROBFWPython} -m robot "${@}"
