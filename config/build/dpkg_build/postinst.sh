@@ -155,6 +155,8 @@ fi
 #chmod -R 0775 /opt/rfwaio/robotvscode/data/user-data/
 PyPath=/opt/rfwaio/python39/install/bin
 TestPath=${HOME}/RobotTest/testcases
+VsCodePath=/opt/rfwaio/robotvscode
 WpPath=`echo $TestPath | perl -MURI::file -e 'print URI::file->new(<STDIN>)."\n"'`
 sed -i "s|{RobotPythonPath}|$PyPath|g" /opt/rfwaio/robotvscode/data/user-data/User/settings.json
 sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
+sed -i "s|{RobotVsCode}|$VsCodePath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json

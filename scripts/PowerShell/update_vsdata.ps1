@@ -36,5 +36,5 @@ $KeyBindingContent = '
 
 echo $SettingContent
 ($SettingContent -replace '// Other specific settings',$SettingWindows -replace '{RobotToolsPath}',$ToolsPath) | Set-Content -Path $SettingsPathFile
-($StorageContent -replace '{RobotTestPath}',$WpPath) | Set-Content -Path $StoragePathFile
+($StorageContent -replace '{RobotTestPath}',$WpPath -replace '{RobotVsCode}',$Env:RobotVsCode) | Set-Content -Path $StoragePathFile
 Set-Content -Path $Env:RobotVsCode\data\user-data\User\keybindings.json -Value $KeyBindingContent

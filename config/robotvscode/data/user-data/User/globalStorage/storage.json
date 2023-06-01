@@ -25,7 +25,11 @@
     },
     "windowsState": {
         "lastActiveWindow": {
-            "folder": "{RobotTestPath}",
+            "workspaceIdentifier": {
+                "id": "bc93839cff18145a2e54f98357ebf4c1",
+                "configURIPath": "{RobotTestPath}/RobotTest.code-workspace"
+            },
+            "backupPath": "{RobotVsCode}/data/user-data/Backups/bc93839cff18145a2e54f98357ebf4c1",
             "uiState": {
                 "mode": 1,
                 "x": 256,
