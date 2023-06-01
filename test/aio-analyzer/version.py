@@ -19,6 +19,6 @@
 # Version and date of aio-analyzer
 #
 NAME         = "RobotFramework AIO Analyzer"
-VERSION      = "0.4.0"
-VERSION_DATE = "25.01.2023"
+VERSION      = "0.5.0"
+VERSION_DATE = "01.06.2023"
 

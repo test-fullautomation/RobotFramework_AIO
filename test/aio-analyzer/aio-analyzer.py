@@ -20,6 +20,8 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
+# 01.06.2023
+#
 # --------------------------------------------------------------------------------------------------------------
 #
 # Application to parse (and partially check) the version numbers from installed components
@@ -63,6 +65,7 @@ class enVersionType:
 class enVersionFormatType:
    format_1 = "format_1"
    format_2 = "format_2"
+   format_3 = "format_3"
 
 def get_version_as_int(sVersion=None, oLogFile=None):
    """Converts a version number from format
@@ -80,7 +83,7 @@ def get_version_as_int(sVersion=None, oLogFile=None):
    if sVersion == "":
       return None
 
-   sPattern_Versions = r"^(\d+)\.(\d+)\.(\d+)$"
+   sPattern_Versions = r"^(\d+)\.(\d+)\.(\d+)"
    regex_Versions    = re.compile(sPattern_Versions)
    listVersions = regex_Versions.findall(sVersion)
    # debug
@@ -157,6 +160,7 @@ print()
 #TM***
 
 # -- version and date formats
+# (parsing completely done as static code analysis)
 
 # enVersionFormatType.format_1
 # VERSION      = "0.2.2"
@@ -178,29 +182,43 @@ regex_maximum_version_format_2    = re.compile(sPattern_maximum_version_format_2
 sPattern_minimum_version_format_2 = r"\"Minimum_version\"\s*:\s*\"(.+?)\""
 regex_minimum_version_format_2    = re.compile(sPattern_minimum_version_format_2)
 
+# enVersionFormatType.format_3
+# "bundle_name"        : "RobotFramework AIO",
+# "bundle_version"     : "0.8.0.0",
+# "bundle_version_date": "05.2023"
+
+sPattern_bundle_name = r"\"bundle_name\"\s*:\s*\"(.+?)\""
+regex_bundle_name    = re.compile(sPattern_bundle_name)
+
+sPattern_bundle_version = r"\"bundle_version\"\s*:\s*\"(.+?)\""
+regex_bundle_version    = re.compile(sPattern_bundle_version)
+
+sPattern_bundle_version_date = r"\"bundle_version_date\"\s*:\s*\"(.+?)\""
+regex_bundle_version_date    = re.compile(sPattern_bundle_version_date)
+
 # -- list of components version information (location and format)
 
 listofdictComponents = []
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotFramework_AIO"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/CConfig.py"
-dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+dictComponent['NAME']           = "Bundle"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/package_context.json"
+dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_3
 dictComponent['VERSIONTYPE']    = enVersionType.current_version
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "RobotFramework_TestsuitesManagement_config"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/robot_config.json"
+dictComponent['NAME']           = "Version required"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/Config/robot_config.jsonp"
 dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_2
 dictComponent['VERSIONTYPE']    = enVersionType.required_version
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
 dictComponent['NAME']           = "RobotFramework_TestsuitesManagement"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/packageversion.py"
+dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotFramework_TestsuitesManagement/version.py"
 dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
-dictComponent['VERSIONTYPE']    = None
+dictComponent['VERSIONTYPE']    = enVersionType.current_version
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
@@ -291,19 +309,37 @@ oLogFile.Write()
 oLogFile.Write(120*"-")
 oLogFile.Write()
 
-nRJust = 62
+nRJust = 56
 bErrorHappened = False
 
 dictVersionControl = {}
-dictVersionControl['CURRENT_VERSION']      = None
-dictVersionControl['REQUIRED_MAX_VERSION'] = None
-dictVersionControl['REQUIRED_MIN_VERSION'] = None
+dictVersionControl['CURRENT_VERSION']        = None
+dictVersionControl['CURRENT_BUNDLE_VERSION'] = None
+dictVersionControl['REQUIRED_MAX_VERSION']   = None
+dictVersionControl['REQUIRED_MIN_VERSION']   = None
 
 for dictComponent in listofdictComponents:
    NAME          = dictComponent['NAME']
    VERSIONFILE   = dictComponent['VERSIONFILE']
    VERSIONFORMAT = dictComponent['VERSIONFORMAT']
    VERSIONTYPE   = dictComponent['VERSIONTYPE']
+
+   if VERSIONFORMAT == enVersionFormatType.format_3:
+      if os.path.isfile(VERSIONFILE) is True:
+         sOut = 28* " " + f"<<< testsuites management is running as part of a bundle >>>"
+         print(COLBG + sOut)
+         print()
+         oLogFile.Write(sOut)
+         oLogFile.Write()
+      else:
+         sOut = 28* " " + f"<<< testsuites management is running stand-alone >>>"
+         print(COLBG + sOut)
+         print()
+         oLogFile.Write(sOut)
+         oLogFile.Write()
+         # bundle information is optional, therefore no error here
+         continue # for dictComponent in listofdictComponents:
+
    if os.path.isfile(VERSIONFILE) is False:
       bSuccess = False
       sResult = f"Version file '{VERSIONFILE}' not found (component '{NAME}')"
@@ -353,7 +389,7 @@ for dictComponent in listofdictComponents:
 
       print()
       oLogFile.Write()
-      sTopic = f"{NAME} > VERSION"
+      sTopic = f"{NAME} - VERSION"
       if sVersion == "":
          sResult = "'VERSION' not defined"
       else:
@@ -363,7 +399,7 @@ for dictComponent in listofdictComponents:
       sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
-      sTopic = f"{NAME} > VERSION_DATE"
+      sTopic = f"{NAME} - VERSION_DATE"
       if sVersionDate == "":
          sResult = "'VERSION_DATE' not defined"
       else:
@@ -422,7 +458,7 @@ for dictComponent in listofdictComponents:
 
       print()
       oLogFile.Write()
-      sTopic = f"{NAME} > Maximum_version"
+      sTopic = f"{NAME} - Maximum_version"
       if sMaximumVersion == "":
          sResult = "'Maximum_version' not defined"
       else:
@@ -432,7 +468,7 @@ for dictComponent in listofdictComponents:
       sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
       oLogFile.Write(sOut)
       print(COLBY + sOut)
-      sTopic = f"{NAME} > Minimum_version"
+      sTopic = f"{NAME} - Minimum_version"
       if sMinimumVersion == "":
          sResult = "'Minimum_version' not defined"
       else:
@@ -444,6 +480,86 @@ for dictComponent in listofdictComponents:
       print(COLBY + sOut)
       print()
       oLogFile.Write()
+
+   elif VERSIONFORMAT == enVersionFormatType.format_3:
+      oFile = CFile(VERSIONFILE)
+      listLines, bSuccess, sResult = oFile.ReadLines(
+                                                      bCaseSensitive  = True,
+                                                      bSkipBlankLines = True,
+                                                      sComment        = None,
+                                                      sContains       = "bundle_name;bundle_version", # 'bundle_version' includes 'bundle_version_date'
+                                                      bLStrip         = True,
+                                                      bRStrip         = True,
+                                                      bToScreen       = False
+                                                     )
+      del oFile
+      if bSuccess is not True:
+         sResult = CString.FormatResult(sThisScriptName, bSuccess, sResult)
+         oLogFile.Write(sResult)
+         oLogFile.Write()
+         printerror(sResult)
+         print()
+         PrettyPrint(listLines)
+         print()
+         bErrorHappened = True
+         continue # for dictComponent in listofdictComponents:
+
+      listBundleNames        = []
+      listBundleVersions     = []
+      listBundleVersionDates = []
+      for sLine in listLines:
+         for sBundleName in regex_bundle_name.findall(sLine):
+            listBundleNames.append(sBundleName)
+         for sBundleVersion in regex_bundle_version.findall(sLine):
+            listBundleVersions.append(sBundleVersion)
+         for sBundleVersionDate in regex_bundle_version_date.findall(sLine):
+            listBundleVersionDates.append(sBundleVersionDate)
+      sBundleName        = "; ".join(listBundleNames)
+      sBundleVersion     = "; ".join(listBundleVersions)
+      sBundleVersionDate = "; ".join(listBundleVersionDates)
+
+      print()
+      oLogFile.Write()
+      #
+      sTopic = "bundle_name"
+      if sBundleName == "":
+         sResult = "'bundle_name' not defined"
+      else:
+         sResult = f"{sBundleName}"
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
+      oLogFile.Write(sOut)
+      print(COLBY + sOut)
+      #
+      sTopic = "bundle_version"
+      if sBundleVersion == "":
+         sResult = "'bundle_version' not defined"
+      else:
+         sResult = f"{sBundleVersion}"
+         if VERSIONTYPE == enVersionType.current_version:
+            dictVersionControl['CURRENT_BUNDLE_VERSION'] = sBundleVersion
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
+      oLogFile.Write(sOut)
+      print(COLBY + sOut)
+      #
+      sTopic = "bundle_version_date"
+      if sBundleVersionDate == "":
+         sResult = "'bundle_version_date' not defined"
+      else:
+         sResult = f"{sBundleVersionDate}"
+      sOut = sTopic.rjust(nRJust, ' ') + f" : {sResult}"
+      oLogFile.Write(sOut)
+      print(COLBY + sOut)
+      oLogFile.Write()
+      print()
+
+      if ( (sBundleVersion == "") or (sBundleVersionDate == "") ):
+         sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult="Not able to parse content from file")
+         oLogFile.Write(sResult)
+         oLogFile.Write()
+         printerror(sResult)
+         print()
+         bErrorHappened = True
+         continue # for dictComponent in listofdictComponents:
 
    else:
       sResult = CString.FormatResult(sMethod=sThisScriptName, bSuccess=False, sResult=f"Version format '{VERSIONFORMAT}' not supported")
@@ -457,7 +573,7 @@ for dictComponent in listofdictComponents:
    # eof else - if VERSIONFORMAT == enVersionFormatType.format_1:
 # eof for dictComponent in listofdictComponents:
 
-# -- version check (between current bundle version defined in Python code of component RobotFramework_TestsuitesManagement
+# -- version check between version of currently installed software (either RobotFramework_TestsuitesManagement or RobotFramework AIO bundle)
 #    and optional maximum and minimum version defined in JSON configuration file of component RobotFramework_TestsuitesManagement)
 
 # debug
@@ -465,17 +581,24 @@ for dictComponent in listofdictComponents:
 # PrettyPrint(dictVersionControl)
 # print()
 
-CURRENT_VERSION      = dictVersionControl['CURRENT_VERSION']
-REQUIRED_MAX_VERSION = dictVersionControl['REQUIRED_MAX_VERSION']
-REQUIRED_MIN_VERSION = dictVersionControl['REQUIRED_MIN_VERSION']
+CURRENT_VERSION        = dictVersionControl['CURRENT_VERSION']
+CURRENT_BUNDLE_VERSION = dictVersionControl['CURRENT_BUNDLE_VERSION']
+REQUIRED_MAX_VERSION   = dictVersionControl['REQUIRED_MAX_VERSION']
+REQUIRED_MIN_VERSION   = dictVersionControl['REQUIRED_MIN_VERSION']
+
+REFERENCE_VERSION = None
+if CURRENT_BUNDLE_VERSION is not None:
+   REFERENCE_VERSION = CURRENT_BUNDLE_VERSION
+else:
+   REFERENCE_VERSION = CURRENT_VERSION
 
 bVersionMismatch      = False
 bVersionCheckExecuted = False
 
-if CURRENT_VERSION is None:
+if REFERENCE_VERSION is None:
    bErrorHappened = True
    print()
-   print(COLBY + "Version check not possible because of missing Robot Framework AIO version")
+   print(COLBY + "Version check not possible because of missing version of installed software")
    print()
 else:
    if ( (REQUIRED_MAX_VERSION is None) and (REQUIRED_MIN_VERSION is None) ):
@@ -483,7 +606,7 @@ else:
       print(COLBY + "Version check skipped because 'Maximum_version' and 'Minimum_version' are not defined")
       print()
    else:
-      nCurrentVersion = get_version_as_int(CURRENT_VERSION, oLogFile)
+      nCurrentVersion = get_version_as_int(REFERENCE_VERSION, oLogFile)
       if nCurrentVersion is None:
          bErrorHappened = True
       else:
@@ -512,7 +635,7 @@ else:
             if nRequiredMaxVersion is not None:
                # max version check
                if nCurrentVersion > nRequiredMaxVersion:
-                  sResult = f"Version mismatch: Current Robot Framework bundle version {CURRENT_VERSION} is bigger than the allowed maximum version {REQUIRED_MAX_VERSION}."
+                  sResult = f"Version mismatch: Current software version {REFERENCE_VERSION} is bigger than the allowed maximum version {REQUIRED_MAX_VERSION}."
                   oLogFile.Write(sResult)
                   oLogFile.Write()
                   printerror(sResult)
@@ -522,15 +645,16 @@ else:
             if nRequiredMinVersion is not None:
                # min version check
                if nCurrentVersion < nRequiredMinVersion:
-                  sResult = f"Version mismatch: Current Robot Framework bundle version {CURRENT_VERSION} is smaller than the allowed minimum version {REQUIRED_MIN_VERSION}."
+                  sResult = f"Version mismatch: Current software version {REFERENCE_VERSION} is smaller than the allowed minimum version {REQUIRED_MIN_VERSION}."
                   oLogFile.Write(sResult)
                   oLogFile.Write()
                   printerror(sResult)
                   print()
                   bVersionMismatch = True
                bVersionCheckExecuted = True
-
-# eof else ... if CURRENT_VERSION is None:
+      # eof else - if nCurrentVersion is None:
+   # eof else - if ( (REQUIRED_MAX_VERSION is None) and (REQUIRED_MIN_VERSION is None) ):
+# eof else ... if REFERENCE_VERSION is None:
 
 if bErrorHappened is True:
    sResult = f"Done with errors (return {ERROR})"
