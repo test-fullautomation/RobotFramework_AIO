@@ -196,7 +196,7 @@ jobs:
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
+        sudo $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py
 
     - name: Upload test result as artifact
       if: success() || failure()
