@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 08.03.2023
+# 06.06.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -149,22 +149,12 @@ class CTestTriggerConfig():
       if bSuccess is not True:
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
-      oTestTriggerConfigFileCleaned = CFile(sTestTriggerConfigFileCleaned)
-      bSuccess, sResult = oTestTriggerConfigFileCleaned.Write(listLines)
-      del oTestTriggerConfigFileCleaned
-      if bSuccess is not True:
-         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
-
-      # access to json file (external configuration values)
       dictExternalConfigValues = None
       try:
-         hTestTriggerConfigFileCleaned = open(sTestTriggerConfigFileCleaned)
-         dictExternalConfigValues = json.load(hTestTriggerConfigFileCleaned)
-         hTestTriggerConfigFileCleaned.close()
-         del hTestTriggerConfigFileCleaned
+         dictExternalConfigValues = json.loads("\n".join(listLines))
       except Exception as reason:
          bSuccess = None
-         sResult  = "An exception occurred while loading the configuration file:\n" + str(reason)
+         sResult  = str(reason) + f" - while parsing JSON content of '{sTestTriggerConfigFile}'"
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       if dictExternalConfigValues is None:
