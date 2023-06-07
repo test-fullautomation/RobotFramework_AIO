@@ -145,11 +145,11 @@ function packaging_vscode() {
 		json_ext_filename=$(basename $jsonp_ext_pathfile)
 		echo "Install ${json_ext_filename} extension from vscode-jsonp repo"
 		"$sourceDir/vscodium/bin/codium" --install-extension "${jsonp_ext_pathfile}" --user-data-dir "$sourceDir/vscodium/data"
-		logresult "$?" "installed ${jsonp_ext_file} Extension" "install ${jsonp_ext_file} Extension"
+		logresult "$?" "installed ${json_ext_filename} Extension" "install ${json_ext_filename} Extension"
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
-	while IFS=, read -r publisher name version dump
+	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
 		url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
