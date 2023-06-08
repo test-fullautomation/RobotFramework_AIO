@@ -6,6 +6,7 @@ $Env:RobotPythonPath=[System.Environment]::GetEnvironmentVariable("RobotPythonPa
 $WpPath = ([System.Uri]$Env:RobotTestPath).AbsoluteUri
 $ToolsPath = ($Env:RobotToolsPath) -replace [RegEx]::Escape("\"),"\\"
 $PyPath = ($Env:RobotPythonPath) -replace [RegEx]::Escape("\"),"\\"
+$VscodePath = ($Env:RobotVsCode) -replace [RegEx]::Escape("\"),"\\"
 $PyBin  = "/python3"  
 $PyExe  = "\\python.exe"
 
@@ -36,5 +37,5 @@ $KeyBindingContent = '
 
 echo $SettingContent
 ($SettingContent -replace '// Other specific settings',$SettingWindows -replace '{RobotToolsPath}',$ToolsPath) | Set-Content -Path $SettingsPathFile
-($StorageContent -replace '{RobotTestPath}',$WpPath -replace '{RobotVsCode}',$Env:RobotVsCode) | Set-Content -Path $StoragePathFile
+($StorageContent -replace '{RobotTestPath}',$WpPath -replace '{RobotVsCode}',$VscodePath) | Set-Content -Path $StoragePathFile
 Set-Content -Path $Env:RobotVsCode\data\user-data\User\keybindings.json -Value $KeyBindingContent
