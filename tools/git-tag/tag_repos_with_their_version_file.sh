@@ -67,7 +67,7 @@ function tag_single_repo(){
       echo "Found version file at '${version_file}'"
    fi
 
-   version_info=$(grep -E 'VERSION\s+=' ${version_file} | awk -F'"' '{print $2}')
+   version_info=$(grep -E 'VERSION\s+=' ${version_file} | sed "s/'/\"/g" | awk -F'"' '{print $2}')
    # Check if the version is empty
    if [ -z "$version_info" ]; then
       errormsg "Version information not found or empty"
@@ -75,6 +75,7 @@ function tag_single_repo(){
 
    # Call git-tag tool to tag repo
    python "$(dirname $0)/git-tag.py" rel/${version_info} ${config_file}
+   logresult "$?" "tagged repo '$repo_name' with tag 'rel/$version_info'" "tag '$repo_name' with tag 'rel/$version_info'"
 }
 
 list_repo=()
