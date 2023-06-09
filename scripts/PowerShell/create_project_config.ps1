@@ -53,5 +53,5 @@ $innoSetupCodeOutput
 "@
 
 # Save InnoSetup file to inno_new.iss file
-New-Item -ItemType Directory -Force -Path "$ScriptPath\..\..\Output\Include"
-$innoSetupFilesOutput | Out-File -Encoding Default -FilePath "$ScriptPath\..\..\Output\Include\install_projects.iss"
+New-Item -ItemType Directory -Force -Path "$ScriptPath\..\..\include\windows"
+$innoSetupFilesOutput | Out-File -Encoding Default -FilePath "$ScriptPath\..\..\include\windows\install_projects.iss"

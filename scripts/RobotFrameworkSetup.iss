@@ -34,7 +34,7 @@
 #define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
-#include '..\Output\Include\install_projects.iss';
+#include '..\include\windows\install_projects.iss';
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
