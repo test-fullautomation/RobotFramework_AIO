@@ -299,6 +299,7 @@ function build_debian()
 	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PACK_NAME}-0_amd64.deb
 	logresult "$?" "built deb package" "build deb package"
 
+	chmod -R +r ./output_lx
 	dpkg -I ./output_lx/${PACK_NAME}-0_amd64.deb
 	goodmsg "done."
 }
