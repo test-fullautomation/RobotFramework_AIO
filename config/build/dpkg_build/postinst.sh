@@ -80,14 +80,18 @@ else
    ###########################################################################
    if [ -d ${HOME}/RobotTest/tutorial ]; then
       rm -rf ${HOME}/RobotTest/tutorial/*
+   else
+      mkdir -p ${HOME}/RobotTest/tutorial
    fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
 
-   if [ ! -d ${HOME}/RobotTest/documentation ]; then
+   if [ -d ${HOME}/RobotTest/documentation ]; then
+      rm -rf ${HOME}/RobotTest/documentation/*
+   else
       mkdir -p ${HOME}/RobotTest/documentation
    fi
-   cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/documentation/* ${HOME}/RobotTest/documentation
+   cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
 
    if [ ! -d ${HOME}/RobotTest/testcases ]; then
       if [ -f ${HOME}/RobotTest/testcases ]; then
@@ -95,8 +99,11 @@ else
       fi
       mkdir -p ${HOME}/RobotTest/testcases
    fi
-   cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
-   chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases/RobotTest.code-workspace
+
+   if [ ! -f ${HOME}/RobotTest/testcases/RobotTest.code-workspace ]; then
+      cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
+      chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases/RobotTest.code-workspace
+   fi
 
    echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated tutorial, documentation folders and RobotTest.code-workspace file."
 fi
