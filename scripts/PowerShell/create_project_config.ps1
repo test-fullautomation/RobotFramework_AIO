@@ -9,8 +9,8 @@ Write-Host "Project config path: $configFile"
 # Convert JSON back to InnoSetup file section
 $i = 0
 $innoSetupFilesOutput = $json | ForEach-Object {
-    "Source: `"$($_.Source)`"; DestDir: `{app`}`\python39`\Lib`\site-packages`\RobotFramework_TestsuitesManagement`\Config`\ ; DestName: robot_config.json ; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall recursesubdirs createallsubdirs;"
-    "Source: `"$($_.Source)`"; DestDir: `{code:GetUsrDataDir`}`\testcases`\config`\; DestName: robot_config.json; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall;"
+    "Source: `"$($_.Source)`"; DestDir: `{app`}`\python39`\Lib`\site-packages`\RobotFramework_TestsuitesManagement`\Config`\ ; DestName: robot_config.jsonp ; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall recursesubdirs createallsubdirs;"
+    "Source: `"$($_.Source)`"; DestDir: `{code:GetUsrDataDir`}`\testcases`\config`\; DestName: robot_config.jsonp; Check: IsSelectedProject($i); Flags: ignoreversion uninsneveruninstall;"
     $i = $i+1
 } | Out-String
 
@@ -53,5 +53,5 @@ $innoSetupCodeOutput
 "@
 
 # Save InnoSetup file to inno_new.iss file
-New-Item -ItemType Directory -Force -Path "$ScriptPath\..\..\Output\Include"
-$innoSetupFilesOutput | Out-File -Encoding Default -FilePath "$ScriptPath\..\..\Output\Include\install_projects.iss"
+New-Item -ItemType Directory -Force -Path "$ScriptPath\..\..\include\windows"
+$innoSetupFilesOutput | Out-File -Encoding Default -FilePath "$ScriptPath\..\..\include\windows\install_projects.iss"
