@@ -49,11 +49,9 @@ echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/robotvscode/data"
 if [ ! -d "${HOME}/RobotTest" ]; then
    
    mkdir -p ${HOME}/RobotTest/logfiles
-   #mkdir -p ${HOME}/RobotTest/ctrlfiles
    mkdir -p ${HOME}/RobotTest/localconfig
    mkdir -p ${HOME}/RobotTest/testcases
    mkdir -p ${HOME}/RobotTest/tutorial
-   #mkdir -p ${HOME}/RobotTest/workspace
    
    #
    # Create VS Code Workspacce
@@ -62,7 +60,6 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
-   
    
    #
    # assure access rights to files in ~/ROBFW
@@ -78,20 +75,38 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
    #
-   # update tutorial
+   # update tutorial, documentation and Vscodium workspace
    #
    ###########################################################################
    if [ -d ${HOME}/RobotTest/tutorial ]; then
       rm -rf ${HOME}/RobotTest/tutorial/*
+   else
+      mkdir -p ${HOME}/RobotTest/tutorial
    fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
 
-   echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated only tutorial."
+   if [ -d ${HOME}/RobotTest/documentation ]; then
+      rm -rf ${HOME}/RobotTest/documentation/*
+   else
+      mkdir -p ${HOME}/RobotTest/documentation
+   fi
+   cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
+
+   if [ ! -d ${HOME}/RobotTest/testcases ]; then
+      if [ -f ${HOME}/RobotTest/testcases ]; then
+         rm -f ${HOME}/RobotTest/testcases
+      fi
+      mkdir -p ${HOME}/RobotTest/testcases
+   fi
+
+   if [ ! -f ${HOME}/RobotTest/testcases/RobotTest.code-workspace ]; then
+      cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
+      chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases/RobotTest.code-workspace
+   fi
+
+   echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated tutorial, documentation folders and RobotTest.code-workspace file."
 fi
-   cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
-   mkdir -p ${HOME}/RobotTest/documentation
-   cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/documentation/* ${HOME}/RobotTest/documentation
 
 # Set schedule for installing DLTConnector (will active in future)
 #
