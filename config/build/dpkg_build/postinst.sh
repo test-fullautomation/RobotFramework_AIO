@@ -90,6 +90,9 @@ else
    cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/documentation/* ${HOME}/RobotTest/documentation
 
    if [ ! -d ${HOME}/RobotTest/testcases ]; then
+      if [ -f ${HOME}/RobotTest/testcases ]; then
+         rm -f ${HOME}/RobotTest/testcases
+      fi
       mkdir -p ${HOME}/RobotTest/testcases
    fi
    cp -R -a -n /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
