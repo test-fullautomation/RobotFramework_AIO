@@ -78,20 +78,28 @@ else
    # update tutorial, documentation and Vscodium workspace
    #
    ###########################################################################
+   echo -e "${MSG_INFO} Found workspace in ~/RobotTest."
+   action_msg="Updated"
+   
    if [ -d ${HOME}/RobotTest/tutorial ]; then
       rm -rf ${HOME}/RobotTest/tutorial/*
    else
       mkdir -p ${HOME}/RobotTest/tutorial
+      action_msg="Created"
    fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
+   echo -e "${MSG_DONE} ${action_msg} tutorial folder."
 
    if [ -d ${HOME}/RobotTest/documentation ]; then
       rm -rf ${HOME}/RobotTest/documentation/*
+      action_msg="Updated"
    else
       mkdir -p ${HOME}/RobotTest/documentation
+      action_msg="Created"
    fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
+   echo -e "${MSG_DONE} ${action_msg} documentation folder."
 
    if [ ! -d ${HOME}/RobotTest/testcases ]; then
       if [ -f ${HOME}/RobotTest/testcases ]; then
@@ -103,9 +111,9 @@ else
    if [ ! -f ${HOME}/RobotTest/testcases/RobotTest.code-workspace ]; then
       cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
       chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases/RobotTest.code-workspace
+      echo -e "${MSG_DONE} Initialized workspace (RobotTest.code-workspace)"
    fi
 
-   echo -e "${MSG_DONE} Found workspace in ~/RobotTest. Updated tutorial, documentation folders and RobotTest.code-workspace file."
 fi
 
 # Set schedule for installing DLTConnector (will active in future)
