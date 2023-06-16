@@ -18,7 +18,9 @@
          "robotframework-testsuitesmanagement": "",
          "robotframework-tutorial": "",
          "testresultwebapp": "",
-         "vscode-jsonp": ""
+         "vscode-jsonp": "",
+         "robotframework-dbus": "",
+         "robotframework-qconnect-winapp": ""
       }
    }
 }

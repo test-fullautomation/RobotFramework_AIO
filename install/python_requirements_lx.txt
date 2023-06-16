@@ -145,3 +145,7 @@ mobly
 pytest_mock
 odxtools
 xmlschema
+pyinstaller
+pycairo
+PyGObject
+dasbus
