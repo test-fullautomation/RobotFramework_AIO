@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2022 Robert Bosch GmbH
+#  Copyright 2020-2023 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ def get_version_as_int(sVersion=None, oLogFile=None):
          oLogFile.Write()
       return None
 
-   #                 30^2                     30^1                   30^0       
+   #                 30^2                     30^1                   30^0
    version_number = (int(tupleVersions[0])*900) + (int(tupleVersions[1])*30) + int(tupleVersions[2])
 
    # debug
