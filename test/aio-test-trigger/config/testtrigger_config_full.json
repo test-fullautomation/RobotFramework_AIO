@@ -17,7 +17,7 @@
 
 # Section "COMPONENTS":
 # ---------------------
-# 
+#
 # It is assumed that "TESTFOLDER" is a subfolder of "COMPONENTROOTPATH" and that "TESTEXECUTOR" (the name only) is placed inside "TESTFOLDER"!
 # "TESTTYPE" has to be one of ['ROBOT', 'PYTEST']
 # It is assumed that "COMPONENTROOTPATH" does exist.
