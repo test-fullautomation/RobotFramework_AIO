@@ -121,7 +121,7 @@ function get_server_url()
 	return
 }
 
-function install_texlive_2022 () {
+function install_texlive () {
 	CDIR=$(pwd)
 	mkdir -p download
 	cd download
@@ -132,7 +132,7 @@ function install_texlive_2022 () {
 	
 	zcat install-tl-unx.tar.gz | tar xf -
 	cd install-tl-20*
-	perl ./install-tl --no-interaction
+	sudo perl ./install-tl --no-interaction
 	cd $CDIR
 }
 
@@ -150,8 +150,8 @@ function check_and_install_texlive () {
 	if [ ! -z "$ver" ]; then
 		release_year=${ver:0:4}
 		if [ $release_year -lt 2019 ]; then
-			if [ -f "/usr/local/texlive/2022/bin/x86_64-linux/pdflatex" ]; then
-				export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
+			if [ -f "/usr/local/texlive/$(date +%Y)/bin/x86_64-linux/pdflatex" ]; then
+				export GENDOC_LATEXPATH=/usr/local/texlive/$(date +%Y)/bin/x86_64-linux
 				return 0
 			fi
 		else
@@ -160,8 +160,8 @@ function check_and_install_texlive () {
 			return 0
 		fi
 	fi
-	install_texlive_2022
-	export GENDOC_LATEXPATH=/usr/local/texlive/2022/bin/x86_64-linux
+	install_texlive
+	export GENDOC_LATEXPATH="/usr/local/texlive/$(date +%Y)/bin/x86_64-linux"
 }
 
 function parse_repo () {
