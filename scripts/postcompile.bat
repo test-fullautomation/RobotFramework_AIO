@@ -1,2 +1,2 @@
 @echo off
-subst A: /D 1> NUL 2>&1
+subst R: /D 1> NUL 2>&1
