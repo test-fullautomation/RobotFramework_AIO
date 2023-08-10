@@ -4,7 +4,7 @@
 #
 # Full version including robotframework/atest
 #
-# 24.03.2023
+# 10.08.2023
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -62,6 +62,14 @@
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../python-jsonpreprocessor",
+                       "TESTFOLDER"        : "test/pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
+                       "LOGFILE"           : "../../../../python-jsonpreprocessor/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-microservice-base",
