@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 06.06.2023
+# 10.08.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ class CTestTriggerConfig():
          sConfigPath = f"{sReferencePath}/config"
          sTestTriggerConfigFileName = "testtrigger_config.json"
          sTestTriggerConfigFile = f"{sConfigPath}/{sTestTriggerConfigFileName}"
-         self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sTestTriggerConfigFile
+         self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sTestTriggerConfigFile + " (default config file)"
 
       if os.path.isfile(sTestTriggerConfigFile) is False:
          bSuccess = None
@@ -126,8 +126,6 @@ class CTestTriggerConfig():
       self.__dictTestTriggerConfig['PLATFORMSYSTEM'] = sPlatformSystem
       self.__dictTestTriggerConfig['OSNAME']         = sOSName
       self.__dictTestTriggerConfig['TMPPATH']        = sTmpPath
-
-      self.PrintConfig()
 
       # precompile regular expression needed for parsing the parameters in configuration file
       sPattern_Parameters = r"\${(\w+?)}"  # version 1: only alphanumerical characters (including the underline) are allowed within names
@@ -169,9 +167,16 @@ class CTestTriggerConfig():
       for key, value in dictExternalConfigValues.items():
          self.__dictTestTriggerConfig[key] = value
 
+      if self.__dictTestTriggerConfig['VERSION_CONFIG'] is None:
+         bSuccess = None
+         sResult  = f"Missing key 'VERSION_CONFIG' in file {sTestTriggerConfigFile}"
+         raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
+
       # print()
       # PrettyPrint(self.__dictTestTriggerConfig, sPrefix="TestTriggerConfig")
       # print()
+
+      self.PrintConfig() # (all values that shall be printed to console, are available now)
 
       # Prepare and check all paths from external json configuration file.
       # The absolute path that is the reference for all possible relative paths inside the json file, is 'sConfigPath'.
@@ -478,6 +483,7 @@ class CTestTriggerConfig():
             sResult  = CString.FormatResult(sMethod, bSuccess, sResult)
             return bSuccess, sResult
       self.__dictTestTriggerConfig['TESTTRIGGERCONFIGFILE'] = sConfigFile
+      self.__dictTestTriggerConfig['VERSION_CONFIG']        = None # will be overwritten when content is read, but we preserve this position in dict to have both informations printed nearby in console
 
       dictParams = None
       if oCmdLineArgs.params is not None:
@@ -549,13 +555,29 @@ class CTestTriggerConfig():
    # --------------------------------------------------------------------------------------------------------------
 
    def PrintConfig(self):
-      # -- print configuration to console
+      # -- print assorted configuration values to console
+      tupleSupportedValues = ('WHOAMI',
+                              'REFERENCEPATH',
+                              'EXECUTIONLOGFILE',
+                              'NAME',
+                              'VERSION',
+                              'VERSION_DATE',
+                              'UUID',
+                              'ROBOTCOMMANDLINE',
+                              'PYTESTCOMMANDLINE',
+                              'TESTTRIGGERCONFIGFILE',
+                              'VERSION_CONFIG',
+                              'RESULTS2DB',
+                              'CONFIGPATH',
+                              'PYTHON',
+                              'PYTHONVERSION',
+                              'PLATFORMSYSTEM',
+                              'OSNAME',
+                              'TMPPATH')
       nJust = 25
       print()
-      for sKey in self.__dictTestTriggerConfig:
-         # "PARAMS" can contain database credentials, therefore this key is excluded from print
-         if sKey != "PARAMS":
-            print(sKey.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sKey]))
+      for sValue in tupleSupportedValues:
+         print(sValue.rjust(nJust, ' ') + " : " + str(self.__dictTestTriggerConfig[sValue]))
       print()
    # eof def PrintConfig(self):
 
