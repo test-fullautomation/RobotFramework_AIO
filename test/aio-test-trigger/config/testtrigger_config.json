@@ -2,7 +2,7 @@
 #
 # Test Trigger configuration file
 #
-# Standard version without robotframework/atest
+# OSS standard version (without robotframework/atest)
 #
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.0 / 10.08.2023 (standard config)",
+   "VERSION_CONFIG" : "0.1.1 / 11.08.2023 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
