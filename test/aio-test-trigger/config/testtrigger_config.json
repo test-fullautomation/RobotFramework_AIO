@@ -4,8 +4,6 @@
 #
 # Standard version without robotframework/atest
 #
-# 10.08.2023
-#
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
 # The reference for relative paths is the position of this file.
@@ -14,6 +12,11 @@
 # Command line parameter (--params) are used for both section "COMPONENTS" and section "TESTTYPES".
 
 {
+
+# Section "VERSION_CONFIG":
+# -------------------------
+
+   "VERSION_CONFIG" : "0.1.0 / 10.08.2023 (standard config)",
 
 # Section "COMPONENTS":
 # ---------------------
