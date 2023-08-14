@@ -90,21 +90,21 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 
 ;Tutorial installation
 
-Source: "A:\robotframework-tutorial\100_variables_and_datatypes\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\100_variables_and_datatypes; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
-Source: "A:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\900_building_testsuites; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
-Source: "A:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-tutorial\100_variables_and_datatypes\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\100_variables_and_datatypes; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\900_building_testsuites; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "A:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
-Source: "A:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
  
 ;selftest installation
-Source: "A:\robotframework-selftest\*"; Excludes: ".git"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "R:\robotframework-selftest\*"; Excludes: ".git"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
-Source: "A:\robotvscode\*"; Excludes: ".git"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "R:\robotvscode\*"; Excludes: ".git"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
