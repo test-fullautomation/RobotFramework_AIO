@@ -9,3 +9,4 @@ export RobotTestPath=~/RobotTest/testcases
 export RobotLogPath=~/RobotTest/logfiles
 export RobotTutorialPath=~/RobotTest/tutorial
 export GENDOC_PLANTUML_PATH=$RobotVsCode/data/extensions/jebbs.plantuml-2.17.5
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64

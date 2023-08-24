@@ -172,6 +172,17 @@ if [ -d "${DLTCONNECTOR_PATH}" ]; then
 fi
 
 #
+# Remind user to install OpenJDK for Java
+#
+###############################################################################
+if ! command -v javac &> /dev/null; then
+    echo "For using GenPackageDoc, please install OpenJDK by commands:"
+    echo "sudo apt-get install default-jdk"
+else
+    echo "The required software is already installed."
+fi
+
+#
 # Update robotvscode data
 #
 ###############################################################################
