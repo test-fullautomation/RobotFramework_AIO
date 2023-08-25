@@ -9,4 +9,20 @@ export RobotTestPath=~/RobotTest/testcases
 export RobotLogPath=~/RobotTest/logfiles
 export RobotTutorialPath=~/RobotTest/tutorial
 export GENDOC_PLANTUML_PATH=$RobotVsCode/data/extensions/jebbs.plantuml-2.17.5
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+
+# Check if JAVA_HOME is already set
+if [ -z "$JAVA_HOME" ]; then
+    # Find the path of OpenJDK using the update-alternatives command
+    JDK_PATH=$(update-alternatives --query java | grep 'Value: ' | grep -o '/.*/bin/java')
+    
+    if [ -n "$JDK_PATH" ]; then
+        # Export JAVA_HOME if OpenJDK path is found
+        export JAVA_HOME=$(dirname $(dirname $JDK_PATH))
+        echo "JAVA_HOME set to $JAVA_HOME"
+    else
+        echo "No OpenJDK installation found."
+    fi
+else
+    echo "JAVA_HOME is already set to $JAVA_HOME"
+fi

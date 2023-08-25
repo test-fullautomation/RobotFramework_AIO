@@ -178,8 +178,18 @@ fi
 if ! command -v javac &> /dev/null; then
     echo "For using GenPackageDoc, please install OpenJDK by commands:"
     echo "sudo apt-get install default-jdk"
+    
+    read -p "Do you want to install the package? (Y/N): " answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+      # Perform the package installation here
+      sudo apt-get update
+      sudo apt-get install -y default-jdk
+      echo "${MSG_INFO} default-jdk package has been installed."
+   else
+      echo "Package installation canceled."
+   fi
 else
-    echo "The required software is already installed."
+    echo "The required OpenJDK software is already installed."
 fi
 
 #
