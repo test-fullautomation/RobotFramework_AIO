@@ -184,12 +184,12 @@ if ! command -v javac &> /dev/null; then
       # Perform the package installation here
       sudo apt-get update
       sudo apt-get install -y default-jdk
-      echo "${MSG_INFO} default-jdk package has been installed."
+      echo -e "${MSG_DONE} default-jdk package has been installed."
    else
-      echo "Package installation canceled."
+      echo -e "${MSG_INFO} Package installation canceled."
    fi
 else
-    echo "The required OpenJDK software is already installed."
+    echo -e "${MSG_INFO} The required OpenJDK for GenPackageDoc is already installed."
 fi
 
 #

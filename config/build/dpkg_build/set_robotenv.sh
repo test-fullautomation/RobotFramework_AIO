@@ -14,7 +14,7 @@ export GENDOC_PLANTUML_PATH=$RobotVsCode/data/extensions/jebbs.plantuml-2.17.5
 # Check if JAVA_HOME is already set
 if [ -z "$JAVA_HOME" ]; then
     # Find the path of OpenJDK using the update-alternatives command
-    JDK_PATH=$(update-alternatives --query java | grep 'Value: ' | grep -o '/.*/bin/java')
+    JDK_PATH=$(update-alternatives --query javac | grep 'Value: ' | grep -o '/.*/bin/java')
     
     if [ -n "$JDK_PATH" ]; then
         # Export JAVA_HOME if OpenJDK path is found
@@ -23,6 +23,4 @@ if [ -z "$JAVA_HOME" ]; then
     else
         echo "No OpenJDK installation found."
     fi
-else
-    echo "JAVA_HOME is already set to $JAVA_HOME"
 fi
