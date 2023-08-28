@@ -149,3 +149,9 @@ pyinstaller
 pycairo
 PyGObject
 dasbus
+pre-commit
+pre-commit-hooks
+robotframework-tidy
+black
+isort
+ruff

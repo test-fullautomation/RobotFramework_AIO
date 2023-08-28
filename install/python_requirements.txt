@@ -140,3 +140,9 @@ pytest_mock
 odxtools
 xmlschema
 pyinstaller
+pre-commit
+pre-commit-hooks
+robotframework-tidy
+black
+isort
+ruff
