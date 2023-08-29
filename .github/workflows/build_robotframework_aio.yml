@@ -52,6 +52,8 @@ jobs:
 
       - name: Install dependencies and set environment variables
         run: |
+          sudo apt-get update
+          sudo apt-get install --fix-missing
           chmod +x ./requirements_linux.sh
           ./requirements_linux.sh
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
