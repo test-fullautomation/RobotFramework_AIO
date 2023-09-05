@@ -47,14 +47,11 @@ function parse_repo () {
 	for repo in "${list_repos[@]}"
 	do
 		repo_name=${repo#${repo_type}.}
-		repo_url=$(git config -f $1 --get ${repo});
-		if [ "$repo_url" == "" ]; then
-			server_url=$(get_server_url "${conf_file}" "${repo_type}")
-			if [[ "$server_url" != "" ]]; then
-				repo_url=$(get_url ${repo_type} ${server_url} ${repo_name})
-			else
-				errormsg "not supported repo type '$repo_type'"
-			fi
+		server_url=$(get_server_url "${conf_file}" "${repo_type}")
+		if [[ "$server_url" != "" ]]; then
+			repo_url=$(get_url ${repo_type} ${server_url} ${repo_name})
+		else
+			errormsg "not supported repo type '$repo_type'"
 		fi
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
 		
@@ -63,7 +60,9 @@ function parse_repo () {
 		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
 			clone_update_repo "../$repo_name" "$repo_url" "$TAG_NAME"
 		else
-			clone_update_repo "../$repo_name" "$repo_url"
+			# Allow to specify commit/branch of repos to be built 
+			commit_branch=$(git config -f $conf_file --get $repo)
+			clone_update_repo "../$repo_name" "$repo_url" "$commit_branch"
 		fi
 
 	done
