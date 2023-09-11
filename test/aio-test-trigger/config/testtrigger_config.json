@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.1 / 11.08.2023 (OSS standard version)",
+   "VERSION_CONFIG" : "0.1.2 / 11.09.2023 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -40,6 +40,9 @@
 #
 # It is assumed that every value inside --params can be a string containing blanks. Nevertheless it is not necessary to encapsulate values in quotes.
 # The Test Trigger does this internally. Using also quotes inside --params most probably causes invalid command lines.
+#
+# "FILES_SAVE" is an optional key defining a path to additional self test log files. The Test Trigger does not require this information,
+# but the build process. Because the build process is responsible for collecting all log files, to make them available for users.
 
    "COMPONENTS" : [
                     {
@@ -48,7 +51,8 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=PythonExtensionsCollection"],
-                       "LOGFILE"           : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                       "LOGFILE"           : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml",
+                       "FILES_SAVE"        : "../../../../python-extensions-collection/test/testlogfiles"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-genpackagedoc",
@@ -72,7 +76,8 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
-                       "LOGFILE"           : "../../../../python-jsonpreprocessor/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                       "LOGFILE"           : "../../../../python-jsonpreprocessor/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
+                       "FILES_SAVE"        : "../../../../python-jsonpreprocessor/test/testlogfiles"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-microservice-base",
@@ -137,7 +142,8 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=TestsuitesManagement"],
-                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
+                       "FILES_SAVE"        : "../../../../robotframework-testsuitesmanagement/test/testlogfiles"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
