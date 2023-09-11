@@ -172,6 +172,18 @@ if [ -d "${DLTCONNECTOR_PATH}" ]; then
 fi
 
 #
+# Remind user to install OpenJDK for Java
+#
+###############################################################################
+if ! command -v javac &> /dev/null; then
+   sudo apt-get update
+   sudo apt-get install -y default-jdk
+   echo -e "${MSG_DONE} default-jdk package has been installed."
+else
+   echo -e "${MSG_INFO} OpenJDK is already installed."
+fi
+
+#
 # Update robotvscode data
 #
 ###############################################################################
