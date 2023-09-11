@@ -20,7 +20,5 @@ if [ -z "$JAVA_HOME" ]; then
         # Export JAVA_HOME if OpenJDK path is found
         export JAVA_HOME=$(dirname $(dirname $JDK_PATH))
         echo "JAVA_HOME set to $JAVA_HOME"
-    else
-        echo "No OpenJDK installation found."
     fi
 fi
