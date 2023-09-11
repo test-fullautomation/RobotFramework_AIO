@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 10.08.2023
+# 11.09.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -135,8 +135,7 @@ class CTestTriggerConfig():
       # Read the test trigger configuration from separate json file.
       #
       # The json file may contain lines that are commented out by a '#' at the beginning of the line.
-      # Therefore we read in this file in text format, remove the comments and save the cleaned file within the temp folder.
-      # Now it's a valid json file and we read the file from there.
+      # Therefore we read in this file in text format, remove the comments and pass the remaining content to the JSON interpreter.
 
       sTestTriggerConfigFileName = os.path.basename(sTestTriggerConfigFile)
       sTestTriggerConfigFileCleaned = f"{sTmpPath}/{sTestTriggerConfigFileName}"
@@ -277,6 +276,13 @@ class CTestTriggerConfig():
          dictComponent['LOCALCOMMANDLINE'] = LOCALCOMMANDLINE
 
          # optional
+         FILES_SAVE = None
+         if "FILES_SAVE" in dictComponent:
+            FILES_SAVE = dictComponent['FILES_SAVE']
+            FILES_SAVE = CString.NormalizePath(FILES_SAVE, sReferencePathAbs=sConfigPath)
+         dictComponent['FILES_SAVE'] = FILES_SAVE
+
+         # optional
          if "EXECUTION" not in dictComponent:
             dictComponent['EXECUTION'] = None
 
@@ -287,6 +293,7 @@ class CTestTriggerConfig():
          dictTestExecution['TESTEXECUTOR']     = dictComponent['TESTEXECUTOR']
          dictTestExecution['LOCALCOMMANDLINE'] = dictComponent['LOCALCOMMANDLINE']
          dictTestExecution['LOGFILE']          = dictComponent['LOGFILE']
+         dictTestExecution['FILES_SAVE']       = dictComponent['FILES_SAVE']
          dictTestExecution['EXECUTION']        = dictComponent['EXECUTION']
          self.__listofdictTestExecutions.append(dictTestExecution)
 
@@ -595,6 +602,9 @@ class CTestTriggerConfig():
          print("TESTEXECUTOR".rjust(nJust, ' ')     + " : " + str(dictTestExecution['TESTEXECUTOR']))
          print("LOCALCOMMANDLINE".rjust(nJust, ' ') + " : " + str(dictTestExecution['LOCALCOMMANDLINE']))
          print("LOGFILE".rjust(nJust, ' ')          + " : " + str(dictTestExecution['LOGFILE']))
+         FILES_SAVE = dictTestExecution['FILES_SAVE']
+         if FILES_SAVE is not None:
+            print("FILES_SAVE".rjust(nJust, ' ') + " : " + str(FILES_SAVE))
          EXECUTION = dictTestExecution['EXECUTION']
          if EXECUTION is not None:
             print("EXECUTION".rjust(nJust, ' ') + " : " + str(EXECUTION))
