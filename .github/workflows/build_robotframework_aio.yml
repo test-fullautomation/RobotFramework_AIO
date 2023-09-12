@@ -8,9 +8,15 @@ on:
   pull_request:
     types:
       - closed
+      - opened
+      - synchronize
     branches: 
       - develop
   workflow_dispatch:
+
+  repository_dispatch:
+    types:
+      - Triggered from another workflow
 
 env:
   GITHUB_PAT : ${{ secrets.PAT_GITHUB }} 
