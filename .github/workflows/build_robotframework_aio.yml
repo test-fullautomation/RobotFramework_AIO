@@ -45,6 +45,26 @@ jobs:
     - name: Tag repositories
       run: python ./tools/git-tag/git-tag.py "$TAG_NAME" ./config/repositories/tag_repos.json
 
+  trigger-aio:
+    runs-on: ubuntu-latest
+    name: Listen event trigger
+    if: github.event.action == 'Triggered from another workflow'
+    outputs:
+      repository: ${{ steps.extract_data.outputs.REPOSITORY }}
+      branch: ${{ steps.extract_data.outputs.PULL_MERGE_BRANCH }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Extract request data
+        id: extract_data
+        run: |
+          # Extract value from request JSON payload
+          repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
+          branch=$(jq -r .client_payload.branch $GITHUB_EVENT_PATH)
+          echo "REPOSITORY=${repository#test-fullautomation/}"  >> "$GITHUB_OUTPUT"
+          echo "PULL_MERGE_BRANCH=$branch"  >> "$GITHUB_OUTPUT"
+
   build-linux:
     name: Build Linux package
     runs-on: ubuntu-latest
@@ -69,6 +89,8 @@ jobs:
 
       - name: Clone repositories
         run: |
+          REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+          PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
           chmod +x ./cloneall
           ./cloneall
 
