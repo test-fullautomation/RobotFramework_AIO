@@ -68,7 +68,7 @@ jobs:
   build-linux:
     name: Build Linux package
     runs-on: ubuntu-latest
-    needs: tag-repos
+    needs: [ tag-repos , trigger-aio ]
     # if: always() && needs.tag-repos.result != 'failure' && needs.tag-repos.result != 'cancelled'
     if: ${{ ! failure() && ! cancelled() }}
 
@@ -113,7 +113,7 @@ jobs:
   build-windows:
     name: Build Windows package
     runs-on: windows-latest
-    needs: tag-repos
+    needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
 
     steps:
