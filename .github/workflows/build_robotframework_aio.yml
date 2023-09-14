@@ -169,6 +169,8 @@ jobs:
         path: |
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
 
   install-test-linux:
     name: Test Linux package
@@ -205,7 +207,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: linux-aiotestlogfiles
-        path: ${{ runner.workspace }}/**/*/aiotestlogfiles/*
+        path: |
+          ${{ runner.workspace }}/**/*/aiotestlogfiles/*
+          ${{ runner.workspace }}/**/*/testlogfiles/*
+
 
   release:
     name: Release AIO
