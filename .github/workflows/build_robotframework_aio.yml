@@ -16,7 +16,7 @@ on:
 
   repository_dispatch:
     types:
-      - Triggered from another workflow
+      - Triggered by other workflow
 
 env:
   GITHUB_PAT : ${{ secrets.PAT_GITHUB }} 
