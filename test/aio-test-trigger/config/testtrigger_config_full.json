@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.2 / 11.09.2023 (OSS full version)",
+   "VERSION_CONFIG" : "0.1.3 / 13.09.2023 (OSS full version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -47,11 +47,11 @@
    "COMPONENTS" : [
                     {
                        "COMPONENTROOTPATH" : "../../../../python-extensions-collection",
-                       "TESTFOLDER"        : "pytest",
+                       "TESTFOLDER"        : "test/pytest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=PythonExtensionsCollection"],
-                       "LOGFILE"           : "../../../../python-extensions-collection/pytest/aiotestlogfiles/aiotestlogfile.xml",
+                       "LOGFILE"           : "../../../../python-extensions-collection/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
                        "FILES_SAVE"        : "../../../../python-extensions-collection/test/testlogfiles"
                     },
                     {
