@@ -157,7 +157,7 @@ jobs:
       shell: cmd
       run: |
         set Robot
-        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py | tee console_log.txt
+        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee -a console_log.txt
 
     - name: Upload test result as artifact
       if: success() || failure()
@@ -171,7 +171,7 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
-          ${{ runner.workspace }}/**/*/console_log.txt
+          ${{ runner.workspace }}/[Rr]obotframework_AIO/**/*/console_log.txt
 
   install-test-linux:
     name: Test Linux package
@@ -201,7 +201,7 @@ jobs:
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py | tee console_log.txt
+        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee -a console_log.txt
 
     - name: Upload test result as artifact
       if: success() || failure()
