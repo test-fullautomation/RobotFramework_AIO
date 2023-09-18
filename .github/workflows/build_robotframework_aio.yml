@@ -157,7 +157,12 @@ jobs:
       shell: cmd
       run: |
         set Robot
-        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee -a console_log.txt
+        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        # Get system error code from python program
+        exit_code=${PIPESTATUS[0]}
+        if [ $exit_code -eq -1 ]; then
+            exit 1
+        fi
 
     - name: Upload test result as artifact
       if: success() || failure()
@@ -171,7 +176,7 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
-          ${{ runner.workspace }}/[Rr]obotframework_AIO/**/*/console_log.txt
+          ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
 
   install-test-linux:
     name: Test Linux package
@@ -201,7 +206,13 @@ jobs:
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee -a console_log.txt
+        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        # Get system error code from python program
+        exit_code=${PIPESTATUS[0]}
+        if [ $exit_code -eq 255 ]; then
+            exit 1
+        fi
+
 
     - name: Upload test result as artifact
       if: success() || failure()
