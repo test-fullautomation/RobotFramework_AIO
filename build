@@ -249,6 +249,7 @@ function build_debian()
 {
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
+	update_debian_control_file
 	parse_config $ConfigFile
 
 	cd $CURDIR
@@ -256,7 +257,7 @@ function build_debian()
 	echo -e "${COL_GREEN}#          Executing dpkg to create installer...                                   #${COL_RESET}"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-	PACK_NAME=RobotFramework_AIO_${VERSION}
+	PACK_NAME=RobotFramework_AIO_${AIO_VERSION}
 
 	#first cleanup
 	rm -rf ./output_lx/${PACK_NAME}/
