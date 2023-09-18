@@ -84,7 +84,7 @@ function create_testsuitmanagement_package_context_file(){
 function update_debian_control_file(){
 	if [[ "$AIO_VERSION" =~ $VERSION_REGEX ]] && [ "$AIO_VERSION" != "$VERSION" ]; then
 		echo "Update version info in control file to '$AIO_VERSION'"
-		sed -i "s/\(Version: \)[0-9].[0-9].[0-9].[0-9]/\1$AIO_VERSION/" $control_pathfile
+		sed -i "s/\(Version: \)[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}.[0-9]\{1,\}/\1$AIO_VERSION/" $control_pathfile
 	fi
 }
 # Clone or update repository
