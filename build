@@ -249,6 +249,7 @@ function build_debian()
 {
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
+	update_debian_control_file
 	parse_config $ConfigFile
 
 	cd $CURDIR
