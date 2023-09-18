@@ -154,10 +154,14 @@ jobs:
       run: ./scripts/install-windows.bat
 
     - name: Run tests on Windows
-      shell: cmd
+      shell: bash
       run: |
-        set Robot
-        "%RobotPythonPath%/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 console_log.txt
+        "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        # Get system error code from python program
+        exit_code=${PIPESTATUS[0]}
+        if [ $exit_code -eq 127 ]; then
+            exit 1
+        fi
 
     - name: Upload test result as artifact
       if: success() || failure()
