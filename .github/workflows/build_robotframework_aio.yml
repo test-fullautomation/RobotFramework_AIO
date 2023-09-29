@@ -16,7 +16,7 @@ on:
 
   repository_dispatch:
     types:
-      - Triggered by other workflow
+      - TRIGGER_AIO
 
 env:
   GITHUB_PAT : ${{ secrets.PAT_GITHUB }} 
@@ -48,7 +48,7 @@ jobs:
   trigger-aio:
     runs-on: ubuntu-latest
     name: Listen event trigger
-    if: github.event.action == 'Triggered from another workflow'
+    if: github.event.action == 'TRIGGER_AIO'
     outputs:
       repository: ${{ steps.extract_data.outputs.REPOSITORY }}
       branch: ${{ steps.extract_data.outputs.PULL_MERGE_BRANCH }}
