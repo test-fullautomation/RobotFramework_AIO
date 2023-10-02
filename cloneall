@@ -137,8 +137,8 @@ fi
 # Receive event from other repos and update repository config file
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
 
-	sed -i "s/$REPOSITORY=\(.*\)/${REPOSITORY}=$PULL_REQUEST_BRANCH/" "$CONFIG_FILE"
-	echo "Updated $REPOSITORY in $CONFIG_FILE with value $PULL_REQUEST_BRANCH"
+	sed -i "s/$REPOSITORY=\(.*\)/${REPOSITORY}=$PULL_REQUEST_BRANCH/" "$config_file"
+	echo "Updated $REPOSITORY in $config_file with value $PULL_REQUEST_BRANCH"
 fi
 
 parse_config $config_file
