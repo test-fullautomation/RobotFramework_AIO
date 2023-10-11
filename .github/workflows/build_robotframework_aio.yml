@@ -308,11 +308,11 @@ jobs:
     - name: Update version AIO on control file
       run: |
         echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
-        ./build.sh && update_debian_control_file
+        . ./include/bash/common.sh && update_debian_control_file
       
     - name: Commit Changes
       run: |
-        tag_branch=htv3hc/feat/tag-$AIO_VERSION
+        tag_branch=htv3hc/feat/tag-aio-$AIO_VERSION-date-$(date +%d.%m.%Y)
         echo $tag_branch > tag_branch.txt
 
         git checkout -b $tag_branch
