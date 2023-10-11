@@ -304,6 +304,13 @@ jobs:
       run: |
         git config user.email "huavanthong14@gmail.com"
         git config user.name "Thong Hua"
+    
+    - name: Checkout automation branch
+      run: |
+        tag_branch=automation/task/update_controlfile_version
+        echo $tag_branch > tag_branch.txt
+        git checkout -b $tag_branch
+
 
     - name: Update version AIO on control file
       run: |
@@ -312,13 +319,10 @@ jobs:
       
     - name: Commit Changes
       run: |
-        tag_branch=htv3hc/feat/tag-aio-$AIO_VERSION-date-$(date +%d.%m.%Y)
-        echo $tag_branch > tag_branch.txt
-
-        git checkout -b $tag_branch
+        tag_branch=$(cat tag_branch.txt)
         git add ./config/build/dpkg_build/control
         git commit -m "Auto commit from GitHub Actions"
-        git push -u origin $tag_branch
+        git push -u -f origin $tag_branch
 
     - name: Create Pull Request
       run: |
