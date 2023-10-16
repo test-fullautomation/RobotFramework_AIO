@@ -172,17 +172,6 @@ if [ -d "${DLTCONNECTOR_PATH}" ]; then
 fi
 
 #
-# Remind user to install OpenJDK for Java
-#
-###############################################################################
-if ! command -v java &> /dev/null; then
-   echo "For using PlantUML, please install OpenJDK manually by below command:"
-   echo "sudo apt-get install -y default-jdk"
-else
-   echo -e "${MSG_INFO} OpenJDK is already installed."
-fi
-
-#
 # Update robotvscode data
 #
 ###############################################################################
