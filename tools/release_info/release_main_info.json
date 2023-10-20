@@ -1,0 +1,39 @@
+# **************************************************************************************************************
+#
+# Copyright 2020-2023 Robert Bosch GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# **************************************************************************************************************
+#
+# ========== Release Main Info ==========
+#
+# Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+#
+# --------------------------------------------------------------------------------------------------------------
+
+{
+   "0.9" : {
+            "RELEASENOTES"    : ["releasenote 0.9 A"     , "releasenote 0.9 B"     , "releasenote 0.9 C"],
+            "HIGHLIGHTS"      : ["highlight 0.9 A"       , "highlight 0.9 B"       , "highlight 0.9 C"],
+            "ADDITIONALHINTS" : ["additional hint 0.9 A" , "additional hint 0.9 B" , "additional hint 0.9 C"],
+            "REQUIREMENTS"    : ["requirement 0.9 A"     , "requirement 0.9 B"     , "requirement 0.9 C"]
+           },
+   "0.10" : {
+            "RELEASENOTES"    : ["releasenote 0.10 A"     , "releasenote 0.10 B"     , "releasenote 0.10 C"],
+            "HIGHLIGHTS"      : ["highlight 0.10 A"       , "highlight 0.10 B"       , "highlight 0.10 C"],
+            "ADDITIONALHINTS" : ["additional hint 0.10 A" , "additional hint 0.10 B" , "additional hint 0.10 C"],
+            "REQUIREMENTS"    : ["requirement 0.10 A"     , "requirement 0.10 B"     , "requirement 0.10 C"]
+            }
+}
