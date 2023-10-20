@@ -147,7 +147,7 @@ odxtools
 xmlschema
 pyinstaller
 pycairo
-PyGObject
+PyGObject==3.44.1
 dasbus
 pre-commit
 pre-commit-hooks

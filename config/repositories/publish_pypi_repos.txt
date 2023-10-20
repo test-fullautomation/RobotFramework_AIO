@@ -7,3 +7,5 @@ robotframework-qconnect-base
 robotframework-testsuitesmanagement
 robotframework-robotlog2db
 robotframework-robotlog2rqm
+robotframework-dbus
+robotframework-qconnect-winapp
