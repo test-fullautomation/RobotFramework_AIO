@@ -50,6 +50,7 @@
     },
     "diffEditor.ignoreTrimWhitespace": false,
     "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.defaultProfile.linux": "Git Bash",
     "editor.suggestSelection": "first",
     "files.exclude": {
         "**/.classpath": true,
