@@ -166,6 +166,7 @@ Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string;
 
 ;Environment variables
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonPath; ValueData: {app}\python39;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonSitePackagesPath; ValueData: {app}\python39\Lib\site-packages;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotScriptPath; ValueData: {app}\python39\scripts;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode; 
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotToolsPath; ValueData: {app}\tools;

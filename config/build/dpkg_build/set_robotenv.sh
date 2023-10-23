@@ -2,6 +2,7 @@
 
 #create environment variables
 export RobotPythonPath=/opt/rfwaio/python39/install/bin
+export RobotPythonSitePackagesPath=/opt/rfwaio/python39/install/lib/python3.9/site-packages
 export RobotScriptPath=/opt/rfwaio/python39/install/bin
 export RobotVsCode=/opt/rfwaio/robotvscode
 export RobotToolsPath=/opt/rfwaio/tools
