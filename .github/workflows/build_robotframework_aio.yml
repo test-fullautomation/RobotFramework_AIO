@@ -55,7 +55,7 @@ jobs:
       branch: ${{ steps.extract_data.outputs.PULL_MERGE_BRANCH }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Extract request data
         id: extract_data
@@ -136,7 +136,11 @@ jobs:
 
       - name: Clone repositories
         shell: bash
-        run: ./cloneall
+        run: |
+          export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+          export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
+          chmod +x ./cloneall
+          ./cloneall
 
       - name: Install
         shell: bash
@@ -171,7 +175,11 @@ jobs:
 
     - name: Clone repositories
       shell: bash
-      run: ./cloneall
+      run: |
+        export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+        export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
+        chmod +x ./cloneall
+        ./cloneall
 
     - name: Download Windows installer package
       uses: actions/download-artifact@v3
@@ -218,6 +226,8 @@ jobs:
 
     - name: Clone repositories
       run: |
+        export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+        export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
         chmod +x ./cloneall
         ./cloneall
 
