@@ -90,8 +90,8 @@ jobs:
 
       - name: Clone repositories
         run: |
-          REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
-          PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
+          export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+          export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
           chmod +x ./cloneall
           ./cloneall
 
