@@ -136,9 +136,15 @@ fi
 
 # Receive event from other repos and update repository config file
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
+	echo -e "${COL_GREEN}#          Trigger AIO from repository: $REPOSITORY; branch: $PULL_REQUEST_BRANCH    #${COL_RESET}"
 
-	sed -i "s/$REPOSITORY=\(.*\)/${REPOSITORY}=$PULL_REQUEST_BRANCH/" "$config_file"
-	echo "Updated $REPOSITORY in $config_file with value $PULL_REQUEST_BRANCH"
+	grep -q $REPOSITORY $CONFIG_FILE
+	if [ $? -ne 0 ]; then
+    	errormsg "Repository received from trigger request not found in '$config_file'"
+	else
+		sed -i "s,$REPOSITORY=.*,$REPOSITORY=$PULL_REQUEST_BRANCH," $config_file
+		echo -e "${COL_GREEN}# Updated $REPOSITORY in $config_file with value $PULL_REQUEST_BRANCH"
+	fi
 fi
 
 parse_config $config_file
