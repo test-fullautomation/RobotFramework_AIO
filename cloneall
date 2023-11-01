@@ -138,7 +138,7 @@ fi
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
 	echo -e "${COL_GREEN}#          Trigger AIO from repository: $REPOSITORY; branch: $PULL_REQUEST_BRANCH    #${COL_RESET}"
 
-	grep -q $REPOSITORY $CONFIG_FILE
+	grep -q $REPOSITORY $config_file
 	if [ $? -ne 0 ]; then
     	errormsg "Repository received from trigger request not found in '$config_file'"
 	else
