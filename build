@@ -260,7 +260,6 @@ function build_debian()
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 	PACK_NAME=RobotFramework_AIO_${AIO_VERSION}
-	VERSION_INFO="RobotFramework AIO (OSS) ${AIO_VERSION}"
 
 	#first cleanup
 	rm -rf ./output_lx/${PACK_NAME}/
