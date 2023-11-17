@@ -79,16 +79,17 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 		RobotFrameworkVersion=`echo $TAG_NAME | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g"`
 	elif [ -n "$REF_NAME" ]; then
 		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
-			# A pull request branch is mergered into develop
+			# Triggered by a merged pull request branch
 			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
 		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
 			# Triggered by other repository
 			RobotFrameworkVersion=`echo triggered_by_$REPOSITORY | sed -e "s/\//-/g"`
 		else
-			# Triggered manually
+			# Triggered by any branch manually
 			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
 		fi
 	else
+		# Triggered on local
 		RobotFrameworkVersion="manual_build"
 	fi
 
