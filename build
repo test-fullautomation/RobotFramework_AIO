@@ -75,11 +75,17 @@ fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
 	if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
+		# Triggered by a TAG
 		RobotFrameworkVersion=`echo $TAG_NAME | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g"`
 	elif [ -n "$REF_NAME" ]; then
 		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
+			# A pull request branch is mergered into develop
 			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
+		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
+			# Triggered by other repository
+			RobotFrameworkVersion=`echo triggered_by_$REPOSITORY | sed -e "s/\//-/g"`
 		else
+			# Triggered manually
 			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
 		fi
 	else
@@ -301,10 +307,10 @@ function build_debian()
 
 	logresult "$?" "prepared package build" "prepare package build"
 
-	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PACK_NAME}-0_amd64.deb
+	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${RobotFrameworkVersion}-0_amd64.deb
 	logresult "$?" "built deb package" "build deb package"
 
-	dpkg -I ./output_lx/${PACK_NAME}-0_amd64.deb
+	dpkg -I ./output_lx/${RobotFrameworkVersion}-0_amd64.deb
 	goodmsg "done."
 }
 
