@@ -75,16 +75,25 @@ fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
 	if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
+		# Triggered by a TAG
 		RobotFrameworkVersion=`echo $TAG_NAME | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g"`
 	elif [ -n "$REF_NAME" ]; then
 		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
+			# Triggered by a merged pull request branch
 			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
+		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
+			# Triggered by other repository
+			RobotFrameworkVersion=`echo triggered_by_$REPOSITORY | sed -e "s/\//-/g"`
 		else
+			# Triggered by any branch manually
 			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
 		fi
 	else
+		# Triggered on local
 		RobotFrameworkVersion="manual_build"
 	fi
+
+	echo "RobotFramework AIO (OSS) ${RobotFrameworkVersion}" > version.txt
 fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
@@ -294,13 +303,15 @@ function build_debian()
 
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
+	# Update version
+	cp ./version.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
 
 	logresult "$?" "prepared package build" "prepare package build"
 
-	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PACK_NAME}-0_amd64.deb
+	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${RobotFrameworkVersion}-0_amd64.deb
 	logresult "$?" "built deb package" "build deb package"
 
-	dpkg -I ./output_lx/${PACK_NAME}-0_amd64.deb
+	dpkg -I ./output_lx/${RobotFrameworkVersion}-0_amd64.deb
 	goodmsg "done."
 }
 

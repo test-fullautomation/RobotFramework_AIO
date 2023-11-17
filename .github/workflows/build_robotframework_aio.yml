@@ -87,11 +87,12 @@ jobs:
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          # Environment variable for trigger process
+          echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
+          echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
 
       - name: Clone repositories
         run: |
-          export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
-          export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
           chmod +x ./cloneall
           ./cloneall
 
@@ -133,12 +134,12 @@ jobs:
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
           echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
+          echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
 
       - name: Clone repositories
         shell: bash
         run: |
-          export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
-          export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
           chmod +x ./cloneall
           ./cloneall
 

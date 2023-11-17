@@ -88,6 +88,9 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 ;;; will be overwritten with each new installation/update
 ;;;
 
+; Update version
+Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+
 ;Tutorial installation
 
 Source: "R:\robotframework-tutorial\100_variables_and_datatypes\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\100_variables_and_datatypes; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
