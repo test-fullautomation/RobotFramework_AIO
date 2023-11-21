@@ -1,0 +1,117 @@
+# **************************************************************************************************************
+#
+# Copyright 2020-2023 Robert Bosch GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# **************************************************************************************************************
+#
+# ========== Release Items for component 'release_info.py' ==========
+#
+# Basically this component is stand-alone, but can also be used as part of an automation framework called
+# RobotFramework AIO. More information about this framework you can find here:
+# 
+# https://github.com/test-fullautomation/RobotFramework_AIO
+# 
+# This JSON file contains component specific release information for the RobotFramework AIO.
+# In case you use the component stand-alone only, you can ignore this file.
+# 
+# --------------------------------------------------------------------------------------------------------------
+#
+# Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+#
+# --------------------------------------------------------------------------------------------------------------
+
+{
+
+# Section "COMPONENT":
+# --------------------
+
+   "COMPONENT" : "ReleaseTool",
+
+
+# Section "RELEASES" for RobotFramework AIO:
+# ------------------------------------------
+
+   "RELEASES"  : {
+                   "0.9." : [
+"
+**1. Location**
+    The release info tool (**release_info.py**) is hosted in **RobotFramework_AIO** repository under **tools**:
+
+    `https://github.com/test-fullautomation/RobotFramework_AIO/tree/develop/tools <https://github.com/test-fullautomation/RobotFramework_AIO/tree/develop/tools>`_
+
+**2. Input**
+    Release information is taken out of configuration files in JSON format. The paths to all of these files are also taken out of a JSON file, that is the main configuration file
+    and has to be defined in command line of **release_info.py**.
+
+    Naming convention for the main configuration file: **release_info_config_<** *extension* **>.json**. The *extension* can be used e.g. to distinguish between an **OSS** and a **BIOS** configuration.
+
+    Additionally to the the main configuration file, three different types of JSON files need to be defined:
+
+    1. **package_context.json**
+
+       This file is part of the **RobotFramework AIO** distribution and contains package information like the release number and date.
+
+    2. **release_main_info.json**
+
+       This file contains common release information like: \"RELEASENOTES\", \"HIGHLIGHTS\", \"ADDITIONALHINTS\" and \"REQUIREMENTS\". These sections are optional.
+
+       Responsible for the content of this file is the Product Owner.
+
+    3. **release_items_<** *component name* **>.json**
+
+       The *release items* files are component specific and contain information about all changes in the components between two releases of the **RobotFramework AIO**.
+
+       Every component is allowed to be considered in one single *release items* file only! No cumulation of content from several files belonging to the same component, will happen.
+       The name of the component is defined within the *release items* files.
+
+       Responsible for the content of these files are all developers who made changes in the components.
+
+**3. Output**
+    1. The output is written to a file in HTML format. Location is the folder in which the application is placed.
+
+    2. If a valid email address is provided in command line, the entire HTML content is put into an HTML email and send to the recipient. This feature is an option.
+
+       Usually the Product Owner should send this email to himself. After review only the email addresses of sender and recipients need to be updated; then the email can be published.
+
+**4. Command line**
+    The release info tool supports the following command line parameter:
+
+    * *--configfile*
+
+      Path and name of release info configuration file (required)
+
+    * *--mailaddress*
+
+      Mail address of initial sender and recipient (optional)
+
+    * *--configdump*
+
+      If True, basic configuration values are dumped to console; default: False
+
+**5. Additional hints**
+    1. The files **release_main_info.json** and **release_items_<** *component name* **>.json** contain the entire history of all changes over all releases of the **RobotFramework AIO**.
+       Therefore the release numbers are part of the files and will be used for content identification.
+
+       The HTML output only contains what belongs to the version number that is defined in **package_context.json**.
+
+    2. The goal of a release mail is to inform the audience about all changes made between the current and the previous release of the framework generally and about all changes in the components
+       that are part of the released framework. This is another scope than the history in the documentation of these components. The history of the component documentation
+       belongs to the version number of this component. Between these scopes there is not necessarily a full match. The content used in the release mail, should be taken out of the component history carefully.
+"
+                           ]
+                 }
+}
+
