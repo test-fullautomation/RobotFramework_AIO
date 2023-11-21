@@ -70,7 +70,10 @@
                             "../../../robotframework-testsuitesmanagement/config/robotframework_aio/release_items_RobotFramework_TestsuitesManagement.json",
                             "../../../robotframework-tutorial/__setup/robotframework_aio/release_items_RobotframeworkTutorial.json",
                             "../../../testresultwebapp/config/robotframework_aio/release_items_TestResultWebApp.json",
-                            "../../../vscode-jsonp/config/robotframework_aio/release_items_VSCodeJsonp.json"
+                            "../../../vscode-jsonp/config/robotframework_aio/release_items_VSCodeJsonp.json",
+                            "../../../robotframework-documentation/config/robotframework_aio/release_items_RobotFrameworkAIO_Documentation.json",
+                            "../../../robotframework/config/robotframework_aio/release_items_Robotframework.json"
+
                           ]
 }
 
