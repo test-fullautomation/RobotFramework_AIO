@@ -18,6 +18,16 @@
 #
 # ========== Release Items for component 'release_info.py' ==========
 #
+# Basically this component is stand-alone, but can also be used as part of an automation framework called
+# RobotFramework AIO. More information about this framework you can find here:
+# 
+# https://github.com/test-fullautomation/RobotFramework_AIO
+# 
+# This JSON file contains component specific release information for the RobotFramework AIO.
+# In case you use the component stand-alone only, you can ignore this file.
+# 
+# --------------------------------------------------------------------------------------------------------------
+#
 # Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
 # The reference for relative paths is the position of this file.
 #
@@ -31,11 +41,11 @@
    "COMPONENT" : "ReleaseTool",
 
 
-# Section "RELEASES":
-# -------------------
+# Section "RELEASES" for RobotFramework AIO:
+# ------------------------------------------
 
    "RELEASES"  : {
-                   "0.9" : [
+                   "0.9." : [
 "
 **1. Location**
     The release info tool (**release_info.py**) is hosted in **RobotFramework_AIO** repository under **tools**:

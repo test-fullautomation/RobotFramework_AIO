@@ -24,16 +24,16 @@
 # --------------------------------------------------------------------------------------------------------------
 
 {
-   "0.9" : {
-            "RELEASENOTES"    : ["releasenote 0.9 A"     , "releasenote 0.9 B"     , "releasenote 0.9 C"],
-            "HIGHLIGHTS"      : ["highlight 0.9 A"       , "highlight 0.9 B"       , "highlight 0.9 C"],
-            "ADDITIONALHINTS" : ["additional hint 0.9 A" , "additional hint 0.9 B" , "additional hint 0.9 C"],
-            "REQUIREMENTS"    : ["requirement 0.9 A"     , "requirement 0.9 B"     , "requirement 0.9 C"]
-           },
-   "0.10" : {
-            "RELEASENOTES"    : ["releasenote 0.10 A"     , "releasenote 0.10 B"     , "releasenote 0.10 C"],
-            "HIGHLIGHTS"      : ["highlight 0.10 A"       , "highlight 0.10 B"       , "highlight 0.10 C"],
-            "ADDITIONALHINTS" : ["additional hint 0.10 A" , "additional hint 0.10 B" , "additional hint 0.10 C"],
-            "REQUIREMENTS"    : ["requirement 0.10 A"     , "requirement 0.10 B"     , "requirement 0.10 C"]
-            }
+   "0.9." : {
+              "RELEASENOTES"    : ["releasenote 0.9 A"     , "releasenote 0.9 B"     , "releasenote 0.9 C"],
+              "HIGHLIGHTS"      : ["highlight 0.9 A"       , "highlight 0.9 B"       , "highlight 0.9 C"],
+              "ADDITIONALHINTS" : ["additional hint 0.9 A" , "additional hint 0.9 B" , "additional hint 0.9 C"],
+              "REQUIREMENTS"    : ["requirement 0.9 A"     , "requirement 0.9 B"     , "requirement 0.9 C"]
+            },
+   "0.10." : {
+               "RELEASENOTES"    : ["releasenote 0.10 A"     , "releasenote 0.10 B"     , "releasenote 0.10 C"],
+               "HIGHLIGHTS"      : ["highlight 0.10 A"       , "highlight 0.10 B"       , "highlight 0.10 C"],
+               "ADDITIONALHINTS" : ["additional hint 0.10 A" , "additional hint 0.10 B" , "additional hint 0.10 C"],
+               "REQUIREMENTS"    : ["requirement 0.10 A"     , "requirement 0.10 B"     , "requirement 0.10 C"]
+             }
 }
