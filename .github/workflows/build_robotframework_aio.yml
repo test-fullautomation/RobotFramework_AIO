@@ -160,7 +160,7 @@ jobs:
   install-test-windows:
     name: Test Windows package
     runs-on: windows-latest
-    needs: build-windows
+    needs: [ build-windows  , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
       RobotPythonPath: "C:/Program Files/RobotFramework/python39"
@@ -218,7 +218,7 @@ jobs:
   install-test-linux:
     name: Test Linux package
     runs-on: ubuntu-latest
-    needs: build-linux
+    needs: [ build-linux , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
 
     steps:
