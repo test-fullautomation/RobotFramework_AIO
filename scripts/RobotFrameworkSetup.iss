@@ -204,6 +204,8 @@ Name: {code:GetUsrDataDir}\testcases\lib; Flags: UninsNeverUninstall;
 Name: {code:GetUsrDataDir}\logfiles; Flags: UninsNeverUninstall; 
 Name: {code:GetUsrDataDir}\testcases\doc; Flags: UninsNeverUninstall;
 Name: {app}\robotvscode\data; Permissions: users-full; 
+Name: {app}\robotvscode\data\extensions; Permissions: users-full; 
+Name: {app}\robotvscode\data\user-data; Permissions: users-full; 
 
 [INI]
 
@@ -420,33 +422,6 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
-      GetWindowsVersionEx(Version);
-
-      //if the platform is younger or equal to Windows Vista, then
-      //win32com has a problem with creating the COM interface files
-      //in gen_py folder.
-      //In order to avoid this as post installation process the
-      //ownership and accessrights will be transfered to the user who installes RobotFramework
-      if (Version.NTPlatform) and (Version.Major>=6) then
-        begin
-           //
-           // grant access rights for {app}\Python279\Lib\site-packages\win32com\gen_py
-           //////////////////////////////////////////////////////////////////////////////////
-//           Win7GiveWriteAccess('{app}\Python279\Lib\site-packages\win32com\gen_py');
-        
-           //
-           // grant access rights for {app}\robotvscode\data folder
-           //////////////////////////////////////////////////////////////////////////////////
-           Win7GiveWriteAccess('{app}\robotvscode\data');
-           
-           //
-           // grant access rights for ConEmu config file
-           //////////////////////////////////////////////////////////////////////////////////
-//           Win7GiveWriteAccess('{app}\ConEmu\ConEmu.xml');
-           
-
-        end;
-
 
 #ifdef DoInstallTracking
         //installation tracking
