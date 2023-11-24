@@ -327,7 +327,7 @@ function build_debian()
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 	# Update version
-	cp ./version.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
+	cp ./Readme.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
 
 	logresult "$?" "prepared package build" "prepare package build"
 

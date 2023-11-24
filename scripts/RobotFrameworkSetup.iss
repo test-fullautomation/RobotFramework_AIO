@@ -89,7 +89,7 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 ;;;
 
 ; Update version
-Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: ..\Readme.txt; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Tutorial installation
 
