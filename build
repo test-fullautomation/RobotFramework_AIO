@@ -92,8 +92,6 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 		# Triggered on local
 		RobotFrameworkVersion="manual_build"
 	fi
-
-	echo "RobotFramework AIO (OSS) ${RobotFrameworkVersion}" > version.txt
 fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
@@ -254,8 +252,33 @@ function parse_config () {
 	done
 }
 
+add_line_to_file() {
+    echo "$1" >> version.txt
+}
+
+function generate_version_info() {
+
+	add_line_to_file "Installer version:"
+	add_line_to_file "********************"
+	add_line_to_file "RobotFramework AIO (OSS)  ${RobotFrameworkVersion}"
+	add_line_to_file ""
+	add_line_to_file "Web sites:"
+	add_line_to_file "********************"
+	add_line_to_file "RobotFramework AIO Tool full version:"
+	add_line_to_file "    https://htmlpreview.github.io/?https://github.com/test-fullautomation/robotframework-documentation/blob/develop/RobotFrameworkAIO/Components.html"
+	add_line_to_file ""
+	add_line_to_file "RobotFramework AIO project:"
+	add_line_to_file "    https://github.com/test-fullautomation/RobotFramework_AIO"
+	add_line_to_file ""
+	add_line_to_file "Author:"
+	add_line_to_file "********************"
+	add_line_to_file "Thomas Pollerspöck <thomas.pollerspoeck@de.bosch.com>"
+}
+
+
 function build_debian()
-{
+{	
+	generate_version_info
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
@@ -326,6 +349,7 @@ function build_windows() {
 		errormsg "Environment variable 'GENDOC_LATEXPATH' is not set."
 	fi
 
+	generate_version_info
 	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
 
