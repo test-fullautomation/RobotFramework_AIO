@@ -108,6 +108,7 @@ robotframework-requests
 robotframework-sshlibrary
 robotframework-excellib
 robotframework-imagecompare
+robotframework-dependencylibrary
 schedule
 scp
 # scapy
