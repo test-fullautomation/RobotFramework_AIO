@@ -30,6 +30,7 @@ function tag_single_repo(){
    # Define common information => adapt them for your project and requirement
    infix_tag=""
    repo_name=$(basename ${repo_location})
+   package_name=$repo_name
    commit_sha=""
    # version.py file should be placed under package_name folder as below structure
    # repo_name
@@ -65,6 +66,12 @@ function tag_single_repo(){
       errormsg "No version.py file is found under '${repo_location}'"
    else
       echo "Found version file at '${version_file}'"
+      # Get package name for pypi verification
+      # repos with prefix robotframework- : the package name is the same as the repository name.
+      # repos with prefix python- : the package name is different from the repository name.
+      if [[ $repo_name =~ ^python-.* ]];then
+         package_name=$(basename "$(dirname $version_file)")
+      fi
    fi
 
    version_info=$(grep -E 'VERSION\s+=' ${version_file} | sed "s/'/\"/g" | awk -F'"' '{print $2}')
@@ -76,6 +83,8 @@ function tag_single_repo(){
    # Call git-tag tool to tag repo
    python "$(dirname $0)/git-tag.py" rel/${version_info} ${config_file}
    logresult "$?" "tagged repo '$repo_name' with tag 'rel/$version_info'" "tag '$repo_name' with tag 'rel/$version_info'"
+
+   verify_pkg_version $package_name $version_info
 }
 
 list_repo=()

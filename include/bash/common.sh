@@ -150,3 +150,42 @@ function clone_update_repo () {
 		logresult "$?" "switched to '$commit_branch_tag'" "checkout to '$commit_branch_tag' from '$repo_url'"
 	fi
 }
+
+function verify_pkg_version(){
+   pkg_name=$1
+   given_version=$2
+   pkg_api_url="https://pypi.org/pypi/${pkg_name}/json"
+   timesleep=10  # timeslepp for each verification
+   timeout=600   # timeout for verification loop
+   counter=$(($timeout / $timesleep))
+	success=False
+
+   while [ "$counter" -gt 0 ]; do
+      # Send request and extract version info from response
+      response=$(curl -s -w "%{http_code}" "$pkg_api_url")
+      http_status=$(echo "$response" | tail -n1)
+
+      if [ "$http_status" -eq 200 ]; then
+         # Extract version information using jq
+         version=$(echo "$response" | head -n -1 | grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*' | awk -F'"' '{print $4}')
+
+         # Print the extracted version
+         echo "Latest version of ${pkg_name}: $version"
+         if [ "$version" == "$given_version" ]; then
+            goodmsg "Package '${pkg_name}-${version}' is published to pypi successfully."
+				success=True
+            break
+         fi
+      else
+         errormsg "Unable to fetch information for ${pkg_name}."
+			break
+      fi
+
+      counter=$((counter - 1))
+      sleep $timesleep
+   done
+	
+	if [[ "$success" == "False" ]];then
+		errormsg "Latest version ${given_version} of ${pkg_name} is not published to pypi within ${timeout} seconds."
+	fi
+}
