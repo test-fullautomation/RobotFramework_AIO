@@ -195,6 +195,7 @@ jobs:
       shell: bash
       run: |
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        mv console_log.txt ../
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
@@ -205,7 +206,8 @@ jobs:
       shell: powershell
       run: |
         & $env:RobotPythonPath\python .\tools\release_info\release_info.py --configfile ".\example\release_info_config_ReleaseToolTest.json"
-        dir .\tools\release_info\
+        mv .\tools\release_info\example\release_info_RobotFramework_AIO_*.html ..\ 
+
          
     - name: Upload test result as artifact
       if: success() || failure()
@@ -219,8 +221,8 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
-          ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
-          ${{ runner.workspace }}/Robotframework_AIO/tools/release_info/release_info_RobotFramework_AIO_*.html
+          ${{ runner.workspace }}/console_log.txt
+          ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
 
 
   install-test-linux:
@@ -254,6 +256,7 @@ jobs:
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        mv console_log.txt ../
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
@@ -265,6 +268,7 @@ jobs:
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./example/release_info_config_ReleaseToolTest.json
         ls -la ./tools/release_info
+        mv ./tools/release_info/example/release_info_RobotFramework_AIO_*.html ../
        
     - name: Upload test result as artifact
       if: success() || failure()
@@ -274,8 +278,8 @@ jobs:
         path: |
           ${{ runner.workspace }}/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/**/*/testlogfiles/*
-          ${{ runner.workspace }}/**/*/console_log.txt
-          ${{ runner.workspace }}/tools/release_info/release_info_RobotFramework_AIO_*.html
+          ${{ runner.workspace }}/console_log.txt
+          ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
 
 
   release:
