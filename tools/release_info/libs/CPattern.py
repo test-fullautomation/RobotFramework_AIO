@@ -20,7 +20,7 @@
 #
 # XC-CT/ECA3-Queckenstedt
 #
-# 17.10.2023
+# 13.12.2023
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -59,11 +59,6 @@ class CPattern():
 <head>
    <meta name="###FRAMEWORKNAME###" content="Release">
    <title>###FRAMEWORKNAME###</title>
-
-   <style type="text/css">
-   td {padding:6pt 6pt 6pt 6pt;}
-   </style>
-
 </head>
 <body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#0000FF">
 """
@@ -126,12 +121,12 @@ class CPattern():
    <col width="100%" span="1"/>
 </colgroup>
 <tr border="0" cellspacing="0" colspan="2">
-   <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0">
+   <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0" style="padding:9pt 6pt 9pt 6pt">
       <font face="Arial" color="#242424" size="+4"><b>###FRAMEWORKNAME###</b></font>
    </td>
 </tr>
 <tr border="0" cellspacing="0" colspan="2">
-   <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0">
+   <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0" style="padding:9pt 6pt 9pt 6pt">
       <font face="Arial" color="#242424" size="+1">(<i>&quot;<b>A</b>ll <b>I</b>n <b>O</b>ne&quot; bundle, based on Robot Framework</i>)</font>
    </td>
 </tr>
@@ -179,7 +174,7 @@ class CPattern():
 
    def GetReleaseNotesTableDataRow(self, sReleaseNote=None):
       sReleaseNotesTableDataRow = """<tr>
-   <td bgcolor="#F5F5F5" width="100%" align="left"><font face="Arial" color="#000000" size="-1">###RELEASENOTE###</font></td>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###RELEASENOTE###</font></td>
 </tr>
 """
       sReleaseNotesTableDataRow = sReleaseNotesTableDataRow.replace("###RELEASENOTE###", f"{sReleaseNote}")
@@ -199,7 +194,7 @@ class CPattern():
 
    def GetHighlightsTableDataRow(self, sHighlight=None):
       sHighlightsTableDataRow = """<tr>
-   <td bgcolor="#F5F5F5" width="100%" align="left"><font face="Arial" color="#000000" size="-1">###HIGHLIGHT###</font></td>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###HIGHLIGHT###</font></td>
 </tr>
 """
       sHighlightsTableDataRow = sHighlightsTableDataRow.replace("###HIGHLIGHT###", f"{sHighlight}")
@@ -219,7 +214,7 @@ class CPattern():
 
    def GetAdditionalHintsTableDataRow(self, sHint=None):
       sAdditionalHintsTableDataRow = """<tr>
-   <td bgcolor="#F5F5F5" width="100%" align="left"><font face="Arial" color="#000000" size="-1">###HINT###</font></td>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###HINT###</font></td>
 </tr>
 """
       sAdditionalHintsTableDataRow = sAdditionalHintsTableDataRow.replace("###HINT###", f"{sHint}")
@@ -239,7 +234,7 @@ class CPattern():
 
    def GetRequirementsTableDataRow(self, sRequirement=None):
       sRequirementsTableDataRow = """<tr>
-   <td bgcolor="#F5F5F5" width="100%" align="left"><font face="Arial" color="#000000" size="-1">###REQUIREMENT###</font></td>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###REQUIREMENT###</font></td>
 </tr>
 """
       sRequirementsTableDataRow = sRequirementsTableDataRow.replace("###REQUIREMENT###", f"{sRequirement}")
@@ -265,9 +260,9 @@ class CPattern():
    def GetChangesTableDataRow(self, nCnt=0, sComponent=None, sChange=None):
       # padding: oben rechts unten links
       sChangesTableDataRow = """<tr>
-   <td bgcolor="#F5F5F5" width="3%" valign="top" align="center"><font face="Arial" color="#FF0000" size="-1"><b>###CNT###</b></font></td>
-   <td bgcolor="#F5F5F5" width="16%" valign="top" align="left"><font face="Arial" color="#000000" size="-1"><i>###COMPONENT###</i></font></td>
-   <td bgcolor="#F5F5F5" width="81%" valign="top" align="left"><font face="Arial" color="#000000" size="-1">###CHANGE###</font></td>
+   <td bgcolor="#F5F5F5" width="3%" valign="middle" align="center" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#FF0000" size="-1"><b>###CNT###</b></font></td>
+   <td bgcolor="#F5F5F5" width="16%" valign="middle" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1"><i>###COMPONENT###</i></font></td>
+   <td bgcolor="#F5F5F5" width="81%" valign="middle" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###CHANGE###</font></td>
 </tr>
 """
       sChangesTableDataRow = sChangesTableDataRow.replace("###CNT###", f"{nCnt}")

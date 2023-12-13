@@ -24,7 +24,7 @@
 # --------------------------------------------------------------------------------------------------------------
 
 {
-   "0.9." : {
+   "0.10." : {
               "RELEASENOTES"    : ["With this release the prototype of a new tool is available that creates release mails in HTML format. The content is also available as separate HTML file."],
               "HIGHLIGHTS"      : ["The creation of release mails can be automated soon ..."],
               "REQUIREMENTS"    : ["The RobotFramework AIO needs to be installed"],
