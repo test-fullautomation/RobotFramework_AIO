@@ -201,6 +201,12 @@ jobs:
             exit 1
         fi
 
+    - name: Generate release info
+      shell: powershell
+      run: |
+        & $env:RobotPythonPath\python .\tools\release_info\release_info.py --configfile ".\example\release_info_config_ReleaseToolTest.json"
+        dir .\tools\release_info\
+         
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -214,6 +220,8 @@ jobs:
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
+          ${{ runner.workspace }}/Robotframework_AIO/tools/release_info/release_info_RobotFramework_AIO_*.html
+
 
   install-test-linux:
     name: Test Linux package
@@ -252,7 +260,11 @@ jobs:
             exit 1
         fi
 
-
+    - name: Generate release info
+      run: |
+        $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./example/release_info_config_ReleaseToolTest.json
+        ls -la ./tools/release_info
+       
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -262,6 +274,7 @@ jobs:
           ${{ runner.workspace }}/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/**/*/testlogfiles/*
           ${{ runner.workspace }}/**/*/console_log.txt
+          ${{ runner.workspace }}/tools/release_info/release_info_RobotFramework_AIO_*.html
 
 
   release:
@@ -278,6 +291,7 @@ jobs:
       run: |
         echo "EXE_FILE=$(ls windows-package/*.exe | head -1)" >> $GITHUB_ENV
         echo "DEB_FILE=$(ls linux-package/*.deb | head -1)" >> $GITHUB_ENV
+        echo "RELEASE_INFO_FILE=$(ls linux-aiotestlogfiles/*.html | head -1)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
 
     - name: Create Release
@@ -310,6 +324,16 @@ jobs:
         asset_path: ${{ env.DEB_FILE }}
         asset_name: setup_RobotFramework_AIO_Linux_${{ env.RELEASE_VERSION }}.deb
         asset_content_type: application/vnd.debian.binary-package
+    
+    - name: Upload Release Info Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.RELEASE_INFO_FILE }}
+        asset_name: RELEASE_INFO_FILE
+        asset_content_type: text/html
 
   tag-to-publish-packges-to-pypi:
     name: Tag Python packages to trigger workflow for publishing to PyPI
