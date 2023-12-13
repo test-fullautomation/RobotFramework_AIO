@@ -45,7 +45,7 @@
 # ------------------------------------------
 
    "RELEASES"  : {
-                   "0.9." : [
+                   "0.10." : [
 "
 **1. Location**
     The release info tool (**release_info.py**) is hosted in **RobotFramework_AIO** repository under **tools**:
