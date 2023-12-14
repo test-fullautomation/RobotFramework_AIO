@@ -165,6 +165,7 @@ jobs:
     env:
       RobotPythonPath: "C:/Program Files/RobotFramework/python39"
       RobotTutorialPath: "C:/RobotTest/tutorial"
+      RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python39/Lib/site-packages"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
 
     steps:
