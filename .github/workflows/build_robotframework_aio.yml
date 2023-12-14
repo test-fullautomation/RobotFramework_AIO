@@ -165,6 +165,7 @@ jobs:
     env:
       RobotPythonPath: "C:/Program Files/RobotFramework/python39"
       RobotTutorialPath: "C:/RobotTest/tutorial"
+      RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python39/Lib/site-packages"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
 
     steps:
@@ -195,12 +196,20 @@ jobs:
       shell: bash
       run: |
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        mv console_log.txt ../
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
             exit 1
         fi
 
+    - name: Generate release info
+      shell: cmd
+      run: |
+        "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS.json"
+        move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
+
+         
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -213,7 +222,9 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
-          ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
+          ${{ runner.workspace }}/console_log.txt
+          ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
+
 
   install-test-linux:
     name: Test Linux package
@@ -246,13 +257,19 @@ jobs:
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py 2>&1 | tee console_log.txt
+        mv console_log.txt ../
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
             exit 1
         fi
 
-
+    - name: Generate release info
+      run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
+        $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./release_info_config_OSS.json
+        mv ./tools/release_info/release_info_RobotFramework_AIO_*.html ../
+       
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -261,7 +278,8 @@ jobs:
         path: |
           ${{ runner.workspace }}/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/**/*/testlogfiles/*
-          ${{ runner.workspace }}/**/*/console_log.txt
+          ${{ runner.workspace }}/console_log.txt
+          ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
 
 
   release:
@@ -278,6 +296,7 @@ jobs:
       run: |
         echo "EXE_FILE=$(ls windows-package/*.exe | head -1)" >> $GITHUB_ENV
         echo "DEB_FILE=$(ls linux-package/*.deb | head -1)" >> $GITHUB_ENV
+        echo "RELEASE_INFO_FILE=$(ls windows-aiotestlogfiles/*.html | head -1)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
 
     - name: Create Release
@@ -310,6 +329,16 @@ jobs:
         asset_path: ${{ env.DEB_FILE }}
         asset_name: setup_RobotFramework_AIO_Linux_${{ env.RELEASE_VERSION }}.deb
         asset_content_type: application/vnd.debian.binary-package
+    
+    - name: Upload Release Info Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.RELEASE_INFO_FILE }}
+        asset_name: release_info_RobotFramework_AIO_${{ env.RELEASE_VERSION }}.html
+        asset_content_type: text/html
 
   tag-to-publish-packges-to-pypi:
     name: Tag Python packages to trigger workflow for publishing to PyPI
