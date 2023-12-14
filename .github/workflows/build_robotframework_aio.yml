@@ -207,7 +207,7 @@ jobs:
       shell: cmd
       run: |
         "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS.json"
-        mv .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\ 
+        move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
 
          
     - name: Upload test result as artifact
