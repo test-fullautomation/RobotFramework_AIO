@@ -18,9 +18,9 @@
 #
 # CPattern.py
 #
-# XC-CT/ECA3-Queckenstedt
+# XC-HWP/ESW3-Queckenstedt
 #
-# 13.12.2023
+# 02.01.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -269,6 +269,31 @@ class CPattern():
       sChangesTableDataRow = sChangesTableDataRow.replace("###COMPONENT###", f"{sComponent}")
       sChangesTableDataRow = sChangesTableDataRow.replace("###CHANGE###", f"{sChange}")
       return sChangesTableDataRow
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetLinksTableBegin(self):
+      sLinksTableBegin = """<h3><font face="Arial" color="#242424">Links</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sLinksTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetLinksTableDataRow(self, sLinkAddress=None, sLinkName=None, sLinkHeadline=None):
+      sLinksTableDataRow = """<tr>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###LINKHEADLINE###<a target="_blank" href="###LINKADDRESS###">###LINKNAME###</a></font></td>
+</tr>
+"""
+      sLinksTableDataRow = sLinksTableDataRow.replace("###LINKADDRESS###", f"{sLinkAddress}")
+      sLinksTableDataRow = sLinksTableDataRow.replace("###LINKNAME###", f"{sLinkName}")
+      if sLinkHeadline is None:
+         sLinksTableDataRow = sLinksTableDataRow.replace("###LINKHEADLINE###", "")
+      else:
+         sLinksTableDataRow = sLinksTableDataRow.replace("###LINKHEADLINE###", f"{sLinkHeadline}:&nbsp;&nbsp;") # <br/> # :&nbsp;&nbsp;
+      return sLinksTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***

@@ -18,9 +18,9 @@
 #
 # COutput.py
 #
-# XC-CT/ECA3-Queckenstedt
+# XC-HWP/ESW3-Queckenstedt
 #
-# 20.10.2023
+# 02.01.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -122,6 +122,7 @@ class COutput():
       listHighlights      = []
       listAdditionalHints = []
       listRequirements    = []
+      listLinksRaw        = []
 
       for sVersionNumber in listVersionNumbersIdentified:
          # -- list of sections for certain version number
@@ -134,11 +135,51 @@ class COutput():
             listAdditionalHints.extend(RELEASE_MAIN_INFO[sVersionNumber]['ADDITIONALHINTS'])
          if "REQUIREMENTS" in listSections:
             listRequirements.extend(RELEASE_MAIN_INFO[sVersionNumber]['REQUIREMENTS'])
+         if "VERSIONEDLINKS" in listSections:
+            listLinksRaw.extend(RELEASE_MAIN_INFO[sVersionNumber]['VERSIONEDLINKS'])
+      # eof for sVersionNumber in listVersionNumbersIdentified:
 
+      if "COMMONLINKS" in RELEASE_MAIN_INFO:
+         # we assume here that no version number is "COMMONLINKS"
+         listLinksRaw.extend(RELEASE_MAIN_INFO['COMMONLINKS'])
+
+      # generate a list of all links, at first the version specific ones, at second the common ones,
+      # with link information separated by link address and link name
+
+      listofdictLinks = []
+      for sLink in listLinksRaw:
+         listLinkParts = sLink.split(';')
+         # PrettyPrint(listLinkParts, sPrefix="listLinkParts")
+         nNrOfParts = len(listLinkParts)
+         dictLink = {}
+         if nNrOfParts == 1:
+            dictLink['LINKADDRESS']  = listLinkParts[0].strip()
+            dictLink['LINKNAME']     = dictLink['LINKADDRESS']
+            dictLink['LINKHEADLINE'] = None
+         elif nNrOfParts == 2:
+            dictLink['LINKADDRESS']  = listLinkParts[0].strip()
+            dictLink['LINKNAME']     = listLinkParts[1].strip()
+            dictLink['LINKHEADLINE'] = None
+         elif nNrOfParts == 3:
+            dictLink['LINKADDRESS']  = listLinkParts[0].strip()
+            dictLink['LINKNAME']     = listLinkParts[1].strip()
+            dictLink['LINKHEADLINE'] = listLinkParts[2].strip()
+         else:
+            bSuccess = False
+            sResult  = f"Invalid link: '{sLink}'. Reason: Too much ';' separators found; expected two separator at most"
+            sResult  = CString.FormatResult(sMethod=sMethod, bSuccess=bSuccess, sResult=sResult)
+            return bSuccess, sResult
+         listofdictLinks.append(dictLink)
+         del dictLink
+      # eof for sLink in listLinksRaw:
+
+      # debug:
       # PrettyPrint(listReleaseNotes, sPrefix="listReleaseNotes")
       # PrettyPrint(listHighlights, sPrefix="listHighlights")
       # PrettyPrint(listAdditionalHints, sPrefix="listAdditionalHints")
       # PrettyPrint(listRequirements, sPrefix="listRequirements")
+      # PrettyPrint(listLinksRaw, sPrefix="listLinksRaw")
+      # PrettyPrint(listofdictLinks, sPrefix="listofdictLinks")
 
       # -- 'RELEASENOTES'
 
@@ -236,6 +277,17 @@ class COutput():
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
       # eof if len(listIdentifiedComponents) > 0:
+
+      # -- 'LINKS'
+
+      if len(listofdictLinks) > 0:
+         # found 'LINKS' => write to output
+         listLinesHTML.append(self.__oPattern.GetLinksTableBegin())
+         for dictLink in listofdictLinks:
+            listLinesHTML.append(self.__oPattern.GetLinksTableDataRow(dictLink['LINKADDRESS'], dictLink['LINKNAME'], dictLink['LINKHEADLINE']))
+         listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listLinesHTML.append(self.__oPattern.GetVDist())
+      # eof if len(listofdictLinks) > 0:
 
       listLinesHTML.append(self.__oPattern.GetVDist())
       listLinesHTML.append(self.__oPattern.GetHLine())
