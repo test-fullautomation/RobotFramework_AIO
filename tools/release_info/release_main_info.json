@@ -34,6 +34,26 @@
                "RELEASENOTES"    : ["releasenote 0.10 A"     , "releasenote 0.10 B"     , "releasenote 0.10 C"],
                "HIGHLIGHTS"      : ["highlight 0.10 A"       , "highlight 0.10 B"       , "highlight 0.10 C"],
                "ADDITIONALHINTS" : ["additional hint 0.10 A" , "additional hint 0.10 B" , "additional hint 0.10 C"],
-               "REQUIREMENTS"    : ["requirement 0.10 A"     , "requirement 0.10 B"     , "requirement 0.10 C"]
-             }
+               "REQUIREMENTS"    : ["requirement 0.10 A"     , "requirement 0.10 B"     , "requirement 0.10 C"],
+               "VERSIONEDLINKS"  : ["file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.9.3.0 ; setup_RobotFramework_AIO_Win_0.9.3.0.exe ; Windows 10 Installation (please download the exe file before installation)",
+                                    "file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.9.3.0 ; setup_RobotFramework_AIO_OSD6Linux_0.9.3.0.deb ; OSD6 Linux Installation (please download the deb file before installation)",
+                                    "file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.9.3.0 ; setup_RobotFramework_AIO_Apertis_0.9.3.0.deb ; Apertis Installation (please download the deb file before installation)",
+                                    "https://github.com/test-fullautomation/RobotFramework_AIO/releases/tag/rel%2Faio%2F0.9.3.0 ; Windows 10 and Ubuntu ; OSS versions (without BOSCH specific parts)",
+                                    "http://www-app.hi.de.bosch.com/ROBOTFW_AIO_SelfTest/index.html?branch=main&variant=BIOS_Windows&version=7371521d-14e3-4b38-88b1-cb0b14ea10ad&component=All%20Components ; Windows 10 ; SelfTest Result",
+                                    "http://www-app.hi.de.bosch.com/ROBOTFW_AIO_SelfTest/index.html?branch=main&variant=BIOS_OSD6&version=e20cd845-a758-4302-91ab-62390b1c3836&component=All%20Components ; OSD6 Linux ; SelfTest Result",
+                                    "http://www-app.hi.de.bosch.com/ROBOTFW_AIO_SelfTest/index.html?branch=main&variant=BIOS_Apertis&version=fbb887fb-23fa-439a-9abe-d17d32a04fb4&component=All%20Components ; Apertis ; SelfTest Result",
+                                    "https://github.com/test-fullautomation?tab=repositories ; git tag: rel/aio/0.9.3.0 ; RobotFramework AIO Sources in GITHUB",
+                                    "https://sourcecode.socialcoding.bosch.com/projects/ROBFW ; BIOS git tag: rel/aio/0.9.3.0 ; RobotFramework AIO Sources in BIOS",
+                                    "https://gitlab-apertispro.boschdevcloud.com/robotframework-aio/main ; git tag: rel/0.9.3.0 ; RobotFramework AIO Sources in ApertisPro"]
+             },
+
+   # --------------------------------------------------------------------------------------------------------------
+
+   "COMMONLINKS" : ["http://hc1-v-0002y.hc.apac.bosch.com/ ; RobotFramework AIO Homepage",
+                    "https://github.com/test-fullautomation ; RobotFramework AIO main page in GitHub",
+                    "https://htmlpreview.github.io/?https://github.com/test-fullautomation/robotframework-documentation/blob/develop/RobotFrameworkAIO/Components.html; RobotFramework AIO Components",
+                    "https://htmlpreview.github.io/?https://github.com/test-fullautomation/robotframework-tutorial/blob/develop/robot_framework_tutorial.html ; RobotFramework AIO Tutorial Main Page",
+                    "https://rb-tracker.bosch.com/tracker01/secure/RapidBoard.jspa?rapidView=13300&view=planning.nodetail&issueLimit=100 ; Issue / CRQ Tracking",
+                    "https://robotframework.org/ ; OSS Origin of RobotFramework Core"]
 }
+
