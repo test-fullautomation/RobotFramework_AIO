@@ -17,6 +17,7 @@ configparser
 cryptography
 cycler
 decorator
+doipclient
 docutils
 dotdict          
 dotmap               

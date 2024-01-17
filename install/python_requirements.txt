@@ -21,7 +21,8 @@ decorator
 docutils
 dotdict          
 dotmap               
-doxypypy             
+doxypypy   
+doipclient          
 easyprocess 
 httpserver
 idna
