@@ -56,6 +56,7 @@
    # of this component between two releases of the RobotFramework AIO. Between these scopes there is not necessarily a full match.
    
    "RELEASE_ITEM_FILES" : [
+                            "../../config/robotframework_aio/release_items_Robotframework_AIO.json",
                             "../../../python-extensions-collection/config/robotframework_aio/release_items_PythonExtensionsCollection.json",
                             "../../../python-genpackagedoc/config/robotframework_aio/release_items_GenPackageDoc.json",
                             "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",
