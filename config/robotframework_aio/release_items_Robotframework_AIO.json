@@ -1,0 +1,67 @@
+# **************************************************************************************************************
+#
+# Copyright 2020-2023 Robert Bosch GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# **************************************************************************************************************
+#
+# ========== Release Items for component 'RobotFramework AIO Package' ==========
+#
+# Basically this component is stand-alone, but can also be used as part of an automation framework called
+# RobotFramework AIO. More information about this framework you can find here:
+# 
+# https://github.com/test-fullautomation/RobotFramework_AIO
+# 
+# This JSON file contains component specific release information for the RobotFramework AIO.
+# In case you use the component stand-alone only, you can ignore this file.
+# 
+# --------------------------------------------------------------------------------------------------------------
+#
+# Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+#
+# --------------------------------------------------------------------------------------------------------------
+
+{
+
+# Section "COMPONENT":
+# --------------------
+
+   "COMPONENT" : "RobotFramework AIO Package",
+
+
+# Section "RELEASES" for RobotFramework_AIO:
+# ------------------------------------------
+
+   "RELEASES"  : {
+                   "0.10." : [
+"
+**VSCodium**
+
+* Change default terminal from Git Bash to PowerShell on Windows
+* Fix startup error on Windows
+
+**Environment/Installation**
+
+* Add environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python
+* Add **version.txt** file in root directory of installation
+
+**Python Packages**
+
+* Integrate **robotframework-dependencylibrary** library
+* Integrate **robotframework-doip** library
+"
+                             ]
+                 }
+}

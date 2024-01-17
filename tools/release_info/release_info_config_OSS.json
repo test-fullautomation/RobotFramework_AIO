@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.0 / 21.11.2023 (OSS version)",
+   "VERSION_CONFIG" : "0.2.0 / 17.01.2024 (OSS version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -56,23 +56,24 @@
    # of this component between two releases of the RobotFramework AIO. Between these scopes there is not necessarily a full match.
    
    "RELEASE_ITEM_FILES" : [
-                            "../../../python-extensions-collection/config/robotframework_aio/release_items_PythonExtensionsCollection.json",
-                            "../../../python-genpackagedoc/config/robotframework_aio/release_items_GenPackageDoc.json",
-                            "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",
-                            "../../../python-pytestlog2db/config/robotframework_aio/release_items_PyTestLog2DB.json",
-                            "../../../robotframework-dbus/config/robotframework_aio/release_items_RobotFramework_DBus.json",
-                            "../../../robotframework-doip/config/robotframework_aio/release_items_RobotFramework_DoIP.json",
-                            "../../../robotframework-extensions-collection/config/robotframework_aio/release_items_RobotframeworkExtensions.json",
-                            "../../../robotframework-qconnect-base/config/robotframework_aio/release_items_QConnectBase.json",
-                            "../../../robotframework-qconnect-winapp/config/robotframework_aio/release_items_QConnectWinapp.json",
-                            "../../../robotframework-robotlog2db/config/robotframework_aio/release_items_RobotLog2DB.json",
-                            "../../../robotframework-robotlog2rqm/config/robotframework_aio/release_items_RobotLog2RQM.json",
-                            "../../../robotframework-testsuitesmanagement/config/robotframework_aio/release_items_RobotFramework_TestsuitesManagement.json",
-                            "../../../robotframework-tutorial/__setup/robotframework_aio/release_items_RobotframeworkTutorial.json",
-                            "../../../testresultwebapp/config/robotframework_aio/release_items_TestResultWebApp.json",
-                            "../../../vscode-jsonp/config/robotframework_aio/release_items_VSCodeJsonp.json",
-                            "../../../robotframework-documentation/config/robotframework_aio/release_items_RobotFrameworkAIO_Documentation.json",
-                            "../../../robotframework/config/robotframework_aio/release_items_Robotframework.json"
+                              "../../config/robotframework_aio/release_items_Robotframework_AIO.json",
+                              "../../../python-extensions-collection/config/robotframework_aio/release_items_PythonExtensionsCollection.json",
+                              "../../../python-genpackagedoc/config/robotframework_aio/release_items_GenPackageDoc.json",
+                              "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",
+                              "../../../python-pytestlog2db/config/robotframework_aio/release_items_PyTestLog2DB.json",
+                              "../../../robotframework-dbus/config/robotframework_aio/release_items_RobotFramework_DBus.json",
+                              "../../../robotframework-doip/config/robotframework_aio/release_items_RobotFramework_DoIP.json",
+                              "../../../robotframework-extensions-collection/config/robotframework_aio/release_items_RobotframeworkExtensions.json",
+                              "../../../robotframework-qconnect-base/config/robotframework_aio/release_items_QConnectBase.json",
+                              "../../../robotframework-qconnect-winapp/config/robotframework_aio/release_items_QConnectWinapp.json",
+                              "../../../robotframework-robotlog2db/config/robotframework_aio/release_items_RobotLog2DB.json",
+                              "../../../robotframework-robotlog2rqm/config/robotframework_aio/release_items_RobotLog2RQM.json",
+                              "../../../robotframework-testsuitesmanagement/config/robotframework_aio/release_items_RobotFramework_TestsuitesManagement.json",
+                              "../../../robotframework-tutorial/__setup/robotframework_aio/release_items_RobotframeworkTutorial.json",
+                              "../../../testresultwebapp/config/robotframework_aio/release_items_TestResultWebApp.json",
+                              "../../../vscode-jsonp/config/robotframework_aio/release_items_VSCodeJsonp.json",
+                              "../../../robotframework-documentation/config/robotframework_aio/release_items_RobotFrameworkAIO_Documentation.json",
+                              "../../../robotframework/config/robotframework_aio/release_items_Robotframework.json"
 
                           ]
 }
