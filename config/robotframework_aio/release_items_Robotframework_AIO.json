@@ -46,12 +46,22 @@
 
    "RELEASES"  : {
                    "0.10." : [
-                               "Change default terminal in VSCodium from Git Bash to PowerShell on Windows",
-                               "Add environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python",
-                               "Integrate **robotframework-dependencylibrary** library",
-                               "Integrate **robotframework-doip** library",
-                               "Add **version.txt** file in root directory of installation",
-                               "Fix VSCodium startup error on Windows"
+"
+**VSCodium**
+
+* Change default terminal from Git Bash to PowerShell on Windows
+* Fix startup error on Windows
+
+**Environment/Installation**
+
+* Add environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python
+* Add **version.txt** file in root directory of installation
+
+**Python Packages**
+
+* Integrate **robotframework-dependencylibrary** library
+* Integrate **robotframework-doip** library
+"
                              ]
                  }
 }
