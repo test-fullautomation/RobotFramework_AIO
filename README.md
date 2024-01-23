@@ -21,6 +21,8 @@ One) setup for both Windows and Linux.
   - [Manual build](#manual-build)
 	 - [Preconditions](#preconditions)
 	 - [Execute build scripts](#execute-build-scripts)
+	 - [Repositories configuration file](#repositories-configuration-file)
+	 - [Other tools](#other-tools)
   - [Github Actions](#github-actions)
     - [Workflow](#workflow)
     - [Runners](#runners)
@@ -59,7 +61,7 @@ git clone https://github.com/test-fullautomation/RobotFramework_AIO.git
 
 Then follow below steps for building process:
 
-1. Clone all related repositories with is configured `config/repositories/repositories.conf` file
+1. Clone all related repositories that are configured in the [config/repositories/repositories.conf](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/config/repositories/repositories.conf) file
 	```
 	./cloneall
 	```
@@ -82,14 +84,88 @@ Then follow below steps for building process:
 	./build
 	```
 
-Build the RobotFramework AIO package with all related libraries 
-(defined in `config/repositories/repositories.conf` file).
+	Build the RobotFramework AIO package with all related libraries 
+	(defined in `config/repositories/repositories.conf` file).
 
-Build script will detect the operating system (**Windows** or **Linux**) 
-automatically to run the appropriate steps for building installer package.
 
-The new generated RobotFramework AIO setup file can found under `Output/` folder 
-on Windows and `output_lx` on Linux machine.
+	Build script will detect the operating system (**Windows** or **Linux**) 
+	automatically to run the appropriate steps for building installer package.
+
+	The new generated RobotFramework AIO setup file can found under `Output/` folder 
+	on Windows and `output_lx` on Linux machine.
+
+#### Repositories configuration file
+The repositories configuration file `repositories.conf` allows you to manage various repositories across different Git servers.
+
+[config/repositories/repositories.conf](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/config/repositories/repositories.conf) is used as default for [cloneall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/cloneall), 
+[gitall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/gitall) 
+and [build](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/build) scripts (without specifying in command line argument)
+
+However, you can define your own `repositories.conf` configuration file (remove/add repositories from multiple Git servers) and use it for those scripts.
+* Define supported git server(s) (alias name) and their project/user url in `[supported-server]`
+	```
+	[supported-server]
+	gitlab=https://gitlab.com/robotframework-aio
+	github=https://github.com/test-fullautomation
+	bitbucket=ssh://git@bitbucket.org:7999/robfw
+	```
+* List all repositories for each supported Git server
+	```
+	[gitlab]
+	robotframework-otherlibraries=
+	...
+
+	[github]
+	robotframework=
+	...
+
+	[bitbucket]
+	python-libraries=
+	...
+	```
+	You can also specify the *branch*/*commit*/*tag* to switch to after cloning (only used for `cloneall` script)
+	```
+	...
+	[github]
+	robotframework=develop_6.1
+	...
+	```
+
+Then, execute the scripts with additional argument `--config-file=<path-to-your-config-file>`
+```
+./cloneall --config-file=<path-to-your-config-file>
+```
+
+```
+./gitall --config-file=<path-to-your-config-file> <git-command>
+```
+
+```
+./build --config-file=<path-to-your-config-file>
+```
+#### Other tools:
+1. [gitall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/gitall)
+
+	The `gitall` tool allows to execute Git commands across multiple repositories defined in a above repositories configuration file.
+	Before using `gitall`, ensure that all repositories have been cloned with the `cloneall` tool.
+
+	Usage:
+	* Check status
+		```
+		./gitall
+		```
+		or
+		```
+		./gitall status
+		```
+	* Create git commit:
+		```
+		./gitall commit -m "Commit message"
+		```
+	* Use with custom repositories configuration file:
+		```
+		./gitall --config-file=<path-to-your-config-file> commit -m "Commit message" 
+		```
 
 ### Github Actions
 
