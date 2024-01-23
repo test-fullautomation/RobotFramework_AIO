@@ -4,25 +4,31 @@
 #
 # import common bash scripts
 #
-. ./include/bash/common.sh
+SCRIPT_DIR=$(dirname $0)
+. $SCRIPT_DIR/include/bash/common.sh
 
-config_file="./config/repositories/repositories.conf"
+config_file="$SCRIPT_DIR/config/repositories/repositories.conf"
 # return github url bases on provided authentication or not
 function get_url () {
 	repo_type=$1
 	repo_name=$3
-	PROJECT_URL=`echo  "$2" | sed 's~http[s]*://~~g'`
+	if [[ $2 == http://* || $2 == https://* ]]; then
+		PROJECT_URL=`echo  "$2" | sed 's~http[s]*://~~g'`
 
-	var_usr=$(echo ${repo_type^^}_BOT_USERNAME)
-	var_pw=$(echo ${repo_type^^}_BOT_PASSWORD)
+		var_usr=$(echo ${repo_type^^}_BOT_USERNAME)
+		var_pw=$(echo ${repo_type^^}_BOT_PASSWORD)
 
-	bot_usr=${!var_usr}
-	bot_pw=${!var_pw}
+		bot_usr=${!var_usr}
+		bot_pw=${!var_pw}
 
-	repo_url="https://${PROJECT_URL}/${repo_name}.git"
-	if [ -n "${bot_usr}" ] && [ -n "${bot_pw}" ]; then
-		repo_url="https://${bot_usr}:${bot_pw}@${PROJECT_URL}/${repo_name}.git"
+		repo_url="https://${PROJECT_URL}/${repo_name}.git"
+		if [ -n "${bot_usr}" ] && [ -n "${bot_pw}" ]; then
+			repo_url="https://${bot_usr}:${bot_pw}@${PROJECT_URL}/${repo_name}.git"
+		fi
+	else
+		repo_url="$2/${repo_name}.git"
 	fi
+
 	echo $repo_url
 }
 
@@ -58,11 +64,11 @@ function parse_repo () {
 
 		# switch repo to given released tag $TAG_NAME
 		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
-			clone_update_repo "../$repo_name" "$repo_url" "$TAG_NAME"
+			clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$TAG_NAME"
 		else
 			# Allow to specify commit/branch of repos to be built 
 			commit_branch=$(git config -f $conf_file --get $repo)
-			clone_update_repo "../$repo_name" "$repo_url" "$commit_branch"
+			clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$commit_branch"
 		fi
 
 	done
@@ -93,7 +99,7 @@ function parse_config () {
 			
 			sec_path=$(git config -f $1 --get ${section}.path)
 			if [ "$sec_path" == "" ]; then
-				sec_path="../${sec_name}"
+				sec_path="$SCRIPT_DIR/../${sec_name}"
 			fi
 			sec_url=$(eval echo $(git config -f $1 --get ${section}.url))
 			if [ "$sec_url" == "" ]; then
