@@ -276,8 +276,6 @@ class COutput():
                # !!! still under construction !!! : ## <code> tag fix: size and color
                # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"crimson\" size=\"+1\">")
                # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("</code>", "</font></code>")
-               sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"crimson\" size=\"+1\">")
-               sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
