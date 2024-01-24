@@ -89,7 +89,7 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 ;;;
 
 ; Update version
-Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion; Permissions: everyone-full;
 
 ;Tutorial installation
 
@@ -104,7 +104,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; 
 Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
  
 ;selftest installation
-Source: "R:\robotframework-selftest\*"; Excludes: ".git"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
