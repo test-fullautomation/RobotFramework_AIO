@@ -223,6 +223,7 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
+          ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
 
 
   install-test-linux:

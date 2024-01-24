@@ -18,6 +18,7 @@ for /f "tokens=*" %%a in ('dir /b !directory!\*.exe') do (
             echo !app! installation successful.
         ) else (
             echo !app! installation failed.
+            exit 1
         )
     )
 )
