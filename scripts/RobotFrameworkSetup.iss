@@ -583,6 +583,53 @@ begin
     Result:=False;
 end;
 
+//
+// Check corrupted unins00x.dat file to remove it and correspoding unins00x.exe file
+//////////////////////////////////////////////////////////////////////////////////
+function ShouldRemoveUninsFiles(const AppPath: String): Boolean;
+var
+  bUninstallerExists : Boolean;
+  I: Integer;
+  DatFileName, ExeFileName: String;
+  FileStream: TFileStream;
+  DatFileSize: Cardinal;
+begin
+  Result := False;
+
+  for I := 0 to 9 do
+  begin
+    // Construct the file names for unins00x.dat and unins00x.exe
+    bUninstallerExists := FileExists(ExpandConstant('{app}\unins00'+IntToStr(i)+'.dat'));
+    if bUninstallerExists=True then
+    begin
+      DatFileName := ExpandConstant('{app}\unins00'+IntToStr(i)+'.dat')
+      ExeFileName := ChangeFileExt(DatFileName, '.exe');
+
+      // Initialize the file size
+      DatFileSize := 0;
+
+      // Open the file stream to get the size
+      try
+        FileStream := TFileStream.Create(DatFileName, fmOpenRead or fmShareDenyNone);
+        DatFileSize := FileStream.Size;
+      finally
+        FileStream.Free;
+      end;
+
+      // If the size is 0KB, set the result to True
+      if DatFileSize = 0 then
+      begin
+        // Remove both the .dat and .exe files
+        DelTree(DatFileName, True, True, True);
+        DelTree(ExeFileName, True, True, True);
+
+      end;
+    end
+  end;
+  // Set the result to True to indicate that the files have been removed
+  Result := True;
+end;
+
 [UninstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
 Name: {app}\python39\*; Type: filesandordirs;
@@ -591,6 +638,7 @@ Name: {app}\selftest\*; Type: filesandordirs;
 ;Name: {app}\devtools\*; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\tutorial; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\documentation; Type: filesandordirs;
+Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConstant('{app}'))
 
 [InstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
