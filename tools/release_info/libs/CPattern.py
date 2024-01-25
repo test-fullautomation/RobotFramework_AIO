@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 02.01.2024
+# 24.01.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -204,7 +204,8 @@ class CPattern():
    #TM***
 
    def GetAdditionalHintsTableBegin(self):
-      sAdditionalHintsTableBegin = """<h3><font face="Arial" color="#242424">Additional hints</font></h3>
+      # 24.01.2024 : 'hints' renamed to 'information' / !!! TODO: Adapt this in remaining code !!!
+      sAdditionalHintsTableBegin = """<h3><font face="Arial" color="#242424">Additional information</font></h3>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
 """
       return sAdditionalHintsTableBegin

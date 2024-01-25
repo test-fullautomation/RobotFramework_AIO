@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 02.01.2024
+# 24.01.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -273,6 +273,9 @@ class COutput():
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
                # to open link in another explorer window:
                sChange_conv = sChange_conv.replace("a href=", "a target=\"_blank\" href=")
+               # !!! still under construction !!! : ## <code> tag fix: size and color
+               # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"crimson\" size=\"+1\">")
+               # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
