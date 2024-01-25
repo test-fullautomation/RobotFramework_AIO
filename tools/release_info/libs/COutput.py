@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 24.01.2024
+# 25.01.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -190,6 +190,9 @@ class COutput():
             sReleaseNote_conv = pypandoc.convert_text(sReleaseNote, 'html', format='rst')
             # to open link in another explorer window:
             sReleaseNote_conv = sReleaseNote_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sReleaseNote_conv = sReleaseNote_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sReleaseNote_conv = sReleaseNote_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetReleaseNotesTableDataRow(sReleaseNote_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -203,6 +206,9 @@ class COutput():
             sHighlight_conv = pypandoc.convert_text(sHighlight, 'html', format='rst')
             # to open link in another explorer window:
             sHighlight_conv = sHighlight_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sHighlight_conv = sHighlight_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sHighlight_conv = sHighlight_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetHighlightsTableDataRow(sHighlight_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -216,6 +222,9 @@ class COutput():
             sAdditionalHint_conv = pypandoc.convert_text(sAdditionalHint, 'html', format='rst')
             # to open link in another explorer window:
             sAdditionalHint_conv = sAdditionalHint_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sAdditionalHint_conv = sAdditionalHint_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sAdditionalHint_conv = sAdditionalHint_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetAdditionalHintsTableDataRow(sAdditionalHint_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -229,6 +238,9 @@ class COutput():
             sRequirement_conv = pypandoc.convert_text(sRequirement, 'html', format='rst')
             # to open link in another explorer window:
             sRequirement_conv = sRequirement_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sRequirement_conv = sRequirement_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sRequirement_conv = sRequirement_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetRequirementsTableDataRow(sRequirement_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -273,10 +285,11 @@ class COutput():
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
                # to open link in another explorer window:
                sChange_conv = sChange_conv.replace("a href=", "a target=\"_blank\" href=")
-               # !!! still under construction !!! : ## <code> tag fix: size and color
-               # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"crimson\" size=\"+1\">")
-               # !!! still under construction !!! : # sChange_conv = sChange_conv.replace("</code>", "</font></code>")
+               # <code> tag fix: size and color
+               sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+               sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
+
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
       # eof if len(listIdentifiedComponents) > 0:
