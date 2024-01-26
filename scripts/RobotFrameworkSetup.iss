@@ -647,4 +647,4 @@ Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
 ;Name: {app}\devtools\*; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\documentation; Type: filesandordirs;
-
+Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConstant('{app}'))
