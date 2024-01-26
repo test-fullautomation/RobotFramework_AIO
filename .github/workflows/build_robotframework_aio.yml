@@ -116,7 +116,7 @@ jobs:
           git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
           git add RobotFrameworkAIO/Components.html
           git add RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
-          git add RobotFrameworkAIO/components.rst
+          git add RobotFrameworkAIO/Components.rst
           git commit -m "Auto update documents in robotframework-documents"
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
