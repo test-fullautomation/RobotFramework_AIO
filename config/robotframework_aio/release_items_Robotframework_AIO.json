@@ -49,19 +49,19 @@
 "
 **VSCodium**
 
-* Change default terminal from Git Bash to PowerShell on Windows
-* Fix startup error on Windows
+* Changed default terminal from Git Bash to PowerShell on Windows
+* Fixed startup error on Windows
 
 **Environment/Installation**
 
-* Add environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python
-* Add **version.txt** file in root directory of installation
+* Added environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python
+* Added **version.txt** file in root directory of installation
 
 **Python Packages**
 
-* Integrate **robotframework-dependencylibrary** library
-* Integrate **robotframework-doip** library
-* Integrate **doipclient** library
+* Integrated **robotframework-dependencylibrary** library
+* Integrated **robotframework-doip** library
+* Integrated **doipclient** library
 "
                              ]
                  }
