@@ -114,9 +114,19 @@ jobs:
           git config user.name "Thong Hua"
           git checkout -b $doc_branch
           git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
-          git add -u
+          git add RobotFrameworkAIO/Components.html
+          git add RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+          git add RobotFrameworkAIO/components.rst
           git commit -m "Auto update documents in robotframework-documents"
           git push -u -f doc-repo $doc_branch
+          echo -e "\e[32;01mPush all changes completely ... \e[0m"
+          
+          # curl -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
+          # --header 'authorization: Bearer ${{ secrets.ACTIONS_KEY }}' \
+          # -H 'Accept: application/vnd.github.everest-preview+json' \
+          # --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : '"$doc_branch"'}}'
+          
+          # echo -e "\e[32;01m Trigger jobs for pull request ...\e[0m"
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
@@ -140,7 +150,7 @@ jobs:
       - name: Install dependencies and set environment variables
         shell: bash
         run: |
-          . ./requirements_windows.sh
+          . ./requirements_windows -e.sh
           echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
