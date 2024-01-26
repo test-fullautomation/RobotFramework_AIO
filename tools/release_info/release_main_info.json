@@ -31,21 +31,22 @@ Dear team,
 | After hard work we are proud to announce a **new release of the RobotFramework AIO (All In One) for Windows 10 and OSD6 Linux and Apertis**.
 | Please feel free to give any feedback about your experiences and wishes!
 
-Feel free to contact us when you use RobotFramework AIO the first time. We are keen to support you!
+Feel free to contact us when you use **RobotFramework AIO** the first time. We are keen to support you!
 
 **What is RobotFramework AIO**
-  - One installer brings after few clicks all you need to work with Robot Framework based test case execution and/or test case development. We support you in case of any wishes. 
+
+- One installer brings after few clicks all you need to develop and execute Robot Framework based test cases. We support you in case of any wishes. 
     
-    You are free to request changes.
+  You are free to request changes.
 
-  - RobotFramework AIO is installed transparently for all other applications. It will not interfere with existing installations of e.g. python or `VSCodium <https://vscodium.com/>`_ (OSS version of Visual Studio Code).
+- **RobotFramework AIO** is installed transparently for all other applications. It will not interfere with existing installations of e.g. Python or `VSCodium <https://vscodium.com/>`_ (OSS version of Visual Studio Code).
 
-  - Preconfigured `VSCodium <https://vscodium.com/>`_ (OSS version of Visual Studio Code) integrates “Hello, world!” work space for immediate execution of *.robot and .py files.
+- Preconfigured `VSCodium <https://vscodium.com/>`_ (OSS version of Visual Studio Code) integrates “Hello, world!” work space for immediate execution of *.robot and .py files.
 
-  - Large tutorial how to work with RobotFramework AIO as part of our preconfigured `VSCodium <https://vscodium.com/>`_ (e.g. how to configure testsuites, how to work with different data types, static code analysis, ...).
+- Large tutorial how to work with **RobotFramework AIO** as part of our preconfigured `VSCodium <https://vscodium.com/>`_ (e.g. how to configure testsuites, how to work with different data types, static code analysis, ...).
 
-  - Integrated `RobotFramework_TestsuitesManagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf>`_ with `JSON <https://www.json.org/json-de.html>`_ based configuration files for unlimited variant/project-configurations.
-    - extended JSON syntax (e.g. comments, imports, variables).
+- Integrated `RobotFramework_TestsuitesManagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf>`_ with `JSON <https://www.json.org/json-de.html>`_ based configuration files for unlimited variant/project-configurations.
+    - Extended JSON syntax (e.g. comments, imports, variables).
     - ${variable} allows reuse of already defined variables on `JSON <https://www.json.org/json-de.html>`_ level.
     - \".\" (dot)-syntax allows easy navigation through object hierarchies.
                "],
@@ -73,7 +74,7 @@ Feel free to contact us when you use RobotFramework AIO the first time. We are k
 
 - RobotFramework core version 6.0.2 as base.
 
-- All preinstalled OSS RobotFramework AIO libraries available in OSS python package index `pypi <https://pypi.org/>`_ now as part of release process: e.g. 
+- All preinstalled OSS **RobotFramework AIO** libraries available in OSS Python package index `pypi <https://pypi.org/>`_ now as part of release process: e.g. 
    
   `robotframework-testsuitesmanagement <https://pypi.org/project/robotframework-testsuitesmanagement/>`_,
   `robotframework-qconnect-base <https://pypi.org/project/robotframework-qconnect-base/>`_,
@@ -87,7 +88,7 @@ Feel free to contact us when you use RobotFramework AIO the first time. We are k
 
 - VSCodium recognize “.jsonp” as JSON files with extended syntax used by `RobotFramework_TestsuitesManagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf>`_.
 
-- queued connectivity for 
+- Queued connectivity for 
   `DLT <https://sourcecode.socialcoding.bosch.com/projects/ROBFW/repos/robotframework-qconnect-dlt/browse>`_, 
   `TTFIS <https://sourcecode.socialcoding.bosch.com/projects/ROBFW/repos/robotframework-qconnect-dlt/browse>`_, 
   `serial port <https://github.com/test-fullautomation/robotframework-qconnect-base/blob/develop/QConnectBase/QConnectBase.pdf>`_, 
@@ -103,7 +104,7 @@ Feel free to contact us when you use RobotFramework AIO the first time. We are k
 
 - Integrated RFW-libraries (tag RFW-2.0).
 
-- General: improved all documentation and SelfTests.
+- General: improved all documentations and self tests.
                  "],
                "ADDITIONALHINTS" : ["
 **GITHUB git tag**
@@ -133,36 +134,23 @@ Feel free to contact us when you use RobotFramework AIO the first time. We are k
 ----
 
 **Download**
-   `RobotFramework AIO Windows <setup_RobotFramework_AIO_Win_0.8.2.2.exe>`_
+   `RobotFramework AIO Windows <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.10.0/>`_
 
-   `RobotFramework AIO OSD6 <setup_RobotFramework_AIO_OSD5Linux_0.8.2.2.deb>`_
+   `RobotFramework AIO OSD6 <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.10.0/>`_
 
-   `RobotFramework AIO OSD7 <setup_RobotFramework_AIO_OSD6Linux_0.8.2.2.deb>`_
+   `RobotFramework AIO OSD7 <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.10.0/>`_
 
-   `RobotFramework AIO Apertis <setup_RobotFramework_AIO_Apertis_0.8.2.2.deb>`_
+   `RobotFramework AIO Apertis <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.10.0/>`_
    
 **Download OSS versions** 
-   `RobotFramework AIO OSS Windows <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.9.3.0/setup_RobotFramework_AIO_Win_0.9.3.0.exe>`_
+   `RobotFramework AIO OSS Windows <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.10.0/>`_
 
-   `RobotFramework AIO OSS Ubuntu <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases/0.9.3.0/setup_RobotFramework_AIO_Win_0.9.3.0.exe>`_
+   `RobotFramework AIO OSS Ubuntu <file://///bosch.com/dfsrb/DfsDE/DIV/CM/DI/Projects/Common/RobotFramework/Releases//0.10.0/>`_
 
 ----
 
 **How to Install**
-  `Installation instruction <>`_ 
-
-----
-
-**SelfTest Result**
-   `Windows 10 <>`_
-   
-   `OSD6 Linux <>`_
-
-   `OSD7 Linux <>`_
-
-   `Apertis <>`_
-   
-
+  Chapter 2, page 2 of `RobotFrameworkAIO_Reference.pdf <https://github.com/test-fullautomation/robotframework-documentation/blob/develop/RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf>`_ 
                                  "],                              
 #               "REQUIREMENTS"    : ["
 #               
@@ -211,8 +199,9 @@ Feel free to contact us when you use RobotFramework AIO the first time. We are k
 
    "COMMONLINKS" : [
                     "",
+                    "https://htmlpreview.github.io/?https://github.com/test-fullautomation/robotframework-tutorial/blob/develop/robot_framework_tutorial.html; RobotFramework AIO Tutorial",
                     "https://robotframework.org/ ; Open Source Origin of RobotFramework Core", 
-                    "https://robotframework.org/#documentation ; RobotFramework documentation"
+                    "https://docs.robotframework.org/docs ; RobotFramework documentation"
                     #"http://hc1-v-0002y.hc.apac.bosch.com/ ; RobotFramework AIO Homepage",
                     #"https://github.com/test-fullautomation ; RobotFramework AIO main page in GitHub",
                     #"https://htmlpreview.github.io/?https://github.com/test-fullautomation/robotframework-documentation/blob/develop/RobotFrameworkAIO/Components.html; RobotFramework AIO Components",
