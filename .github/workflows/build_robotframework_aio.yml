@@ -109,7 +109,13 @@ jobs:
       - name: Update all documents
         run: |
           cd ../robotframework-documentation
-          git status
+          git config user.email "huavanthong14@gmail.com"
+          git config user.name "Thong Hua"
+          git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
+          git add -u
+          git commit -m "Auto update documents in robotframework-documents"
+          doc_branch=htv3hc/feat/auto-update-doc
+          git push -u -f doc-repo $doc_branch
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
