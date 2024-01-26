@@ -70,7 +70,6 @@ jobs:
     name: Build Linux package
     runs-on: ubuntu-latest
     needs: [ tag-repos , trigger-aio ]
-    # if: always() && needs.tag-repos.result != 'failure' && needs.tag-repos.result != 'cancelled'
     if: ${{ ! failure() && ! cancelled() }}
 
     steps:
@@ -105,6 +104,28 @@ jobs:
         run: |
           chmod +x ./build
           ./build
+
+      - name: Update all documents
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          cd ../robotframework-documentation
+          doc_branch=htv3hc/feat/auto-update-doc
+          git config user.email "huavanthong14@gmail.com"
+          git config user.name "Thong Hua"
+          git checkout -b $doc_branch
+          git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
+          git add RobotFrameworkAIO/Components.html
+          git add RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+          git add RobotFrameworkAIO/Components.rst
+          git commit -m "Auto update documents in robotframework-documents"
+          git push -u -f doc-repo $doc_branch
+          echo -e "\e[32;01mPush all changes completely ... \e[0m"
+          
+          curl -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
+          --header 'authorization: Bearer ${{ secrets.ACTIONS_KEY }}' \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : '"$doc_branch"'}}'
+          echo -e "\e[32;01m Trigger jobs for pull request ...\e[0m"
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
