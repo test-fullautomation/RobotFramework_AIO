@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-# Copyright 2020-2023 Robert Bosch GmbH
+# Copyright 2020-2024 Robert Bosch GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,19 +30,20 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.2.0 / 17.01.2024 (OSS version)",
+   "VERSION_CONFIG" : "0.3.0 / 07.02.2024 (OSS version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
 # -------------------------------
 
    # package information provided from build process; content: framework name, version, release date
+
    "PACKAGE_CONTEXT_FILE" : "${RobotPythonSitePackagesPath}/RobotFramework_TestsuitesManagement/Config/package_context.json",
 
 # Section "RELEASE_MAIN_INFO_FILE":
 # ---------------------------------
 
-   # main and common information like highlights, hints, requirements, links; responsible: product owner
+   # main and common information like: release notes, highlights, additional information, requirements, restrictions, links; responsible: product owner
 
    "RELEASE_MAIN_INFO_FILE" : "./release_main_info.json",
 
@@ -74,7 +75,6 @@
                               #"../../../vscode-jsonp/config/robotframework_aio/release_items_VSCodeJsonp.json",
                               "../../../robotframework-documentation/config/robotframework_aio/release_items_RobotFrameworkAIO_Documentation.json",
                               "../../../robotframework/config/robotframework_aio/release_items_Robotframework.json"
-
                           ]
 }
 

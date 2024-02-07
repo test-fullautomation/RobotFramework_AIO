@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2024 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 24.01.2024
+# 07.02.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -203,23 +203,22 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetAdditionalHintsTableBegin(self):
-      # 24.01.2024 : 'hints' renamed to 'information' / !!! TODO: Adapt this in remaining code !!!
-      sAdditionalHintsTableBegin = """<h3><font face="Arial" color="#242424">Additional information</font></h3>
+   def GetAdditionalInformationTableBegin(self):
+      sAdditionalInformationTableBegin = """<h3><font face="Arial" color="#242424">Additional information</font></h3>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
 """
-      return sAdditionalHintsTableBegin
+      return sAdditionalInformationTableBegin
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetAdditionalHintsTableDataRow(self, sHint=None):
-      sAdditionalHintsTableDataRow = """<tr>
+   def GetAdditionalInformationTableDataRow(self, sHint=None):
+      sAdditionalInformationTableDataRow = """<tr>
    <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###HINT###</font></td>
 </tr>
 """
-      sAdditionalHintsTableDataRow = sAdditionalHintsTableDataRow.replace("###HINT###", f"{sHint}")
-      return sAdditionalHintsTableDataRow
+      sAdditionalInformationTableDataRow = sAdditionalInformationTableDataRow.replace("###HINT###", f"{sHint}")
+      return sAdditionalInformationTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -240,6 +239,26 @@ class CPattern():
 """
       sRequirementsTableDataRow = sRequirementsTableDataRow.replace("###REQUIREMENT###", f"{sRequirement}")
       return sRequirementsTableDataRow
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetRestrictionsTableBegin(self):
+      sRestrictionsTableBegin = """<h3><font face="Arial" color="#242424">Restrictions</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sRestrictionsTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetRestrictionsTableDataRow(self, sRestriction=None):
+      sRestrictionsTableDataRow = """<tr>
+   <td bgcolor="#FFEFD5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###RESTRICTION###</font></td>
+</tr>
+"""
+      sRestrictionsTableDataRow = sRestrictionsTableDataRow.replace("###RESTRICTION###", f"{sRestriction}")
+      return sRestrictionsTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***

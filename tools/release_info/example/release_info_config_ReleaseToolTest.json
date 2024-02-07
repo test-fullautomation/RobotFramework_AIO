@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-# Copyright 2020-2023 Robert Bosch GmbH
+# Copyright 2020-2024 Robert Bosch GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.0 / 19.10.2023 (OSS standard version)",
+   "VERSION_CONFIG" : "0.2.0 / 07.02.2024 (OSS standard version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -38,15 +38,12 @@
 
    # package information provided from build process; content: framework name, version, release date
 
-   # 18.10.2023 / currently support of Windows only, because of:
-   # https://github.com/test-fullautomation/RobotFramework_AIO/issues/165
-
-   "PACKAGE_CONTEXT_FILE" : "${ROBOTPYTHONPATH}/Lib/site-packages/RobotFramework_TestsuitesManagement/Config/package_context.json",
+   "PACKAGE_CONTEXT_FILE" : "${RobotPythonSitePackagesPath}/RobotFramework_TestsuitesManagement/Config/package_context.json",
 
 # Section "RELEASE_MAIN_INFO_FILE":
 # ---------------------------------
 
-   # main and common information like highlights, hints, requirements, links; responsible: product owner
+   # main and common information like highlights, additional information, requirements, restrictions, links; responsible: product owner
 
    "RELEASE_MAIN_INFO_FILE" : "./release_main_info_ReleaseToolTest.json",
 

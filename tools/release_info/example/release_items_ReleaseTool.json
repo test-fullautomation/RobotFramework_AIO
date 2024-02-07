@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-# Copyright 2020-2023 Robert Bosch GmbH
+# Copyright 2020-2024 Robert Bosch GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@
 
     2. **release_main_info.json**
 
-       This file contains common release information like: \"RELEASENOTES\", \"HIGHLIGHTS\", \"ADDITIONALHINTS\" and \"REQUIREMENTS\". These sections are optional.
+       This file contains common release information like: \"RELEASENOTES\", \"HIGHLIGHTS\", \"ADDITIONALINFORMATION\", \"REQUIREMENTS\" and \"RESTRICTIONS\". These sections are optional.
 
        Responsible for the content of this file is the Product Owner.
 
@@ -101,7 +101,7 @@
 
       If True, basic configuration values are dumped to console; default: False
 
-**5. Additional hints**
+**5. Additional information**
     1. The files **release_main_info.json** and **release_items_<** *component name* **>.json** contain the entire history of all changes over all releases of the **RobotFramework AIO**.
        Therefore the release numbers are part of the files and will be used for content identification.
 
