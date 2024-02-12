@@ -22,7 +22,7 @@
 #
 # **************************************************************************************************************
 #
-VERSION      = "0.1.0"
+VERSION      = "0.2.0"
 VERSION_DATE = "12.02.2024"
 #
 # **************************************************************************************************************
@@ -1040,6 +1040,24 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
 }
 """)
 
+      listCodeSnippets.append("""{
+   ${testdict1} : {"subKey1" : {"subKey2" : {"subKey3" : {"subKey4" : 0}}}},
+   ${testdict1.subKey1} : {"subKey2" : {"subKey3" : {"subKey4" : 1}}},
+   ${testdict1.subKey1.subKey2} : {"subKey3" : {"subKey4" : 2}},
+   ${testdict1.subKey1.subKey2.subKey3} : {"subKey4" : 3},
+   ${testdict1.subKey1.subKey2.subKey3.subKey4} : 4,
+   //
+   ${testdict2.subKey1.subKey2.subKey3.subKey4} : 5,
+   ${testdict2.subKey1.subKey2.subKey3} : {"subKey4" : 6},
+   ${testdict2.subKey1.subKey2} : {"subKey3" : {"subKey4" : 7}},
+   ${testdict2.subKey1} : {"subKey2" : {"subKey3" : {"subKey4" : 8}}},
+   ${testdict2} : {"subKey1" : {"subKey2" : {"subKey3" : {"subKey4" : 9}}}},
+   //
+   ${testdict3} : {"subKey1" : {"subKey2" : {"subKey3" : {"subKey4" : 10}}}},
+   "testdict4" : {"subKey1" : {"subKey2" : {"subKey3" : {"subKey4" : 20}}}}
+}
+""")
+
 
       # --------------------------------------------------------------------------------------------------------------
       # TODO: check: several different expressions in square brackets inside curly brackets
@@ -1470,6 +1488,81 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
 
    # eof def GetNotExistingParams(self):
 
+   # --------------------------------------------------------------------------------------------------------------
+
+   def GetKeywords(self):
+      """Python keywords at several positions within a complex data structure
+      """
+
+      sHeadline = "Python keywords at several positions within a complex data structure"
+
+      # data structure 1
+      sDataStructure1 = """   "params" : {*01* : *02*,
+               *03* : [*04*, {*05* : *06*,
+                              *07* : [*08*, [*09*, *10*]],
+                              *11* : [*12*, {*13* : *14*}],
+                              *15* : {*16* : [*17*, *18*]},
+                              *19* : {*20* : {*21* : *22*}}
+                             }
+                       ]
+              }"""
+
+      sDefinitions = """   "indexP" : 0,
+   "keyP"   : "A",
+   "dictP"  : {"A" : 0, "B" : 1},
+   "listP"  : ["A", "B"],
+"""
+
+      sCodeSnippetPattern = """{
+####DEFINITIONS####
+####DATASTRUCTURE####
+}
+"""
+
+      # We have a list of expressions and we have a list of placeholders like used in sDataStructure1.
+      # The followig code runs in a nested loop: Every expression is placed at every placeholder position. Only one single
+      # expression and placeholder per iteration. All remaining placeholders in current iteration are replaced by elements
+      # from a list of filler expressions (simple letters) that are only used to complete the code snippet, but are not in focus.
+
+      # results mostly not interesting: # listExpressions = ["True", "False", "None", "true", "false", "null"]
+      listExpressions = ["None", "${True}", "${None}", "\"${False}\"", "\"${None}\""]
+
+      listPlaceholders = ["*01*", "*02*", "*03*", "*04*", "*05*", "*06*", "*07*", "*08*", "*09*", "*10*", "*11*",
+                          "*12*", "*13*", "*14*", "*15*", "*16*", "*17*", "*18*", "*19*", "*20*", "*21*", "*22*"]
+
+      listPositions = listPlaceholders[:] # to support a nested iteration of the same list; better readibility of code because of different names
+
+      listFiller = ["001","002","003","004","005","006","007","008","009","010",
+                    "011","012","013","014","015","016","017","018","019","020","021","022"] # as much elements as in listPlaceholders
+
+      # put all things together
+
+      listCodeSnippets = []
+
+      # sDataStructure1
+
+      for sExpression in listExpressions:
+         for sPosition in listPositions:
+            sDataStructure = sDataStructure1      # init a new data structure from pattern sDataStructure1
+            sCodeSnippet   = sCodeSnippetPattern  # init a new code snippet from code snippet pattern
+            oFiller = CListElements(listFiller)   # init a new filler object (= content for remaining placeholders)
+            for sPlaceholder in listPlaceholders:
+               sFiller = oFiller.GetElement()
+               if sPosition == sPlaceholder:
+                  sDataStructure = sDataStructure.replace(sPlaceholder, sExpression)
+               else:
+                  sDataStructure = sDataStructure.replace(sPlaceholder, f"\"{sFiller}\"")
+            # eof for sPlaceholder in listPlaceholders:
+            sCodeSnippet = sCodeSnippet.replace("####DEFINITIONS####", sDefinitions)
+            sCodeSnippet = sCodeSnippet.replace("####DATASTRUCTURE####", sDataStructure)
+            listCodeSnippets.append(sCodeSnippet)
+         # eof for sPosition in listPositions:
+      # eof for sExpression in listExpressions:
+
+      return sHeadline, listCodeSnippets
+
+   # eof def GetKeywords(self):
+
 # eof class CSnippets():
 
 
@@ -1591,6 +1684,9 @@ sHeadline, listCodeSnippets = oSnippets.GetNestedDataTypes()
 bSuccess, sResult = oExecutor.Execute(sHeadline, listCodeSnippets, "JPP")
 
 sHeadline, listCodeSnippets = oSnippets.GetNotExistingParams()
+bSuccess, sResult = oExecutor.Execute(sHeadline, listCodeSnippets, "JPP")
+
+sHeadline, listCodeSnippets = oSnippets.GetKeywords()
 bSuccess, sResult = oExecutor.Execute(sHeadline, listCodeSnippets, "JPP")
 
 print()
