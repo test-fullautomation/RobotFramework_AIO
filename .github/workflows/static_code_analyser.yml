@@ -1,0 +1,40 @@
+name: Static Code Analyser
+
+on: 
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "repository to be checked"
+        required: false
+        types: string
+jobs:
+  pylint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4.3.0
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+
+    - name: Analysing the code with pylint
+      run: |
+        if [ -n "${REPO_NAME}" ]; then
+          echo "Run static code analysis for $REPO_NAME"
+          . ./include/bash/common.sh 
+          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$REPO_NAME
+          pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
+        else
+          echo "Run static code analysis for this repo"
+          pylint --rcfile=./config/pylint/pyproject.toml ./tools/*.py
+        fi
+
+      env:
+        REPO_NAME: ${{ inputs.repository }}
