@@ -1,5 +1,4 @@
 name: Static Code Analyser
-
 on: 
   workflow_dispatch:
     inputs:
@@ -7,9 +6,27 @@ on:
         description: "repository to be checked"
         required: false
         types: string
+
 jobs:
   pylint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repositories: 
+          - ''
+          - python-genpackagedoc
+          - python-extensions-collection
+          - python-jsonpreprocessor
+          - python-pytestlog2db
+          - python-microservice-base
+          - python-microservice-cleware-switch
+          - robotframework-extensions-collection
+          - robotframework-qconnect-base
+          - robotframework-testsuitesmanagement
+          - robotframework-dbus
+          - robotframework-robotlog2rqm
+          - robotframework-robotlog2db
+          - robotframework-doip
     steps:
     - name: Checkout source
       uses: actions/checkout@v3
@@ -29,15 +46,16 @@ jobs:
         if [ -n "${REPO_NAME}" ]; then
           echo "Run static code analysis for $REPO_NAME"
           . ./include/bash/common.sh 
-          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$REPO_NAME
+          # clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$GITHUB_USER/$REPO_NAME
+          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
           if [ -f ../$REPO_NAME/requirements.txt ]; then
             python -m pip install -r ../$REPO_NAME/requirements.txt
           fi
           pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
         else
           echo "Run static code analysis for this repo"
-          pylint --rcfile=./config/pylint/pyproject.toml ./tools/*.py
+          pylint --rcfile=./config/pylint/pyproject.toml ./tools/
         fi
 
       env:
-        REPO_NAME: ${{ inputs.repository }}
+        REPO_NAME: ${{ matrix.repositories }}
