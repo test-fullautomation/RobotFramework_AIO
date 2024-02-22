@@ -30,6 +30,9 @@ jobs:
           echo "Run static code analysis for $REPO_NAME"
           . ./include/bash/common.sh 
           clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$REPO_NAME
+          if [ -f ../$REPO_NAME/requirements.txt ]; then
+            python -m pip install -r ../$REPO_NAME/requirements.txt
+          fi
           pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
         else
           echo "Run static code analysis for this repo"
