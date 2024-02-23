@@ -1,11 +1,11 @@
 name: Static Code Analyser
 on: 
   workflow_dispatch:
-    inputs:
-      repository:
-        description: "repository to be checked"
-        required: false
-        types: string
+    # inputs:
+    #   repository:
+    #     description: "repository to be checked"
+    #     required: false
+    #     types: string
 
 jobs:
   pylint:
@@ -25,6 +25,7 @@ jobs:
           - robotframework-qconnect-base
           - robotframework-testsuitesmanagement
           - robotframework-dbus
+          - robotframework-qconnect-winapp
           - robotframework-robotlog2rqm
           - robotframework-robotlog2db
           - robotframework-doip
@@ -60,3 +61,28 @@ jobs:
 
       env:
         REPO_NAME: ${{ matrix.repositories }}
+
+  cppcheck:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repositories: 
+          - robotframework-qconnect-winapp
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
+    - name: Run cppcheck
+      run: |
+        echo "Run static code analysis for $REPO_NAME"
+        . ./include/bash/common.sh 
+        clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
+        cppcheck --enable=all --error-exitcode=1 ../$REPO_NAME    
+
+      env:
+        REPO_NAME: ${{ matrix.repositories }} 
