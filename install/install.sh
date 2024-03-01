@@ -30,16 +30,28 @@ use_cntlm="No"
 python_only="No"
 vscode_only="No"
 pandoc_only="No"
+android_only="No"
 
 UNAME=$(uname)
 
+
 if [ "$UNAME" == "Linux" ] ; then
+	os=linux
+	os_short=linux
+	arch=
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
 
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
+
+	nodejs_ext=tar.xz
+	appium_inspector_ext=AppImage
+
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	os=windows
+	os_short=win
+	arch=-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
@@ -47,6 +59,9 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
+
+	nodejs_ext=zip
+	appium_inspector_ext=zip
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -65,6 +80,7 @@ function parse_arg() {
 		--python) echo "Create Python repo only";python_only="Yes"; shift;;
 		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
 		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
+		--android) echo "Create android repo only";android_only="Yes"; shift;;
 
 		-*) echo "unknown option: $1" >&2; exit 1;;
 	esac
@@ -181,6 +197,83 @@ function packaging_pandoc_windows() {
 	export PATH=$PATH:$destDir/pandoc
 }
 
+function packaging_android() {
+	platform_tool_version=34.0.5
+	build_tool_version=33.0.2
+	nodejs_version=21.6.2
+	appium_inspector_version=2024.2.2
+
+	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
+	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
+	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
+	# download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
+	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${build_tool_version}-${os}.zip
+	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${build_tool_version}-${os}.zip
+	download_nodejs=https://nodejs.org/dist/v${nodejs_version}/node-v${nodejs_version}-${os_short}-x64.${nodejs_ext}
+	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${appium_inspector_version}/Appium-Inspector-${os}-${appium_inspector_version}${arch}.${appium_inspector_ext}
+
+	archived_android_tools=android-tools.zip
+	# archived_android_emulator=android-emulator.zip
+	archived_android_buildtools=android-buildtools.zip
+	archived_android_platformtools=android-platformtools.zip
+	archived_nodejs=nodejs.${nodejs_ext}
+	archived_appium_inspector=appium-inspector.${appium_inspector_ext}
+
+	echo "Packaging Android ..."
+	rm -rf $destDir/devtools
+	mkdir $destDir/devtools
+
+	# download Node.js installer
+	echo "Downloading Node.js"
+	download_package "Node.js" $download_nodejs ${sourceDir}/${archived_nodejs}
+	if [ "$nodejs_ext" == "zip" ]; then
+		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
+		mv $destDir/devtools/node-* $destDir/devtools/nodejs
+		npm_bin=$destDir/devtools/nodejs/npm
+	else
+	   mkdir $destDir/devtools/nodejs
+		tar -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
+		npm_bin=$destDir/devtools/nodejs/bin/npm
+	fi
+
+	# download appium packages:
+	# 	- appium server 
+	echo "Installing appium server"
+	$npm_bin install --prefix $destDir/devtools/nodejs appium -g
+
+	#  - UIAutomator2 driver for appium
+	echo "Installing UIAutomator2 driver for appium"
+	export APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
+	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver -g
+	# APPIUM_HOME=./android appium driver install uiautomator2
+	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
+
+	# 	- appium inspector 
+	echo "Downloading Appium Inspector"
+	download_package "Appium Inspector" ${download_appium_inspector} ${sourceDir}/${archived_appium_inspector}
+	if [ "$appium_inspector_ext" == "zip" ]; then
+		/usr/bin/yes A | unzip ${sourceDir}/${archived_appium_inspector} -d $destDir/devtools/Appium-Inspector
+	else
+		mv ${sourceDir}/${archived_appium_inspector} $destDir/devtools/Appium-Inspector.${appium_inspector_ext}
+	fi
+	
+
+	mkdir $destDir/devtools/Android
+	# download Android SDK Tools
+	echo "Downloading Android SDK Tools"
+	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android
+
+	echo "Downloading Android Platform Tools"
+	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android
+
+	echo "Downloading Android Build Tools"
+	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
+	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${build_tool_version}
+}
+
 #
 #  Packaging python for Windows
 #
@@ -288,9 +381,14 @@ function make_pandoc() {
 	fi
 }
 
+function make_android() {
+	packaging_android
+}
+
 function make_all() {
 	make_python
 	make_vscode
+	make_android
 	make_pandoc
 	goodmsg "make_all done"
 }
@@ -315,6 +413,8 @@ elif [[ "$vscode_only" == "Yes" ]]; then
 	make_vscode
 elif [[ "$pandoc_only" == "Yes" ]]; then
 	make_pandoc
+elif [[ "$android_only" == "Yes" ]]; then
+	make_android
 else
 	make_all
 fi

@@ -45,6 +45,10 @@ MSG_ERR="${COL_RED}[ERR]${COL_RESET} "
 chown -R "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/robotvscode/data
 chmod -R 0775 /opt/rfwaio/robotvscode/data
 echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/robotvscode/data"
+
+chown -R "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/devtools/nodejs/lib
+chmod -R 0775 /opt/rfwaio/devtools/nodejs/lib
+echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/devtools/nodejs/lib"
    
 if [ ! -d "${HOME}/RobotTest" ]; then
    
@@ -130,7 +134,16 @@ fi
 ############################################################################### 
 echo -e "${MSG_DONE} Creating/Updating Unity Launchers" 
 cp /opt/rfwaio/linux/robot.desktop ${HOME}/.local/share/applications
-chown -R "${CURRENT_USER}:${sGROUP}" /home/${CURRENT_USER}/.local/share/applications/robot.desktop
+chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/.local/share/applications/robot.desktop
+chmod +x ${HOME}/.local/share/applications/robot.desktop
+
+cp /opt/rfwaio/linux/appium.desktop ${HOME}/.local/share/applications
+chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/.local/share/applications/appium.desktop
+chmod +x ${HOME}/.local/share/applications/appium.desktop
+
+cp /opt/rfwaio/linux/appiumInspector.desktop ${HOME}/.local/share/applications
+chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/.local/share/applications/appiumInspector.desktop
+chmod +x ${HOME}/.local/share/applications/appiumInspector.desktop
 
 #
 # configure login/non login shells

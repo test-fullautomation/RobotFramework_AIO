@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=Start Appium Server
+Terminal=true
+Name=Appium Server
+Exec=bash -c 'export ANDROID_HOME=/opt/rfwaio/devtools/Android; export APPIUM_HOME=/opt/rfwaio/devtools/nodejs/lib; /opt/rfwaio/devtools/nodejs/bin/appium'
+Type=Application
+Icon=/opt/rfwaio/linux/icon/appium.png
