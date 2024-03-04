@@ -16,13 +16,13 @@
 Code snippet generator
 ======================
 
-GenSnippets.py
+GenSnippetsJPP.py
 
 XC-HWP/ESW3-Queckenstedt
 
-12.02.2024
+01.03.2024
 
-**GenSnippets** generates JSONP code snippets and executes the **JsonPreprocessor** with these snippets.
+**GenSnippetsJPP** generates JSONP code snippets and executes the **JsonPreprocessor** with these snippets.
 
 The base of the JSONP code snippets generation is mainly a combination of code patterns and lists of expressions
 that are combined under several conditions. The goal is to have *stuff* to stimulate the **JsonPreprocessor**.
@@ -30,12 +30,12 @@ that are combined under several conditions. The goal is to have *stuff* to stimu
 The snippets together with the answers from **JsonPreprocessor** are written to a log file in text format (to support diffs)
 and to a report file in HTML format (to support better readibility by colored text).
 
-Currently **GenSnippets** is a one-file tool; no separate configuration files, no command line parameter.
+Currently **GenSnippetsJPP** is a one-file tool; no separate configuration files, no command line parameter.
 
 All code pattern are defined directly within class 'CSnippets()'.
 
 Output files are written to script folder.
 
 The purpose behind this script is not to have an automated test. No valuation of results is done.
-It's on the user to interprete the results. **GenSnippets** only produces these results.
+It's on the user to interprete the results. **GenSnippetsJPP** only produces these results.
 

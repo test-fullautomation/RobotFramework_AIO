@@ -16,14 +16,14 @@
 #
 # **************************************************************************************************************
 #
-# GenSnippets.py
+# GenSnippetsJPP.py
 #
 # XC-HWP/ESW3-Queckenstedt
 #
 # **************************************************************************************************************
 #
-VERSION      = "0.2.0"
-VERSION_DATE = "12.02.2024"
+VERSION      = "0.4.1"
+VERSION_DATE = "04.03.2024"
 #
 # **************************************************************************************************************
 
@@ -109,8 +109,8 @@ class CConfig():
       self.__dictConfig['REFERENCEPATH']  = REFERENCEPATH
       self.__dictConfig['TMPFILESPATH']   = f"{REFERENCEPATH}/tmp_files"
       self.__dictConfig['OUTPUTPATH']     = f"{REFERENCEPATH}" # /output
-      self.__dictConfig['LOGFILE']        = f"{self.__dictConfig['OUTPUTPATH']}/GenSnippetLog.log"
-      self.__dictConfig['REPORTFILE']     = f"{self.__dictConfig['OUTPUTPATH']}/GenSnippetReport.html"
+      self.__dictConfig['LOGFILE']        = f"{self.__dictConfig['OUTPUTPATH']}/GenSnippetLogJPP.log"
+      self.__dictConfig['REPORTFILE']     = f"{self.__dictConfig['OUTPUTPATH']}/GenSnippetReportJPP.html"
       self.__dictConfig['JPPJSONFILE']    = f"{self.__dictConfig['TMPFILESPATH']}/JPPSnippetFile.jsonp"
       OSNAME                              = os.name
       self.__dictConfig['OSNAME']         = OSNAME
@@ -566,6 +566,8 @@ class CHTMLPattern():
       listLinesHTMLindent = []
       for sLine in listHTML:
          sLine = sLine.rstrip() # remove unnecessary trailing blanks
+         sLine = sLine.replace("<", "&lt;") # replace HTML special characters
+         sLine = sLine.replace(">", "&gt;") # replace HTML special characters
          sLine = sLine.replace(" ", "&nbsp;") # replace spaces by non breaking HTML spaces
          listLinesHTMLindent.append(sLine)
       # eof for sLine in listHTML:
@@ -822,7 +824,7 @@ class CSnippets():
 """)
 
       listCodeSnippets.append("""{
-   "intval" : 1,
+   "intval"   : 1,
    "testlist" : ["B", 2],
    ${testlist}['${intval}'] : 4
 }
@@ -863,37 +865,37 @@ class CSnippets():
 
       listCodeSnippets.append("""{
    "testlist" : ["A", "B", "C", "D"],
-   "param2"  : ${testlist}[-1]
+   "param2"   : ${testlist}[-1]
 }
 """)
 
       listCodeSnippets.append("""{
    "testlist" : ["A", "B", "C", "D"],
-   "param2"  : ${testlist}[+1]
+   "param2"   : ${testlist}[+1]
 }
 """)
 
       listCodeSnippets.append("""{
    "testlist" : ["A", "B", "C", "D"],
-   "param2"  : ${testlist}[1:]
+   "param2"   : ${testlist}[1:]
 }
 """)
 
       listCodeSnippets.append("""{
    "testlist" : ["A", "B", "C", "D"],
-   "param2"  : ${testlist}[50]
+   "param2"   : ${testlist}[50]
 }
 """)
 
       listCodeSnippets.append("""{
    "testlist" : ["A", "B", "C", "D"],
-   "param2"  : ${testlist}[X]
+   "param2"   : ${testlist}[X]
 }
 """)
 
       listCodeSnippets.append("""{
    "param1" : "string",
-   "param2"  : ${param1}[50]
+   "param2" : ${param1}[50]
 }
 """)
 
@@ -1011,7 +1013,7 @@ class CSnippets():
 """)
 
       listCodeSnippets.append("""{
-   "intval" : 1,
+   "intval"   : 1,
    "testlist" : ["B", 2],
    ${testlist}[${intval}] : 4
 }
@@ -1063,12 +1065,48 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
 }
 """)
 
+      listCodeSnippets.append("""{
+   "keyP"     : "A",
+   "dictP"    : {"A" : "B", "C" : 2},
+   "newparam" : "${dictP[${keyP}]}"
+}
+""")
+
+      listCodeSnippets.append("""{
+   "keyP"     : "A",
+   "B"        : 1,
+   "dictP"    : {"A" : "B", "C" : 2},
+   "newparam" : "${${dictP}[${keyP}]}"
+}
+""")
+
+      # valid syntax, causing a freeze / https://github.com/test-fullautomation/python-jsonpreprocessor/issues/226
+      listCodeSnippets.append("""{
+   "keyP"       : "A",
+   "B"          : "keyP",
+   "dictP"      : {"A" : "B"},
+   //
+   "newparam_1" : "${dictP}['${keyP}']",                  // => "${dictP}['A']" -> 'B'
+   "newparam_2" : "${${dictP}['${keyP}']}",               // => "${B}"          -> 'keyP'
+   "newparam_3" : "${${${dictP}['${keyP}']}}",            // => "${keyP}"       -> 'A'
+   "newparam_4" : "${dictP}['${${${dictP}['${keyP}']}}']" // => "${dictP}['A']" -> !!! freeze !!!
+}
+""")
+
+      # invalid syntax, causing a freeze / https://github.com/test-fullautomation/python-jsonpreprocessor/issues/226
+      listCodeSnippets.append("""{
+   "keyP"     : "A",
+   "dictP"    : {"A" : "B", "C" : 2},
+   "newparam" : "${dictP['${keyP}']}"
+}
+""")
+
 
       # --------------------------------------------------------------------------------------------------------------
       # TODO: check: several different expressions in square brackets inside curly brackets
       # TODO: check: invalid bracket content
       # TODO: check: usage of single quotes
-      # TODO: check: substitutiomn with not supported (composite) data types
+      # TODO: check: substitution with not supported (composite) data types
       # TODO: automate: several combinations with not existing parameters
       # TODO: ${dict} : ${dict} -> by value or by reference?
       # TODO: several comments wit different content: "testlist" : ["A1", /*"B2", "C3",*/ "D4"]
@@ -1218,10 +1256,10 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
    # --------------------------------------------------------------------------------------------------------------
 
    def GetDatatypePermutations(self):
-      """Data type permutations in a fix pattern. Paremeter types: int, str, list, dict.
+      """Data type permutations in a fix pattern. Parameter types: int, str, list, dict.
       """
 
-      sHeadline = "Data type permutations in a fix pattern. Paremeter types: int, str, list, dict."
+      sHeadline = "Data type permutations in a fix pattern. Parameter types: int, str, list, dict."
 
       sDefinitions = """   "indexP" : 0,
    "keyP"   : "A",
@@ -1236,22 +1274,22 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
 """
 
       listofDataTypeTuples = []
-      listofDataTypeTuples.append(("indexP", "indexP"))
-      listofDataTypeTuples.append(("indexP", "keyP"))
-      listofDataTypeTuples.append(("indexP", "dictP"))
-      listofDataTypeTuples.append(("indexP", "listP"))
-      listofDataTypeTuples.append(("keyP", "indexP"))
-      listofDataTypeTuples.append(("keyP", "keyP"))
-      listofDataTypeTuples.append(("keyP", "dictP"))
-      listofDataTypeTuples.append(("keyP", "listP"))
-      listofDataTypeTuples.append(("dictP", "indexP"))
+      # listofDataTypeTuples.append(("indexP", "indexP"))
+      # listofDataTypeTuples.append(("indexP", "keyP"))
+      # listofDataTypeTuples.append(("indexP", "dictP"))
+      # listofDataTypeTuples.append(("indexP", "listP"))
+      # listofDataTypeTuples.append(("keyP", "indexP"))
+      # listofDataTypeTuples.append(("keyP", "keyP"))
+      # listofDataTypeTuples.append(("keyP", "dictP"))
+      # listofDataTypeTuples.append(("keyP", "listP"))
+      # listofDataTypeTuples.append(("dictP", "indexP"))
       listofDataTypeTuples.append(("dictP", "keyP"))
-      listofDataTypeTuples.append(("dictP", "dictP"))
-      listofDataTypeTuples.append(("dictP", "listP"))
-      listofDataTypeTuples.append(("listP", "indexP"))
-      listofDataTypeTuples.append(("listP", "keyP"))
-      listofDataTypeTuples.append(("listP", "dictP"))
-      listofDataTypeTuples.append(("listP", "listP"))
+      # listofDataTypeTuples.append(("dictP", "dictP"))
+      # listofDataTypeTuples.append(("dictP", "listP"))
+      # listofDataTypeTuples.append(("listP", "indexP"))
+      # listofDataTypeTuples.append(("listP", "keyP"))
+      # listofDataTypeTuples.append(("listP", "dictP"))
+      # listofDataTypeTuples.append(("listP", "listP"))
 
       listAssignments = []
 
