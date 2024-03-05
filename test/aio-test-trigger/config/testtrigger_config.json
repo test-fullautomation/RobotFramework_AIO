@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.1.3 / 13.09.2023 (OSS standard version)",
+   "VERSION_CONFIG" : "0.2.0 / 26.02.2024 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -152,6 +152,15 @@
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework",
+                       "TESTFOLDER"        : "atest",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "run.py",
+                       "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\""],
+                       "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
+                       "EXECUTION"         : "RAW"
                     }
                   ],
 
