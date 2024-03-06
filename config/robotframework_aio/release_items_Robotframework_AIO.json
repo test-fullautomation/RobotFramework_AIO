@@ -63,6 +63,14 @@
 * Integrated **robotframework-doip** library
 * Integrated **doipclient** library
 "
-                             ]
+                             ],
+                   "0.11." : [
+"
+**VSCodium**
+
+* Assigning the keyboard shortcut **CTRL+F6** for executing the **Run Python File in Terminal** feature. With this update, users can quickly run Python programs in the terminal by pressing **CTRL+F6**.
+
+"
+                              ]
                  }
 }

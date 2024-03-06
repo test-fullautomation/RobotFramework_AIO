@@ -32,6 +32,10 @@ $KeyBindingContent = '
     {
         "key": "ctrl+alt+r",
         "command": "vs-external-tools.externalCommand1"
+    },
+    {
+        "key": "ctrl+f6",
+        "command": "python.execInTerminal"
     }
 ]'
 

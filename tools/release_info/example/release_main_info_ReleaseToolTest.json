@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-# Copyright 2020-2023 Robert Bosch GmbH
+# Copyright 2020-2024 Robert Bosch GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,9 +25,10 @@
 
 {
    "0.10." : {
-              "RELEASENOTES"    : ["With this release the prototype of a new tool is available that creates release mails in HTML format. The content is also available as separate HTML file."],
-              "HIGHLIGHTS"      : ["The creation of release mails can be automated soon ..."],
-              "REQUIREMENTS"    : ["The RobotFramework AIO needs to be installed"],
-              "ADDITIONALHINTS" : ["(*beta version, stabilization still ongoing*)"]
+              "RELEASENOTES"          : ["With this release the prototype of a new tool is available that creates release mails in HTML format. The content is also available as separate HTML file."],
+              "HIGHLIGHTS"            : ["The creation of release mails is automated"],
+              "ADDITIONALINFORMATION" : ["Additional information can be placed here"],
+              "REQUIREMENTS"          : ["The RobotFramework AIO needs to be installed"],
+              "RESTRICTIONS"          : ["Currently HTML content must be copied to an email manually"]
             }
 }

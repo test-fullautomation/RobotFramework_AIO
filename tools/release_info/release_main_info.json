@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-# Copyright 2020-2023 Robert Bosch GmbH
+# Copyright 2020-2024 Robert Bosch GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
                "RELEASENOTES"    : ["
 Dear team,
 
-| After hard work we are proud to announce a **new release of the RobotFramework AIO (All In One) for Windows 10 and OSD6 Linux and Apertis**.
+| after hard work we are proud to announce a **new release of the RobotFramework AIO (All In One) for Windows 10 and OSD6 Linux and Apertis**.
 | Please feel free to give any feedback about your experiences and wishes!
 
 Feel free to contact us when you use **RobotFramework AIO** the first time. We are keen to support you!
@@ -106,7 +106,7 @@ Feel free to contact us when you use **RobotFramework AIO** the first time. We a
 
 - General: improved all documentations and self tests.
                  "],
-               "ADDITIONALHINTS" : ["
+               "ADDITIONALINFORMATION" : ["
 **GITHUB git tag**
    **rel/aio/0.10.0.6**
 

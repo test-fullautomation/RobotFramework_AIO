@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2024 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 25.01.2024
+# 07.02.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -118,11 +118,12 @@ class COutput():
 
       # ---- lists of items for each section over all identified version numbers
 
-      listReleaseNotes    = []
-      listHighlights      = []
-      listAdditionalHints = []
-      listRequirements    = []
-      listLinksRaw        = []
+      listReleaseNotes          = []
+      listHighlights            = []
+      listAdditionalInformation = []
+      listRequirements          = []
+      listRestrictions          = []
+      listLinksRaw              = []
 
       for sVersionNumber in listVersionNumbersIdentified:
          # -- list of sections for certain version number
@@ -131,10 +132,12 @@ class COutput():
             listReleaseNotes.extend(RELEASE_MAIN_INFO[sVersionNumber]['RELEASENOTES'])
          if "HIGHLIGHTS" in listSections:
             listHighlights.extend(RELEASE_MAIN_INFO[sVersionNumber]['HIGHLIGHTS'])
-         if "ADDITIONALHINTS" in listSections:
-            listAdditionalHints.extend(RELEASE_MAIN_INFO[sVersionNumber]['ADDITIONALHINTS'])
+         if "ADDITIONALINFORMATION" in listSections:
+            listAdditionalInformation.extend(RELEASE_MAIN_INFO[sVersionNumber]['ADDITIONALINFORMATION'])
          if "REQUIREMENTS" in listSections:
             listRequirements.extend(RELEASE_MAIN_INFO[sVersionNumber]['REQUIREMENTS'])
+         if "RESTRICTIONS" in listSections:
+            listRestrictions.extend(RELEASE_MAIN_INFO[sVersionNumber]['RESTRICTIONS'])
          if "VERSIONEDLINKS" in listSections:
             listLinksRaw.extend(RELEASE_MAIN_INFO[sVersionNumber]['VERSIONEDLINKS'])
       # eof for sVersionNumber in listVersionNumbersIdentified:
@@ -176,8 +179,9 @@ class COutput():
       # debug:
       # PrettyPrint(listReleaseNotes, sPrefix="listReleaseNotes")
       # PrettyPrint(listHighlights, sPrefix="listHighlights")
-      # PrettyPrint(listAdditionalHints, sPrefix="listAdditionalHints")
+      # PrettyPrint(listAdditionalInformation, sPrefix="listAdditionalInformation")
       # PrettyPrint(listRequirements, sPrefix="listRequirements")
+      # PrettyPrint(listRestrictions, sPrefix="listRestrictions")
       # PrettyPrint(listLinksRaw, sPrefix="listLinksRaw")
       # PrettyPrint(listofdictLinks, sPrefix="listofdictLinks")
 
@@ -213,19 +217,19 @@ class COutput():
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
-      # -- 'ADDITIONALHINTS'
+      # -- 'ADDITIONALINFORMATION'
 
-      if len(listAdditionalHints) > 0:
-         # found 'ADDITIONALHINTS' => write to output
-         listLinesHTML.append(self.__oPattern.GetAdditionalHintsTableBegin())
-         for sAdditionalHint in listAdditionalHints:
-            sAdditionalHint_conv = pypandoc.convert_text(sAdditionalHint, 'html', format='rst')
+      if len(listAdditionalInformation) > 0:
+         # found 'ADDITIONALINFORMATION' => write to output
+         listLinesHTML.append(self.__oPattern.GetAdditionalInformationTableBegin())
+         for sAdditionalInformation in listAdditionalInformation:
+            sAdditionalInformation_conv = pypandoc.convert_text(sAdditionalInformation, 'html', format='rst')
             # to open link in another explorer window:
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("a href=", "a target=\"_blank\" href=")
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("</code>", "</font></code>")
-            listLinesHTML.append(self.__oPattern.GetAdditionalHintsTableDataRow(sAdditionalHint_conv))
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetAdditionalInformationTableDataRow(sAdditionalInformation_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
@@ -242,6 +246,22 @@ class COutput():
             sRequirement_conv = sRequirement_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
             sRequirement_conv = sRequirement_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetRequirementsTableDataRow(sRequirement_conv))
+         listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listLinesHTML.append(self.__oPattern.GetVDist())
+
+      # -- 'RESTRICTIONS'
+
+      if len(listRestrictions) > 0:
+         # found 'RESTRICTIONS' => write to output
+         listLinesHTML.append(self.__oPattern.GetRestrictionsTableBegin())
+         for sRestriction in listRestrictions:
+            sRestriction_conv = pypandoc.convert_text(sRestriction, 'html', format='rst')
+            # to open link in another explorer window:
+            sRestriction_conv = sRestriction_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sRestriction_conv = sRestriction_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sRestriction_conv = sRestriction_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetRestrictionsTableDataRow(sRestriction_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
