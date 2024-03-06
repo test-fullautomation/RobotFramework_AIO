@@ -70,6 +70,10 @@
 
 * Assigning the keyboard shortcut **CTRL+F6** for executing the **Run Python File in Terminal** feature. With this update, users can quickly run Python programs in the terminal by pressing **CTRL+F6**.
 
+**Python Package Index (PyPI)**
+
+* Publish RobotFramework_DoIP package to `PyPI <https://pypi.org/user/ThPoll>`_
+
 "
                               ]
                  }
