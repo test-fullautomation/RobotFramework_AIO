@@ -22,8 +22,8 @@
 #
 # **************************************************************************************************************
 #
-VERSION      = "0.4.1"
-VERSION_DATE = "04.03.2024"
+VERSION      = "0.7.0"
+VERSION_DATE = "07.03.2024"
 #
 # **************************************************************************************************************
 
@@ -442,7 +442,7 @@ class CExecutor():
             printfailure(sException)
             self.__oLogger.WriteLog(sException)
             self.__oLogger.WriteLog("")
-            self.__oLogger.WriteReport(self.__oHTMLPattern.GetHTMLException(sException))
+            self.__oLogger.WriteReport(self.__oHTMLPattern.GetHTMLException(self.__oHTMLPattern.Txt2HTML(sException)))
 
          self.__oLogger.WriteLog(120*"-" + "\n")
          self.__oLogger.WriteReport(self.__oHTMLPattern.GetHTMLHLine())
@@ -1080,26 +1080,64 @@ ${testdict.subKey.subKey.subKey} : {"A" : 1},
 }
 """)
 
-      # valid syntax, causing a freeze / https://github.com/test-fullautomation/python-jsonpreprocessor/issues/226
       listCodeSnippets.append("""{
    "keyP"       : "A",
    "B"          : "keyP",
    "dictP"      : {"A" : "B"},
    //
-   "newparam_1" : "${dictP}['${keyP}']",                  // => "${dictP}['A']" -> 'B'
-   "newparam_2" : "${${dictP}['${keyP}']}",               // => "${B}"          -> 'keyP'
-   "newparam_3" : "${${${dictP}['${keyP}']}}",            // => "${keyP}"       -> 'A'
-   "newparam_4" : "${dictP}['${${${dictP}['${keyP}']}}']" // => "${dictP}['A']" -> !!! freeze !!!
+   "newparam_1" : "${dictP}['${keyP}']",                                          // => "${dictP}['A']" -> 'B'
+   "newparam_2" : "${${dictP}['${keyP}']}",                                       // => "${B}"          -> 'keyP'
+   "newparam_3" : "${${${dictP}['${keyP}']}}",                                    // => "${keyP}"       -> 'A'
+   "newparam_4" : "${dictP}['${${${dictP}['${keyP}']}}']",                        // => "${dictP}['A']" -> 'B'
+   "newparam_5" : "${${dictP}['${${${dictP}['${keyP}']}}']}",                     // => "${B}"          -> 'keyP'
+   "newparam_6" : "${${${dictP}['${${${dictP}['${keyP}']}}']}}",                  // => "${keyP}"       -> 'A'
+   "newparam_7" : "${dictP}['${${${dictP}['${${${dictP}['${keyP}']}}']}}']",      // => "${dictP}['A']" -> 'B'
+   "newparam_8" : "${${dictP}['${${${dictP}['${${${dictP}['${keyP}']}}']}}']}",   // => "${B}"          -> 'keyP'
+   "newparam_9" : "${${${dictP}['${${${dictP}['${${${dictP}['${keyP}']}}']}}']}}" // => "${keyP}"       -> 'A'
 }
 """)
 
-      # invalid syntax, causing a freeze / https://github.com/test-fullautomation/python-jsonpreprocessor/issues/226
       listCodeSnippets.append("""{
    "keyP"     : "A",
    "dictP"    : {"A" : "B", "C" : 2},
    "newparam" : "${dictP['${keyP}']}"
 }
 """)
+
+      listCodeSnippets.append("""{
+   // implicitly created data structure
+   ${testdict1.subKey1.subKey2.subKey3} : {"subKey4" : 1},
+   "testdict2" : ${testdict1}, // by reference
+   //
+   // parameters containing names of existing keys
+   "param1" : "subKey1",
+   "param2" : "subKey2",
+   "param3" : "subKey3",
+   "param4" : "subKey4",
+   //
+   // access to implicitly created keys by parameters (standard notation); all are strings, therefore single quotes do not matter
+   ${testdict1}[${param1}]['${param2}']['subKey3'][${param4}] : 2,
+   // access to implicitly created keys by parameters (dotdict notation)
+   ${testdict2.${param1}.subKey2.${param3}.subKey4} : 3,
+   // assign modified values to new parameters
+   "param5" : ${testdict1}[${param1}]['${param2}']['subKey3'][${param4}],
+   "param6" : ${testdict2.${param1}.subKey2.${param3}.subKey4}
+}
+""")
+
+      listCodeSnippets.append("""{
+   "listparam" : ["A","B","C"],
+   "param_1"   : "}${listparam}[0]{",
+   "param_2"   : "{${listparam}[0]}",
+   "param_3"   : "$}${listparam}[0]$}",
+   "param_4"   : "{$}${listparam}[0]{$}",
+   "param_5"   : "}{$}${listparam}[0]{$}{",
+   "param_6"   : "{}{$}${listparam}[0]{$}{}",
+   "param_7"   : "{}${listparam}[0]{$}${listparam}[1]{$}${listparam}[2]{}",
+   "param_8"   : "{}$${listparam}[0]{$$}$${listparam}[1]{$$}$${listparam}[2]{}"
+}
+""")
+
 
 
       # --------------------------------------------------------------------------------------------------------------
