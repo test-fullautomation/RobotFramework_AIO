@@ -74,6 +74,25 @@
 
 * Publish RobotFramework_DoIP package to `PyPI <https://pypi.org/user/ThPoll>`_
 
+**Environment/Installation**
+
+* Integrated Android support and Appium:
+
+  This package can be selected during installation, which contains:
+
+  * **Android SDK Tools**: platform-tools, build-tools and command line tools
+  * **Node.js**: runtime environment which is required for **Appium Server**
+  * **Appium Server**: includes **UIAutomator2** driver
+  * **Appium Inspector**: GUI assistant tool for Appium, providing visual inspection of the application under test
+
+  **Appium Server** and **Appium Inspector** applications are available in **Start Menu** (Windows) and **Application Overview** (Linux).
+  just. These applications can be easily started by clicking on their respective icons.
+
+  Environment variables *RobotDevtools*, *RobotNodeJS*, *RobotAppium* and *RobotAndroidPlatformTools* are added.
+
+**Python Packages**
+
+* Fixed versions of **Appium-Python-Client==3.1.1** and **robotframework-appiumlibrary==2.0.0** to avoid in incompatible issues
 "
                               ]
                  }

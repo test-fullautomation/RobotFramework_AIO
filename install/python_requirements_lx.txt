@@ -99,8 +99,8 @@ QLed
 # queuelib             
 requests             
 # requests-ntlm  
-Appium-Python-Client
-robotframework-appiumlibrary==1.4.4
+Appium-Python-Client==3.1.1
+robotframework-appiumlibrary==2.0.0
 robotframework-ftplibrary     
 robotframework-listenerlibrary
 robotframework-mqttlibrary    
