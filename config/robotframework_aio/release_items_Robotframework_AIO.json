@@ -93,6 +93,7 @@
 **Python Packages**
 
 * Fixed versions of **Appium-Python-Client==3.1.1** and **robotframework-appiumlibrary==2.0.0** to avoid in incompatible issues
+* Upgrade the pip package to version 24.0 on both Windows and Linux platforms.
 "
                               ]
                  }
