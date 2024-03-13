@@ -326,6 +326,9 @@ function packaging_python_linux() {
 	mv "$sourceDir/python" "$destDir/python39lx"
 	logresult "$?" "created Python repository" "create Python repository" 
 
+	# Upgrade pip
+	$destDir/python39lx/install/bin/python3 -m pip install --upgrade pip
+
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
