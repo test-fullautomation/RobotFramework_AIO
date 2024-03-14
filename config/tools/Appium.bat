@@ -6,6 +6,6 @@ set path=%path%;
 set ANDROID_HOME=%RobotDevtools%\Android
 set APPIUM_HOME=%RobotNodeJS%
 
-start "Appium" "%RobotAppium%"\appium
+start "Appium" "%RobotAppium%\appium"
 
 @echo on
