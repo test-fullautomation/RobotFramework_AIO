@@ -1,38 +1,95 @@
-texlive_packages=(
-"multirow"
-"booktabs"
-"framed"
-"fvextra"
-"courier"
-"efbox"
-"grffile"
-"pdfpages"
-"tcolorbox"
-"wasysym"
-"wasy"
-"fancyvrb"
-"xcolor"
-"etoolbox"
-"upquote"
-"lineno"
-"eso-pic"
-"lstaddons"
-"pdflscape"
-"infwarerr"
-"pgf"
-"environ"
-"trimspaces"
-"listings"
-"pdfcol"
+#!/bin/bash
+
+# Define variables
+download_url="https://mirror.ctan.org/systems/texlive/tlnet"
+# download_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
+archive_file="install-tl.zip"
+TEXDIR="C:/texlive/aio"
+collections=("pictures" "latex")
+extraPackages=(
+    "multirow"
+    "booktabs"
+    "framed"
+    "fvextra"
+    "courier"
+    "efbox"
+    "grffile"
+    "pdfpages"
+    "tcolorbox"
+    "wasysym"
+    "wasy"
+    "fancyvrb"
+    "xcolor"
+    "etoolbox"
+    "upquote"
+    "lineno"
+    "eso-pic"
+    "lstaddons"
+    "pdflscape"
+    "infwarerr"
+    "pgf"
+    "environ"
+    "trimspaces"
+    "listings"
+    "pdfcol"
 )
-extra_packages=""
-for package in ${texlive_packages[@]}; do
-  extra_packages+="$package,"
+
+# Download and extract TexLive installer package
+mkdir download
+echo "Downloading Textlive installer package"
+if curl -L "$download_url/$archive_file" -o "download/$archive_file"; then
+  unzip "download/$archive_file" -d download/
+  mv download/install-tl-* download/install-tl
+else
+  echo "Error downloading TexLive installer package."
+  exit 1
+fi
+
+
+# Create texlive profile file
+profileContent="selected_scheme scheme-full
+TEXDIR $TEXDIR\n"
+for collection in "${collections[@]}"; do
+    profileContent+="collection-$collection 1\n"
 done
+echo -e "$profileContent" > "download/texlive.profile"
 
-TEXLIVE_DIR="C:/texlive/aio"
+# Perform texlive installation
+if cd download/install-tl/ && ./install-tl-windows.bat -no-gui -profile=../texlive.profile && cd ../../; then
+    echo "TexLive installation completed successfully."
+else
+    echo "Error running TexLive installer."
+    exit 1
+fi
 
-# choco install texlive --version=2022.20221202 --params "'/collections:pictures,latex,latexextra,latexrecommended'" --execution-timeout 5400
-choco install texlive --params "'/collections:pictures,latex /InstallationPath:${TEXLIVE_DIR} /extraPackages:${extra_packages}'"
+# Find actual path of tlmgr.bat under $TEXDIR
+tlmgrPath=$(find "$TEXDIR" -name "tlmgr.bat" -type f -print -quit)
 
-export GENDOC_LATEXPATH="${TEXLIVE_DIR}/bin/windows"
+if [ -n "$tlmgrPath" ] && [ -f "$tlmgrPath" ]; then
+  # Install extra packages
+  for package in "${extraPackages[@]}"; do
+    echo "install $package with tlmgr"
+    if "$tlmgrPath" install "$package"; then
+      echo "Package '$package' installed successfully."
+    else
+      echo "Error installing package '$package'."
+      exit 1
+    fi
+  done
+else
+  echo "Cannot find location of tlmgr.bat."
+  exit 1
+fi
+
+
+# Set environment variable GENDOC_LATEXPATH for genpackagedoc
+pdflatexDir=$(find "$TEXDIR" -name "pdflatex.exe" -type f -exec dirname {} \; -quit)
+if [ -n "$pdflatexDir" ] && [ -d "$pdflatexDir" ]; then
+  export GENDOC_LATEXPATH=$pdflatexDir
+else
+  echo "Cannot find location of pdflatex binary."
+  exit 1
+fi
+
+
+echo "TexLive installation and configuration completed successfully."
