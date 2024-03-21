@@ -160,7 +160,6 @@
                        "TESTEXECUTOR"      : "run.py",
                        "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\""],
                        "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework/atest/aiotestlogfiles",
                        "EXECUTION"         : "RAW"
                     }
                   ],
