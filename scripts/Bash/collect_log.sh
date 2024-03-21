@@ -13,9 +13,6 @@ fi
 
 test_config=$1
 
-# Remove '\r' characters from testtrigger_config.json
-dos2unix $test_config
-
 # Getting value from testtrigger_config.json file
 target_dir_test_log=$(cat $test_config | grep "FILES_SAVE" | awk -F '[:,]' '/"FILES_SAVE"/ {gsub(/"/, "", $2); if ($2 != "") print $2}')
 
@@ -32,10 +29,12 @@ for target_dir in "${value_array[@]}"; do
 
     # Source log file
     source_log_file=$(echo "$target_dir" | sed 's#../../robotframework_aio/aiotestlogfiles/##g')
+    echo "Fetching log files from: $source_log_file"
     # Desitantion log file
     destination_log_file=$(echo "$target_dir" | sed 's#../../##g')
     
     mkdir -p $destination_log_file 
-
     cp -rf $source_log_file/* $destination_log_file 
 done
+
+echo "All test logfiles have been successfully collected"
