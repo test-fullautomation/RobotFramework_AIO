@@ -1,9 +1,0 @@
-{
-    "Common.Yes": "Да",
-    "Common.No": "Нет",
-    "Common.remindMeLater": "Напомните мне позже",
-    "LanguageServer.turnItOn": "Да, и перезагрузить окно",
-    "LanguageServer.noThanks": "Нет, спасибо",
-    "LanguageServer.settingsMigratedMessage": "Установки Microsoft Language Server были скопированы в установки Pylance. Изменения в файлах settings.json.",
-    "LanguageServer.settingsMigrationError": "Следующие становки Microsoft Language Server не были скопированы из-за ошибок:"
-}
