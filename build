@@ -301,6 +301,8 @@ function build_debian()
 	mkdir -p ./output_lx/${PACK_NAME}/DEBIAN
 
 	cp ./config/build/dpkg_build/control ./output_lx/${PACK_NAME}/DEBIAN
+	cp ./config/build/dpkg_build/preinst.sh ./output_lx/${PACK_NAME}/DEBIAN/preinst
+	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/preinst
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	cp ./config/build/dpkg_build/prerm.sh ./output_lx/${PACK_NAME}/DEBIAN/prerm
