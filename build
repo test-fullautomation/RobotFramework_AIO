@@ -295,16 +295,22 @@ function build_debian()
 	rm -rf ./output_lx/${PACK_NAME}/
 
 	#now create package new
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tools
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	mkdir -p ./output_lx/${PACK_NAME}/usr/local/bin
 	mkdir -p ./output_lx/${PACK_NAME}/DEBIAN
 
+	# DEBIAN installation scripts
 	cp ./config/build/dpkg_build/control ./output_lx/${PACK_NAME}/DEBIAN
+	cp ./config/build/dpkg_build/preinst.sh ./output_lx/${PACK_NAME}/DEBIAN/preinst
+	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/preinst
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	cp ./config/build/dpkg_build/prerm.sh ./output_lx/${PACK_NAME}/DEBIAN/prerm
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/prerm
+
+	# executable scripts and applications
 	cp ./config/build/dpkg_build/robot.ico ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/codium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/appium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
@@ -317,20 +323,24 @@ function build_debian()
 	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
 	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
 
+	# Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
 	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial/
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
 	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation/
+
+	# Python package: core framework and libraries
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
-	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
 
+	# Devtools: Android package
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	cp -R -a ../devtools/. ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Appium-Inspector.AppImage
 
+	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 	# Update version
