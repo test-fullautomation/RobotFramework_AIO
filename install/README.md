@@ -19,12 +19,12 @@ This is the guideline to use CNTLM for running install.sh behind proxy.
   - [What is CNTLM](#what-is-CNTLM)
   - [Install CNTLM for Windows 10](#install-cntlm-for-windows-10)
     - [Download and install CNTLM for Windows 10](#download-and-install-cntlm-for-windows-10)
-    - [Config CNTLM on Windows 10](#config-windows)
-    - [Run CNTLM on Windows 10](#run-windows)
-  - [Install CNTLM for Linux](#install-linux)
-    - [Install CNTLM by apt-get command](#download-install-linux)
-    - [Config CNTLM for Linux](#config-linux)
-    - [Run CNTLM for Linux](#run-linux)
+    - [Config CNTLM on Windows 10](#config-cntlm-on-windows-10)
+    - [Run CNTLM on Windows 10](#run-cntlm-on-windows-10)
+  - [Install CNTLM for Linux](#install-cntlm-for-linux)
+    - [Install CNTLM by apt-get command](#install-cntlm-by-apt-get-command)
+    - [Config CNTLM for Linux](#config-cntlm-for-linux)
+    - [Run CNTLM for Linux](#run-cntlm-for-linux)
 - [Extension in AIO packages](#install-extension-in-aio-package)
 - [About](#about)
   - [Maintainers](#maintainers)
@@ -207,7 +207,7 @@ This section provides the info for installing Visual Studio Code extensions usin
 |---------------------|---------------------|---------|
 | ms-python           | python              | 2022.4.1|
 | test-fullautomation | robotframework-lsp  | 1.11.1  |
-| xabikos             | JavaScriptSnippets | 1.8.0   |
+| xabikos             | JavaScriptSnippets  | 1.8.0   |
 | redhat              | vscode-xml          | 0.18.1  |
 | tomoki1207          | pdf                 | 1.2.2   |
 | jebbs               | plantuml            | 2.17.5  |
