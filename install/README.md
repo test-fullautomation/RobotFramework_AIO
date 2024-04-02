@@ -17,14 +17,15 @@ This is the guideline to use CNTLM for running install.sh behind proxy.
 
 - [Getting Started](#getting-started)
   - [What is CNTLM](#what-is-CNTLM)
-  - [Install CNTLM for Windows 10](#install-windows)
-    - [Download and install CNTLM for Windows 10](#download-install-windows)
-    - [Config CNTLM on Windows 10](#config-windows)
-    - [Run CNTLM on Windows 10](#run-windows)
-  - [Install CNTLM for Linux](#install-linux)
-    - [Install CNTLM by apt-get command](#download-install-linux)
-    - [Config CNTLM for Linux](#config-linux)
-    - [Run CNTLM for Linux](#run-linux)
+  - [Install CNTLM for Windows 10](#install-cntlm-for-windows-10)
+    - [Download and install CNTLM for Windows 10](#download-and-install-cntlm-for-windows-10)
+    - [Config CNTLM on Windows 10](#config-cntlm-on-windows-10)
+    - [Run CNTLM on Windows 10](#run-cntlm-on-windows-10)
+  - [Install CNTLM for Linux](#install-cntlm-for-linux)
+    - [Install CNTLM by apt-get command](#install-cntlm-by-apt-get-command)
+    - [Config CNTLM for Linux](#config-cntlm-for-linux)
+    - [Run CNTLM for Linux](#run-cntlm-for-linux)
+- [Extension in AIO packages](#install-extension-in-aio-package)
 - [About](#about)
   - [Maintainers](#maintainers)
   - [Contributors](#contributors)
@@ -186,6 +187,32 @@ Finally, issue the command:
 ```
 . ~/.bashrc
 ```
+## Install extension in AIO package
+This section provides the info for installing Visual Studio Code extensions using a **install.sh** script. Refer: [issues 191](https://github.com/test-fullautomation/RobotFramework_AIO/issues/191#issuecomment-2031051647)
+* All extensions can be installed through https://open-vsx.org/
+
+| Publisher           | Name                | Version |
+|---------------------|---------------------|---------|
+| ms-python           | python              | 2022.4.1|
+| robocorp            | robotframework-lsp  | 1.11.0  |
+| xabikos             | JavaScriptSnippets  | 1.8.0   |
+| redhat              | vscode-xml          | 0.18.1  |
+| tomoki1207          | pdf                 | 1.2.2   |
+| jebbs               | plantuml            | 2.17.5  |
+| hediet              | vscode-drawio       | 1.6.6   |
+
+* Specify the extension from the test-fullautomation owner.
+
+| Publisher           | Extension           | Version |
+|---------------------|---------------------|---------|
+| ms-python           | python              | 2022.4.1|
+| test-fullautomation | robotframework-lsp  | 1.11.1  |
+| xabikos             | JavaScriptSnippets  | 1.8.0   |
+| redhat              | vscode-xml          | 0.18.1  |
+| tomoki1207          | pdf                 | 1.2.2   |
+| jebbs               | plantuml            | 2.17.5  |
+| hediet              | vscode-drawio       | 1.6.6   |
+
 ## About
 
 ### Maintainers
@@ -203,3 +230,5 @@ Finally, issue the command:
 [Tran Duy Ngoan](mailto:Ngoan.TranDuy@vn.bosch.com)
 
 [Tran Hoang Nguyen](mailto:Nguyen.TranHoang@vn.bosch.com)
+
+[Hua Van Thong](mailto:Thong.Huavan@vn.bosch.com)

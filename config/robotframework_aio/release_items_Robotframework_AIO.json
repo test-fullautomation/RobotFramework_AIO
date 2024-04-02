@@ -90,6 +90,8 @@
 
   Environment variables *RobotDevtools*, *RobotNodeJS*, *RobotAppium* and *RobotAndroidPlatformTools* are added.
 
+* Integrated robotframework-lsp from test-fullautomation owner.
+
 * Partition installation for Debian package:
 
   The Debian installer package offers enhanced flexibility by allowing you to 

@@ -165,13 +165,20 @@ function packaging_vscode() {
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
+	MY_PUBLISHER="test-fullautomation"
+
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
 		url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+		our_url=https://github.com/${publisher}/${name}/releases/download/${name}-${version}/${name}.vsix
 
 		if [[ -n "$name" ]]; then
-			if [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
+			# Download the test-fullautomation asset.
+			if [ "$publisher" == "$MY_PUBLISHER" ]; then
+            	download_package "${name}-${version} Extension" "$our_url" "$sourceDir/${name}-${version}.vsix"
+        	# Download the Open-VSX Community extension.
+			elif [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
 				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix"
 			fi
 			
