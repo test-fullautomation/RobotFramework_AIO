@@ -92,6 +92,43 @@
 
 * Integrated robotframework-lsp from test-fullautomation owner.
 
+* Partition installation for Debian package:
+
+  The Debian installer package offers enhanced flexibility by allowing you to 
+  customize the installation according to your needs.
+
+  You can now determine whether to include additional packages such as 
+  **Android** and **Vscodium** during the installation process.
+
+  * Select extensions:
+
+    When executing the command to install Robotframework AIO, you will be prompted to select extensions for installation as below
+
+    .. code-block::
+ 
+       Select one or more extra components:
+          N : No extra package - only the core framework and libraries
+          A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)
+          V : Vscodium package
+       Enter : All packages (default choice after 30s)
+       Enter your choices (e.g., AC for both Android and VSCodium packages):
+
+    The default choice is to install all packages, including the core framework and all extensions. 
+
+    If no action is taken within 30 seconds, the installer will proceed with the default choice.
+
+  * Besides, you can also provide your choice directly in command for the installation (for CI/CT system) as below examples:
+  
+    * Only the core feature of Robotframework AIO
+      .. code-block::
+  
+        yes 'N' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
+     
+    * Installation with both **Android** and **Vscodium** packages
+      .. code-block::
+  
+        yes 'AC' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
+
 **Python Packages**
 
 * Fixed versions of **Appium-Python-Client==3.1.1** and **robotframework-appiumlibrary==2.0.0** to avoid in incompatible issues
