@@ -16,10 +16,9 @@
 20230227 15:09:59.559 - INFO - ${CONFIG} = {'WelcomeString': 'Hello... Robot Framework is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'Project': 'RobotFramework Testsuites', 'TargetName': 'Device_01', 'params': {}}
 20230227 15:09:59.559 - INFO - The parameter 'params['global']['teststring_bench']' is updated
 20230227 15:09:59.559 - INFO - Running with configuration level 2
-20230227 15:09:59.559 - INFO - Parameters loaded from 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_default.jsonp'
 20230227 15:09:59.559 - INFO - Robot Framework AIO version check passed!
+20230227 15:09:59.559 - INFO - Loaded configuration file 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_default.jsonp'
 20230227 15:09:59.559 - INFO - Suite Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\'
-20230227 15:09:59.559 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\config\exercise-06_config_default.jsonp'
 20230227 15:09:59.559 - INFO - Local config file: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-06\localconfig\exercise-06_localconfig_bench1.jsonp'
 20230227 15:09:59.559 - INFO - Number of test suites: 1
 20230227 15:09:59.559 - INFO - Total number of testcases: 1
