@@ -11,9 +11,9 @@
 20230227 15:09:53.163 - INFO - Set suite metadata 'version_hw' to value ''.
 20230227 15:09:53.163 - INFO - Set suite metadata 'version_test' to value ''.
 20230227 15:09:53.164 - INFO - ${CONFIG} = {'Project': 'RobotFramework Testsuites', 'WelcomeString': 'Hello... RobotFramework AIO is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'version': {'majorversion': '0', 'minor...
-20230227 15:09:53.164 - WARN - Running with configuration level 4! 
-Selected configuration file 'D:\RobotFramework\python39\lib\site-packages\RobotFramework_TestsuitesManagement\Config\robot_config.json'
-20230227 15:09:53.165 - INFO - Robot Framework AIO version check passed!
+20230227 15:09:53.164 - WARN - Running with configuration level 4!
+20230227 15:09:53.164 - INFO - Robot Framework AIO version check passed!
+20230227 15:09:53.164 - INFO - Loaded configuration file 'D:\RobotFramework\python39\lib\site-packages\RobotFramework_TestsuitesManagement\Config\robot_config.json'
 20230227 15:09:53.165 - INFO - Suite Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-01\'
 20230227 15:09:53.165 - INFO - CfgFile Path: 'D:\RobotFramework\python39\lib\site-packages\RobotFramework_TestsuitesManagement\Config\robot_config.json'
 20230227 15:09:53.165 - INFO - Number of test suites: 1
