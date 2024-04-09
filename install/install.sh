@@ -230,10 +230,17 @@ function packaging_android() {
 	rm -rf $destDir/devtools
 	mkdir $destDir/devtools
 
+	npm_proxy_args=""
+	if [ "$use_cntlm" == "Yes" ]; then
+		npm_proxy_args="--proxy=http://localhost:3128"
+	fi
+
 	# download Node.js installer
 	echo "Downloading Node.js"
 	download_package "Node.js" $download_nodejs ${sourceDir}/${archived_nodejs}
 	if [ "$nodejs_ext" == "zip" ]; then
+		# Not using cntlm proxy for Windows runner
+		npm_proxy_args=""
 		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
 		mv $destDir/devtools/node-* $destDir/devtools/nodejs
 		npm_bin=$destDir/devtools/nodejs/npm
@@ -244,21 +251,16 @@ function packaging_android() {
 		npm_bin=$destDir/devtools/nodejs/bin/npm
 	fi
 
-	npm_proxy_args=""
-	if [ "$use_cntlm" == "Yes" ]; then
-		npm_proxy_args="--proxy=http://localhost:3128"
-	fi
-
 	# download appium packages:
 	# 	- appium server 
 	echo "Installing appium server"
-	$npm_bin install --prefix $destDir/devtools/nodejs appium -g ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
 
 	#  - UIAutomator2 driver for appium
 	echo "Installing UIAutomator2 driver for appium"
 	export APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
-	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver -g ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed UIAutomator2 driver for appium" "install UIAutomator2 driver for appium"
 	# APPIUM_HOME=./android appium driver install uiautomator2
 	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
