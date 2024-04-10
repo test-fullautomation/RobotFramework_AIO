@@ -106,9 +106,10 @@ jobs:
           ./build
 
       - name: Update all documents
+        if: ${{ github.ref_type == 'tag' }}
         run: |
           cd ../robotframework-documentation
-          doc_branch=htv3hc/feat/auto-update-doc
+          doc_branch=automation/task/update-rfw-documents
           git config user.email "huavanthong14@gmail.com"
           git config user.name "Thong Hua"
           git checkout -b $doc_branch
