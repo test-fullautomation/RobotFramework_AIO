@@ -121,11 +121,16 @@ jobs:
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
           
-          curl -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
+          curl -f -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
           --header 'authorization: Bearer ${{ secrets.PAT_THONG }}' \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : "'"$doc_branch"'"}}'
-          echo -e "\e[32;01m Trigger jobs for pull request ...\e[0m"
+          if [ $? -ne 0 ]; then
+            echo "Error: curl command failed to trigger a document jobs"
+            exit 1
+          fi
+
+          echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
