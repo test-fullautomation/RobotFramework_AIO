@@ -109,7 +109,7 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         run: |
           cd ../robotframework-documentation
-          doc_branch=htv3hc/feat/auto-update-doc
+          doc_branch=automation/task/update-rfw-documents
           git config user.email "huavanthong14@gmail.com"
           git config user.name "Thong Hua"
           git checkout -b $doc_branch
@@ -121,11 +121,16 @@ jobs:
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
           
-          curl -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
+          curl -f -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
           --header 'authorization: Bearer ${{ secrets.PAT_THONG }}' \
           -H 'Accept: application/vnd.github.everest-preview+json' \
-          --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : '"$doc_branch"'}}'
-          echo -e "\e[32;01m Trigger jobs for pull request ...\e[0m"
+          --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : "'"$doc_branch"'"}}'
+          if [ $? -ne 0 ]; then
+            echo "Error: curl command failed to trigger a document jobs"
+            exit 1
+          fi
+
+          echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
       - name: Upload built package
         uses: actions/upload-artifact@v3
@@ -228,7 +233,6 @@ jobs:
       run: |
         "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS.json"
         move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
-
          
     - name: Upload test result as artifact
       if: success() || failure()
