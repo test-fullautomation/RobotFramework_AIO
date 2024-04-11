@@ -220,6 +220,9 @@ Feel free to contact us when you use or intend to use **RobotFramework AIO**. We
               "HIGHLIGHTS"      : ["
 **New**
 
+- Android:
+ Integrated Android support and Appium                 
+
 - Threading:
  New keywords to send and receive notifications between threads are available.
 
