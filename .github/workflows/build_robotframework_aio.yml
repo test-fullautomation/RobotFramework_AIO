@@ -316,7 +316,7 @@ jobs:
       run: |
         echo "EXE_FILE=$(ls windows-package/*.exe | head -1)" >> $GITHUB_ENV
         echo "DEB_FILE=$(ls linux-package/*.deb | head -1)" >> $GITHUB_ENV
-        echo "RELEASE_INFO_FILE=$(ls windows-aiotestlogfiles/*.html | head -1)" >> $GITHUB_ENV
+        echo "RELEASE_INFO_FILE=$(ls windows-aiotestlogfiles/release_info_RobotFramework_AIO_${TAG_NAME#rel/aio/}.html)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
 
     - name: Create Release
