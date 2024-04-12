@@ -41,6 +41,11 @@ function errormsg(){
    exit 1
 }
 
+function warningmsg(){
+   echo -e "${COL_YELLOW}>>>> WARN: $1!${COL_YELLOW}"
+   echo
+}
+
 function goodmsg(){
    echo -e "${COL_GREEN}>>>> $1.${COL_RESET}"
    echo
@@ -155,17 +160,22 @@ function verify_pkg_version(){
    pkg_name=$1
    given_version=$2
    pkg_api_url="https://pypi.org/pypi/${pkg_name}/json"
-   timesleep=10  # timeslepp for each verification
+   timesleep=10  # timesleep for each verification
    timeout=600   # timeout for verification loop
    counter=$(($timeout / $timesleep))
 	success=False
+	found=False
 
    while [ "$counter" -gt 0 ]; do
       # Send request and extract version info from response
-      response=$(curl -s -w "%{http_code}" "$pkg_api_url")
+		# "\n" before http_code to make sure the newline is added between 
+		# the reponse data and status code 
+		# Then status code can be extracted properly
+      response=$(curl -s -w "\n%{http_code}" "$pkg_api_url")
       http_status=$(echo "$response" | tail -n1)
 
       if [ "$http_status" -eq 200 ]; then
+			found=True
          # Extract version information using jq
          version=$(echo "$response" | head -n -1 | grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*' | awk -F'"' '{print $4}')
 
@@ -177,14 +187,20 @@ function verify_pkg_version(){
             break
          fi
       else
-         errormsg "Unable to fetch information for ${pkg_name}."
-			break
+         warningmsg "Unable to fetch information for ${pkg_name}."
+			# Package is not found on PyPi, retry with timesleep and counter
+			# This ensures the package which is initially published on PyPi
+			# break
       fi
 
       counter=$((counter - 1))
       sleep $timesleep
    done
 	
+	if [[ "$found" == "False" ]];then
+		errormsg "Package ${pkg_name} is not available on pypi."
+	fi
+
 	if [[ "$success" == "False" ]];then
 		errormsg "Latest version ${given_version} of ${pkg_name} is not published to pypi within ${timeout} seconds."
 	fi
