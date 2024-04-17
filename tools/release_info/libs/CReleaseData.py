@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 02.01.2024
+# 17.04.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -31,7 +31,10 @@ from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Utils.CUtils import *
 
+from libs.CJsonTools import CJsonTools
+
 col.init(autoreset=True)
+
 COLBR = col.Style.BRIGHT + col.Fore.RED
 COLBG = col.Style.BRIGHT + col.Fore.GREEN
 
@@ -93,7 +96,14 @@ class CReleaseData():
          dictPackageContext = json.loads("\n".join(listLines))
       except Exception as reason:
          bSuccess = None
-         sResult  = str(reason) + f" - while parsing JSON content of '{PACKAGE_CONTEXT_FILE}'"
+         listResults = []
+         listResults.append(f"{reason}")
+         failedJsonDoc = CJsonTools.get_failed_json_doc(reason)
+         if failedJsonDoc is not None:
+            listResults.append(f"Nearby: '{failedJsonDoc}'")
+         listResults.append(f"In file: '{PACKAGE_CONTEXT_FILE}'")
+         bSuccess = None
+         sResult = "\n".join(listResults)
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       if dictPackageContext is None:
@@ -118,7 +128,14 @@ class CReleaseData():
          dictReleaseMainInfo = json.loads("\n".join(listLines), strict=False) # strict=False allows multi line content inside values defined within JSON files
       except Exception as reason:
          bSuccess = None
-         sResult  = str(reason) + f" - while parsing JSON content of '{RELEASE_MAIN_INFO_FILE}'"
+         listResults = []
+         listResults.append(f"{reason}")
+         failedJsonDoc = CJsonTools.get_failed_json_doc(reason)
+         if failedJsonDoc is not None:
+            listResults.append(f"Nearby: '{failedJsonDoc}'")
+         listResults.append(f"In file: '{RELEASE_MAIN_INFO_FILE}'")
+         bSuccess = None
+         sResult = "\n".join(listResults)
          return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
       if dictReleaseMainInfo is None:
@@ -147,7 +164,14 @@ class CReleaseData():
             dictReleaseItemFileContent = json.loads("\n".join(listLines), strict=False) # strict=False allows multi line content inside values defined within JSON files
          except Exception as reason:
             bSuccess = None
-            sResult  = str(reason) + f" - while parsing JSON content of '{sReleaseItemFile}'"
+            listResults = []
+            listResults.append(f"{reason}")
+            failedJsonDoc = CJsonTools.get_failed_json_doc(reason)
+            if failedJsonDoc is not None:
+               listResults.append(f"Nearby: '{failedJsonDoc}'")
+            listResults.append(f"In file: '{sReleaseItemFile}'")
+            bSuccess = None
+            sResult = "\n".join(listResults)
             return bSuccess, CString.FormatResult(sMethod, bSuccess, sResult)
 
          if dictReleaseItemFileContent is None:

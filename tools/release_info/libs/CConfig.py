@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 02.01.2024
+# 17.04.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -31,6 +31,8 @@ import pypandoc
 from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Utils.CUtils import *
+
+from libs.CJsonTools import CJsonTools
 
 col.init(autoreset=True)
 
@@ -131,7 +133,13 @@ class CConfig():
          dictJsonValues = json.loads("\n".join(listLines))
       except Exception as reason:
          bSuccess = None
-         sResult  = str(reason) + f" - while parsing JSON content of '{CONFIGFILE}'"
+         listResults = []
+         listResults.append(f"{reason}")
+         failedJsonDoc = CJsonTools.get_failed_json_doc(reason)
+         if failedJsonDoc is not None:
+            listResults.append(f"Nearby: '{failedJsonDoc}'")
+         listResults.append(f"In file: '{CONFIGFILE}'")
+         sResult = "\n".join(listResults)
          raise Exception(CString.FormatResult(sMethod, bSuccess, sResult))
 
       if dictJsonValues is None:
