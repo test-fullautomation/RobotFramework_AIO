@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 07.02.2024
+# 17.04.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ class CPattern():
    def GetHeader(self, sFrameworkName=None):
       sHeader = """<html>
 <head>
-   <meta name="###FRAMEWORKNAME###" content="Release">
+   <meta name="###FRAMEWORKNAME###" content="Release" charset="UTF-8"/>
    <title>###FRAMEWORKNAME###</title>
 </head>
 <body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#0000FF">
