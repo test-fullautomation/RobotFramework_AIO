@@ -213,14 +213,14 @@ function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
 	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
-	# download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
+	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${build_tool_version}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${build_tool_version}-${os}.zip
 	download_nodejs=https://nodejs.org/dist/v${nodejs_version}/node-v${nodejs_version}-${os_short}-x64.${nodejs_ext}
 	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${appium_inspector_version}/Appium-Inspector-${os}-${appium_inspector_version}${arch}.${appium_inspector_ext}
 
 	archived_android_tools=android-tools.zip
-	# archived_android_emulator=android-emulator.zip
+	archived_android_emulator=android-emulator.zip
 	archived_android_buildtools=android-buildtools.zip
 	archived_android_platformtools=android-platformtools.zip
 	archived_nodejs=nodejs.${nodejs_ext}
@@ -289,6 +289,10 @@ function packaging_android() {
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
 	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${build_tool_version}
+
+	echo "Download Android Emulator"
+	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
+	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
 }
 
 #
