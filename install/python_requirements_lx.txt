@@ -157,3 +157,4 @@ robotframework-tidy
 black
 isort
 ruff
+requests_kerberos
