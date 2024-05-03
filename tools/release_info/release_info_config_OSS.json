@@ -61,6 +61,7 @@
                               "../../../python-extensions-collection/config/robotframework_aio/release_items_PythonExtensionsCollection.json",
                               "../../../python-genpackagedoc/config/robotframework_aio/release_items_GenPackageDoc.json",
                               "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",
+                              "../../../python-testresultdbaccess/config/robotframework_aio/release_items_TestResultDBAccess.json",
                               "../../../python-pytestlog2db/config/robotframework_aio/release_items_PyTestLog2DB.json",
                               "../../../robotframework-dbus/config/robotframework_aio/release_items_RobotFramework_DBus.json",
                               "../../../robotframework-doip/config/robotframework_aio/release_items_RobotFramework_DoIP.json",
