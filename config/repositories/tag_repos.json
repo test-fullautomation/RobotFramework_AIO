@@ -5,6 +5,7 @@
          "python-extensions-collection": "",
          "python-genpackagedoc": "",
          "python-jsonpreprocessor": "",
+         "python-testresultdbaccess": "",
          "python-pytestlog2db": "",
          "python-microservice-base": "",
          "python-microservice-cleware-switch": "",

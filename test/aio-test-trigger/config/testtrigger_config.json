@@ -96,6 +96,14 @@
                        "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
+                       "COMPONENTROOTPATH" : "../../../../python-testresultdbaccess",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["--junit-prefix=TestResultDBAccess"],
+                       "LOGFILE"           : "../../../../python-testresultdbaccess/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
                        "COMPONENTROOTPATH" : "../../../../python-pytestlog2db",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
