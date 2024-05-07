@@ -161,7 +161,14 @@
                        "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\""],
                        "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
                        "EXECUTION"         : "RAW"
-                    }
+                    },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-selftest",
+                       "TESTFOLDER"        : "testcases",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "../../../../robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml"
+                     }
                   ],
 
 
