@@ -149,3 +149,4 @@ black
 isort
 ruff
 requests_kerberos
+pydotdict
