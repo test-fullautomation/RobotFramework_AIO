@@ -4,6 +4,7 @@
 #Appium-Python-Client
 Sphinx
 aenum
+asciidoxy
 attrs                
 # autobahn             
 # Automat 
@@ -19,7 +20,8 @@ cryptography
 cycler
 decorator
 docutils
-dotdict          
+dotdict 
+# dotted-dict         
 dotmap               
 doxypypy   
 doipclient          
@@ -70,10 +72,11 @@ pycparser
 # pyHook               
 pyodbc  
 pycparser
+pydotdict
 PyNaCl             
 # pyOpenSSL            
-pyparsing            
-# PyQt4                
+pyparsing     
+PyQt5       
 pyscreenshot         
 pyserial==3.4
 # pytest 
@@ -90,7 +93,8 @@ pywin32
 PyYAML               
 pyzmq                
 QLed                 
-# queuelib             
+# queuelib          
+qtawesome   
 requests             
 # requests-ntlm  
 Appium-Python-Client==3.1.1
