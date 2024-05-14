@@ -8,6 +8,7 @@
                      "PyTest Log 2 DB"  : "PyTestLog2DB",
                      "Tut Test"         : "TutorialTest",
                      "RF Ext Coll"      : "robotframework-extensions-collection",
+                     "DB Access"        : "TestResultDBAccess",
                      "RF Log 2 DB"      : "RobotLog2DB",
                      "RF Log 2 RQM"     : "RobotLog2RQM",
                      "RF TSM"           : ["robotframework-testsuitesmanagement", "TestsuitesManagement"],
