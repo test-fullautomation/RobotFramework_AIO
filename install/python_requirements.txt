@@ -21,7 +21,7 @@ cycler
 decorator
 docutils
 dotdict 
-dotted-dict         
+# dotted-dict         
 dotmap               
 doxypypy   
 doipclient          
@@ -72,6 +72,7 @@ pycparser
 # pyHook               
 pyodbc  
 pycparser
+pydotdict
 PyNaCl             
 # pyOpenSSL            
 pyparsing     

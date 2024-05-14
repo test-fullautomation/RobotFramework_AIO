@@ -21,7 +21,7 @@ decorator
 doipclient
 docutils
 dotdict    
-dotted-dict      
+# dotted-dict
 dotmap               
 doxypypy             
 easyprocess 
@@ -66,7 +66,8 @@ pillow
 # progressbar          
 psutil               
 # py                   
-pycparser            
+pycparser   
+pydotdict         
 # pycrypto             
 # pydbus               
 # PyDispatcher         
