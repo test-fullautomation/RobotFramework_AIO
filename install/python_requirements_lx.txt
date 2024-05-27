@@ -3,7 +3,8 @@
 
 #Appium-Python-Client 
 aenum
-attrs                
+attrs      
+asciidoxy          
 # autobahn             
 # Automat 
 bcrypt
@@ -19,7 +20,8 @@ cycler
 decorator
 doipclient
 docutils
-dotdict          
+dotdict    
+# dotted-dict
 dotmap               
 doxypypy             
 easyprocess 
@@ -64,7 +66,8 @@ pillow
 # progressbar          
 psutil               
 # py                   
-pycparser            
+pycparser   
+pydotdict         
 # pycrypto             
 # pydbus               
 # PyDispatcher         
@@ -79,7 +82,7 @@ pyfranca
 PyNaCl             
 # pyOpenSSL            
 pyparsing            
-# PyQt4                
+PyQt5
 pyscreenshot         
 pyserial==3.4
 # pytest 
@@ -96,7 +99,8 @@ pyttsx
 PyYAML               
 pyzmq                
 QLed                 
-# queuelib             
+# queuelib  
+qtawesome           
 requests             
 # requests-ntlm  
 Appium-Python-Client==3.1.1

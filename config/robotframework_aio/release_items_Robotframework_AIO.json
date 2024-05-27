@@ -138,6 +138,18 @@
 
 * Added a self test for the new log level ``USER``.
 * In log levels ``USER``, ``WARN`` and ``ERROR``, the content of the Robot Framework XML log file is further shortened.
+
+"
+                              ],
+                    "0.12." : [
+"
+**Python Packages**
+
+* Integrated **PyQt5** library
+* Integrated **QtAwesome** library
+* Integrated **Asciidoxy** library
+* Integrated **pydotdict** library
+
 "
                               ]
                  }
