@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 07.02.2024
+# 28.05.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -48,6 +48,21 @@ def printfailure(sMsg, prefix=None):
    else:
       sMsg = COLBR + f"{prefix}:\n{sMsg}!\n\n"
    sys.stderr.write(sMsg)
+
+# --------------------------------------------------------------------------------------------------------------
+
+def IsVersionMatch(bundle_version, release_info_version):
+   """Little helper to identify version numbers (match between bundle version number and version number string in release info file)
+   """
+   is_version_match = False
+   splitparts = release_info_version.split(';')
+   for part in splitparts:
+      part = part.strip()
+      if part != "":
+         if ( (part == "*") or (bundle_version.startswith(part)) ):
+            is_version_match = True
+            break
+   return is_version_match
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -111,7 +126,7 @@ class COutput():
 
       listVersionNumbersIdentified = []
       for sVersionNumber in listVersionNumbersAll:
-         if bundle_version.startswith(sVersionNumber):
+         if IsVersionMatch(bundle_version, sVersionNumber):
             listVersionNumbersIdentified.append(sVersionNumber)
 
       # PrettyPrint(listVersionNumbersIdentified, sPrefix="listVersionNumbersIdentified")
@@ -285,7 +300,7 @@ class COutput():
          # -- find version number matches
          listVersionNumbersIdentified = []
          for sVersionNumber in listVersionNumbersAllPerComponent:
-            if bundle_version.startswith(sVersionNumber):
+            if IsVersionMatch(bundle_version, sVersionNumber):
                listVersionNumbersIdentified.append(sVersionNumber)
 
          for sVersion in listVersionNumbersIdentified:
