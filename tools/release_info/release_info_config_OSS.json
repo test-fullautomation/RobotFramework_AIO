@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.4.0 / 07.05.2024 (OSS version)",
+   "VERSION_CONFIG" : "0.5.0 / 27.05.2024 (OSS version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -66,6 +66,7 @@
                               "../../../robotframework-dbus/config/robotframework_aio/release_items_RobotFramework_DBus.json",
                               "../../../robotframework-doip/config/robotframework_aio/release_items_RobotFramework_DoIP.json",
                               "../../../robotframework-extensions-collection/config/robotframework_aio/release_items_RobotframeworkExtensions.json",
+                              "../../../robotframework-prometheus/config/robotframework_aio/release_items_PrometheusInterface.json",
                               "../../../robotframework-qconnect-base/config/robotframework_aio/release_items_QConnectBase.json",
                               "../../../robotframework-qconnect-winapp/config/robotframework_aio/release_items_QConnectWinapp.json",
                               "../../../robotframework-robotlog2db/config/robotframework_aio/release_items_RobotLog2DB.json",
