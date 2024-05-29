@@ -157,6 +157,19 @@
 
 
 "
+                              ],
+                    "0.12.1" : [
+"
+**Python Packages**
+
+* Integrated **robotframework-prometheus** library
+
+**Python Package Index (PyPI)**
+
+* Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
+
+
+"
                               ]
                  }
 }
