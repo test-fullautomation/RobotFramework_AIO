@@ -2,6 +2,23 @@
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
 
+   # This owner change is required when installation with sudo permission
+   # File/Folder after copying need to change the owner to actual user instead of root
+function update_owner(){
+   if [ "$(id -u)" = "0" ]; then
+      chown -R "${CURRENT_USER}:${sGROUP}" $1
+   fi
+}
+
+# Allow user and `robot-aio` group have full permission on app's file/folder
+function allow_user_group_permissions(){
+   path_to_dir=$1;
+
+   chown -R "${CURRENT_USER}:${sGROUP}" $path_to_dir
+   chmod -R 0775 $path_to_dir
+   echo -e "${MSG_DONE} Updated permission for $path_to_dir"
+}
+
 function remove_vscodium_package(){
    echo remove Vscodium related stuffs
 
@@ -32,25 +49,17 @@ function update_android_related(){
    echo "Performing updates for Android-related components..."
 
    #
-   # Update permission of Android-related data
-   #
-   #############################################################################
-   chown -R "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/devtools/nodejs/lib
-   chmod -R 0775 /opt/rfwaio/devtools/nodejs/lib
-   echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/devtools/nodejs/lib"
-
-   #
    # Configure Unitiy Launchers - "Appium Server" and Appium Inspector
    #
    #############################################################################
    echo -e "${MSG_DONE} Creating/Updating 'Appium Server' App"
    cp /opt/rfwaio/linux/appium.desktop ${APPS_PATH}/appium.desktop
-   chown -R "${CURRENT_USER}:${sGROUP}" ${APPS_PATH}/appium.desktop
+   update_owner ${APPS_PATH}/appium.desktop
    chmod +x ${APPS_PATH}/appium.desktop
 
    echo -e "${MSG_DONE} Creating/Updating 'Appium Inspector' App"
    cp /opt/rfwaio/linux/appiumInspector.desktop ${APPS_PATH}/appiumInspector.desktop
-   chown -R "${CURRENT_USER}:${sGROUP}" ${APPS_PATH}/appiumInspector.desktop
+   update_owner ${APPS_PATH}/appiumInspector.desktop
    chmod +x ${APPS_PATH}/appiumInspector.desktop
 }
 
@@ -58,20 +67,12 @@ function update_vscodium_related(){
    echo "Performing updates for Vscodium-related components..."
 
    #
-   # Update permission of Vscodium-related data
-   #
-   #############################################################################
-   chown -R "${CURRENT_USER}:${sGROUP}" /opt/rfwaio/robotvscode/data
-   chmod -R 0775 /opt/rfwaio/robotvscode/data
-   echo -e "${MSG_DONE} Updated permission for /opt/rfwaio/robotvscode/data"
-
-   #
    # Configure Unitiy Launchers - "VSCodium for RobotFramework AIO" 
    #
    ############################################################################### 
    echo -e "${MSG_DONE} Creating/Updating 'VSCodium for RobotFramework AIO' App" 
    cp /opt/rfwaio/linux/robot.desktop ${APPS_PATH}/robot.desktop
-   chown -R "${CURRENT_USER}:${sGROUP}" ${APPS_PATH}/robot.desktop
+   update_owner ${APPS_PATH}/robot.desktop
    chmod +x ${APPS_PATH}/robot.desktop
 
    #
@@ -80,7 +81,7 @@ function update_vscodium_related(){
    #############################################################################
    if [ ! -f ${HOME}/RobotTest/testcases/RobotTest.code-workspace ]; then
       cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/RobotTest.code-workspace ${HOME}/RobotTest/testcases
-      chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases/RobotTest.code-workspace
+      update_owner ${HOME}/RobotTest/testcases/RobotTest.code-workspace
       echo -e "${MSG_DONE} Initialized workspace (RobotTest.code-workspace)"
    fi
 
@@ -113,16 +114,31 @@ fi
 DLTCONNECTOR_PATH="/opt/rfwaio/python39/install/lib/python3.9/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
 
-#in osd4 group name is the user name.
-#in osd5 group name is "domain users". Therefore
-#look if a group wi th the user name exists, if not
-#then we assume that we are on OSD5
-sGROUP=$(id -G)
-if ! getent group "${sGROUP}" | grep "${sGROUP}" ; then
-   sGROUP='domain users'
-   echo -e "Assuming OSD5 and using group 'domain users' as user group for private files"
+# Introduce group `robot-aio` which allow access for group of multiple users
+sGROUP=robot-aio
+
+
+if [ "$(id -u)" = "0" ]; then
+   # Run with sudo
+   if [ ! $(getent group $sGROUP) ]; then
+      addgroup $sGROUP
+   fi
+   usermod -a -G $sGROUP ${CURRENT_USER}
+   echo -e "Using group ${sGROUP} as user group for robotframework-aio permission"
 else
-   echo -e "Assuming OSD4 and using group ${sGROUP} as user group for private files"
+   if [ ! $(getent group $sGROUP) ]; then
+      echo -e "${MSG_ERR} User group '$sGROUP' is not found"
+      echo -e "${MSG_ERR} Please verify the installation of robotframework-aio"
+      exit 1
+   fi
+
+   if groups ${CURRENT_USER} | grep $sGROUP; then
+      echo -e "${MSG_INFO} User '${CURRENT_USER}' already belongs to group '$sGROUP'"
+   else
+      echo -e "${MSG_ERR} Please add '${CURRENT_USER}' to group '$sGROUP' as below command then try again"
+      echo -e "${MSG_ERR} sudo usermod -a -G $sGROUP ${CURRENT_USER}"
+      exit 1
+   fi
 fi
 
 COL_GREEN='\033[0;32m'
@@ -167,13 +183,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    # assure access rights to files in ~/ROBFW
    #
    ###############################################################################                          
-   chown "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/logfiles
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/localconfig
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/testcases
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/documentation
-   chmod 0775 ${HOME}/RobotTest
+   allow_user_group_permissions ${HOME}/RobotTest
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
    #
@@ -190,7 +200,7 @@ else
       action_msg="Created"
    fi
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
-   chown -R "${CURRENT_USER}:${sGROUP}" ${HOME}/RobotTest/tutorial
+   update_owner ${HOME}/RobotTest/tutorial
    echo -e "${MSG_DONE} ${action_msg} tutorial folder."
 
    if [ -d ${HOME}/RobotTest/documentation ]; then
@@ -232,19 +242,33 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
    if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Android " ]]; then  
       remove_android_package;
    else
+      #
+      # Update permission of Android-related data
+      #
+      #############################################################################
+      allow_user_group_permissions /opt/rfwaio/devtools/nodejs/lib
       update_android_related;
    fi
 
    if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then  
       remove_vscodium_package;
    else
+      #
+      # Update permission of Vscodium-related data
+      #
+      #############################################################################
+      allow_user_group_permissions /opt/rfwaio/robotvscode/data
       update_vscodium_related;
    fi
 
    rm ${SELECTED_CMPTS_FILE}
 else
-   update_android_related;
-   update_vscodium_related;
+   if [ -d "/opt/rfwaio/devtools" ]; then
+      update_android_related;
+   fi
+   if [ -d "/opt/rfwaio/robotvscode" ]; then
+      update_vscodium_related;
+   fi
 fi
 
 #
