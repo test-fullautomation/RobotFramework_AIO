@@ -342,6 +342,7 @@ function build_debian()
 
 	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
+	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 	# Update version
 	cp ./version.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
