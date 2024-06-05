@@ -85,6 +85,7 @@ python-can
 python-dateutil
 pyshark  
 pyttsx    
+prometheus_client
 # python-jenkins       
 # pythonnet            
 # PyUserInput          

@@ -149,6 +149,27 @@
 * Integrated **QtAwesome** library
 * Integrated **Asciidoxy** library
 * Integrated **pydotdict** library
+* Integrated **robotframework-prometheus** library
+
+**Python Package Index (PyPI)**
+
+* Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
+
+
+"
+                              ],
+                    "0.12.1.;0.13.0." : [
+"
+**Python Packages**
+
+* Integrated **robotframework-prometheus** library
+* Integrated **prometheus_client** library
+
+
+**Python Package Index (PyPI)**
+
+* Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
+
 
 "
                               ]

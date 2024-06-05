@@ -11,3 +11,4 @@ robotframework-robotlog2rqm
 robotframework-dbus
 robotframework-qconnect-winapp
 robotframework-doip
+robotframework-prometheus
