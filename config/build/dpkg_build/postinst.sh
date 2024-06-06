@@ -151,7 +151,7 @@ else
    fi
 fi
 
-   
+
 # Set schedule for installing DLTConnector (will active in future)
 #
 ############################################################################### 
@@ -176,9 +176,11 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    # Create RobotTest Workspacce Folder
    #
    ##############################################################################
-   cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
-   cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
-   cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
+   if [ -d "/opt/rfwaio/robotvscode" ]; then
+      cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
+   fi
+   cp -R -a /opt/rfwaio/tutorial/. ${HOME}/RobotTest/tutorial
+   cp -R -a /opt/rfwaio/documentation/. ${HOME}/RobotTest/documentation
 
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
@@ -195,7 +197,7 @@ else
       mkdir -p ${HOME}/RobotTest/tutorial
       action_msg="Created"
    fi
-   cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
+   cp -R -a /opt/rfwaio/tutorial/. ${HOME}/RobotTest/tutorial
    update_owner ${HOME}/RobotTest/tutorial
    echo -e "${MSG_DONE} ${action_msg} tutorial folder."
 
@@ -206,7 +208,7 @@ else
       mkdir -p ${HOME}/RobotTest/documentation
       action_msg="Created"
    fi
-   cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
+   cp -R -a /opt/rfwaio/documentation/. ${HOME}/RobotTest/documentation
    echo -e "${MSG_DONE} ${action_msg} documentation folder."
 
    if [ ! -d ${HOME}/RobotTest/testcases ]; then
@@ -224,11 +226,11 @@ if [ -e "${APPS_PATH}" ]; then
    # remove it in case it is fine then create appropriate directory 
    if [ -f "${APPS_PATH}" ]; then
       rm "${APPS_PATH}"
-      mkdir "${APPS_PATH}"
+      mkdir -p "${APPS_PATH}"
    fi
 else
    # Create applications launcher folder if not existing
-   mkdir "${APPS_PATH}"
+   mkdir -p "${APPS_PATH}"
 fi
 
 # Check whether this script is executed in installation or not
