@@ -339,6 +339,8 @@ function build_debian()
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	cp -R -a ../devtools/. ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Appium-Inspector.AppImage
+	cp ./config/tools/appium.sh ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
 
 	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
