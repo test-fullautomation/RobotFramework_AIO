@@ -102,6 +102,16 @@ function update_vscodium_related(){
 echo "Creating/Updating RobotFramework AIO runtime environment"
 echo "----------------------------------------"
 
+COL_GREEN='\033[0;32m'
+COL_ORANGE='\033[0;33m'
+COL_BLUE='\033[0;34m'
+COL_RED='\033[1;31m'
+COL_RESET='\033[0m' # No Color
+
+MSG_INFO="${COL_GREEN}[INFO]${COL_RESET}"
+MSG_DONE="${COL_ORANGE}[DONE]${COL_RESET}"
+MSG_ERR="${COL_RED}[ERR]${COL_RESET} "
+
 CURRENT_USER=${SUDO_USER}
 if [ -z ${CURRENT_USER} ]; then
    CURRENT_USER=$(whoami)
@@ -141,15 +151,6 @@ else
    fi
 fi
 
-COL_GREEN='\033[0;32m'
-COL_ORANGE='\033[0;33m'
-COL_BLUE='\033[0;34m'
-COL_RED='\033[1;31m'
-COL_RESET='\033[0m' # No Color
-
-MSG_INFO="${COL_GREEN}[INFO]${COL_RESET}"
-MSG_DONE="${COL_ORANGE}[DONE]${COL_RESET}"
-MSG_ERR="${COL_RED}[ERR]${COL_RESET} "
    
 # Set schedule for installing DLTConnector (will active in future)
 #
@@ -178,12 +179,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/tutorial/. ${HOME}/RobotTest/tutorial
    cp -R -a /opt/rfwaio/robotvscode/RobotTest/documentation/. ${HOME}/RobotTest/documentation
-   
-   #
-   # assure access rights to files in ~/ROBFW
-   #
-   ###############################################################################                          
-   allow_user_group_permissions ${HOME}/RobotTest
+
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
    #
@@ -260,6 +256,12 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
       update_vscodium_related;
    fi
+
+   #
+   # Update permission of Vscodium-related data
+   #
+   #############################################################################
+   allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
 
    rm ${SELECTED_CMPTS_FILE}
 else
