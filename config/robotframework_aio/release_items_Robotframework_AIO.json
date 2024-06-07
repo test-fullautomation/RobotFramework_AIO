@@ -170,7 +170,41 @@
 
 * Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
 
+**Environment/Installation**
 
+* Debian package:
+
+  * Enhanced **initRobotFrameworkAIO.sh**, support to setup environment for non-root user
+
+  * Introduce new user group **robot-aio** which is granted required permissions to use *robotframework-aio* package
+
+    An user (BOT or integrator account) which have non-root permission can also be setup to use the installed robotframework-aio package on test machine as following steps:
+
+    * Add BOT or Integrator account to robot-aio group by execute below command with root user or add it as a **RUN** step of Docker file 
+
+      .. code-block::
+
+        usermod -a -G robot-aio $BOT_USER
+
+    * Login as BOT or Integrator account
+
+    * Execute **initRobotFrameworkAIO.sh** script to setup enviroment or add it as **CMD** step when starting Docker container
+
+      .. code-block::
+      
+        initRobotFrameworkAIO.sh
+
+    * Now, execute your Robotframework test case/suite. E.g 
+
+      .. code-block::
+
+        robot ~/RobotTest/testcases/HelloWorld.robot
+  
+  * Added executable **appium** script to start the Appium server in command line (useful for Docker container)
+
+    .. code-block::
+
+      $RobotDevtools/appium
 "
                               ]
                  }
