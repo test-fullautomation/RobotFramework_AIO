@@ -2,8 +2,8 @@
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
 
-   # This owner change is required when installation with sudo permission
-   # File/Folder after copying need to change the owner to actual user instead of root
+# This owner change is required when installation with sudo permission
+# File/Folder after copying need to change the owner to actual user instead of root
 function update_owner(){
    if [ "$(id -u)" = "0" ]; then
       chown -R "${CURRENT_USER}:${sGROUP}" $1
@@ -209,6 +209,7 @@ else
       action_msg="Created"
    fi
    cp -R -a /opt/rfwaio/documentation/. ${HOME}/RobotTest/documentation
+   update_owner ${HOME}/RobotTest/documentation
    echo -e "${MSG_DONE} ${action_msg} documentation folder."
 
    if [ ! -d ${HOME}/RobotTest/testcases ]; then
@@ -256,14 +257,10 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       #
       #############################################################################
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
+      allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
       update_vscodium_related;
    fi
-
-   #
-   # Update permission of Vscodium-related data
-   #
-   #############################################################################
-   allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+   
 
    rm ${SELECTED_CMPTS_FILE}
 else
