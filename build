@@ -326,10 +326,12 @@ function build_debian()
 	# Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
-	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
-	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial/
-	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
-	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation/
+
+	# Tutorial and Documentation packages
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial
+	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial/
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/documentation
+	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/documentation/
 
 	# Python package: core framework and libraries
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
@@ -339,9 +341,12 @@ function build_debian()
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	cp -R -a ../devtools/. ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Appium-Inspector.AppImage
+	cp ./config/tools/appium.sh ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
 
 	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
+	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 	# Update version
 	cp ./version.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
