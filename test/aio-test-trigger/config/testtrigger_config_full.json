@@ -50,6 +50,7 @@
                        "TESTFOLDER"        : "test/pytest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
+                       "COVERAGE"          : "coverage.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=PythonExtensionsCollection"],
                        "LOGFILE"           : "../../../../python-extensions-collection/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
                        "FILES_SAVE"        : "../../../../python-extensions-collection/test/testlogfiles"
@@ -59,6 +60,7 @@
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
+                       "COVERAGE"          : "coverage.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=GenPackageDoc"],
                        "LOGFILE"           : "../../../../python-genpackagedoc/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
@@ -67,6 +69,7 @@
                        "TESTFOLDER"        : "atest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
+                       "COVERAGE"          : "coverage.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
                        "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
