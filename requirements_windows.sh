@@ -45,8 +45,8 @@ else
   exit 1
 fi
 
-
-# Create texlive profile file
+mkdir -p "$TEXDIR"
+echo "Create texlive profile file"
 profileContent="selected_scheme scheme-full
 TEXDIR $TEXDIR\n"
 for collection in "${collections[@]}"; do
