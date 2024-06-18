@@ -164,6 +164,8 @@
 
 * Integrated **robotframework-prometheus** library
 * Integrated **prometheus_client** library
+* Integrated **pika** library
+
 
 
 **Python Package Index (PyPI)**
