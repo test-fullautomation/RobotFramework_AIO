@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables
-download_url="https://mirror.ctan.org/systems/texlive/tlnet"
+download_url="https://ctan.math.utah.edu/ctan/tex-archive/systems/texlive/tlnet/"
 # download_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
 archive_file="install-tl.zip"
 TEXDIR="C:/texlive/aio"
@@ -45,8 +45,8 @@ else
   exit 1
 fi
 
-
-# Create texlive profile file
+mkdir -p "$TEXDIR"
+echo "Create texlive profile file"
 profileContent="selected_scheme scheme-full
 TEXDIR $TEXDIR\n"
 for collection in "${collections[@]}"; do
