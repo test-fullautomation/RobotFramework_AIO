@@ -56,7 +56,8 @@ paho-mqtt
 paramiko             
 # parsel               
 path.py              
-# pbr                  
+# pbr     
+pika             
 pickleDB             
 pillow
 # pip                  
