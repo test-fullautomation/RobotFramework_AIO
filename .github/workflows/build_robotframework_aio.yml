@@ -231,7 +231,7 @@ jobs:
     - name: Run tests coverage on Windows
       shell: bash
       run: |
-        "$RobotPythonPath/python" test/aio-test-coverage/aio-test-coverage.py 2>&1 | tee console_log.txt
+        "$RobotPythonPath/python" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
