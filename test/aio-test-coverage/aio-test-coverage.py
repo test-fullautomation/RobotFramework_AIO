@@ -101,7 +101,6 @@ try:
             bSuccess = None
             bSuccess = None
             sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
-            return nReturn, bSuccess, sResult
 
 except Exception as ex:
    print()
@@ -109,9 +108,6 @@ except Exception as ex:
    print()
    sys.exit(ERROR)
 
-
-
-nReturn, bSuccess, sResult = oTestTrigger.Trigger()
 if bSuccess is None:
    print()
    printerror(sResult)
