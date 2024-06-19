@@ -26,9 +26,9 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 
-import os, sys
-
+import os, sys, shlex, subprocess
 import colorama as col
+from libs.CTestTriggerConfig import CTestTriggerConfig
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
@@ -48,14 +48,10 @@ def printexception(sMsg):
 
 # --------------------------------------------------------------------------------------------------------------
 
-# add the directory containing the CTestTriggerConfig module to sys.path
-module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../aio-test-trigger/libs'))
-sys.path.append(module_path)
-
-from CTestTriggerConfig import CTestTriggerConfig
-from CTestTrigger import CTestTrigger
+from libs.CTestTriggerConfig import CTestTriggerConfig
 
 # -- setting up the test trigger configuration (relative to the path of this script)
+
 oRepositoryConfig = None
 try:
    oTestTriggerConfig = CTestTriggerConfig(os.path.abspath(sys.argv[0]))
@@ -67,7 +63,8 @@ except Exception as ex:
 
 # -- setting up the test trigger
 try:
-   listofdictComponents = self.__oTestTriggerConfig.Get('COMPONENTS')
+   listofdictComponents = oTestTriggerConfig.Get('COMPONENTS')
+   PYTHON = oTestTriggerConfig.Get('PYTHON')
    nNrOfComponents = len(listofdictComponents)
    nCntComponent = 0
 
@@ -78,29 +75,28 @@ try:
       COMPONENTROOTPATH = dictComponent['COMPONENTROOTPATH']
       TESTFOLDER        = dictComponent['TESTFOLDER']
       TESTTYPE          = dictComponent['TESTTYPE']
-      COVERAGE          = dictComponent['COVERAGE']
       # -- prepare the command line for the test execution
 
       listCmdLineParts = []
       listCmdLineParts.append(f"\"{PYTHON}\"")
       listCmdLineParts.append(f"\"{TESTFOLDER}/coverage/coverage.py\"")
 
-   if TESTTYPE == "PYTEST":
-      PLATFORMSYSTEM = self.__oTestTriggerConfig.Get('PLATFORMSYSTEM')
-      if PLATFORMSYSTEM == "Windows" and COVERAGE is not None:
-         sCmdLine = " ".join(listCmdLineParts)
-         del listCmdLineParts
-         print(f"Now executing command line:\n{sCmdLine}")
-         listCmdLineParts = shlex.split(sCmdLine)
-         try:
-            nReturn = subprocess.call(listCmdLineParts)
-            nReturn = ctypes.c_int32(nReturn).value
-            print()
-         except Exception as ex:
-            nReturn  = ERROR
-            bSuccess = None
-            bSuccess = None
-            sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
+      if TESTTYPE == "PYTEST":
+         PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
+         if PLATFORMSYSTEM == "Windows":
+            sCmdLine = " ".join(listCmdLineParts)
+            del listCmdLineParts
+            print(f"Now executing command line:\n{sCmdLine}")
+            listCmdLineParts = shlex.split(sCmdLine)
+            try:
+               nReturn = subprocess.call(listCmdLineParts)
+               nReturn = ctypes.c_int32(nReturn).value
+               print()
+            except Exception as ex:
+               nReturn  = ERROR
+               bSuccess = None
+               bSuccess = None
+               sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
 
 except Exception as ex:
    print()
