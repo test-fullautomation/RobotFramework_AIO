@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.5.0 / 27.05.2024 (OSS version)",
+   "VERSION_CONFIG" : "0.6.0 / 20.06.2024 (OSS version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -63,6 +63,8 @@
                               "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",
                               "../../../python-testresultdbaccess/config/robotframework_aio/release_items_TestResultDBAccess.json",
                               "../../../python-pytestlog2db/config/robotframework_aio/release_items_PyTestLog2DB.json",
+                              "../../../python-microservice-cleware-switch/config/robotframework_aio/release_items_MicroserviceClewareSwitch.json",
+                              "../../../python-microservice-base/config/robotframework_aio/release_items_MicroserviceBase.json",
                               "../../../robotframework-dbus/config/robotframework_aio/release_items_RobotFramework_DBus.json",
                               "../../../robotframework-doip/config/robotframework_aio/release_items_RobotFramework_DoIP.json",
                               "../../../robotframework-extensions-collection/config/robotframework_aio/release_items_RobotframeworkExtensions.json",
