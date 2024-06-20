@@ -29,6 +29,7 @@
 import os, sys, shlex, subprocess
 import colorama as col
 from libs.CTestTriggerConfig import CTestTriggerConfig
+from PythonExtensionsCollection.String.CString import CString
 
 col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
@@ -77,20 +78,16 @@ try:
       TESTTYPE          = dictComponent['TESTTYPE']
 
       # -- prepare the command line for the test execution
-
       listCmdLineParts = []
-      listCmdLineParts.append(f"\"{PYTHON}\"")
-      listCmdLineParts.append(f"\"{TESTFOLDER}/coverage/coverage.py\"")
-
       if TESTTYPE == "PYTEST":
          PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
          if PLATFORMSYSTEM == "Windows":
+            listCmdLineParts.append("cd")
+            listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
+            listCmdLineParts.append(f"&&")
+            listCmdLineParts.append(f"\"{PYTHON}\"")
+            listCmdLineParts.append(f"\"{TESTFOLDER}/coverage/coverage.py\"")
             sCmdLine = " ".join(listCmdLineParts)
-
-            listCmdLineParts = []
-            listCmdLineParts.append(f"cd \"{COMPONENTROOTPATH}\"")
-            subprocess.call(listCmdLineParts)
-            del listCmdLineParts
 
             print(f"Now executing command line:\n{sCmdLine}")
             listCmdLineParts = shlex.split(sCmdLine)
@@ -102,7 +99,7 @@ try:
                nReturn  = ERROR
                bSuccess = None
                bSuccess = None
-               sResult  = CString.FormatResult(sMethod, bSuccess, str(ex))
+               sResult  = CString.FormatResult(bSuccess, str(ex))
 
 except Exception as ex:
    print()
