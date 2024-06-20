@@ -82,11 +82,9 @@ try:
       if TESTTYPE == "PYTEST":
          PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
          if PLATFORMSYSTEM == "Windows":
-            listCmdLineParts.append("cd")
-            listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
-            listCmdLineParts.append(f"&&")
             listCmdLineParts.append(f"\"{PYTHON}\"")
-            listCmdLineParts.append(f"\"{TESTFOLDER}/coverage/coverage.py\"")
+            listCmdLineParts.append(f"\"{TESTFOLDER}\\coverage\\coverage.py\"")
+            listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
             sCmdLine = " ".join(listCmdLineParts)
 
             print(f"Now executing command line:\n{sCmdLine}")
