@@ -75,6 +75,7 @@ try:
       COMPONENTROOTPATH = dictComponent['COMPONENTROOTPATH']
       TESTFOLDER        = dictComponent['TESTFOLDER']
       TESTTYPE          = dictComponent['TESTTYPE']
+
       # -- prepare the command line for the test execution
 
       listCmdLineParts = []
@@ -85,7 +86,12 @@ try:
          PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
          if PLATFORMSYSTEM == "Windows":
             sCmdLine = " ".join(listCmdLineParts)
+
+            listCmdLineParts = []
+            listCmdLineParts.append(f"cd \"{COMPONENTROOTPATH}\"")
+            subprocess.call(listCmdLineParts)
             del listCmdLineParts
+
             print(f"Now executing command line:\n{sCmdLine}")
             listCmdLineParts = shlex.split(sCmdLine)
             try:
