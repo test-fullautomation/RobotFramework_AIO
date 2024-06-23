@@ -52,8 +52,11 @@ def printexception(sMsg):
 from libs.CTestTriggerConfig import CTestTriggerConfig
 
 # -- setting up the test trigger configuration (relative to the path of this script)
+nReturn  = ERROR
+bSuccess = None
+sResult  = "UNKNOWN"
+nCntSubProcessErrors = 0
 
-oRepositoryConfig = None
 try:
    oTestTriggerConfig = CTestTriggerConfig(os.path.abspath(sys.argv[0]))
 except Exception as ex:
@@ -77,13 +80,27 @@ try:
       TESTFOLDER        = dictComponent['TESTFOLDER']
       TESTTYPE          = dictComponent['TESTTYPE']
 
+      sCoverageFile = CString.NormalizePath(f"\"{TESTFOLDER}/coverage/coverage.py\"")
+
       # -- prepare the command line for the test execution
       listCmdLineParts = []
       if TESTTYPE == "PYTEST":
          PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
          if PLATFORMSYSTEM == "Windows":
+            # -- Handle repositories that cannot run coverage. These will be removed after coverage is completed.
+            from pathlib import Path
+
+            try:
+               file_path = Path(sCoverageFile)
+               if file_path.exists():
+                  pass
+               else:
+                  continue
+            except:
+               pass  # The file does not exist, but we are ignoring this case
+
             listCmdLineParts.append(f"\"{PYTHON}\"")
-            listCmdLineParts.append(f"\"{TESTFOLDER}\\coverage\\coverage.py\"")
+            listCmdLineParts.append(f"\"{sCoverageFile}\"")
             listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
             sCmdLine = " ".join(listCmdLineParts)
 
@@ -98,6 +115,23 @@ try:
                bSuccess = None
                bSuccess = None
                sResult  = CString.FormatResult(bSuccess, str(ex))
+            print()
+            if nReturn != SUCCESS:
+               nCntSubProcessErrors = nCntSubProcessErrors + 1
+               bSuccess = False
+               sResult  = CString.FormatResult(bSuccess, f"Subprocess {TESTTYPE} executor has not returned expected value {SUCCESS}")
+               print()
+               print(COLBR + sResult)
+               print()
+
+      if nCntSubProcessErrors == 0:
+         nReturn  = SUCCESS
+         bSuccess = True
+         sResult = "COMPLETE"
+      else:
+         nReturn  = -nCntSubProcessErrors
+         bSuccess = False
+         sResult  = f"[coverage trigger] : {nCntSubProcessErrors} errors occurred during the execution of subprocesses"
 
 except Exception as ex:
    print()
