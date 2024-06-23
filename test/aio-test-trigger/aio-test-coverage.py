@@ -73,7 +73,7 @@ try:
       nCntComponent = nCntComponent + 1
 
       # -- get data for test execution
-      COMPONENTROOTPATH = dictComponent['COMPONENTROOTPATH']
+      COMPONENTROOTPATH = CString.NormalizePath(dictComponent['COMPONENTROOTPATH'])
       TESTFOLDER        = dictComponent['TESTFOLDER']
       TESTTYPE          = dictComponent['TESTTYPE']
 
