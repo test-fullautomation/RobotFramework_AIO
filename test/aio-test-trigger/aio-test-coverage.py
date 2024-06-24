@@ -26,7 +26,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 
-import os, sys, shlex, subprocess
+import os, sys, shlex, subprocess, ctypes
 import colorama as col
 from libs.CTestTriggerConfig import CTestTriggerConfig
 from PythonExtensionsCollection.String.CString import CString
@@ -51,12 +51,12 @@ def printexception(sMsg):
 
 from libs.CTestTriggerConfig import CTestTriggerConfig
 
-# -- setting up the test trigger configuration (relative to the path of this script)
 nReturn  = ERROR
 bSuccess = None
 sResult  = "UNKNOWN"
 nCntSubProcessErrors = 0
-
+nCntComponent = 0
+# -- setting up the test trigger configuration (relative to the path of this script)
 try:
    oTestTriggerConfig = CTestTriggerConfig(os.path.abspath(sys.argv[0]))
 except Exception as ex:
@@ -68,61 +68,65 @@ except Exception as ex:
 # -- setting up the test trigger
 try:
    listofdictComponents = oTestTriggerConfig.Get('COMPONENTS')
-   PYTHON = oTestTriggerConfig.Get('PYTHON')
+   PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
    nNrOfComponents = len(listofdictComponents)
-   nCntComponent = 0
+   PYTHON = oTestTriggerConfig.Get('PYTHON')
 
    for dictComponent in listofdictComponents:
       nCntComponent = nCntComponent + 1
-
       # -- get data for test execution
-      COMPONENTROOTPATH = CString.NormalizePath(dictComponent['COMPONENTROOTPATH'])
-      TESTFOLDER        = dictComponent['TESTFOLDER']
       TESTTYPE          = dictComponent['TESTTYPE']
+      TESTFOLDER        = dictComponent['TESTFOLDER']
+      COMPONENTROOTPATH = dictComponent['COMPONENTROOTPATH']
 
       sCoverageFile = CString.NormalizePath(f"\"{TESTFOLDER}/coverage/coverage.py\"")
 
+      # -- Handle repositories that cannot run coverage. These will be removed after coverage is completed.
+      from pathlib import Path
+      try:
+         file_path = Path(sCoverageFile)
+         if file_path.exists():
+            pass
+         else:
+            continue
+      except:
+         pass  # The file does not exist, but we are ignoring this case
+
+      # --------------------------------------------------
+
       # -- prepare the command line for the test execution
-      listCmdLineParts = []
-      if TESTTYPE == "PYTEST":
-         PLATFORMSYSTEM = oTestTriggerConfig.Get('PLATFORMSYSTEM')
-         if PLATFORMSYSTEM == "Windows":
-            # -- Handle repositories that cannot run coverage. These will be removed after coverage is completed.
-            from pathlib import Path
 
-            try:
-               file_path = Path(sCoverageFile)
-               if file_path.exists():
-                  pass
-               else:
-                  continue
-            except:
-               pass  # The file does not exist, but we are ignoring this case
+      if TESTTYPE == "PYTEST" and PLATFORMSYSTEM == "Windows":
+         listCmdLineParts = []
+         listCmdLineParts.append(f"\"{PYTHON}\"")
+         listCmdLineParts.append(f"\"{sCoverageFile}\"")
+         listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
+         sCmdLine = " ".join(listCmdLineParts)
 
-            listCmdLineParts.append(f"\"{PYTHON}\"")
-            listCmdLineParts.append(f"\"{sCoverageFile}\"")
-            listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
-            sCmdLine = " ".join(listCmdLineParts)
+      print(COLBY + "Starting test coverage:")
+      print()
+      print(f"* ({nCntComponent}/{nNrOfComponents}) : '{TESTFOLDER}' ({TESTTYPE})")
+      print()
 
-            print(f"Now executing command line:\n{sCmdLine}")
-            listCmdLineParts = shlex.split(sCmdLine)
-            try:
-               nReturn = subprocess.call(listCmdLineParts)
-               nReturn = ctypes.c_int32(nReturn).value
-               print()
-            except Exception as ex:
-               nReturn  = ERROR
-               bSuccess = None
-               bSuccess = None
-               sResult  = CString.FormatResult(bSuccess, str(ex))
-            print()
-            if nReturn != SUCCESS:
-               nCntSubProcessErrors = nCntSubProcessErrors + 1
-               bSuccess = False
-               sResult  = CString.FormatResult(bSuccess, f"Subprocess {TESTTYPE} executor has not returned expected value {SUCCESS}")
-               print()
-               print(COLBR + sResult)
-               print()
+      print(f"Now executing command line:\n{sCmdLine}")
+      listCmdLineParts = shlex.split(sCmdLine)
+
+      try:
+         nReturn = subprocess.call(listCmdLineParts)
+         nReturn = ctypes.c_int32(nReturn).value
+         print()
+      except Exception as ex:
+         nReturn  = ERROR
+         bSuccess = None
+         sResult  = CString.FormatResult(bSuccess, str(ex))
+
+      if nReturn != SUCCESS:
+         nCntSubProcessErrors = nCntSubProcessErrors + 1
+         bSuccess = False
+         sResult  = CString.FormatResult(bSuccess, f"Subprocess {TESTTYPE} executor has not returned expected value {SUCCESS}")
+         print()
+         print(COLBR + sResult)
+         print()
 
       if nCntSubProcessErrors == 0:
          nReturn  = SUCCESS
@@ -157,5 +161,5 @@ else:
 print()
 sys.exit(nReturn)
 
-# --------------------------------------------------------------------------------------------------------------
+# # --------------------------------------------------------------------------------------------------------------
 
