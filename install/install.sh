@@ -33,17 +33,17 @@ pandoc_only="No"
 android_only="No"
 
 UNAME=$(uname)
-
+VSCODIUM_VERSION="1.90.2.24171"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
 	os_short=linux
 	arch=
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VSCODIUM_VERSION}/VSCodium-linux-x64-${VSCODIUM_VERSION}.tar.gz
 
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VSCODIUM_VERSION}.tar.gz
 
 	nodejs_ext=tar.xz
 	appium_inspector_ext=AppImage
@@ -53,11 +53,11 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os_short=win
 	arch=-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VSCODIUM_VERSION}/VSCodium-win32-x64-${VSCODIUM_VERSION}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
+	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VSCODIUM_VERSION}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 
 	nodejs_ext=zip
