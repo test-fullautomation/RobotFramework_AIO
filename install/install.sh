@@ -34,16 +34,23 @@ android_only="No"
 
 UNAME=$(uname)
 
+# Version definition of package tools
+VERSION_VSCODIUM="1.90.2.24171"
+
+VERSION_NODEJS="21.6.2"
+VERSION_BUILD_TOOL="33.0.2"
+VERSION_PLATFORM_TOOL="34.0.5"
+VERSION_APPIUM_INSPECTOR="2024.2.2"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
 	os_short=linux
 	arch=
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	nodejs_ext=tar.xz
 	appium_inspector_ext=AppImage
@@ -53,11 +60,11 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os_short=win
 	arch=-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
+	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 
 	nodejs_ext=zip
@@ -205,19 +212,14 @@ function packaging_pandoc_windows() {
 }
 
 function packaging_android() {
-	platform_tool_version=34.0.5
-	build_tool_version=33.0.2
-	nodejs_version=21.6.2
-	appium_inspector_version=2024.2.2
-
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
 	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
-	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${build_tool_version}-${os}.zip
-	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${build_tool_version}-${os}.zip
-	download_nodejs=https://nodejs.org/dist/v${nodejs_version}/node-v${nodejs_version}-${os_short}-x64.${nodejs_ext}
-	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${appium_inspector_version}/Appium-Inspector-${os}-${appium_inspector_version}${arch}.${appium_inspector_ext}
+	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
+	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
+	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
+	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${VERSION_APPIUM_INSPECTOR}/Appium-Inspector-${os}-${VERSION_APPIUM_INSPECTOR}${arch}.${appium_inspector_ext}
 
 	archived_android_tools=android-tools.zip
 	archived_android_emulator=android-emulator.zip
@@ -288,7 +290,7 @@ function packaging_android() {
 	echo "Downloading Android Build Tools"
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
-	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${build_tool_version}
+	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${VERSION_BUILD_TOOL}
 
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
