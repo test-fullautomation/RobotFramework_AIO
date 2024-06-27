@@ -96,7 +96,7 @@ try:
 
       # -- prepare the command line for the test execution
 
-      if TESTTYPE == "PYTEST" and PLATFORMSYSTEM == "Windows":
+      if PLATFORMSYSTEM == "Windows":
          listCmdLineParts = []
          listCmdLineParts.append(f"\"{PYTHON}\"")
          listCmdLineParts.append(f"\"{sCoverageFile}\"")
