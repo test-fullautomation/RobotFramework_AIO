@@ -256,10 +256,13 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/*/coverage_report/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
-
 
   install-test-linux:
     name: Test Linux package
