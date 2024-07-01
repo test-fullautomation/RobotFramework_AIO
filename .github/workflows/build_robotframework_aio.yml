@@ -301,7 +301,7 @@ jobs:
             exit 1
         fi
 
-    - name: Run tests coverage on Windows
+    - name: Run tests coverage on Linux
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
