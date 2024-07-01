@@ -96,12 +96,11 @@ try:
 
       # -- prepare the command line for the test execution
 
-      if PLATFORMSYSTEM == "Windows":
-         listCmdLineParts = []
-         listCmdLineParts.append(f"\"{PYTHON}\"")
-         listCmdLineParts.append(f"\"{sCoverageFile}\"")
-         listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
-         sCmdLine = " ".join(listCmdLineParts)
+      listCmdLineParts = []
+      listCmdLineParts.append(f"\"{PYTHON}\"")
+      listCmdLineParts.append(f"\"{sCoverageFile}\"")
+      listCmdLineParts.append(f"\"{COMPONENTROOTPATH}\"")
+      sCmdLine = " ".join(listCmdLineParts)
 
       print(COLBY + "Starting test coverage:")
       print()
