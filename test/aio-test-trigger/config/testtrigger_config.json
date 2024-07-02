@@ -46,129 +46,12 @@
 
    "COMPONENTS" : [
                     {
-                       "COMPONENTROOTPATH" : "../../../../python-extensions-collection",
-                       "TESTFOLDER"        : "test/pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=PythonExtensionsCollection"],
-                       "LOGFILE"           : "../../../../python-extensions-collection/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../python-extensions-collection/test/testlogfiles"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-genpackagedoc",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=GenPackageDoc"],
-                       "LOGFILE"           : "../../../../python-genpackagedoc/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-jsonpreprocessor",
-                       "TESTFOLDER"        : "atest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
-                       "LOGFILE"           : "../../../../python-jsonpreprocessor/atest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-jsonpreprocessor",
-                       "TESTFOLDER"        : "test/pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=JsonPreprocessor"],
-                       "LOGFILE"           : "../../../../python-jsonpreprocessor/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../python-jsonpreprocessor/test/testlogfiles"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-microservice-base",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceBase"],
-                       "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
                        "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceClewareSwitch"],
                        "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-testresultdbaccess",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=TestResultDBAccess"],
-                       "LOGFILE"           : "../../../../python-testresultdbaccess/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-pytestlog2db",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=PyTestLog2DB"],
-                       "LOGFILE"           : "../../../../python-pytestlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../tutorial-test",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=TutorialTest"],
-                       "LOGFILE"           : "../../tutorial-test/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-extensions-collection",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOGFILE"           : "../../../../robotframework-extensions-collection/test/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    # conditions to be clarified: robotframework-qconnect-base\atest
-                    # conditions to be clarified: robotframework-qconnect-dlt\atest
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-robotlog2db",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=RobotLog2DB"],
-                       "LOGFILE"           : "../../../../robotframework-robotlog2db/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-robotlog2rqm",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=RobotLog2RQM"],
-                       "LOGFILE"           : "../../../../robotframework-robotlog2rqm/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
-                       "TESTFOLDER"        : "test/pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=TestsuitesManagement"],
-                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/test/pytest/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework-testsuitesmanagement/test/testlogfiles"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-testsuitesmanagement",
-                       "TESTFOLDER"        : "atest",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
-                       "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework",
-                       "TESTFOLDER"        : "atest",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "run.py",
-                       "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\""],
-                       "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
-                       "EXECUTION"         : "RAW"
                     }
                   ],
 
