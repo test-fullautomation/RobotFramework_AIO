@@ -3,20 +3,20 @@
         {
             "STATE": "run",
             "COMMANDLINE": "./test/tutorial-test/tutorial-test.py",
-            "CURRENT_WORKING_DIR": "",
-            "CONFIG": "./test/tutorial-test/pytest/coverage/config/.coveragerc"
+            "CURRENT_WORKING_DIR": "test",
+            "CONFIG": "./tutorial-test/pytest/coverage/config/.coveragerc"
         },
         {
             "STATE": "report",
             "COMMANDLINE": "",
-            "CURRENT_WORKING_DIR": "",
-            "CONFIG": "./test/tutorial-test/pytest/coverage/config/.coveragerc"
+            "CURRENT_WORKING_DIR": "test",
+            "CONFIG": "./tutorial-test/pytest/coverage/config/.coveragerc"
         },
         {
             "STATE": "html",
             "COMMANDLINE": "",
             "CURRENT_WORKING_DIR": "",
-            "CONFIG": "./test/tutorial-test/pytest/coverage/config/.coveragerc"
+            "CONFIG": "./tutorial-test/pytest/coverage/config/.coveragerc"
         }
     ]
 }
