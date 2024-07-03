@@ -1,0 +1,22 @@
+{
+    "COVERAGE": [
+        {
+            "STATE": "run",
+            "COMMANDLINE": "tutorial-test.py",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        },
+        {
+            "STATE": "report",
+            "COMMANDLINE": "",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        },
+        {
+            "STATE": "html",
+            "COMMANDLINE": "",
+            "CURRENT_WORKING_DIR": "",
+            "CONFIG": "./pytest/coverage/config/.coveragerc"
+        }
+    ]
+}
