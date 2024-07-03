@@ -1,7 +1,7 @@
 [run]
 branch = True
 
-data_file = ./tutorial-test/pytest/coverage/.coverage
+data_file = ./pytest/coverage/.coverage
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -28,4 +28,4 @@ omit =
 ignore_errors = True
 
 [html]
-directory = ./tutorial-test/pytest/coverage/coverage_report
+directory = ./pytest/coverage/coverage_report
