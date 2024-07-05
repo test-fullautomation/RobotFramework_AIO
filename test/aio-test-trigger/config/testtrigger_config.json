@@ -172,7 +172,7 @@
                     },
                     {
                      "COMPONENTROOTPATH" : "../../../../robotframework-selftest",
-                     "TESTFOLDER"        : "testcases/connectivity/android",
+                     "TESTFOLDER"        : "testcases",
                      "TESTTYPE"          : "ROBOT",
                      "TESTEXECUTOR"      : "executerobottest.py",
                      "LOGFILE"           : "../../../../robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml"
