@@ -138,6 +138,12 @@ jobs:
           name: linux-package
           path: output_lx/*.deb
 
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: RobotFrameworkAIO_Reference
+          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+
   build-windows:
     name: Build Windows package
     runs-on: windows-latest
