@@ -237,7 +237,9 @@ jobs:
     - name: Generate tutorial doc
       shell: cmd
       run: |
-        cd robotframework-tutorial\__setup\
+        ls -la
+        cd ..\robotframework-tutorial\__setup\
+        ls -la
         "%RobotPythonPath%\python" .\gen_doc_tutorial.py
          
     - name: Upload test result as artifact
@@ -302,7 +304,9 @@ jobs:
     
     - name: Generate tutorial doc
       run: |
-        cd robotframework-tutorial\__setup\
+        ls -la
+        cd ../robotframework-tutorial/__setup/
+        ls -la
         $RobotPythonPath/python3.9 ./gen_doc_tutorial.py
 
     - name: Upload test result as artifact
