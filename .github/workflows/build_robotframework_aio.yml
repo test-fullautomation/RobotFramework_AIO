@@ -237,10 +237,7 @@ jobs:
     - name: Generate tutorial doc
       shell: cmd
       run: |
-        ls -la
-        cd ..\robotframework-tutorial\__setup\
-        ls -la
-        "%RobotPythonPath%\python" .\gen_doc_tutorial.py
+        "%RobotPythonPath%\python" ..\robotframework-tutorial\__setup\gen_doc_tutorial.py
          
     - name: Upload test result as artifact
       if: success() || failure()
@@ -304,10 +301,7 @@ jobs:
     
     - name: Generate tutorial doc
       run: |
-        ls -la
-        cd ../robotframework-tutorial/__setup/
-        ls -la
-        $RobotPythonPath/python3.9 ./gen_doc_tutorial.py
+        $RobotPythonPath/python3.9 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
 
     - name: Upload test result as artifact
       if: success() || failure()
