@@ -301,6 +301,7 @@ jobs:
     
     - name: Generate tutorial doc
       run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
 
     - name: Upload test result as artifact
