@@ -100,6 +100,7 @@ class COutput():
       sReleaseInfoFileHTMLName = f"release_info_{bundle_name}_{bundle_version}.html"
       sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(" ", "_")
       sReleaseInfoFileHTML     = f"{REFERENCEPATH_CONFIG}/{sReleaseInfoFileHTMLName}"
+      sReleaseChangelogFileHTML= f"{REFERENCEPATH_CONFIG}/release_changelog.html"
 
       self.__oConfig.Set('RELEASEINFOFILEHTML', sReleaseInfoFileHTML)
 
@@ -308,11 +309,13 @@ class COutput():
             dictListOfChangesPerComponent[sComponent].extend(listChanges)
       # eof for sComponent in listComponentsAll:
 
+      listHTMLChangelog = []
       listIdentifiedComponents = list(dictListOfChangesPerComponent.keys())
       nCnt = 0
       if len(listIdentifiedComponents) > 0:
          # someting found, therefore start a table
          listLinesHTML.append(self.__oPattern.GetChangesTableBegin())
+         listHTMLChangelog.append(self.__oPattern.GetChangesTableBegin())
          for sIdentifiedComponent in listIdentifiedComponents:
             listChanges = dictListOfChangesPerComponent[sIdentifiedComponent]
             for sChange in listChanges:
@@ -324,8 +327,10 @@ class COutput():
                sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
                sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
+               listHTMLChangelog.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
 
          listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listHTMLChangelog.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
       # eof if len(listIdentifiedComponents) > 0:
 
@@ -355,6 +360,13 @@ class COutput():
       oReleaseInfoFileHTML = CFile(sReleaseInfoFileHTML)
       oReleaseInfoFileHTML.Write(sHTMLCode)
       del oReleaseInfoFileHTML
+
+      listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
+
+      # write changelog html file
+      oReleaseChangelogFileHTML = CFile(sReleaseChangelogFileHTML)
+      oReleaseChangelogFileHTML.Write("\n".join(listHTMLChangelog))
+      del oReleaseChangelogFileHTML
 
       listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
 
