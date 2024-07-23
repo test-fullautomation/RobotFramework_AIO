@@ -320,13 +320,9 @@ jobs:
     - name: Download artifact from build workflow
       uses: actions/download-artifact@v3
 
-    - name: Get released file names
+    - name: Get released version
       run: |
-        echo "EXE_FILE=$(ls windows-package/*.exe | head -1)" >> $GITHUB_ENV
-        echo "DEB_FILE=$(ls linux-package/*.deb | head -1)" >> $GITHUB_ENV
-        echo "RELEASE_INFO_FILE=$(ls windows-aiotestlogfiles/release_info_RobotFramework_AIO_${TAG_NAME#rel/aio/}.html)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
-
 
     - name: Create/Update GitHub Release
       id: create_update_release

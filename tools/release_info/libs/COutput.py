@@ -365,10 +365,10 @@ class COutput():
 
       # write changelog html file
       oReleaseChangelogFileHTML = CFile(sReleaseChangelogFileHTML)
-      oReleaseChangelogFileHTML.Write("\n".join(listHTMLChangelog))
+      oReleaseChangelogFileHTML.Write("\n".join(listHTMLChangelog).replace("\r\n", " "))
       del oReleaseChangelogFileHTML
 
-      listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
+      listResults.append(f"Release changelog written to '{sReleaseChangelogFileHTML}'")
 
       # -- output to email
 
