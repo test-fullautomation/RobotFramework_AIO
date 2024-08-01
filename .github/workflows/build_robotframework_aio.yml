@@ -138,6 +138,12 @@ jobs:
           name: linux-package
           path: output_lx/*.deb
 
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: RobotFrameworkAIO_Reference
+          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+
   build-windows:
     name: Build Windows package
     runs-on: windows-latest
@@ -234,6 +240,11 @@ jobs:
         "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS.json"
         move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
         move .\tools\release_info\release_changelog.html ..\
+    
+    - name: Generate tutorial doc
+      shell: cmd
+      run: |
+        "%RobotPythonPath%\python" ..\robotframework-tutorial\__setup\gen_doc_tutorial.py
          
     - name: Upload test result as artifact
       if: success() || failure()
@@ -295,7 +306,12 @@ jobs:
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./release_info_config_OSS.json
         mv ./tools/release_info/release_info_RobotFramework_AIO_*.html ../
-       
+    
+    - name: Generate tutorial doc
+      run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
+        $RobotPythonPath/python3.9 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
+
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -306,7 +322,6 @@ jobs:
           ${{ runner.workspace }}/**/*/testlogfiles/*
           ${{ runner.workspace }}/**/*/console_log.txt
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
-
 
   release:
     name: Release AIO
