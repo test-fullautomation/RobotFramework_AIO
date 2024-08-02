@@ -109,6 +109,7 @@ class COutput():
       sReleaseInfoFileHTMLName = f"release_info_{bundle_name}_{bundle_version}.html"
       sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(" ", "_")
       sReleaseInfoFileHTML     = f"{REFERENCEPATH_CONFIG}/{sReleaseInfoFileHTMLName}"
+      sReleaseChangelogFileHTML= f"{REFERENCEPATH_CONFIG}/release_changelog.html"
 
       self.__oConfig.Set('RELEASEINFOFILEHTML', sReleaseInfoFileHTML)
 
@@ -330,13 +331,20 @@ class COutput():
             dictListOfChangesPerComponent[sComponent].extend(listChanges)
       # eof for sComponent in listComponentsAll:
 
+      listHTMLChangelog = []
       listIdentifiedComponents = list(dictListOfChangesPerComponent.keys())
       nCnt = 0
+      nCntCmpt = 1
       if len(listIdentifiedComponents) > 0:
          # someting found, therefore start a table
          listLinesHTML.append(self.__oPattern.GetChangesTableBegin())
+         listHTMLChangelog.append(self.__oPattern.GetChangeLogTableBegin())
          for sIdentifiedComponent in listIdentifiedComponents:
             listChanges = dictListOfChangesPerComponent[sIdentifiedComponent]
+            sHTMLChangelogCmpt = ''
+            if listChanges:
+               nCntCmpt = nCntCmpt + 1
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + f"<h3>{sIdentifiedComponent}</h3>"
             for sChange in listChanges:
                nCnt = nCnt + 1
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
@@ -346,6 +354,10 @@ class COutput():
                sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
                sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + sChange_conv
+            
+            if sHTMLChangelogCmpt:
+               listHTMLChangelog.append(self.__oPattern.GetChangeLogTableDataRow(sHTMLChangelogCmpt))
 
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -379,6 +391,14 @@ class COutput():
       del oReleaseInfoFileHTML
 
       listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
+
+      # write changelog html file
+      oReleaseChangelogFileHTML = CFile(sReleaseChangelogFileHTML)
+      sChangelogContent = "\n".join(listHTMLChangelog).replace("\r\n", " ")
+      oReleaseChangelogFileHTML.Write(sChangelogContent)
+      del oReleaseChangelogFileHTML
+
+      listResults.append(f"Release changelog written to '{sReleaseChangelogFileHTML}'")
 
       # -- output to email
 
