@@ -338,12 +338,13 @@ class COutput():
       if len(listIdentifiedComponents) > 0:
          # someting found, therefore start a table
          listLinesHTML.append(self.__oPattern.GetChangesTableBegin())
-         listHTMLChangelog.append("<h2>Changelog</h2>")
+         listHTMLChangelog.append(self.__oPattern.GetChangeLogTableBegin())
          for sIdentifiedComponent in listIdentifiedComponents:
             listChanges = dictListOfChangesPerComponent[sIdentifiedComponent]
+            sHTMLChangelogCmpt = ''
             if listChanges:
-               listHTMLChangelog.append(f"<h3>{nCntCmpt}. {sIdentifiedComponent}</h3>")
                nCntCmpt = nCntCmpt + 1
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + f"<h3>{sIdentifiedComponent}</h3>"
             for sChange in listChanges:
                nCnt = nCnt + 1
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
@@ -353,7 +354,10 @@ class COutput():
                sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
                sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
-               listHTMLChangelog.append(sChange_conv)
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + sChange_conv
+            
+            if sHTMLChangelogCmpt:
+               listHTMLChangelog.append(self.__oPattern.GetChangeLogTableDataRow(sHTMLChangelogCmpt))
 
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
