@@ -132,8 +132,20 @@ class COutput():
 
       # prepare variable mapping for replacement in release main info 
       lBundleVersion = bundle_version.split('.')
+      lIntermediateLabels = []
+      if (len(lBundleVersion) > 2) and (int(lBundleVersion[2]) == 0):
+         # check list of version from release_main_info to get intermediate release labels
+         # intermediate release labels are only required for major release (patch version is 0)
+         for versionNo in listVersionNumbersAll:
+            lVersionInfo = versionNo.split('.')
+            if (len(lVersionInfo) > 2) and (lVersionInfo[0] == lBundleVersion[0]) \
+                and (int(lVersionInfo[1]) == int(lBundleVersion[1])-1) and (int(lVersionInfo[2]) != 0):
+               lIntermediateLabels.append('.'.join(lVersionInfo[:3]))
+      sIntermediateLabels = ','.join(lIntermediateLabels) if len(lIntermediateLabels) > 0 else ""
+         
       dVariableMapping = {
          "VERSION": '.'.join(lBundleVersion[:4]),
+         "INTERMEDIATE_LABELS": sIntermediateLabels,
          "LABEL": '.'.join(lBundleVersion[:3])
       }
 
