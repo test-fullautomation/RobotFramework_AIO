@@ -99,7 +99,11 @@ function update_vscodium_related(){
    sed -i "s|{RobotVsCode}|$VsCodePath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
 
    # install Github Copilot extensions for VsCodium from end-user due to the extension's license
-   read -p "Do you want to install Github Copilot extensions for VsCodium? (Y/N): " choice
+   read -rt 30 -p "Do you want to install Github Copilot extensions for VsCodium? (Y/N): " choice
+   # execute the script to install install Github Copilot as default (without input from user)
+   if [ -z "$choice" ]; then
+      choice="Y"
+   fi
    case "$choice" in
       Y|y|Yes|yes)
          echo "Installing Github Copilot extensions..."

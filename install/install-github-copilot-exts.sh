@@ -1,4 +1,5 @@
 #!/bin/bash
+. /opt/rfwaio/linux/set_robotenv.sh
 
 VSCODIUM="$RobotVsCode/bin/codium"
 REQUIRED_VERSION=1.90.2
@@ -9,6 +10,8 @@ EXTENSIONS=(
     ["copilot-chat"]="0.16.1"
     ["copilot"]="1.212.0"
 )
+
+TMP=/tmp
 
 # verify installation of VsCodium and its version
 if ! command -v "$VSCODIUM" &> /dev/null; then
