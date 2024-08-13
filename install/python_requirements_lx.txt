@@ -105,8 +105,7 @@ QLed
 qtawesome           
 requests             
 # requests-ntlm  
-Appium-Python-Client==3.1.1
-robotframework-appiumlibrary==2.0.0
+robotframework-appiumlibrary
 robotframework-ftplibrary     
 robotframework-listenerlibrary
 robotframework-mqttlibrary    
