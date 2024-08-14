@@ -98,24 +98,12 @@ function update_vscodium_related(){
    sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
    sed -i "s|{RobotVsCode}|$VsCodePath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
 
-   # install Github Copilot extensions for VsCodium from end-user due to the extension's license
-   read -rt 30 -p "Do you want to install Github Copilot extensions for VsCodium? (Y/N): " choice
-   # execute the script to install install Github Copilot as default (without input from user)
-   if [ -z "$choice" ]; then
-      choice="Y"
+   # Remind user to install Github Copilot extensions for VsCodium
+   INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   if [ -d "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
+      echo "For using Github Copilot extensions with VsCodium, please install them by below commands:"
+      echo "${INSTALL_COPILOT_EXTS_SCRIPT}"
    fi
-   case "$choice" in
-      Y|y|Yes|yes)
-         echo "Installing Github Copilot extensions..."
-         /opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-         ;;
-      N|n|No|no)
-         echo "Skipped Github Copilot extensions installation."
-         ;;
-      *)
-         echo "Invalid input. Skipped Github Copilot extensions installation."
-         ;;
-   esac
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"
