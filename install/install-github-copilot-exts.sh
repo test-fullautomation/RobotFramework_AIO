@@ -1,7 +1,6 @@
 #!/bin/bash
-. /opt/rfwaio/linux/set_robotenv.sh
 
-VSCODIUM="$RobotVsCode/bin/codium"
+VSCODIUM="$RobotVsCode/bin/codium --user-data-dir=$RobotVsCode/data"
 REQUIRED_VERSION=1.90.2
 
 PUBLISHER="GitHub"
@@ -11,10 +10,12 @@ EXTENSIONS=(
     ["copilot"]="1.212.0"
 )
 
-TMP=/tmp
+# Create user temp folder to store downloading extension files
+USER_TMP="$HOME/tmp"
+mkdir -p "$USER_TMP"
 
 # verify installation of VsCodium and its version
-if ! command -v "$VSCODIUM" &> /dev/null; then
+if ! command -v "$RobotVsCode/bin/codium" &> /dev/null; then
    echo "VSCodium for RobotFramework is not installed."
    exit 1
 fi
@@ -30,7 +31,7 @@ fi
 for extension in "${!EXTENSIONS[@]}"; do
    version="${EXTENSIONS[$extension]}"
 
-   extension_info=$("$VSCODIUM" --list-extensions --show-versions | grep ".$extension@")
+   extension_info=$($VSCODIUM --list-extensions --show-versions | grep ".$extension@")
    if [ -z "$extension_info" ]; then
       echo "Extension $extension is not installed."
    else
@@ -54,7 +55,7 @@ for extension in "${!EXTENSIONS[@]}"; do
 	max_retries=5
 	success=false
    while [[ "$retry_counter" -lt "$max_retries" && "$success" == "false" ]];do
-      curl -L -k "$url" -o "$TMP/${PUBLISHER}.${extension}-${version}.vsix" 
+      curl -L -k "$url" -o "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" 
       if [ $? -eq 0 ]; then
          success=true
          echo "Extension ${PUBLISHER}.${extension}-${version} downloaded successfully."
@@ -70,14 +71,14 @@ for extension in "${!EXTENSIONS[@]}"; do
 	fi
 
    # install the extension using VSCodium
-   $VSCODIUM --install-extension "$TMP/${PUBLISHER}.${extension}-${version}.vsix"
+   $VSCODIUM --install-extension "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix"
    if [ $? -eq 0 ]; then
-      echo "Extension ${PUBLISHER}.${extension}-${version} installed successfully."
+      echo "Extension ${PUBLISHER}.${extension}-${version} is installed successfully."
    else
       echo "Failed to install extension ${PUBLISHER}.${extension}-${version}."
       exit 1
    fi
 
    # clean the downloaded VSIX file
-   rm "$TMP/${PUBLISHER}.${extension}-${version}.vsix" 
+   rm "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" 
 done
