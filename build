@@ -326,6 +326,8 @@ function build_debian()
 	# Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
+	cp ./install/install-github-copilot-exts.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
 
 	# Tutorial and Documentation packages
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial

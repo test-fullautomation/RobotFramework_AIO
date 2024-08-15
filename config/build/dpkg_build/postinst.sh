@@ -97,6 +97,13 @@ function update_vscodium_related(){
    sed -i "s|{RobotPythonPath}|$PyPath|g" /opt/rfwaio/robotvscode/data/user-data/User/settings.json
    sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
    sed -i "s|{RobotVsCode}|$VsCodePath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
+
+   # Remind user to install Github Copilot extensions for VsCodium
+   INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
+      echo "For using Github Copilot extensions with VsCodium, please install them by below commands:"
+      echo "${INSTALL_COPILOT_EXTS_SCRIPT}"
+   fi
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"
