@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VSCODIUM="$RobotVsCode/bin/codium --user-data-dir=$RobotVsCode/data"
+VSCODIUM="$RobotVsCode/bin/codium"
 REQUIRED_VERSION=1.90.2
 
 PUBLISHER="GitHub"
@@ -15,12 +15,12 @@ USER_TMP="$HOME/tmp"
 mkdir -p "$USER_TMP"
 
 # verify installation of VsCodium and its version
-if ! command -v "$RobotVsCode/bin/codium" &> /dev/null; then
+if ! command -v "$VSCODIUM" &> /dev/null; then
    echo "VSCodium for RobotFramework is not installed."
    exit 1
 fi
 
-installed_version=$($VSCODIUM --version | head -n 1)
+installed_version=$("$VSCODIUM" --version --user-data-dir=$RobotVsCode/data | head -n 1)
 
 if [ "$installed_version" != "$REQUIRED_VERSION" ]; then
    echo "Installed VSCodium version is ${installed_version} different from expected version ${REQUIRED_VERSION}."
@@ -31,7 +31,7 @@ fi
 for extension in "${!EXTENSIONS[@]}"; do
    version="${EXTENSIONS[$extension]}"
 
-   extension_info=$($VSCODIUM --list-extensions --show-versions | grep ".$extension@")
+   extension_info=$("$VSCODIUM" --list-extensions --show-versions --user-data-dir=$RobotVsCode/data | grep ".$extension@")
    if [ -z "$extension_info" ]; then
       echo "Extension $extension is not installed."
    else
@@ -71,7 +71,7 @@ for extension in "${!EXTENSIONS[@]}"; do
 	fi
 
    # install the extension using VSCodium
-   $VSCODIUM --install-extension "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix"
+   "$VSCODIUM" --install-extension "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" --user-data-dir=$RobotVsCode/data
    if [ $? -eq 0 ]; then
       echo "Extension ${PUBLISHER}.${extension}-${version} is installed successfully."
    else
@@ -80,5 +80,9 @@ for extension in "${!EXTENSIONS[@]}"; do
    fi
 
    # clean the downloaded VSIX file
-   rm "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" 
+   rm "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix"
+
+   echo
+   echo "Please refer to the following article to get a GitHub Copilot license or subscription:"
+   echo "$PLACEHOLDER_REF_URL"
 done
