@@ -100,7 +100,7 @@ function update_vscodium_related(){
 
    # Remind user to install Github Copilot extensions for VsCodium
    INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-   if [ -d "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
+   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
       echo "For using Github Copilot extensions with VsCodium, please install them by below commands:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT}"
    fi
