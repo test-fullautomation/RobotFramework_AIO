@@ -431,16 +431,22 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      GetWindowsVersionEx(Version);
+      if (Version.NTPlatform) and (Version.Major>=6) then
+        begin
+          Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\devtools');
+        end;
 
 #ifdef DoInstallTracking
-        //installation tracking
-        try
-           WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-           WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
-           WinHttpReq.Send();  
-        except
-           //ignore any issue. Setup must complete...
-        end;
+      //installation tracking
+      try
+          WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+          WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
+          WinHttpReq.Send();  
+      except
+          //ignore any issue. Setup must complete...
+      end;
 #endif
 
 
