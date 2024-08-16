@@ -1,5 +1,5 @@
 Package: robotframework-aio
-Version: 0.13.0.6
+Version: 0.13.0.7
 Section: base
 Priority: optional
 Architecture: amd64
