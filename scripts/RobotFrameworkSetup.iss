@@ -558,7 +558,7 @@ begin
   InstructionMemo.Cursor := crArrow;
   InstructionMemo.Text := '1. Open Git Bash or any other bash-compatible terminal.'#13#10#13#10+
                           '2. Run the following bash script to install GitHub Copilot extension:'#13#10+
-                          '    '+ ScriptPath
+                          '    "'+ ScriptPath + '"'
 
 end;
 
