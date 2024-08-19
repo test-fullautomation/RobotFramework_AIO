@@ -35,6 +35,8 @@
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
 
+[CustomMessages]
+InstallCopilotArgs={#GetEnv('GITHUB_COPILOT_EXT_ARG')}
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -467,6 +469,7 @@ var
  StaticText : TNewStaticText;
  ProjectListCounter : Integer;
  i:Integer;
+ MsgInstallCopilotArgs: String;
  
 begin
   InitProjectHash();
@@ -546,6 +549,7 @@ begin
 
   // Create the memo for the Instruction
   ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.sh';
+  MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
   InstructionMemo := TMemo.Create(WizardForm);
   InstructionMemo.Parent := InfoAfterPage.Surface;
   InstructionMemo.Top := WizardForm.ReadyMemo.Top; 
@@ -558,7 +562,7 @@ begin
   InstructionMemo.Cursor := crArrow;
   InstructionMemo.Text := '1. Open Git Bash or any other bash-compatible terminal.'#13#10#13#10+
                           '2. Run the following bash script to install GitHub Copilot extension:'#13#10+
-                          '    "'+ ScriptPath + '"'
+                          '    "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
 
 end;
 
