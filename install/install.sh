@@ -295,6 +295,11 @@ function packaging_android() {
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
 	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
+
+	echo "Installing AVD for Android"
+	ANDROID_HOME=%RobotDevtools%/Android
+	EMULATOR=%RobotDevtools%/Android/tools
+	start "Install AVD" "%AVD%"/avdmanager create avd -n %AVD_NAME% -k "system-images;android-31;google_apis_playstore;x86_64" --force --device "pixel_xl"
 }
 
 #
