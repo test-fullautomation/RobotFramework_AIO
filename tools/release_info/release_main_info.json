@@ -812,7 +812,7 @@ Feel free to contact us when you use or intend to use **RobotFramework AIO**. We
                                   "",  "https://github.com/test-fullautomation/RobotFramework_AIO/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; RobotFramework_AIO (build)",
                                       "https://github.com/test-fullautomation/testresultwebapp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; testresultwebapp",
                                       "https://github.com/test-fullautomation/vscode-jsonp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; vscode-jsonp",
-                                  "",  "https://gitlab-apertispro.boschdevcloud.com/robotframework-aio/main/build/-/merge_requests?scope=all&utf8=%E2%9C%93&state=merged&milestone_title###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; Gitlab build and CI"
+                                  "",  "https://gitlab-apertispro.boschdevcloud.com/robotframework-aio/main/build/-/merge_requests?scope=all&utf8=%E2%9C%93&state=merged&milestone_title=###LABEL###; merged pull-requests; Gitlab build and CI"
                                     ]
                        },
              
