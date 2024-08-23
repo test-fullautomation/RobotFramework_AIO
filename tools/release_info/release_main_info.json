@@ -695,12 +695,7 @@ Feel free to contact us when you use or intend to use **RobotFramework AIO**. We
              - ${variable} allows reuse of already defined variables on `JSON <https://www.json.org/json-de.html>`_ level.
              - \".\" (dot)-syntax allows easy navigation through object hierarchies.
                         "],
-                "HIGHLIGHTS"      : ["
-          **New**
-          
-          (Your update here)
-  
-          
+                "HIGHLIGHTS"      : ["          
           **General**
           
           - Improved continuous test as part of pipeline.
