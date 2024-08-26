@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.5.0 / 27.05.2024 (OSS version)",
+   "VERSION_CONFIG" : "0.5.1 / 26.08.2024 (OSS version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -71,6 +71,7 @@
                               "../../../robotframework-qconnect-winapp/config/robotframework_aio/release_items_QConnectWinapp.json",
                               "../../../robotframework-robotlog2db/config/robotframework_aio/release_items_RobotLog2DB.json",
                               "../../../robotframework-robotlog2rqm/config/robotframework_aio/release_items_RobotLog2RQM.json",
+                              "../../../robotframework-uds/config/robotframework_aio/release_items_RobotFramework_UDS.json",
                               "../../../robotframework-testsuitesmanagement/config/robotframework_aio/release_items_RobotFramework_TestsuitesManagement.json",
                               "../../../robotframework-tutorial/__setup/robotframework_aio/release_items_RobotframeworkTutorial.json",
                               #"../../../testresultwebapp/config/robotframework_aio/release_items_TestResultWebApp.json",
