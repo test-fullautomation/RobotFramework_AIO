@@ -12,3 +12,4 @@ robotframework-dbus
 robotframework-qconnect-winapp
 robotframework-doip
 robotframework-prometheus=prometheus_interface.py
+robotframework-uds
