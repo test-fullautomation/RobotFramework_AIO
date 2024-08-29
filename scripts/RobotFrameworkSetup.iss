@@ -35,6 +35,8 @@
 #define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
 #define MyAppPublisher "Robert Bosch GmbH"
 
+[CustomMessages]
+InstallCopilotArgs={#GetEnv('GITHUB_COPILOT_EXT_ARG')}
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -108,6 +110,7 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: ..\install\install-github-copilot-exts.sh; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -242,6 +245,10 @@ var
   ProjectPage : TWizardPage;
   ProjectListBox: TNewListBox;
   PreviousUserDataDir: String;
+  InfoAfterPage: TWizardPage;
+  InstructionLabel: TLabel;
+  InstructionMemo: TMemo;
+  ScriptPath: string;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -431,16 +438,22 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      GetWindowsVersionEx(Version);
+      if (Version.NTPlatform) and (Version.Major>=6) then
+        begin
+          Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\devtools');
+        end;
 
 #ifdef DoInstallTracking
-        //installation tracking
-        try
-           WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-           WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
-           WinHttpReq.Send();  
-        except
-           //ignore any issue. Setup must complete...
-        end;
+      //installation tracking
+      try
+          WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+          WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
+          WinHttpReq.Send();  
+      except
+          //ignore any issue. Setup must complete...
+      end;
 #endif
 
 
@@ -456,6 +469,7 @@ var
  StaticText : TNewStaticText;
  ProjectListCounter : Integer;
  i:Integer;
+ MsgInstallCopilotArgs: String;
  
 begin
   InitProjectHash();
@@ -522,6 +536,33 @@ begin
   //initialize user data directory page with last directory
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
+
+  //Notice for user who want to use Github Copilot extensions
+  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', 'The GitHub Copilot extension does not come pre-installed with VsCodium for RobotFramework');
+
+  InstructionLabel := TLabel.Create(WizardForm);
+  InstructionLabel.Parent := InfoAfterPage.Surface;
+  InstructionLabel.Caption := 'Please follow these steps to install Github Copilot extension for VsCodium:';
+  InstructionLabel.AutoSize := True;
+  InstructionLabel.Top := ScaleY(0);
+  InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
+
+  // Create the memo for the Instruction
+  ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.sh';
+  MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
+  InstructionMemo := TMemo.Create(WizardForm);
+  InstructionMemo.Parent := InfoAfterPage.Surface;
+  InstructionMemo.Top := WizardForm.ReadyMemo.Top; 
+  InstructionMemo.Width := WizardForm.ReadyMemo.Width;
+  InstructionMemo.Height := WizardForm.ReadyMemo.Height;
+  InstructionMemo.Color := WizardForm.ReadyMemo.Color;
+  InstructionMemo.Font := WizardForm.ReadyMemo.Font;
+  InstructionMemo.ReadOnly := True;
+  InstructionMemo.ScrollBars := ssVertical;
+  InstructionMemo.Cursor := crArrow;
+  InstructionMemo.Text := '1. Open Git Bash or any other bash-compatible terminal.'#13#10#13#10+
+                          '2. Run the following bash script to install GitHub Copilot extension:'#13#10+
+                          '    "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
 
 end;
 

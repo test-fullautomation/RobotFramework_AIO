@@ -154,4 +154,5 @@ black
 isort
 ruff
 requests_kerberos
-pydotdict
+udsoncan
+odxtools

@@ -30,6 +30,8 @@ env:
   BUNDLE_NAME: --bundle_name "RobotFramework AIO"
   GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
   INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
+  GITHUB_COPILOT_REF_URL: "https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/managing-your-copilot-subscription"
+  GITHUB_COPILOT_EXT_ARG: ""
 
 jobs:
   tag-repos:
@@ -89,6 +91,9 @@ jobs:
           # Environment variable for trigger process
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
+
+          # Update placeholders install-github-copilot-exts.sh script
+          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
 
       - name: Clone repositories
         run: |
@@ -168,6 +173,9 @@ jobs:
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
+
+          # Update placeholders install-github-copilot-exts.sh script
+          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
 
       - name: Clone repositories
         shell: bash
