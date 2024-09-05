@@ -695,6 +695,9 @@ Feel free to contact us when you use or intend to use **RobotFramework AIO**. We
              - ${variable} allows reuse of already defined variables on `JSON <https://www.json.org/json-de.html>`_ level.
              - \".\" (dot)-syntax allows easy navigation through object hierarchies.
                         "],
+                "WARNINGS"      : ["          
+          This release contains important changes in the component **RobotFramework_TestsuitesManagement**. Tests need to be adapted after installation. For details please refer to the list of changes below.
+                                 "],
                 "HIGHLIGHTS"      : ["          
           **General**
           
