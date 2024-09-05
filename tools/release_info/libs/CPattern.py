@@ -318,4 +318,23 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetChangeLogTableBegin(self):
+      sChangelogTableBegin = """<h3><font face="Arial" color="#242424">Changelog</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sChangelogTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetChangeLogTableDataRow(self, sChangeLog=None):
+      sChangeLogTableDataRow = """<tr>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###CHANGELOG###</font></td>
+</tr>
+"""
+      sChangeLogTableDataRow = sChangeLogTableDataRow.replace("###CHANGELOG###", f"{sChangeLog}")
+      return sChangeLogTableDataRow
 

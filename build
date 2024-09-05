@@ -319,6 +319,7 @@ function build_debian()
 	cp ./config/build/dpkg_build/appium.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/appiumInspector.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/linux/set_robotenv.sh
 	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
 	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
@@ -326,6 +327,8 @@ function build_debian()
 	# Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
+	cp ./install/install-github-copilot-exts.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
 
 	# Tutorial and Documentation packages
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial

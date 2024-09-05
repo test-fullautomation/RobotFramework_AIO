@@ -30,6 +30,8 @@ env:
   BUNDLE_NAME: --bundle_name "RobotFramework AIO"
   GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
   INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
+  GITHUB_COPILOT_REF_URL: "https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/managing-your-copilot-subscription"
+  GITHUB_COPILOT_EXT_ARG: ""
 
 jobs:
   tag-repos:
@@ -90,6 +92,9 @@ jobs:
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
 
+          # Update placeholders install-github-copilot-exts.sh script
+          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
+
       - name: Clone repositories
         run: |
           chmod +x ./cloneall
@@ -138,6 +143,12 @@ jobs:
           name: linux-package
           path: output_lx/*.deb
 
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: RobotFrameworkAIO_Reference
+          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+
   build-windows:
     name: Build Windows package
     runs-on: windows-latest
@@ -162,6 +173,9 @@ jobs:
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
+
+          # Update placeholders install-github-copilot-exts.sh script
+          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
 
       - name: Clone repositories
         shell: bash
@@ -233,6 +247,12 @@ jobs:
       run: |
         "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS.json"
         move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
+        move .\tools\release_info\release_changelog.html ..\
+    
+    - name: Generate tutorial doc
+      shell: cmd
+      run: |
+        "%RobotPythonPath%\python" ..\robotframework-tutorial\__setup\gen_doc_tutorial.py
          
     - name: Upload test result as artifact
       if: success() || failure()
@@ -248,6 +268,7 @@ jobs:
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
+          ${{ runner.workspace }}/release_changelog.html
           ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
 
 
@@ -293,7 +314,12 @@ jobs:
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./release_info_config_OSS.json
         mv ./tools/release_info/release_info_RobotFramework_AIO_*.html ../
-       
+    
+    - name: Generate tutorial doc
+      run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
+        $RobotPythonPath/python3.9 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
+
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v3
@@ -305,10 +331,11 @@ jobs:
           ${{ runner.workspace }}/**/*/console_log.txt
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
 
-
   release:
     name: Release AIO
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: [install-test-windows, install-test-linux]
     if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
 
@@ -316,53 +343,20 @@ jobs:
     - name: Download artifact from build workflow
       uses: actions/download-artifact@v3
 
-    - name: Get released file names
+    - name: Get released version
       run: |
-        echo "EXE_FILE=$(ls windows-package/*.exe | head -1)" >> $GITHUB_ENV
-        echo "DEB_FILE=$(ls linux-package/*.deb | head -1)" >> $GITHUB_ENV
-        echo "RELEASE_INFO_FILE=$(ls windows-aiotestlogfiles/release_info_RobotFramework_AIO_${TAG_NAME#rel/aio/}.html)" >> $GITHUB_ENV
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create/Update GitHub Release
+      id: create_update_release
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Windows Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.EXE_FILE }}
-        asset_name: setup_RobotFramework_AIO_Win_${{ env.RELEASE_VERSION }}.exe
-        asset_content_type: application/octet-stream
-
-    - name: Upload Linux Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.DEB_FILE }}
-        asset_name: setup_RobotFramework_AIO_Linux_${{ env.RELEASE_VERSION }}.deb
-        asset_content_type: application/vnd.debian.binary-package
-    
-    - name: Upload Release Info Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.RELEASE_INFO_FILE }}
-        asset_name: release_info_RobotFramework_AIO_${{ env.RELEASE_VERSION }}.html
-        asset_content_type: text/html
+        allowUpdates: true
+        omitNameDuringUpdate: true
+        makeLatest: true
+        name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
+        artifacts: "windows-package/*.exe,linux-package/*.deb,windows-aiotestlogfiles/release_info_RobotFramework_AIO_*.html"
+        bodyFile: "windows-aiotestlogfiles/release_changelog.html"
 
   tag-to-publish-packges-to-pypi:
     name: Tag Python packages to trigger workflow for publishing to PyPI

@@ -66,6 +66,15 @@ def IsVersionMatch(bundle_version, release_info_version):
 
 # --------------------------------------------------------------------------------------------------------------
 
+def resolveVariable(sContent, dVarMapping):
+   """Helps to resolve variable (define with ###VAR### syntax) by its value in given content
+   """
+   sResolvedLine = sContent
+   for var, value in dVarMapping.items():
+      sResolvedLine = sResolvedLine.replace(f"###{var}###", value)
+   
+   return sResolvedLine
+
 class COutput():
    """produce the output (currently HTML and email)
    """
@@ -100,6 +109,7 @@ class COutput():
       sReleaseInfoFileHTMLName = f"release_info_{bundle_name}_{bundle_version}.html"
       sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(" ", "_")
       sReleaseInfoFileHTML     = f"{REFERENCEPATH_CONFIG}/{sReleaseInfoFileHTMLName}"
+      sReleaseChangelogFileHTML= f"{REFERENCEPATH_CONFIG}/release_changelog.html"
 
       self.__oConfig.Set('RELEASEINFOFILEHTML', sReleaseInfoFileHTML)
 
@@ -119,6 +129,25 @@ class COutput():
 
       RELEASE_MAIN_INFO = self.__oConfig.Get('RELEASE_MAIN_INFO')
       listVersionNumbersAll = list(RELEASE_MAIN_INFO.keys())
+
+      # prepare variable mapping for replacement in release main info 
+      lBundleVersion = bundle_version.split('.')
+      lIntermediateLabels = []
+      if (len(lBundleVersion) > 2) and (int(lBundleVersion[2]) == 0):
+         # check list of version from release_main_info to get intermediate release labels
+         # intermediate release labels are only required for major release (patch version is 0)
+         for versionNo in listVersionNumbersAll:
+            lVersionInfo = versionNo.split('.')
+            if (len(lVersionInfo) > 2) and (lVersionInfo[0] == lBundleVersion[0]) \
+                and (int(lVersionInfo[1]) == int(lBundleVersion[1])-1) and (int(lVersionInfo[2]) != 0):
+               lIntermediateLabels.append('.'.join(lVersionInfo[:3]))
+      sIntermediateLabels = ','.join(lIntermediateLabels) if len(lIntermediateLabels) > 0 else ""
+         
+      dVariableMapping = {
+         "VERSION": '.'.join(lBundleVersion[:4]),
+         "INTERMEDIATE_LABELS": sIntermediateLabels,
+         "LABEL": '.'.join(lBundleVersion[:3])
+      }
 
       # -- find version number matches
 
@@ -166,7 +195,8 @@ class COutput():
 
       listofdictLinks = []
       for sLink in listLinksRaw:
-         listLinkParts = sLink.split(';')
+         sResolvedLink = resolveVariable(sLink, dVariableMapping)
+         listLinkParts = sResolvedLink.split(';')
          # PrettyPrint(listLinkParts, sPrefix="listLinkParts")
          nNrOfParts = len(listLinkParts)
          dictLink = {}
@@ -206,7 +236,8 @@ class COutput():
          # found 'RELEASENOTES' => write to output
          listLinesHTML.append(self.__oPattern.GetReleaseNotesTableBegin())
          for sReleaseNote in listReleaseNotes:
-            sReleaseNote_conv = pypandoc.convert_text(sReleaseNote, 'html', format='rst')
+            sReleaseNote_resolve = resolveVariable(sReleaseNote, dVariableMapping)
+            sReleaseNote_conv = pypandoc.convert_text(sReleaseNote_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sReleaseNote_conv = sReleaseNote_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -222,7 +253,8 @@ class COutput():
          # found 'HIGHLIGHTS' => write to output
          listLinesHTML.append(self.__oPattern.GetHighlightsTableBegin())
          for sHighlight in listHighlights:
-            sHighlight_conv = pypandoc.convert_text(sHighlight, 'html', format='rst')
+            sHighlight_resolve = resolveVariable(sHighlight, dVariableMapping)
+            sHighlight_conv = pypandoc.convert_text(sHighlight_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sHighlight_conv = sHighlight_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -238,7 +270,8 @@ class COutput():
          # found 'ADDITIONALINFORMATION' => write to output
          listLinesHTML.append(self.__oPattern.GetAdditionalInformationTableBegin())
          for sAdditionalInformation in listAdditionalInformation:
-            sAdditionalInformation_conv = pypandoc.convert_text(sAdditionalInformation, 'html', format='rst')
+            sAdditionalInformation_resolved = resolveVariable(sAdditionalInformation, dVariableMapping)
+            sAdditionalInformation_conv = pypandoc.convert_text(sAdditionalInformation_resolved, 'html', format='rst')
             # to open link in another explorer window:
             sAdditionalInformation_conv = sAdditionalInformation_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -254,7 +287,8 @@ class COutput():
          # found 'REQUIREMENTS' => write to output
          listLinesHTML.append(self.__oPattern.GetRequirementsTableBegin())
          for sRequirement in listRequirements:
-            sRequirement_conv = pypandoc.convert_text(sRequirement, 'html', format='rst')
+            sRequirement_resolve = resolveVariable(sRequirement, dVariableMapping)
+            sRequirement_conv = pypandoc.convert_text(sRequirement_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sRequirement_conv = sRequirement_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -270,7 +304,8 @@ class COutput():
          # found 'RESTRICTIONS' => write to output
          listLinesHTML.append(self.__oPattern.GetRestrictionsTableBegin())
          for sRestriction in listRestrictions:
-            sRestriction_conv = pypandoc.convert_text(sRestriction, 'html', format='rst')
+            sRestriction_resolve = resolveVariable(sRestriction, dVariableMapping)
+            sRestriction_conv = pypandoc.convert_text(sRestriction_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sRestriction_conv = sRestriction_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -308,13 +343,20 @@ class COutput():
             dictListOfChangesPerComponent[sComponent].extend(listChanges)
       # eof for sComponent in listComponentsAll:
 
+      listHTMLChangelog = []
       listIdentifiedComponents = list(dictListOfChangesPerComponent.keys())
       nCnt = 0
+      nCntCmpt = 1
       if len(listIdentifiedComponents) > 0:
          # someting found, therefore start a table
          listLinesHTML.append(self.__oPattern.GetChangesTableBegin())
+         listHTMLChangelog.append(self.__oPattern.GetChangeLogTableBegin())
          for sIdentifiedComponent in listIdentifiedComponents:
             listChanges = dictListOfChangesPerComponent[sIdentifiedComponent]
+            sHTMLChangelogCmpt = ''
+            if listChanges:
+               nCntCmpt = nCntCmpt + 1
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + f"<h3>{sIdentifiedComponent}</h3>"
             for sChange in listChanges:
                nCnt = nCnt + 1
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
@@ -324,6 +366,10 @@ class COutput():
                sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
                sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + sChange_conv
+            
+            if sHTMLChangelogCmpt:
+               listHTMLChangelog.append(self.__oPattern.GetChangeLogTableDataRow(sHTMLChangelogCmpt))
 
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -357,6 +403,14 @@ class COutput():
       del oReleaseInfoFileHTML
 
       listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
+
+      # write changelog html file
+      oReleaseChangelogFileHTML = CFile(sReleaseChangelogFileHTML)
+      sChangelogContent = "\n".join(listHTMLChangelog).replace("\r\n", " ")
+      oReleaseChangelogFileHTML.Write(sChangelogContent)
+      del oReleaseChangelogFileHTML
+
+      listResults.append(f"Release changelog written to '{sReleaseChangelogFileHTML}'")
 
       # -- output to email
 
