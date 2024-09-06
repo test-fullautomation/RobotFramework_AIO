@@ -319,6 +319,7 @@ function build_debian()
 	cp ./config/build/dpkg_build/appium.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/appiumInspector.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/linux/set_robotenv.sh
 	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
 	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
