@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 17.04.2024
+# 05.09.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -179,6 +179,26 @@ class CPattern():
 """
       sReleaseNotesTableDataRow = sReleaseNotesTableDataRow.replace("###RELEASENOTE###", f"{sReleaseNote}")
       return sReleaseNotesTableDataRow
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetWarningsTableBegin(self):
+      sWarningsTableBegin = """<h3><font face="Arial" color="#242424">Warnings</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sWarningsTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetWarningsTableDataRow(self, sWarning=None):
+      sWarningsTableDataRow = """<tr>
+   <td bgcolor="#FFC1C1" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###WARNING###</font></td>
+</tr>
+"""
+      sWarningsTableDataRow = sWarningsTableDataRow.replace("###WARNING###", f"{sWarning}")
+      return sWarningsTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
