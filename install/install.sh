@@ -34,13 +34,14 @@ android_only="No"
 
 UNAME=$(uname)
 
-# Version definition of package tools
-VERSION_VSCODIUM="1.90.2.24171"
+# Load Version definition of package tools
+source ./versions.conf
 
-VERSION_NODEJS="21.6.2"
-VERSION_BUILD_TOOL="33.0.2"
-VERSION_PLATFORM_TOOL="34.0.5"
-VERSION_APPIUM_INSPECTOR="2024.2.2"
+echo "VS Codium version $VERSION_VSCODIUM"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
