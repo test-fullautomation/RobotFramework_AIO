@@ -35,7 +35,7 @@ android_only="No"
 UNAME=$(uname)
 
 # Load Version definition of package tools
-source ./versions.conf
+source $mypath/versions.conf
 
 echo "VS Codium version $VERSION_VSCODIUM"
 echo "Node.js version $VERSION_NODEJS"
