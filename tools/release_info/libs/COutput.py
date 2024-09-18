@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 28.05.2024
+# 05.09.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -163,6 +163,7 @@ class COutput():
       # ---- lists of items for each section over all identified version numbers
 
       listReleaseNotes          = []
+      listWarnings              = []
       listHighlights            = []
       listAdditionalInformation = []
       listRequirements          = []
@@ -174,6 +175,8 @@ class COutput():
          listSections = list(RELEASE_MAIN_INFO[sVersionNumber].keys())
          if "RELEASENOTES" in listSections:
             listReleaseNotes.extend(RELEASE_MAIN_INFO[sVersionNumber]['RELEASENOTES'])
+         if "WARNINGS" in listSections:
+            listWarnings.extend(RELEASE_MAIN_INFO[sVersionNumber]['WARNINGS'])
          if "HIGHLIGHTS" in listSections:
             listHighlights.extend(RELEASE_MAIN_INFO[sVersionNumber]['HIGHLIGHTS'])
          if "ADDITIONALINFORMATION" in listSections:
@@ -223,6 +226,7 @@ class COutput():
 
       # debug:
       # PrettyPrint(listReleaseNotes, sPrefix="listReleaseNotes")
+      # PrettyPrint(listWarnings, sPrefix="listReleaseNotes")
       # PrettyPrint(listHighlights, sPrefix="listHighlights")
       # PrettyPrint(listAdditionalInformation, sPrefix="listAdditionalInformation")
       # PrettyPrint(listRequirements, sPrefix="listRequirements")
@@ -244,6 +248,23 @@ class COutput():
             sReleaseNote_conv = sReleaseNote_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
             sReleaseNote_conv = sReleaseNote_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetReleaseNotesTableDataRow(sReleaseNote_conv))
+         listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listLinesHTML.append(self.__oPattern.GetVDist())
+
+      # -- 'WARNINGS'
+
+      if len(listWarnings) > 0:
+         # found 'WARNINGS' => write to output
+         listLinesHTML.append(self.__oPattern.GetWarningsTableBegin())
+         for sWarning in listWarnings:
+            sWarning_resolve = resolveVariable(sWarning, dVariableMapping)
+            sWarning_conv = pypandoc.convert_text(sWarning_resolve, 'html', format='rst')
+            # to open link in another explorer window:
+            sWarning_conv = sWarning_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sWarning_conv = sWarning_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sWarning_conv = sWarning_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetWarningsTableDataRow(sWarning_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
