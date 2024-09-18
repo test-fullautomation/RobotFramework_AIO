@@ -165,3 +165,4 @@ ruff
 requests_kerberos
 udsoncan
 odxtools
+tabulate
