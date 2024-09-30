@@ -353,7 +353,7 @@ jobs:
       with:
         allowUpdates: true
         omitNameDuringUpdate: true
-        makeLatest: true
+        prerelease: true
         name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
         artifacts: "windows-package/*.exe,linux-package/*.deb,windows-aiotestlogfiles/release_info_RobotFramework_AIO_*.html"
         bodyFile: "windows-aiotestlogfiles/release_changelog.html"
