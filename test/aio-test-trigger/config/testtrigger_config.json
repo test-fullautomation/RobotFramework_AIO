@@ -80,22 +80,6 @@
                        "FILES_SAVE"        : "../../../../python-jsonpreprocessor/test/testlogfiles"
                     },
                     {
-                       "COMPONENTROOTPATH" : "../../../../python-microservice-base",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceBase"],
-                       "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
-                       "TESTFOLDER"        : "pytest",
-                       "TESTTYPE"          : "PYTEST",
-                       "TESTEXECUTOR"      : "executepytest.py",
-                       "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceClewareSwitch"],
-                       "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
-                    {
                        "COMPONENTROOTPATH" : "../../../../python-testresultdbaccess",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
