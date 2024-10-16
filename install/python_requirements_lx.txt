@@ -163,5 +163,6 @@ black
 isort
 ruff
 requests_kerberos
+coverage
 udsoncan
 odxtools

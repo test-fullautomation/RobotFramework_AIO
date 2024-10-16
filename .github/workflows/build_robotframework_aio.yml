@@ -242,6 +242,16 @@ jobs:
             exit 1
         fi
 
+    - name: Run tests coverage on Windows
+      shell: bash
+      run: |
+        "$RobotPythonPath/python" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
+        # Get system error code from python program
+        exit_code=${PIPESTATUS[0]}
+        if [ $exit_code -ne 0 ]; then
+            exit 1
+        fi
+
     - name: Generate release info
       shell: cmd
       run: |
@@ -267,6 +277,10 @@ jobs:
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
+          ${{ runner.workspace }}/[Pp]ython*/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/release_changelog.html
           ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
@@ -309,6 +323,16 @@ jobs:
             exit 1
         fi
 
+    - name: Run tests coverage on Linux
+      run: |
+          . /opt/rfwaio/linux/set_robotenv.sh
+          "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
+          # Get system error code from python program
+          exit_code=${PIPESTATUS[0]}
+          if [ $exit_code -ne 0 ]; then
+              exit 1
+          fi
+
     - name: Generate release info
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
@@ -329,6 +353,7 @@ jobs:
           ${{ runner.workspace }}/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/**/*/testlogfiles/*
           ${{ runner.workspace }}/**/*/console_log.txt
+          ${{ runner.workspace }}/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
 
   release:
