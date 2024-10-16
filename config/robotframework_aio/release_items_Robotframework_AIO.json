@@ -211,6 +211,13 @@
 
       $RobotDevtools/appium
 "
+                              ],
+                              "0.13.1." : [
+"
+**Robot Framework**
+
+* Added test coverage to ensure functionality and improve overall code reliability
+"
                               ]
                  }
 }
