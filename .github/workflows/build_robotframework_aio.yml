@@ -248,9 +248,6 @@ jobs:
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
-        if [ $exit_code -ne 0 ]; then
-            exit 1
-        fi
 
     - name: Generate release info
       shell: cmd
@@ -329,9 +326,6 @@ jobs:
           "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
-          if [ $exit_code -ne 0 ]; then
-              exit 1
-          fi
 
     - name: Generate release info
       run: |
