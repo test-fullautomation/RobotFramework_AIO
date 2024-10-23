@@ -141,7 +141,7 @@ bokeh
 robotframework-robocop
 pylint
 #pandoc
-pypandoc_binary
+pypandoc_binary==1.13
 mobly
 pytest_mock
 odxtools
@@ -154,6 +154,7 @@ black
 isort
 ruff
 requests_kerberos
+coverage
 udsoncan
 odxtools
 tabulate

@@ -15,6 +15,15 @@ echo -e "${COL_GREEN}#          Compiling RobotFramework AIO setup...           
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
+# Load version information from versions.conf
+source ./install/versions.conf
+
+echo "VS Codium version $VERSION_VSCODIUM"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+
 RobotFrameworkVersion=""
 ITrackService="NONE"
 UNAME=$(uname)
@@ -273,6 +282,14 @@ function generate_version_info() {
 	add_line_to_file "Author:"
 	add_line_to_file "*******"
 	add_line_to_file "Thomas Pollerspöck <thomas.pollerspoeck@de.bosch.com>"
+	add_line_to_file ""
+	add_line_to_file "Other tools:"
+	add_line_to_file "************"
+	add_line_to_file "    + VS Codium version: $VERSION_VSCODIUM"
+	add_line_to_file "	  + Node.js version: $VERSION_NODEJS"
+	add_line_to_file "    + Android SDK Build Tool version: $VERSION_BUILD_TOOL"
+	add_line_to_file "    + Android SDK Platform Tool version: $VERSION_PLATFORM_TOOL"
+	add_line_to_file "    + Appium Inspector version: $VERSION_APPIUM_INSPECTOR"
 }
 
 

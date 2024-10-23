@@ -34,18 +34,20 @@ android_only="No"
 
 UNAME=$(uname)
 
-# Version definition of package tools
-VERSION_VSCODIUM="1.90.2.24171"
+# Load Version definition of package tools
+source $mypath/versions.conf
 
-VERSION_NODEJS="21.6.2"
-VERSION_BUILD_TOOL="33.0.2"
-VERSION_PLATFORM_TOOL="34.0.5"
-VERSION_APPIUM_INSPECTOR="2024.2.2"
+echo "VS Codium version $VERSION_VSCODIUM"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
 	os_short=linux
 	arch=
+	platform=linux-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
@@ -59,6 +61,7 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os=windows
 	os_short=win
 	arch=-x64
+	platform=win32-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
@@ -178,6 +181,9 @@ function packaging_vscode() {
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
 		url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+		if [ "$name" == "debugpy" ]; then
+			url=https://open-vsx.org/api/${publisher}/${name}/${platform}/${version}/file/${publisher}.${name}-${version}@${platform}.vsix
+		fi
 		our_url=https://github.com/${publisher}/${name}/releases/download/${name}-${version}/${name}.vsix
 
 		if [[ -n "$name" ]]; then
