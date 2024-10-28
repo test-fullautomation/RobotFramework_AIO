@@ -73,6 +73,8 @@ try:
    PYTHON = oTestTriggerConfig.Get('PYTHON')
 
    for dictComponent in listofdictComponents:
+      if "robotframework-robotlog2rqm" in dictComponent['COMPONENTROOTPATH'].lower() or "robotframework-testsuitesmanagement" in dictComponent['COMPONENTROOTPATH'].lower():
+         continue
       nCntComponent = nCntComponent + 1
       # -- get data for test execution
       TESTTYPE          = dictComponent['TESTTYPE']
