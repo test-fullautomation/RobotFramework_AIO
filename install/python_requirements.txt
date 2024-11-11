@@ -157,3 +157,5 @@ requests_kerberos
 coverage
 udsoncan
 odxtools
+jupyter
+robotkernel
