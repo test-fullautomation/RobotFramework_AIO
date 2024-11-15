@@ -1,0 +1,85 @@
+name: Static Code Analyser
+on: 
+  workflow_dispatch:
+    # inputs:
+    #   repository:
+    #     description: "repository to be checked"
+    #     required: false
+    #     types: string
+
+jobs:
+  pylint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repositories: 
+          - ''
+          - python-genpackagedoc
+          - python-extensions-collection
+          - python-jsonpreprocessor
+          - python-pytestlog2db
+          - python-microservice-base
+          - python-microservice-cleware-switch
+          - robotframework-extensions-collection
+          - robotframework-qconnect-base
+          - robotframework-testsuitesmanagement
+          - robotframework-dbus
+          - robotframework-qconnect-winapp
+          - robotframework-robotlog2rqm
+          - robotframework-robotlog2db
+          - robotframework-doip
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4.3.0
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+    - name: Analysing the code with pylint
+      run: |
+        if [ -n "${REPO_NAME}" ]; then
+          echo "Run static code analysis for $REPO_NAME"
+          . ./include/bash/common.sh 
+          # clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$GITHUB_USER/$REPO_NAME
+          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
+          if [ -f ../$REPO_NAME/requirements.txt ]; then
+            python -m pip install -r ../$REPO_NAME/requirements.txt
+          fi
+          pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
+        else
+          echo "Run static code analysis for this repo"
+          pylint --rcfile=./config/pylint/pyproject.toml ./tools/
+        fi
+      env:
+        REPO_NAME: ${{ matrix.repositories }}
+
+  cppcheck:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repositories: 
+          - robotframework-qconnect-winapp
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
+    - name: Run cppcheck
+      run: |
+        echo "Run static code analysis for $REPO_NAME"
+        . ./include/bash/common.sh 
+        clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
+        cppcheck --enable=all --error-exitcode=1 ../$REPO_NAME
+      env:
+        REPO_NAME: ${{ matrix.repositories }}
