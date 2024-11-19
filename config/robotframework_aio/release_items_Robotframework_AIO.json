@@ -214,9 +214,15 @@
                               ],
                               "0.13.1." : [
 "
-**Robot Framework**
+**Robot Framework pipeline**
 
 * Added test coverage to ensure functionality and improve overall code reliability
+
+**VSCodium Package**
+
+* `robotframework-lsp <https://github.com/robocorp/robotframework-lsp>`_ extension is now deprecated,
+  and the `RobotCode <https://robotcode.io/>`_ extension is used as its replacement.
+  Please refer to `this issue <https://github.com/robocorp/robotframework-lsp/issues/1051>`_ for more detail.
 "
                               ]
                  }

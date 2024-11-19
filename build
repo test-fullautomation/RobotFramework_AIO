@@ -28,13 +28,13 @@ RobotFrameworkVersion=""
 ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
-
+SubVersion=""
 
 arguments=""
 
 if [ "$#" -eq 0 ]; then
    echo you can run the build with optional arguments 
-   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
+   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --suffix_filename=basic
    echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
    echo repo_config_file contains the repository for building.
@@ -62,6 +62,9 @@ else
           --project-config-file=*)
 			 ProjectConfigFile=`cygpath -wa "${i#*=}"`
           ;;
+			--sub-version=*)
+			 SubVersion="${i#*=}"
+			 ;;
           *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
               echo -e $COL_RED"build terminated."$COL_RESET
@@ -79,7 +82,7 @@ fi
 
 if [ "$ITrackService" != "NONE" ]; then
 	echo -e $COL_GREEN"ITrackService         = $ITrackService"$COL_RESET
-	arguments+="//DITrackService=$ITrackService"
+	arguments+="//DITrackService=$ITrackService "
 fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
@@ -104,8 +107,15 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
-arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion"
+arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion "
 echo
+
+PackageFilenameLinux=RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+
+if [ "$SubVersion" != "" ]; then
+	arguments+="//DSubVersion=$SubVersion "
+	PackageFilenameLinux=RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64_$SubVersion.deb
+fi
 
 #read -n1 -r -p "Press space to continue..." key
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -373,10 +383,10 @@ function build_debian()
 
 	logresult "$?" "prepared package build" "prepare package build"
 
-	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PackageFilenameLinux}
 	logresult "$?" "built deb package" "build deb package"
 
-	dpkg -I ./output_lx/RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+	dpkg -I ./output_lx/${PackageFilenameLinux}
 	goodmsg "done."
 }
 
@@ -402,7 +412,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 	./scripts/precompile.bat $ProjectConfigFile
-	./tools/InnoSetup5.5.1/ISCC "${arguments}" ./scripts/RobotFrameworkSetup.iss
+	./tools/InnoSetup5.5.1/ISCC ${arguments} ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
 }

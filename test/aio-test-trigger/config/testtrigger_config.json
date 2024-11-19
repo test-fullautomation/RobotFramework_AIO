@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.3.0 / 15.03.2024 (OSS standard version)",
+   "VERSION_CONFIG" : "0.3.1 / 18.11.2024 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -166,7 +166,7 @@
                        "TESTFOLDER"        : "atest",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "run.py",
-                       "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\""],
+                       "LOCALCOMMANDLINE"  : ["-d \"./atest/aiotestlogfiles\"", "-b aiotestlogfile.log", "-o aiotestlogfile.xml", "\"./atest/robot/log_level\"", "\"./atest/testdata/running/thread\""],
                        "LOGFILE"           : "../../../../robotframework/atest/aiotestlogfiles/aiotestlogfile.xml",
                        "EXECUTION"         : "RAW"
                     }

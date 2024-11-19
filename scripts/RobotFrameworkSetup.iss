@@ -18,10 +18,17 @@
 ;If nothing is provided, then use an empty string. The resulting
 ;installer will be called RobotFramework_setup__.exe in this case
 ;otherwise it is called   RobotFramework_setup_RobotFrameworkVersion.exe
+#define RobotFrameworkSubVersion ""
+#define RobotFrameworkSubName ""
+#ifdef SubVersion
+   #define RobotFrameworkSubVersion " - " + SubVersion
+   #define RobotFrameworkSubName "_" + SubVersion
+#endif
+
 #ifndef RobotFrameworkVersion
    #define RobotFrameworkVersion ""
 #endif
-#pragma message "RobotFrameworkVersion is   : " + RobotFrameworkVersion
+#pragma message "RobotFrameworkVersion is   : " + RobotFrameworkVersion + RobotFrameworkSubVersion
 
 #ifdef ITrackService
    #define DoInstallTracking 
@@ -31,8 +38,8 @@
    #pragma message "ITrackService is: not defined"
 #endif
 
-#define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
-#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
+#define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + RobotFrameworkSubVersion + " (Installer " + SETUPVersion + ")"
+#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion + RobotFrameworkSubName
 #define MyAppPublisher "Robert Bosch GmbH"
 
 [CustomMessages]

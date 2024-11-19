@@ -66,6 +66,10 @@
     "timeline.excludeSources": [],
     "extensions.autoUpdate": false,
     "update.mode": "none",
+    "robotcode.debug.outputTimestamps": true,
+    "robotcode.robocop.exclude": [
+        "0301,0302,0305,0309,0310,0509,0602,0605,0606,0607,0702,0704,0907,0908"
+    ],
     "rst.preview.pythonPath": "{RobotPythonPath}/python3",
     // Other specific settings
 }

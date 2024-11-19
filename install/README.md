@@ -189,29 +189,20 @@ Finally, issue the command:
 ```
 ## Install extension in AIO package
 This section provides the info for installing Visual Studio Code extensions using a **install.sh** script. Refer: [issues 191](https://github.com/test-fullautomation/RobotFramework_AIO/issues/191#issuecomment-2031051647)
-* All extensions can be installed through https://open-vsx.org/
 
-| Publisher           | Name                | Version |
-|---------------------|---------------------|---------|
-| ms-python           | python              | 2022.4.1|
-| robocorp            | robotframework-lsp  | 1.11.0  |
-| xabikos             | JavaScriptSnippets  | 1.8.0   |
-| redhat              | vscode-xml          | 0.18.1  |
-| tomoki1207          | pdf                 | 1.2.2   |
-| jebbs               | plantuml            | 2.17.5  |
-| hediet              | vscode-drawio       | 1.6.6   |
+Below extensions can be installed through https://open-vsx.org/
 
-* Specify the extension from the test-fullautomation owner.
+| Publisher           | Name                | Version   |
+|---------------------|---------------------|-----------|
+| ms-python           | python              | 2024.10.0 |
+| d-biehl             | robotcode           | 0.93.1    |
+| xabikos             | JavaScriptSnippets  | 1.8.0     |
+| redhat              | vscode-xml          | 0.18.1    |
+| tomoki1207          | pdf                 | 1.2.2     |
+| jebbs               | plantuml            | 2.17.5    |
+| hediet              | vscode-drawio       | 1.6.6     |
+| ms-python           | debugpy             | 2024.8.0  |
 
-| Publisher           | Extension           | Version |
-|---------------------|---------------------|---------|
-| ms-python           | python              | 2022.4.1|
-| test-fullautomation | robotframework-lsp  | 1.11.1  |
-| xabikos             | JavaScriptSnippets  | 1.8.0   |
-| redhat              | vscode-xml          | 0.18.1  |
-| tomoki1207          | pdf                 | 1.2.2   |
-| jebbs               | plantuml            | 2.17.5  |
-| hediet              | vscode-drawio       | 1.6.6   |
 
 ## About
 
