@@ -445,6 +445,7 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      SuppressibleMsgBox('Please refer the following guidant for additional installation(s) from end-user side!', mbInformation, MB_OK, MB_OK);
       GetWindowsVersionEx(Version);
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
@@ -549,17 +550,17 @@ begin
 
   InstructionLabel := TLabel.Create(WizardForm);
   InstructionLabel.Parent := InfoAfterPage.Surface;
-  InstructionLabel.Caption := 'Please follow these steps to install Github Copilot extension for VsCodium:';
+  InstructionLabel.Caption := 'Execute the following command in Windows PowerShell';
   InstructionLabel.AutoSize := True;
   InstructionLabel.Top := ScaleY(0);
   InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
 
   // Create the memo for the Instruction
-  ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.sh';
+  ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
   MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
   InstructionMemo := TMemo.Create(WizardForm);
   InstructionMemo.Parent := InfoAfterPage.Surface;
-  InstructionMemo.Top := WizardForm.ReadyMemo.Top; 
+  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(20);
   InstructionMemo.Width := WizardForm.ReadyMemo.Width;
   InstructionMemo.Height := WizardForm.ReadyMemo.Height;
   InstructionMemo.Color := WizardForm.ReadyMemo.Color;
@@ -567,9 +568,10 @@ begin
   InstructionMemo.ReadOnly := True;
   InstructionMemo.ScrollBars := ssVertical;
   InstructionMemo.Cursor := crArrow;
-  InstructionMemo.Text := '1. Open Git Bash or any other bash-compatible terminal.'#13#10#13#10+
-                          '2. Run the following bash script to install GitHub Copilot extension:'#13#10+
-                          '    "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  // Select all text in the memo
+  InstructionMemo.SelStart := 0;
+  InstructionMemo.SelLength := Length(InstructionMemo.Text)
 
 end;
 

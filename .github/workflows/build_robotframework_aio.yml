@@ -104,6 +104,7 @@ jobs:
           
           # Update placeholders install-github-copilot-exts.sh script
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
+          sed -i "s|\$GITHUB_COPILOT_EXT_ARG|${GITHUB_COPILOT_EXT_ARG}|g" ./config/build/dpkg_build/postinst.sh
 
           if [[ ${{ matrix.version }} == "original" ]];then
             echo "REPO_CONFIG=${REPO_CONFIG_NO_RBFW}" >> $GITHUB_ENV
@@ -194,7 +195,7 @@ jobs:
           echo "BUNDLE_NAME=--bundle_name \"${AIO_NAME}\"" >> $GITHUB_ENV
 
           # Update placeholders install-github-copilot-exts.sh script
-          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
+          sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.ps1
 
           if [[ ${{ matrix.version }} == "original" ]];then
             echo "REPO_CONFIG=${REPO_CONFIG_NO_RBFW}" >> $GITHUB_ENV

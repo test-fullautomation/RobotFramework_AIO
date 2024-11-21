@@ -223,6 +223,41 @@
 * `robotframework-lsp <https://github.com/robocorp/robotframework-lsp>`_ extension is now deprecated,
   and the `RobotCode <https://robotcode.io/>`_ extension is used as its replacement.
   Please refer to `this issue <https://github.com/robocorp/robotframework-lsp/issues/1051>`_ for more detail.
+
+* **GitHub Copilot**
+
+  Due to licensing restrictions, the **GitHub Copilot** and **GitHub Copilot Chat** extensions 
+  are not included in the pre-installed packages and must be installed manually.
+
+  To assist you, the **RobotFramework AIO** installer provides a ready-to-use command 
+  at the end of the installation process. This command is tailored to download and install 
+  the correct versions of both extensions, ensuring compatibility with your environment.
+
+  **Steps to Install GitHub Copilot Extensions**:
+
+  1. **Complete the RobotFramework AIO Installation**:
+
+     - Once the installation finishes, note the command provided by the installer.
+
+  2. **Run the Command**:
+
+     - Open a terminal (Linux) or PowerShell (Windows).
+     - Copy and paste the provided command, then execute it to download and install the extensions.
+     - After execution, note the link displayed in the command output for instructions on setting up **GitHub Copilot**.
+
+  3. **Verify Installation**:
+
+     - Open VsCodium and navigate to the **Extensions** panel.
+     - Ensure that both **GitHub Copilot** and **GitHub Copilot Chat** are listed as installed.
+
+  4. **Set Up Your Account**:
+
+     - Use the link provided in the command output to register for a **GitHub Copilot subscription** if you haven't already.
+     - Log in to GitHub Copilot via VsCodium using your GitHub credentials.
+
+  5. **Start Using GitHub Copilot**:
+  
+     - Once logged in, you can utilize the extensions for AI-powered coding assistance and interactive chat features.
 "
                               ]
                  }

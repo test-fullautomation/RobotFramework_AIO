@@ -71,16 +71,16 @@ fi
 installed_version=$("$VSCODIUM" --version --user-data-dir=$RobotVsCode/data | head -n 1)
 
 if [ "$installed_version" != "$REQUIRED_VERSION" ]; then
-   echo "Installed VSCodium version is ${installed_version} different from expected version ${REQUIRED_VERSION}."
+   echo "Installed VSCodium version is '${installed_version}' different from expected version '${REQUIRED_VERSION}'."
    exit 1
 fi
 
 if [ -n "$PROXY" ]; then
    if [[ "$PROXY" =~ ^(http|https|ftp|socks4|socks4a|socks5|socks5h)://([^:@]+):([^:@]+)@(.*) ]]; then
-      echo "Using proxy ${BASH_REMATCH[4]} with embedded credential in URL"
+      echo "Using proxy '${BASH_REMATCH[4]}' with embedded credential in URL"
       PROXY_ARGS="-x $PROXY"
    elif [[ "$PROXY_AUTH" == "False" ]]; then
-      echo "Using proxy $PROXY without any credential";
+      echo "Using proxy '$PROXY' without any credential";
       PROXY_ARGS="-x $PROXY"
    else
       # Prompt the user for the password
@@ -97,18 +97,18 @@ for extension in "${!EXTENSIONS[@]}"; do
 
    extension_info=$("$VSCODIUM" --list-extensions --show-versions --user-data-dir=$RobotVsCode/data | grep ".$extension@")
    if [ -z "$extension_info" ]; then
-      echo "Extension $extension is not installed."
+      echo "Extension '$extension' is not installed."
    else
       installed_ext_version=$(echo "$extension_info" | awk -F '@' '{print $2}')
       if [ "${installed_ext_version}" != "${version}" ]; then
-         echo "Extension $extension version $installed_ext_version is installed. Reininstall it with version $version"
+         echo "Extension '$extension' version '$installed_ext_version' is installed. Reininstall it with version '$version'"
       else
-         echo "Extension $extension version $installed_ext_version is already installed"
+         echo "Extension '$extension' version '$installed_ext_version' is already installed"
          continue
       fi
    fi
 
-   echo "Processing $PUBLISHER.$extension, version $version"
+   echo "Processing '$PUBLISHER.$extension', version '$version'"
 
    # Construct the download URL
    url="https://${PUBLISHER}.gallery.vsassets.io/_apis/public/gallery/PUBLISHER/${PUBLISHER}/extension/${extension}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
@@ -122,7 +122,7 @@ for extension in "${!EXTENSIONS[@]}"; do
       curl -L -k "$url" -o "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" $PROXY_ARGS
       if [ $? -eq 0 ]; then
          success=true
-         echo "Extension ${PUBLISHER}.${extension}-${version} downloaded successfully."
+         echo "Extension '${PUBLISHER}.${extension}-${version}' downloaded successfully."
       else
          ((retry_counter++))
          echo "Failed to download extension ${PUBLISHER}.${extension}-${version} (attempt: $retry_counter)."
@@ -130,23 +130,24 @@ for extension in "${!EXTENSIONS[@]}"; do
       fi
    done
    if [ "$success" == "false" ]; then
-		echo "Could not download extension ${PUBLISHER}.${extension}-${version} after $max_retries attempts"
+		echo "Could not download extension '${PUBLISHER}.${extension}-${version}' after $max_retries attempts."
+      echo "If you're behind a proxy, please ensure you've set the '--proxy' argument correctly and verify the proxy URL."
       exit 1
 	fi
 
    # install the extension using VSCodium
    "$VSCODIUM" --install-extension "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix" --user-data-dir=$RobotVsCode/data
-   if [ $? -eq 0 ]; then
-      echo "Extension ${PUBLISHER}.${extension}-${version} is installed successfully."
-   else
-      echo "Failed to install extension ${PUBLISHER}.${extension}-${version}."
+   if [ $? -ne 0 ]; then
+   #    echo "Extension ${PUBLISHER}.${extension}-${version} is installed successfully."
+   # else
+      echo "Failed to install extension '${PUBLISHER}.${extension}-${version}'."
       exit 1
    fi
 
    # clean the downloaded VSIX file
    rm "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix"
-
    echo
-   echo "Please refer to the following article to get a GitHub Copilot license or subscription:"
-   echo "$PLACEHOLDER_REF_URL"
 done
+
+echo "Please refer to the following article to get a GitHub Copilot license or subscription:"
+echo "$PLACEHOLDER_REF_URL"
