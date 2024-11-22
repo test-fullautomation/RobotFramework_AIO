@@ -107,7 +107,7 @@ Source: "R:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"
 Source: "R:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference*.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
