@@ -29,6 +29,7 @@ jobs:
           - robotframework-robotlog2rqm
           - robotframework-robotlog2db
           - robotframework-doip
+          - robotframework-uds
     steps:
     - name: Checkout source
       uses: actions/checkout@v3
