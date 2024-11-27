@@ -162,6 +162,23 @@ jobs:
       fail-fast: false
       matrix:
         version: [original, extended]
+        repositories:
+          - ''
+          - python-genpackagedoc
+          - python-extensions-collection
+          - python-jsonpreprocessor
+          - python-pytestlog2db
+          - python-microservice-base
+          - python-microservice-cleware-switch
+          - robotframework-extensions-collection
+          - robotframework-qconnect-base
+          - robotframework-testsuitesmanagement
+          - robotframework-dbus
+          - robotframework-qconnect-winapp
+          - robotframework-robotlog2rqm
+          - robotframework-robotlog2db
+          - robotframework-doip
+          - robotframework-uds
     name: Build Windows package
     runs-on: windows-latest
     needs: [ tag-repos , trigger-aio ]
@@ -272,6 +289,24 @@ jobs:
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
 
+    - name: Analysing the code with pylint
+      run: |
+        if [ -n "${REPO_NAME}" ]; then
+          echo "Run static code analysis for $REPO_NAME"
+          . ./include/bash/common.sh
+          # clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$GITHUB_USER/$REPO_NAME
+          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
+          if [ -f ../$REPO_NAME/requirements.txt ]; then
+            python -m pip install -r ../$REPO_NAME/requirements.txt
+          fi
+          pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
+        else
+          echo "Run static code analysis for this repo"
+          pylint --rcfile=./config/pylint/pyproject.toml ./tools/
+        fi
+      env:
+        REPO_NAME: ${{ matrix.repositories }}
+
     - name: Generate release info
       shell: cmd
       run: |
@@ -373,23 +408,23 @@ jobs:
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
 
-    - name: Analysing the code with pylint
-      run: |
-        if [ -n "${REPO_NAME}" ]; then
-          echo "Run static code analysis for $REPO_NAME"
-          . ./include/bash/common.sh
-          # clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$GITHUB_USER/$REPO_NAME
-          clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
-          if [ -f ../$REPO_NAME/requirements.txt ]; then
-            python -m pip install -r ../$REPO_NAME/requirements.txt
-          fi
-          pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
-        else
-          echo "Run static code analysis for this repo"
-          pylint --rcfile=./config/pylint/pyproject.toml ./tools/
-        fi
-      env:
-        REPO_NAME: ${{ matrix.repositories }}
+    # - name: Analysing the code with pylint
+    #   run: |
+    #     if [ -n "${REPO_NAME}" ]; then
+    #       echo "Run static code analysis for $REPO_NAME"
+    #       . ./include/bash/common.sh
+    #       # clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/$GITHUB_USER/$REPO_NAME
+    #       clone_update_repo ../$REPO_NAME $GITHUB_SERVER_URL/test-fullautomation/$REPO_NAME
+    #       if [ -f ../$REPO_NAME/requirements.txt ]; then
+    #         python -m pip install -r ../$REPO_NAME/requirements.txt
+    #       fi
+    #       pylint --rcfile=./config/pylint/pyproject.toml ../$REPO_NAME/*.py
+    #     else
+    #       echo "Run static code analysis for this repo"
+    #       pylint --rcfile=./config/pylint/pyproject.toml ./tools/
+    #     fi
+    #   env:
+    #     REPO_NAME: ${{ matrix.repositories }}
 
     - name: Generate release info
       run: |
