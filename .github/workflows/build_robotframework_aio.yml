@@ -309,7 +309,7 @@ jobs:
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/release_changelog.html
           ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
-          ${{ runner.workspace }}/test/aio-static-code-trigger/static_code_report/*
+          ${{ runner.workspace }}/Robotframework_AIO/test/aio-static-code-trigger/static_code_report/*
 
   install-test-linux:
     strategy:
