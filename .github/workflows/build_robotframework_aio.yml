@@ -255,6 +255,11 @@ jobs:
       shell: cmd
       run: ./scripts/install-windows.bat
 
+    - name: Run static code analysis on Windows
+      shell: bash
+      run: |
+        "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
+
     - name: Run tests on Windows
       shell: bash
       run: |
@@ -304,6 +309,7 @@ jobs:
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/release_changelog.html
           ${{ runner.workspace }}/Robotframework_AIO/install-windows.log
+          ${{ runner.workspace }}/test/aio-static-code-trigger/static_code_report/*
 
   install-test-linux:
     strategy:
@@ -338,6 +344,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install ./*.deb --fix-missing
+
+    - name: Run static code analysis on Linux
+      run: |
+          . /opt/rfwaio/linux/set_robotenv.sh
+          "$RobotPythonPath/python3.9" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
     - name: Run tests on Linux
       run: |
@@ -378,6 +389,7 @@ jobs:
           ${{ runner.workspace }}/**/*/console_log.txt
           ${{ runner.workspace }}/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
+          ${{ runner.workspace }}/**/*/static_code_report/*
 
   release:
     name: Release AIO
