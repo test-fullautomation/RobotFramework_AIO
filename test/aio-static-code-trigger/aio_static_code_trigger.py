@@ -103,7 +103,7 @@ try:
          parts = component.split("/")
          for part in parts:
             if "python-" in part or "robotframework-" in part:
-               sOutputFile = CString.NormalizePath(f"{sOutputFolder}/{part}.txt")
+               sOutputFile = CString.NormalizePath(f"{sOutputFolder}/{part}.json")
                if not os.path.exists(sOutputFile):
                   with open(sOutputFile, "w") as f:
                      pass
@@ -112,7 +112,7 @@ try:
          listCmdLineParts.append(f"\"{sPythonPath}\"")
          listCmdLineParts.append(f"-m pylint --rcfile=\"{sRcfile}\"")
          listCmdLineParts.append(f"\"{component}\"")
-         listCmdLineParts.append(f"> \"{sOutputFile}\"")
+         listCmdLineParts.append(f"--output-format=json:\"{sOutputFile}\"")
          sCmdLine = " ".join(listCmdLineParts)
          listCmdLineParts = shlex.split(sCmdLine)
          try:
