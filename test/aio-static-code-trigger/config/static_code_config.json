@@ -20,12 +20,5 @@
          "../robotframework-doip/RobotFramework_DoIP",
          "../robotframework-uds/RobotFramework_UDS"
       ]
-   },
-   "CPPCHECK": {
-      "RCFILE": "",
-      "OUTPUT": "",
-      "COMPONENTS": [
-
-      ]
    }
 }
