@@ -1,0 +1,264 @@
+# **************************************************************************************************************
+#
+# Copyright 2020-2024 Robert Bosch GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# **************************************************************************************************************
+#
+# ========== Release Items for component 'RobotFramework AIO Package' ==========
+#
+# Basically this component is stand-alone, but can also be used as part of an automation framework called
+# RobotFramework AIO. More information about this framework you can find here:
+# 
+# https://github.com/test-fullautomation/RobotFramework_AIO
+# 
+# This JSON file contains component specific release information for the RobotFramework AIO.
+# In case you use the component stand-alone only, you can ignore this file.
+# 
+# --------------------------------------------------------------------------------------------------------------
+#
+# Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
+# The reference for relative paths is the position of this file.
+#
+# --------------------------------------------------------------------------------------------------------------
+
+{
+
+# Section "COMPONENT":
+# --------------------
+
+   "COMPONENT" : "RobotFramework AIO Package (original core)",
+
+
+# Section "RELEASES" for RobotFramework_AIO:
+# ------------------------------------------
+
+   "RELEASES"  : {
+                   "0.10." : [
+"
+**VSCodium**
+
+* Changed default terminal from Git Bash to PowerShell on Windows
+* Fixed startup error on Windows
+
+**Environment/Installation**
+
+* Added environment variable **RobotPythonSitePackagesPath** pointing to the **site-packages** directory of Python
+* Added **version.txt** file in root directory of installation
+
+**Python Packages**
+
+* Integrated **robotframework-dependencylibrary** library
+* Integrated **robotframework-doip** library
+* Integrated **doipclient** library
+"
+                             ],
+                   "0.11." : [
+"
+**VSCodium**
+
+* Assigning the keyboard shortcut **CTRL+F6** for executing the **Run Python File in Terminal** feature. With this update, users can quickly run Python programs in the terminal by pressing **CTRL+F6**.
+
+**Python Package Index (PyPI)**
+
+* Publish RobotFramework_DoIP package to `PyPI <https://pypi.org/user/ThPoll>`_
+
+**Environment/Installation**
+
+* Integrated Android support and Appium:
+
+  This package can be selected during installation, which contains:
+
+  * **Android SDK Tools**: platform-tools, build-tools and command line tools
+  * **Node.js**: runtime environment which is required for **Appium Server**
+  * **Appium Server**: includes **UIAutomator2** driver
+  * **Appium Inspector**: GUI assistant tool for Appium, providing visual inspection of the application under test
+
+  **Appium Server** and **Appium Inspector** applications are available in **Start Menu** (Windows) and **Application Overview** (Linux).
+  just. These applications can be easily started by clicking on their respective icons.
+
+  Environment variables *RobotDevtools*, *RobotNodeJS*, *RobotAppium* and *RobotAndroidPlatformTools* are added.
+
+* Integrated robotframework-lsp from test-fullautomation owner.
+
+* Partition installation for Debian package:
+
+  The Debian installer package offers enhanced flexibility by allowing you to 
+  customize the installation according to your needs.
+
+  You can now determine whether to include additional packages such as 
+  **Android** and **Vscodium** during the installation process.
+
+  * Select extensions:
+
+    When executing the command to install Robotframework AIO, you will be prompted to select extensions for installation as below
+
+    .. code-block::
+ 
+       Select one or more extra components:
+          N : No extra package - only the core framework and libraries
+          A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)
+          V : Vscodium package
+       Enter : All packages (default choice after 30s)
+       Enter your choices (e.g., AC for both Android and VSCodium packages):
+
+    The default choice is to install all packages, including the core framework and all extensions. 
+
+    If no action is taken within 30 seconds, the installer will proceed with the default choice.
+
+  * Besides, you can also provide your choice directly in command for the installation (for CI/CT system) as below examples:
+  
+    * Only the core feature of Robotframework AIO
+      .. code-block::
+  
+        yes 'N' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
+     
+    * Installation with both **Android** and **Vscodium** packages
+      .. code-block::
+  
+        yes 'AC' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
+
+**Python Packages**
+
+* Fixed versions of **Appium-Python-Client==3.1.1** and **robotframework-appiumlibrary==2.0.0** to avoid in incompatible issues
+* Upgrade the pip package to version 24.0 on both Windows and Linux platforms.
+
+**Robot Framework**
+
+* Added a self test for the new log level ``USER``.
+* In log levels ``USER``, ``WARN`` and ``ERROR``, the content of the Robot Framework XML log file is further shortened.
+
+"
+                              ],
+                    "0.12.0." : [
+"
+**Python Packages**
+
+* Integrated **PyQt5** library
+* Integrated **QtAwesome** library
+* Integrated **Asciidoxy** library
+* Integrated **pydotdict** library
+* Integrated **robotframework-prometheus** library
+
+**Python Package Index (PyPI)**
+
+* Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
+
+
+"
+                              ],
+                    "0.12.1.;0.13.0." : [
+"
+**Python Packages**
+
+* Integrated **robotframework-prometheus** library
+* Integrated **prometheus_client** library
+* Integrated **pika** library
+* Updated **robotframework-appiumlibrary** library to use latest vesion
+
+**VSCodium Package**
+
+* Updated from VSCodium version **1.73.0.22306** to latest version **1.90.2.24171**
+
+**Python Package Index (PyPI)**
+
+* Publish Robotframework-prometheus package to `PyPI <https://pypi.org/user/ThPoll>`_
+
+**Environment/Installation**
+
+* Debian package:
+
+  * Enhanced **initRobotFrameworkAIO.sh**, support to setup environment for non-root user
+
+  * Introduce new user group **robot-aio** which is granted required permissions to use *robotframework-aio* package
+
+    An user (BOT or integrator account) which have non-root permission can also be setup to use the installed robotframework-aio package on test machine as following steps:
+
+    * Add BOT or Integrator account to robot-aio group by execute below command with root user or add it as a **RUN** step of Docker file 
+
+      .. code-block::
+
+        usermod -a -G robot-aio $BOT_USER
+
+    * Login as BOT or Integrator account
+
+    * Execute **initRobotFrameworkAIO.sh** script to setup enviroment or add it as **CMD** step when starting Docker container
+
+      .. code-block::
+      
+        initRobotFrameworkAIO.sh
+
+    * Now, execute your Robotframework test case/suite. E.g 
+
+      .. code-block::
+
+        robot ~/RobotTest/testcases/HelloWorld.robot
+  
+  * Added executable **appium** script to start the Appium server in command line (useful for Docker container)
+
+    .. code-block::
+
+      $RobotDevtools/appium
+"
+                              ],
+                              "0.13.1." : [
+"
+**Robot Framework pipeline**
+
+* Added test coverage to ensure functionality and improve overall code reliability
+
+**VSCodium Package**
+
+* `robotframework-lsp <https://github.com/robocorp/robotframework-lsp>`_ extension is now deprecated,
+  and the `RobotCode <https://robotcode.io/>`_ extension is used as its replacement.
+  Please refer to `this issue <https://github.com/robocorp/robotframework-lsp/issues/1051>`_ for more detail.
+
+* **GitHub Copilot**
+
+  Due to licensing restrictions, the **GitHub Copilot** and **GitHub Copilot Chat** extensions 
+  are not included in the pre-installed packages and must be installed manually.
+
+  To assist you, the **RobotFramework AIO** installer provides a ready-to-use command 
+  at the end of the installation process. This command is tailored to download and install 
+  the correct versions of both extensions, ensuring compatibility with your environment.
+
+  **Steps to Install GitHub Copilot Extensions**:
+
+  1. **Complete the RobotFramework AIO Installation**:
+
+     - Once the installation finishes, note the command provided by the installer.
+
+  2. **Run the Command**:
+
+     - Open a terminal (Linux) or PowerShell (Windows).
+     - Copy and paste the provided command, then execute it to download and install the extensions.
+     - After execution, note the link displayed in the command output for instructions on setting up **GitHub Copilot**.
+
+  3. **Verify Installation**:
+
+     - Open VsCodium and navigate to the **Extensions** panel.
+     - Ensure that both **GitHub Copilot** and **GitHub Copilot Chat** are listed as installed.
+
+  4. **Set Up Your Account**:
+
+     - Use the link provided in the command output to register for a **GitHub Copilot subscription** if you haven't already.
+     - Log in to GitHub Copilot via VsCodium using your GitHub credentials.
+
+  5. **Start Using GitHub Copilot**:
+  
+     - Once logged in, you can utilize the extensions for AI-powered coding assistance and interactive chat features.
+"
+                              ]
+                 }
+}

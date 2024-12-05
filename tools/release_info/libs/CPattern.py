@@ -115,7 +115,7 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetHeaderTable(self, sFrameworkName=None, sReleaseVersion=None, sReleaseDate=None):
+   def GetHeaderTable(self, sFrameworkName=None, sBundleName=None, sReleaseVersion=None, sReleaseDate=None):
       sHeaderTable = """<table border="0" width="100%" cellspacing="0" cellpadding="5" rules="none">
 <colgroup>
    <col width="100%" span="1"/>
@@ -127,7 +127,7 @@ class CPattern():
 </tr>
 <tr border="0" cellspacing="0" colspan="2">
    <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0" style="padding:9pt 6pt 9pt 6pt">
-      <font face="Arial" color="#242424" size="+1">(<i>&quot;<b>A</b>ll <b>I</b>n <b>O</b>ne&quot; bundle, based on Robot Framework</i>)</font>
+      <font face="Arial" color="#242424" size="+3"><i>&quot;<b>A</b>ll <b>I</b>n <b>O</b>ne&quot; bundle, based on ###BUNDLENAME###</i></font>
    </td>
 </tr>
 <tr border="0" cellspacing="0" colspan="2">
@@ -155,9 +155,10 @@ class CPattern():
 </tr>
 </table>
 """
-      sHeaderTable = sHeaderTable.replace("###FRAMEWORKNAME###", f"{sFrameworkName}")
+      sHeaderTable = sHeaderTable.replace("###FRAMEWORKNAME###",  f"{sFrameworkName}")
+      sHeaderTable = sHeaderTable.replace("###BUNDLENAME###",     f"{sBundleName}")
       sHeaderTable = sHeaderTable.replace("###RELEASEVERSION###", f"{sReleaseVersion}")
-      sHeaderTable = sHeaderTable.replace("###RELEASEDATE###", f"{sReleaseDate}")
+      sHeaderTable = sHeaderTable.replace("###RELEASEDATE###",    f"{sReleaseDate}")
       return sHeaderTable
 
    # --------------------------------------------------------------------------------------------------------------

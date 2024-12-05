@@ -25,17 +25,11 @@ env:
   TAG_NAME: ${{ github.ref_name }}
   REF_NAME: ${{ github.ref_name }}
   DEFAULT_REF: ${{ github.base_ref }}
-  MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS.json"
-  AIO_NAME: "RobotFramework AIO"
-  BUNDLE_NAME: --bundle_name "RobotFramework AIO"
   GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
   INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
   GITHUB_COPILOT_REF_URL: "https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/managing-your-copilot-subscription"
   GITHUB_COPILOT_EXT_ARG: ""
-  REPO_CONFIG: "./config/repositories/repositories.conf"
-  TEST_CONFIG: "./config/testtrigger_config.json"
-  REPO_CONFIG_NO_RBFW: "./config/repositories/repositories_no_robotframework.conf"
-  TEST_CONFIG_NO_RBFW: "./config/testtrigger_config_no_robotframework.json"
+  VARIANT: "OSS"
 
 jobs:
   tag-repos:
@@ -44,7 +38,7 @@ jobs:
     if: github.ref_type == 'tag'
     steps:
     - name: Checkout source   
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: python -m pip install -r ./tools/git-tag/requirements.txt
@@ -61,7 +55,7 @@ jobs:
       branch: ${{ steps.extract_data.outputs.PULL_MERGE_BRANCH }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract request data
         id: extract_data
@@ -81,10 +75,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
+    env:
+      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
+      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies and set environment variables
         run: |
@@ -99,16 +98,11 @@ jobs:
           # Environment variable for trigger process
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
-          echo "AIO_NAME=${AIO_NAME} (${{ matrix.version }})" >> $GITHUB_ENV
-          echo "BUNDLE_NAME=--bundle_name \"${AIO_NAME}\"" >> $GITHUB_ENV
-          
+
           # Update placeholders install-github-copilot-exts.sh script
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
           sed -i "s|\$GITHUB_COPILOT_EXT_ARG|${GITHUB_COPILOT_EXT_ARG}|g" ./config/build/dpkg_build/postinst.sh
 
-          if [[ ${{ matrix.version }} == "original" ]];then
-            echo "REPO_CONFIG=${REPO_CONFIG_NO_RBFW}" >> $GITHUB_ENV
-          fi
 
       - name: Clone repositories
         run: |
@@ -126,7 +120,7 @@ jobs:
           ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
 
       - name: Update all documents
-        if: ${{ github.ref_type == 'tag' && matrix.version == 'extended' }}
+        if: ${{ github.ref_type == 'tag' }}
         run: |
           cd ../robotframework-documentation
           doc_branch=automation/task/update-rfw-documents
@@ -135,9 +129,9 @@ jobs:
           git checkout -b $doc_branch
           git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
           git add RobotFrameworkAIO/Components.html
-          git add RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+          git add RobotFrameworkAIO/RobotFrameworkAIO_Reference*.pdf
           git add RobotFrameworkAIO/Components.rst
-          git commit -m "Auto update documents in robotframework-documents"
+          git commit -m "Auto update documents of ${{ matrix.version }} version in robotframework-documents"
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
           
@@ -153,16 +147,16 @@ jobs:
           echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
       - name: Upload built package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-package-${{ matrix.version }}
           path: output_lx/*.deb
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: RobotFrameworkAIO_Reference-${{ matrix.version }}
-          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference.pdf
+          name: RobotFrameworkAIO_Reference_${{ matrix.version }}
+          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
 
   build-windows:
     strategy:
@@ -173,12 +167,18 @@ jobs:
     runs-on: windows-latest
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
+    env:
+      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
+      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+
     steps:
       - name: Support long path in git
         run: git config --system core.longpaths true
 
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies and set environment variables
         shell: bash
@@ -191,15 +191,9 @@ jobs:
           echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
-          echo "AIO_NAME=${AIO_NAME} (${{ matrix.version }})" >> $GITHUB_ENV
-          echo "BUNDLE_NAME=--bundle_name \"${AIO_NAME}\"" >> $GITHUB_ENV
 
           # Update placeholders install-github-copilot-exts.sh script
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.ps1
-
-          if [[ ${{ matrix.version }} == "original" ]];then
-            echo "REPO_CONFIG=${REPO_CONFIG_NO_RBFW}" >> $GITHUB_ENV
-          fi
 
       - name: Clone repositories
         shell: bash
@@ -216,7 +210,7 @@ jobs:
         run: ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
 
       - name: Upload built package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-package-${{ matrix.version }}
           path: Output/
@@ -235,27 +229,26 @@ jobs:
       RobotTutorialPath: "C:/RobotTest/tutorial"
       RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python39/Lib/site-packages"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
 
     steps:
     - name: Support long path in git
       run: git config --system core.longpaths true
 
     - name: Checkout source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Clone repositories
       shell: bash
       run: |
-        if [[ ${{ matrix.version }} == "original" ]];then
-          export REPO_CONFIG=${REPO_CONFIG_NO_RBFW}
-        fi
         export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
         export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
         chmod +x ./cloneall
         ./cloneall --config-file=${REPO_CONFIG}
 
     - name: Download Windows installer package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: windows-package-${{ matrix.version }}
 
@@ -266,9 +259,6 @@ jobs:
     - name: Run tests on Windows
       shell: bash
       run: |
-        if [[ ${{ matrix.version }} == "original" ]];then
-          export TEST_CONFIG=${TEST_CONFIG_NO_RBFW}
-        fi
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
@@ -279,7 +269,7 @@ jobs:
     - name: Run tests coverage on Windows
       shell: bash
       run: |
-        "$RobotPythonPath/python" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
+        "$RobotPythonPath/python" test/aio-test-trigger/aio-test-coverage.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
 
@@ -297,7 +287,7 @@ jobs:
          
     - name: Upload test result as artifact
       if: success() || failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: windows-aiotestlogfiles-${{ matrix.version }}
         # long path issue on Windows when upload artifact 
@@ -325,23 +315,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-linux , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
+    env:
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Clone repositories
       run: |
-        if [[ ${{ matrix.version }} == "original" ]];then
-          export REPO_CONFIG=${REPO_CONFIG_NO_RBFW}
-        fi
         export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
         export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
         chmod +x ./cloneall
         ./cloneall --config-file=${REPO_CONFIG}
 
     - name: Download Linux installer package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: linux-package-${{ matrix.version }}
 
@@ -352,9 +342,6 @@ jobs:
 
     - name: Run tests on Linux
       run: |
-        if [[ ${{ matrix.version }} == "original" ]];then
-          export TEST_CONFIG=${TEST_CONFIG_NO_RBFW}
-        fi
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
@@ -366,7 +353,7 @@ jobs:
     - name: Run tests coverage on Linux
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
-          "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py 2>&1 | tee console_log.txt
+          "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
 
@@ -383,7 +370,7 @@ jobs:
 
     - name: Upload test result as artifact
       if: success() || failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: linux-aiotestlogfiles-${{ matrix.version }}
         path: |
@@ -403,11 +390,17 @@ jobs:
 
     steps:
     - name: Download artifact from build workflow
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Get released version
       run: |
         echo "RELEASE_VERSION=${TAG_NAME#rel/aio/}" >> $GITHUB_ENV
+        mv windows-package-original/*.exe windows-package-original/setup_OSS_RobotFramework_AIO_Win_${TAG_NAME#rel/aio/}_original.exe
+        mv windows-package-extended/*.exe windows-package-extended/setup_OSS_RobotFramework_AIO_Win_${TAG_NAME#rel/aio/}_extended.exe
+        mv linux-package-original/*.deb linux-package-original/setup_OSS_RobotFramework_AIO_Linux_${TAG_NAME#rel/aio/}_original.deb
+        mv linux-package-extended/*.deb linux-package-extended/setup_OSS_RobotFramework_AIO_Linux_${TAG_NAME#rel/aio/}_extended.deb
+        mv windows-aiotestlogfiles-extended/release_info_RobotFramework_AIO_*.html windows-aiotestlogfiles-extended/release_info_OSS_RobotFramework_AIO_${TAG_NAME#rel/aio/}_extended.html
+        mv windows-aiotestlogfiles-original/release_info_RobotFramework_AIO_*.html windows-aiotestlogfiles-original/release_info_OSS_RobotFramework_AIO_${TAG_NAME#rel/aio/}_original.html
 
     - name: Create/Update GitHub Release
       id: create_update_release
@@ -417,7 +410,7 @@ jobs:
         omitNameDuringUpdate: true
         prerelease: true
         name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
-        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_RobotFramework_AIO_*.html,windows-aiotestlogfiles-original/release_info_RobotFramework_AIO_*.html,RobotFrameworkAIO_Reference-extended/*.pdf"
+        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_*.html,windows-aiotestlogfiles-original/release_info_*.html,RobotFrameworkAIO_Reference_extended/*.pdf,RobotFrameworkAIO_Reference_original/*.pdf"
         bodyFile: "windows-aiotestlogfiles-extended/release_changelog.html"
 
   tag-to-publish-packges-to-pypi:
@@ -428,7 +421,7 @@ jobs:
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: python -m pip install -r ./tools/git-tag/requirements.txt
@@ -446,7 +439,7 @@ jobs:
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set Up Git User
       run: |

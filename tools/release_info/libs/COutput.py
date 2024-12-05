@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 05.09.2024
+# 26.11.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -108,6 +108,8 @@ class COutput():
       bundle_version_date      = PACKAGE_CONTEXT['bundle_version_date']
       sReleaseInfoFileHTMLName = f"release_info_{bundle_name}_{bundle_version}.html"
       sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(" ", "_")
+      sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace("(", "")
+      sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(")", "")
       sReleaseInfoFileHTML     = f"{REFERENCEPATH_CONFIG}/{sReleaseInfoFileHTMLName}"
       sReleaseChangelogFileHTML= f"{REFERENCEPATH_CONFIG}/release_changelog.html"
 
@@ -121,7 +123,10 @@ class COutput():
       listLinesHTML.append(self.__oPattern.GetHLine())
 
       # header table
-      listLinesHTML.append(self.__oPattern.GetHeaderTable(bundle_name, bundle_version, bundle_version_date))
+      # (!!! temporary hack !!!)
+      framework_name = "RobotFramework AIO"
+      bundle_name_fixed = bundle_name.replace("AIO ", "")
+      listLinesHTML.append(self.__oPattern.GetHeaderTable(framework_name, bundle_name_fixed, bundle_version, bundle_version_date))
 
       listLinesHTML.append(self.__oPattern.GetHLine())
 

@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.5.1 / 26.08.2024 (OSS extended version)",
+   "VERSION_CONFIG" : "0.6.0 / 03.12.2024 (OSS extended version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -57,7 +57,7 @@
    # of this component between two releases of the RobotFramework AIO. Between these scopes there is not necessarily a full match.
    
    "RELEASE_ITEM_FILES" : [
-                              "../../config/robotframework_aio/release_items_Robotframework_AIO.json",
+                              "../../config/robotframework_aio/release_items_Robotframework_AIO_extended.json",
                               "../../../python-extensions-collection/config/robotframework_aio/release_items_PythonExtensionsCollection.json",
                               "../../../python-genpackagedoc/config/robotframework_aio/release_items_GenPackageDoc.json",
                               "../../../python-jsonpreprocessor/config/robotframework_aio/release_items_JsonPreprocessor.json",

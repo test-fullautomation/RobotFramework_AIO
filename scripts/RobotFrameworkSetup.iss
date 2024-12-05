@@ -23,6 +23,7 @@
 #ifdef SubVersion
    #define RobotFrameworkSubVersion " - " + SubVersion
    #define RobotFrameworkSubName "_" + SubVersion
+   #define MyAppName "RobotFramework AIO (All In One) with " + SubVersion + " core"
 #endif
 
 #ifndef RobotFrameworkVersion
@@ -107,7 +108,7 @@ Source: "R:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"
 Source: "R:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#RobotFrameworkSubName}.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -117,7 +118,7 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
-Source: ..\install\install-github-copilot-exts.sh; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full;
+Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -445,7 +446,6 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
-      SuppressibleMsgBox('Please refer the following guidant for additional installation(s) from end-user side!', mbInformation, MB_OK, MB_OK);
       GetWindowsVersionEx(Version);
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
@@ -464,7 +464,7 @@ begin
       end;
 #endif
 
-
+      SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
     end;
     
 end;
@@ -546,11 +546,14 @@ begin
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
   //Notice for user who want to use Github Copilot extensions
-  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', 'The GitHub Copilot extension does not come pre-installed with VsCodium for RobotFramework');
+  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
 
   InstructionLabel := TLabel.Create(WizardForm);
   InstructionLabel.Parent := InfoAfterPage.Surface;
-  InstructionLabel.Caption := 'Execute the following command in Windows PowerShell';
+  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 + 
+                              'RobotFramework' + #13#13 + 
+                              'Execute the following command line in Windows PowerShell to download and ' + #13 + 
+                              'install GitHub Copilot extension:';
   InstructionLabel.AutoSize := True;
   InstructionLabel.Top := ScaleY(0);
   InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
@@ -560,7 +563,7 @@ begin
   MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
   InstructionMemo := TMemo.Create(WizardForm);
   InstructionMemo.Parent := InfoAfterPage.Surface;
-  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(20);
+  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
   InstructionMemo.Width := WizardForm.ReadyMemo.Width;
   InstructionMemo.Height := WizardForm.ReadyMemo.Height;
   InstructionMemo.Color := WizardForm.ReadyMemo.Color;

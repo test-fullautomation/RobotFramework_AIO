@@ -34,7 +34,7 @@ arguments=""
 
 if [ "$#" -eq 0 ]; then
    echo you can run the build with optional arguments 
-   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --suffix_filename=basic
+   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --sub-version=extended
    echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
    echo repo_config_file contains the repository for building.
@@ -279,7 +279,7 @@ function generate_version_info() {
 
 	add_line_to_file "Installer version:"
 	add_line_to_file "******************"
-	add_line_to_file "RobotFramework AIO (OSS)  ${RobotFrameworkVersion}"
+	add_line_to_file "RobotFramework AIO (${VARIANT}) ${RobotFrameworkVersion} (${SubVersion} core)"
 	add_line_to_file ""
 	add_line_to_file "Web sites:"
 	add_line_to_file "**********"
@@ -296,7 +296,7 @@ function generate_version_info() {
 	add_line_to_file "Other tools:"
 	add_line_to_file "************"
 	add_line_to_file "    + VS Codium version: $VERSION_VSCODIUM"
-	add_line_to_file "	  + Node.js version: $VERSION_NODEJS"
+	add_line_to_file "    + Node.js version: $VERSION_NODEJS"
 	add_line_to_file "    + Android SDK Build Tool version: $VERSION_BUILD_TOOL"
 	add_line_to_file "    + Android SDK Platform Tool version: $VERSION_PLATFORM_TOOL"
 	add_line_to_file "    + Appium Inspector version: $VERSION_APPIUM_INSPECTOR"
@@ -361,7 +361,7 @@ function build_debian()
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial
 	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial/
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/documentation
-	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/documentation/
+	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference*${SubVersion}.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/documentation/
 
 	# Python package: core framework and libraries
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39

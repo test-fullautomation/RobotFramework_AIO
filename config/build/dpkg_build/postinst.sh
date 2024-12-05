@@ -97,6 +97,9 @@ function update_vscodium_related(){
    sed -i "s|{RobotPythonPath}|$PyPath|g" /opt/rfwaio/robotvscode/data/user-data/User/settings.json
    sed -i "s|{RobotTestPath}|$WpPath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
    sed -i "s|{RobotVsCode}|$VsCodePath|g" /opt/rfwaio/robotvscode/data/user-data/User/globalStorage/storage.json # > /opt/rfwaio/robotvscode/data/user-data/storage.json
+   if [ -f "$TestPath/.vscode/launch.json" ]; then
+      sed -i "s|\"type\"\s*:\s*\"robotframework-lsp\"|\"type\": \"robotcode\"|g" "$TestPath/.vscode/launch.json"
+   fi
 
    # Remind user to install Github Copilot extensions for VsCodium
    INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
