@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 26.11.2024
+# 13.12.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -124,8 +124,8 @@ class COutput():
 
       # header table
       # (!!! temporary hack !!!)
-      framework_name = "RobotFramework AIO"
-      bundle_name_fixed = bundle_name.replace("AIO ", "")
+      framework_name    = "RobotFramework AIO"
+      bundle_name_fixed = bundle_name.replace("RobotFramework AIO", "Robot Framework")
       listLinesHTML.append(self.__oPattern.GetHeaderTable(framework_name, bundle_name_fixed, bundle_version, bundle_version_date))
 
       listLinesHTML.append(self.__oPattern.GetHLine())

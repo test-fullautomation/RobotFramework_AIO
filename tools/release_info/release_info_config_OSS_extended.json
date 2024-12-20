@@ -30,7 +30,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.6.0 / 03.12.2024 (OSS extended version)",
+   "VERSION_CONFIG" : "0.7.0 / 10.12.2024 (OSS extended version)",
 
 
 # Section "PACKAGE_CONTEXT_FILE":
@@ -45,7 +45,7 @@
 
    # main and common information like: release notes, highlights, additional information, requirements, restrictions, links; responsible: product owner
 
-   "RELEASE_MAIN_INFO_FILE" : "./release_main_info_extended.json",
+   "RELEASE_MAIN_INFO_FILE" : "./release_main_info_OSS_extended.json",
 
 # Section "RELEASE_ITEM_FILES":
 # -----------------------------
