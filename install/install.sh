@@ -159,6 +159,16 @@ function packaging_vscode() {
 	mkdir "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
 
+	# add proxy configuration in vscodium setting if given
+	if [ "$VSCODIUM_PROXY" != "" ] ; then
+		vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
+		if [[ -f "$vscodium_setting_file" ]]; then
+			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$vscodium_setting_file"
+		else
+			echo "Vscodium setting file '$vscodium_setting_file' does not exist"
+		fi
+	fi
+
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
 	for extfile in $vscodeData/extensions/*.vsix; do
