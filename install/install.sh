@@ -30,23 +30,48 @@ use_cntlm="No"
 python_only="No"
 vscode_only="No"
 pandoc_only="No"
+android_only="No"
 
 UNAME=$(uname)
 
+# Load Version definition of package tools
+source $mypath/versions.conf
+
+echo "VS Codium version $VERSION_VSCODIUM"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+
 if [ "$UNAME" == "Linux" ] ; then
+	os=linux
+	os_short=linux
+	arch=
+	platform=linux-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
-	archived_vscode_file=$sourceDir/VSCodium-linux-x64-1.73.0.22306.tar.gz
+	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
+
+	nodejs_ext=tar.xz
+	appium_inspector_ext=AppImage
+
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	os=windows
+	os_short=win
+	arch=-x64
+	platform=win32-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/1.73.0.22306/VSCodium-win32-x64-1.73.0.22306.zip
+	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	archived_vscode_file=$sourceDir/VSCodium-win32-x64-1.73.0.22306.zip
+	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
+
+	nodejs_ext=zip
+	appium_inspector_ext=zip
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -65,6 +90,7 @@ function parse_arg() {
 		--python) echo "Create Python repo only";python_only="Yes"; shift;;
 		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
 		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
+		--android) echo "Create android repo only";android_only="Yes"; shift;;
 
 		-*) echo "unknown option: $1" >&2; exit 1;;
 	esac
@@ -100,7 +126,7 @@ function download_package(){
 
 	echo curl $proxy_args "$package_url" -o "$package_out"
 	while [[ "$retry_counter" -lt "$max_retries" && "$success" == "false" ]];do
-		curl $proxy_args -L "$package_url" -o "$package_out"
+		curl $proxy_args -L -k "$package_url" -o "$package_out"
 
 		if [ $? -eq 0 ]; then
 			success=true
@@ -133,6 +159,16 @@ function packaging_vscode() {
 	mkdir "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
 
+	# add proxy configuration in vscodium setting if given
+	if [ "$VSCODIUM_PROXY" != "" ] ; then
+		vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
+		if [[ -f "$vscodium_setting_file" ]]; then
+			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$vscodium_setting_file"
+		else
+			echo "Vscodium setting file '$vscodium_setting_file' does not exist"
+		fi
+	fi
+
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
 	for extfile in $vscodeData/extensions/*.vsix; do
@@ -149,13 +185,23 @@ function packaging_vscode() {
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
+	MY_PUBLISHER="test-fullautomation"
+
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
 		url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+		if [ "$name" == "debugpy" ]; then
+			url=https://open-vsx.org/api/${publisher}/${name}/${platform}/${version}/file/${publisher}.${name}-${version}@${platform}.vsix
+		fi
+		our_url=https://github.com/${publisher}/${name}/releases/download/${name}-${version}/${name}.vsix
 
 		if [[ -n "$name" ]]; then
-			if [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
+			# Download the test-fullautomation asset.
+			if [ "$publisher" == "$MY_PUBLISHER" ]; then
+            	download_package "${name}-${version} Extension" "$our_url" "$sourceDir/${name}-${version}.vsix"
+        	# Download the Open-VSX Community extension.
+			elif [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
 				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix"
 			fi
 			
@@ -179,6 +225,92 @@ function packaging_pandoc_windows() {
 
 	# Add pandoc to PATH env
 	export PATH=$PATH:$destDir/pandoc
+}
+
+function packaging_android() {
+	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
+	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
+	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
+	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
+	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
+	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
+	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
+	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${VERSION_APPIUM_INSPECTOR}/Appium-Inspector-${os}-${VERSION_APPIUM_INSPECTOR}${arch}.${appium_inspector_ext}
+
+	archived_android_tools=android-tools.zip
+	archived_android_emulator=android-emulator.zip
+	archived_android_buildtools=android-buildtools.zip
+	archived_android_platformtools=android-platformtools.zip
+	archived_nodejs=nodejs.${nodejs_ext}
+	archived_appium_inspector=appium-inspector.${appium_inspector_ext}
+
+	echo "Packaging Android ..."
+	rm -rf $destDir/devtools
+	mkdir $destDir/devtools
+
+	npm_proxy_args=""
+	if [ "$use_cntlm" == "Yes" ]; then
+		npm_proxy_args="--proxy=http://localhost:3128"
+	fi
+
+	# download Node.js installer
+	echo "Downloading Node.js"
+	download_package "Node.js" $download_nodejs ${sourceDir}/${archived_nodejs}
+	if [ "$nodejs_ext" == "zip" ]; then
+		# Not using cntlm proxy for Windows runner
+		npm_proxy_args=""
+		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
+		mv $destDir/devtools/node-* $destDir/devtools/nodejs
+		npm_bin=$destDir/devtools/nodejs/npm
+	else
+	   mkdir $destDir/devtools/nodejs
+		tar -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
+		PATH="$destDir/devtools/nodejs/bin:$PATH"
+		npm_bin=$destDir/devtools/nodejs/bin/npm
+	fi
+
+	# download appium packages:
+	# 	- appium server 
+	echo "Installing appium server"
+	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
+	logresult "$?" "installed appium server" "install appium server"
+
+	#  - UIAutomator2 driver for appium
+	echo "Installing UIAutomator2 driver for appium"
+	export APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
+	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver -g --verbose ${npm_proxy_args}
+	logresult "$?" "installed UIAutomator2 driver for appium" "install UIAutomator2 driver for appium"
+	# APPIUM_HOME=./android appium driver install uiautomator2
+	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
+
+	# 	- appium inspector 
+	echo "Downloading Appium Inspector"
+	download_package "Appium Inspector" ${download_appium_inspector} ${sourceDir}/${archived_appium_inspector}
+	if [ "$appium_inspector_ext" == "zip" ]; then
+		/usr/bin/yes A | unzip ${sourceDir}/${archived_appium_inspector} -d $destDir/devtools/Appium-Inspector
+	else
+		mv ${sourceDir}/${archived_appium_inspector} $destDir/devtools/Appium-Inspector.${appium_inspector_ext}
+	fi
+	
+
+	mkdir $destDir/devtools/Android
+	# download Android SDK Tools
+	echo "Downloading Android SDK Tools"
+	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android
+
+	echo "Downloading Android Platform Tools"
+	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android
+
+	echo "Downloading Android Build Tools"
+	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
+	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${VERSION_BUILD_TOOL}
+
+	echo "Download Android Emulator"
+	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
+	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
 }
 
 #
@@ -232,6 +364,9 @@ function packaging_python_linux() {
 	rm -rf "$destDir/python39lx"
 	mv "$sourceDir/python" "$destDir/python39lx"
 	logresult "$?" "created Python repository" "create Python repository" 
+
+	# Upgrade pip
+	$destDir/python39lx/install/bin/python3 -m pip install --upgrade pip
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
@@ -288,9 +423,14 @@ function make_pandoc() {
 	fi
 }
 
+function make_android() {
+	packaging_android
+}
+
 function make_all() {
 	make_python
 	make_vscode
+	make_android
 	make_pandoc
 	goodmsg "make_all done"
 }
@@ -315,6 +455,8 @@ elif [[ "$vscode_only" == "Yes" ]]; then
 	make_vscode
 elif [[ "$pandoc_only" == "Yes" ]]; then
 	make_pandoc
+elif [[ "$android_only" == "Yes" ]]; then
+	make_android
 else
 	make_all
 fi

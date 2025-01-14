@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2024 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 24.01.2024
+# 05.09.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ class CPattern():
    def GetHeader(self, sFrameworkName=None):
       sHeader = """<html>
 <head>
-   <meta name="###FRAMEWORKNAME###" content="Release">
+   <meta name="###FRAMEWORKNAME###" content="Release" charset="UTF-8"/>
    <title>###FRAMEWORKNAME###</title>
 </head>
 <body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#0000FF">
@@ -115,7 +115,7 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetHeaderTable(self, sFrameworkName=None, sReleaseVersion=None, sReleaseDate=None):
+   def GetHeaderTable(self, sFrameworkName=None, sBundleName=None, sReleaseVersion=None, sReleaseDate=None):
       sHeaderTable = """<table border="0" width="100%" cellspacing="0" cellpadding="5" rules="none">
 <colgroup>
    <col width="100%" span="1"/>
@@ -127,7 +127,7 @@ class CPattern():
 </tr>
 <tr border="0" cellspacing="0" colspan="2">
    <td bgcolor="#FFFFFF" align="center" valign="top" border="0" cellspacing="0" style="padding:9pt 6pt 9pt 6pt">
-      <font face="Arial" color="#242424" size="+1">(<i>&quot;<b>A</b>ll <b>I</b>n <b>O</b>ne&quot; bundle, based on Robot Framework</i>)</font>
+      <font face="Arial" color="#242424" size="+3"><i>&quot;<b>A</b>ll <b>I</b>n <b>O</b>ne&quot; bundle, based on ###BUNDLENAME###</i></font>
    </td>
 </tr>
 <tr border="0" cellspacing="0" colspan="2">
@@ -155,9 +155,10 @@ class CPattern():
 </tr>
 </table>
 """
-      sHeaderTable = sHeaderTable.replace("###FRAMEWORKNAME###", f"{sFrameworkName}")
+      sHeaderTable = sHeaderTable.replace("###FRAMEWORKNAME###",  f"{sFrameworkName}")
+      sHeaderTable = sHeaderTable.replace("###BUNDLENAME###",     f"{sBundleName}")
       sHeaderTable = sHeaderTable.replace("###RELEASEVERSION###", f"{sReleaseVersion}")
-      sHeaderTable = sHeaderTable.replace("###RELEASEDATE###", f"{sReleaseDate}")
+      sHeaderTable = sHeaderTable.replace("###RELEASEDATE###",    f"{sReleaseDate}")
       return sHeaderTable
 
    # --------------------------------------------------------------------------------------------------------------
@@ -183,6 +184,26 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
+   def GetWarningsTableBegin(self):
+      sWarningsTableBegin = """<h3><font face="Arial" color="#242424">Warnings</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sWarningsTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetWarningsTableDataRow(self, sWarning=None):
+      sWarningsTableDataRow = """<tr>
+   <td bgcolor="#FFC1C1" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###WARNING###</font></td>
+</tr>
+"""
+      sWarningsTableDataRow = sWarningsTableDataRow.replace("###WARNING###", f"{sWarning}")
+      return sWarningsTableDataRow
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
    def GetHighlightsTableBegin(self):
       sHighlightsTableBegin = """<h3><font face="Arial" color="#242424">Highlights</font></h3>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
@@ -203,23 +224,22 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetAdditionalHintsTableBegin(self):
-      # 24.01.2024 : 'hints' renamed to 'information' / !!! TODO: Adapt this in remaining code !!!
-      sAdditionalHintsTableBegin = """<h3><font face="Arial" color="#242424">Additional information</font></h3>
+   def GetAdditionalInformationTableBegin(self):
+      sAdditionalInformationTableBegin = """<h3><font face="Arial" color="#242424">Additional information</font></h3>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
 """
-      return sAdditionalHintsTableBegin
+      return sAdditionalInformationTableBegin
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
-   def GetAdditionalHintsTableDataRow(self, sHint=None):
-      sAdditionalHintsTableDataRow = """<tr>
+   def GetAdditionalInformationTableDataRow(self, sHint=None):
+      sAdditionalInformationTableDataRow = """<tr>
    <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###HINT###</font></td>
 </tr>
 """
-      sAdditionalHintsTableDataRow = sAdditionalHintsTableDataRow.replace("###HINT###", f"{sHint}")
-      return sAdditionalHintsTableDataRow
+      sAdditionalInformationTableDataRow = sAdditionalInformationTableDataRow.replace("###HINT###", f"{sHint}")
+      return sAdditionalInformationTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -240,6 +260,26 @@ class CPattern():
 """
       sRequirementsTableDataRow = sRequirementsTableDataRow.replace("###REQUIREMENT###", f"{sRequirement}")
       return sRequirementsTableDataRow
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetRestrictionsTableBegin(self):
+      sRestrictionsTableBegin = """<h3><font face="Arial" color="#242424">Restrictions</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sRestrictionsTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetRestrictionsTableDataRow(self, sRestriction=None):
+      sRestrictionsTableDataRow = """<tr>
+   <td bgcolor="#FFEFD5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###RESTRICTION###</font></td>
+</tr>
+"""
+      sRestrictionsTableDataRow = sRestrictionsTableDataRow.replace("###RESTRICTION###", f"{sRestriction}")
+      return sRestrictionsTableDataRow
 
    # --------------------------------------------------------------------------------------------------------------
    #TM***
@@ -299,4 +339,23 @@ class CPattern():
    # --------------------------------------------------------------------------------------------------------------
    #TM***
 
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetChangeLogTableBegin(self):
+      sChangelogTableBegin = """<h3><font face="Arial" color="#242424">Changelog</font></h3>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" frame="box" rules="all" align="left">
+"""
+      return sChangelogTableBegin
+
+   # --------------------------------------------------------------------------------------------------------------
+   #TM***
+
+   def GetChangeLogTableDataRow(self, sChangeLog=None):
+      sChangeLogTableDataRow = """<tr>
+   <td bgcolor="#F5F5F5" width="100%" align="left" style="padding:6pt 6pt 6pt 6pt"><font face="Arial" color="#000000" size="-1">###CHANGELOG###</font></td>
+</tr>
+"""
+      sChangeLogTableDataRow = sChangeLogTableDataRow.replace("###CHANGELOG###", f"{sChangeLog}")
+      return sChangeLogTableDataRow
 

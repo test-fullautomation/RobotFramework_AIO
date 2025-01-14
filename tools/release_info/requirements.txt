@@ -1,0 +1,4 @@
+PythonExtensionsCollection
+colorama
+pypandoc
+lxml

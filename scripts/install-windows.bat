@@ -13,7 +13,7 @@ set "app="
 for /f "tokens=*" %%a in ('dir /b !directory!\*.exe') do (
     if not defined app (
         set "app=%%~na"
-        start /wait "" "!directory!\%%a" /SILENT /NORESTART /LOG=install-windows.log
+        start /wait "" "!directory!\%%a" /SILENT /NORESTART /SUPPRESSMSGBOXES /LOG=install-windows.log
         if !errorlevel! equ 0 (
             echo !app! installation successful.
         ) else (

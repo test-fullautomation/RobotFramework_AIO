@@ -22,12 +22,12 @@
   "version"        : "0.2.0",
   "configurations" : [
     {
-      "type"     : "robotframework-lsp",
+      "type"     : "robotcode",
       "name"     : "Robot Framework: Launch .robot file",
       "request"  : "launch",
       "cwd"      : "${workspaceFolder}",
       "target"   : "${file}",
-      "terminal" : "integrated",
+      "console"  : "integratedTerminal",
       "env"      : {},
       "args"     : ["-T",
                     "-d", "${workspaceFolder}${pathSeparator}reports${pathSeparator}${input:targetName}_${fileBasenameNoExtension}",

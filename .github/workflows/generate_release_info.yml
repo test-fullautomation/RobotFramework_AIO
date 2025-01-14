@@ -1,0 +1,56 @@
+name: Generate Release Info HTML files
+
+on:
+   push:
+      paths:
+         - tools/release_info/release_main_info_*.json
+   workflow_dispatch:
+
+env:
+   INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
+
+jobs:
+   release-info:
+      name: generate release info html files
+      runs-on: ubuntu-latest
+      steps:
+      - name: checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.3.0
+        with:
+         python-version: "3.9" 
+
+      - name: Install dependencies
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y pandoc
+            python -m pip install -r tools/release_info/requirements.txt
+      
+      - name: Clone repositories
+        run: |
+            chmod +x ./cloneall
+            ./cloneall --config-file=./config/repositories/repositories_extended.conf
+
+      - name: Generate release info
+        run: |
+            export AIO_VERSION_DATE=$(date +%m.%Y)
+            export RobotPythonSitePackagesPath=${{ runner.workspace }}/robotframework-testsuitesmanagement
+
+            VARIANTS=("extended" "original")
+            for variant in "${VARIANTS[@]}"
+            do
+               export AIO_NAME="RobotFramework AIO (${variant})"
+               . ./include/bash/common.sh && create_testsuitmanagement_package_context_file
+               python tools/release_info/release_info.py --configfile ./release_info_config_OSS_${variant}.json
+            done
+      
+      - name: Upload as artifacts
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+            name: release-info-files
+            path: |
+               tools/release_info/release_info_RobotFramework_AIO_*.html
+               tools/release_info/release_changelog.html

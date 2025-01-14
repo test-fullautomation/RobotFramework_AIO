@@ -18,10 +18,18 @@
 ;If nothing is provided, then use an empty string. The resulting
 ;installer will be called RobotFramework_setup__.exe in this case
 ;otherwise it is called   RobotFramework_setup_RobotFrameworkVersion.exe
+#define RobotFrameworkSubVersion ""
+#define RobotFrameworkSubName ""
+#ifdef SubVersion
+   #define RobotFrameworkSubVersion " - " + SubVersion
+   #define RobotFrameworkSubName "_" + SubVersion
+   #define MyAppName "RobotFramework AIO (All In One) with " + SubVersion + " core"
+#endif
+
 #ifndef RobotFrameworkVersion
    #define RobotFrameworkVersion ""
 #endif
-#pragma message "RobotFrameworkVersion is   : " + RobotFrameworkVersion
+#pragma message "RobotFrameworkVersion is   : " + RobotFrameworkVersion + RobotFrameworkSubVersion
 
 #ifdef ITrackService
    #define DoInstallTracking 
@@ -31,10 +39,12 @@
    #pragma message "ITrackService is: not defined"
 #endif
 
-#define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + " (Installer " + SETUPVersion + ")"
-#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion
+#define MyAppVersion "RobotFramework AIO " + RobotFrameworkVersion + RobotFrameworkSubVersion + " (Installer " + SETUPVersion + ")"
+#define MyAppFileName "RobotFramework_AIO_setup_" + RobotFrameworkVersion + RobotFrameworkSubName
 #define MyAppPublisher "Robert Bosch GmbH"
 
+[CustomMessages]
+InstallCopilotArgs={#GetEnv('GITHUB_COPILOT_EXT_ARG')}
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -98,7 +108,7 @@ Source: "R:\robotframework-tutorial\900_building_testsuites\*"; Excludes: ".git"
 Source: "R:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\tutorial\901_static_code_analysis; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;Documentation installation
-Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
+Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#RobotFrameworkSubName}.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -108,15 +118,17 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 Source: "..\test\aio-analyzer\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools\aio-analyzer; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Android related
-;Source: "..\..\devtools\Windows\Android\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Android; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
-;Source: "..\..\devtools\Windows\Appium\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\Appium; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
-;Source: "..\..\devtools\Windows\nodejs\*"; Excludes: ".git"; DestDir: {app}\devtools\Windows\nodejs; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
+Source: "R:\devtools\Android\*"; Excludes: ".git"; DestDir: {app}\devtools\Android; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
+Source: "R:\devtools\nodejs\*"; Excludes: ".git"; DestDir: {app}\devtools\nodejs; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
+Source: "R:\devtools\Appium-Inspector\*"; Excludes: ".git"; DestDir: {app}\devtools\Appium-Inspector; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall; Permissions: users-full; Components: "Android"
+Source: "..\config\tools\Appium.bat"; Excludes: ".git"; DestDir: {app}\devtools; Flags: ignoreversion uninsneveruninstall; Permissions: users-full; Components: "Android"
 
 #include '..\include\windows\install_projects.iss';
 
@@ -138,13 +150,19 @@ Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases;
 
 Name: "{group}\ Tutorial Base Folder"; Filename: {code:GetUsrDataDir}\tutorial; WorkingDir: {code:GetUsrDataDir}\tutorial;
 
+Name: "{group}\(Android) Appium Inspector"; Filename: {app}\devtools\Appium-Inspector\Appium Inspector.exe; Components: "Android";
+Name: "{group}\(Android) Appium Server"; Filename: {app}\devtools\Appium.bat; Components: "Android";
+
 [Types]
-Name: Standard; Description: "Standard Installation"; 
+Name: Standard; Description: "Standard Installation"; Flags: iscustom
 Name: Full; Description: "Full installation of all components."; 
 
 [Components]
-Name: "RobotFramework_AIO_All_In_One"; Description: "All in One required to develop and execute RobotFramework test cases"; Flags: fixed; Types: Standard;
-Name: "Android"; Description: "Android Tools required for Android based test cases (Appium-desktop, nodejs and Android platform-tools."; Types: Standard Full;
+Name: "RobotFramework_AIO_All_In_One"; Description: "All in One required to develop and execute RobotFramework test cases"; Flags: fixed; Types: Standard Full;
+Name: "Android"; Description: "Android package for developing test case"; Types: Standard Full;
+Name: "Android\sdk_tools"; Description: "Android SDK Tools: command line tools, platform tools, build tools."; Types: Standard Full;
+Name: "Android\nodejs"; Description: "Node.js environment which is also contains appium server."; Types: Full;
+Name: "Android\appium_inspector"; Description: "Appium Inspector: a GUI assistant tool for Appium."; Types: Full;
 
 [Registry]
 Root: HKCR; SubKey: .robot; ValueType: string; ValueData: RobotFramework.testcase.file; Flags: UninsDeleteKey;
@@ -156,7 +174,7 @@ Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: 
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey; 
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: """{app}\Python39\python.exe"" ""{app}\python39\scripts\robot-script.py"" ""%1"" %*"; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python39\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Topic; ValueType: string; ValueData: System; Flags: UninsDeleteKey;
 
@@ -183,13 +201,14 @@ Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 ; The idea is that the ROBFW Frameworks sets ANDRDOID_HOME locally for the ROBFW process(es) where ever required to the android sdk delivered with ROBFW Framework
 ; If Android SDK is installed and ANDROID_HOME is existing, then it will be locally overridden, but not globally by ROBFW installation.
 
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: Path; Check:NeedCreateEnvVar('ANDROID_HOME'); ValueData: "{olddata};{app}\devtools\Windows\Android\platform-tools\tools"; Components: "Android"
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: ANDROID_HOME; Check:NeedCreateEnvVar('ANDROID_HOME'); ValueData: {app}\devtools\Windows\Android\platform-tools; Components : "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: Path; Check:NeedCreateEnvVar('ANDROID_HOME'); ValueData: "{olddata};{app}\devtools\Android"; Components: "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: ANDROID_HOME; Check:NeedCreateEnvVar('ANDROID_HOME'); ValueData: {app}\devtools\Android; Components : "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: APPIUM_HOME; Check:NeedCreateEnvVar('APPIUM_HOME'); ValueData: {app}\devtools\nodejs; Components : "Android"
 
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotNodeJS; ValueData: {app}\devtools\Windows\nodejs; Components: "Android"
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotAndroidPlatformTools; ValueData: {app}\devtools\Windows\Android\platform-tools; Components: "Android"
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotAppium; ValueData: {app}\devtools\Windows\Appium; Components: "Android"
-;Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotDevtools; ValueData: {app}\devtools; Components: "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotNodeJS; ValueData: {app}\devtools\nodejs; Components: "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotAndroidPlatformTools; ValueData: {app}\devtools\Android\platform-tools; Components: "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotAppium; ValueData: {app}\devtools\nodejs; Components: "Android"
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotDevtools; ValueData: {app}\devtools; Components: "Android"
 
 ;Switch off "Script need to long for IE": http://support.microsoft.com/kb/175500
 Root: HKCU; SubKey: "Software\Microsoft\Internet Explorer\Styles"; ValueType: dword; ValueName: MaxScriptStatements; ValueData: $FFFFFFFF;
@@ -206,6 +225,7 @@ Name: {code:GetUsrDataDir}\testcases\doc; Flags: UninsNeverUninstall;
 Name: {app}\robotvscode\data; Permissions: users-full; 
 Name: {app}\robotvscode\data\extensions; Permissions: users-full; 
 Name: {app}\robotvscode\data\user-data; Permissions: users-full; 
+Name: {app}\devtools; Permissions: users-full; 
 
 [INI]
 
@@ -217,7 +237,7 @@ Filename: "powershell.exe"; \
 [UninstallRun]
 
 
-[code]
+[Code]
 // Helper type for mapping of Project Index to ListPosition.
 // Name and Index are in a fix relationship. Listposition can be
 // selected free to be free in the order of the displayed list.
@@ -233,6 +253,10 @@ var
   ProjectPage : TWizardPage;
   ProjectListBox: TNewListBox;
   PreviousUserDataDir: String;
+  InfoAfterPage: TWizardPage;
+  InstructionLabel: TLabel;
+  InstructionMemo: TMemo;
+  ScriptPath: string;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -422,19 +446,25 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      GetWindowsVersionEx(Version);
+      if (Version.NTPlatform) and (Version.Major>=6) then
+        begin
+          Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\devtools');
+        end;
 
 #ifdef DoInstallTracking
-        //installation tracking
-        try
-           WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-           WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
-           WinHttpReq.Send();  
-        except
-           //ignore any issue. Setup must complete...
-        end;
+      //installation tracking
+      try
+          WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
+          WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
+          WinHttpReq.Send();  
+      except
+          //ignore any issue. Setup must complete...
+      end;
 #endif
 
-
+      SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
     end;
     
 end;
@@ -447,6 +477,7 @@ var
  StaticText : TNewStaticText;
  ProjectListCounter : Integer;
  i:Integer;
+ MsgInstallCopilotArgs: String;
  
 begin
   InitProjectHash();
@@ -513,6 +544,37 @@ begin
   //initialize user data directory page with last directory
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
+
+  //Notice for user who want to use Github Copilot extensions
+  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
+
+  InstructionLabel := TLabel.Create(WizardForm);
+  InstructionLabel.Parent := InfoAfterPage.Surface;
+  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 + 
+                              'RobotFramework' + #13#13 + 
+                              'Execute the following command line in Windows PowerShell to download and ' + #13 + 
+                              'install GitHub Copilot extension:';
+  InstructionLabel.AutoSize := True;
+  InstructionLabel.Top := ScaleY(0);
+  InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
+
+  // Create the memo for the Instruction
+  ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
+  MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
+  InstructionMemo := TMemo.Create(WizardForm);
+  InstructionMemo.Parent := InfoAfterPage.Surface;
+  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
+  InstructionMemo.Width := WizardForm.ReadyMemo.Width;
+  InstructionMemo.Height := WizardForm.ReadyMemo.Height;
+  InstructionMemo.Color := WizardForm.ReadyMemo.Color;
+  InstructionMemo.Font := WizardForm.ReadyMemo.Font;
+  InstructionMemo.ReadOnly := True;
+  InstructionMemo.ScrollBars := ssVertical;
+  InstructionMemo.Cursor := crArrow;
+  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  // Select all text in the memo
+  InstructionMemo.SelStart := 0;
+  InstructionMemo.SelLength := Length(InstructionMemo.Text)
 
 end;
 
@@ -635,7 +697,7 @@ Name: {app}\robotvscode\*; Type: filesandordirs;
 Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
-;Name: {app}\devtools\*; Type: filesandordirs;
+Name: {app}\devtools\*; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\tutorial; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\documentation; Type: filesandordirs;
 Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConstant('{app}'))
@@ -645,6 +707,6 @@ Name: {app}\robotvscode\*; Type: filesandordirs;
 Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
-;Name: {app}\devtools\*; Type: filesandordirs;
+Name: {app}\devtools\*; Type: filesandordirs;
 Name: {code:GetUsrDataDir}\documentation; Type: filesandordirs;
 Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConstant('{app}'))

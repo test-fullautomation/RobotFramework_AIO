@@ -18,11 +18,13 @@ git_base_url="https://github.com"
 
 function tag_single_repo(){
    # Verify input argument
-   if [[ $# != 1 ]]; then
-      errormsg "Error: Invalid number of arguments.\nUsage: tag_single_repo <path_to_repo>"
+   if [[ $# != 2 ]]; then
+      errormsg "Error: Invalid number of arguments.\nUsage: tag_single_repo <path_to_repo> <version_filename>"
    fi
 
    repo_location=$(realpath "$1")
+   version_file=$2
+
    if [ ! -d "$repo_location" ]; then
       errormsg "Given repo location '${repo_location}' does not exist"
    fi
@@ -32,13 +34,13 @@ function tag_single_repo(){
    repo_name=$(basename ${repo_location})
    package_name=$repo_name
    commit_sha=""
-   # version.py file should be placed under package_name folder as below structure
+   # ${version_file}, e.g version.py file should be placed under package_name folder as below structure
    # repo_name
    #     |__ package_name 
    #              |__ version.py
    #              |__ ...
    # Update below glob pattern incase the repo structure is not as above 
-   version_file_pattern=${repo_location}/*/version.py  
+   version_file_pattern=${repo_location}/*/$version_file
 
    # Prepare configuration file for tagging single repo
    config_content='{
@@ -61,9 +63,9 @@ function tag_single_repo(){
 
    # Get version information from version.py file under repo folder
    version_file=$(ls $version_file_pattern 2>/dev/null)
-   # Check if the version.py does not exist
+   # Check existence of the filename which contains version information
    if [ -z "$version_file" ]; then
-      errormsg "No version.py file is found under '${repo_location}'"
+      errormsg "No $version_file file is found under '${repo_location}'"
    else
       echo "Found version file at '${version_file}'"
       # Get package name for pypi verification
@@ -101,9 +103,22 @@ fi
 
 # Process each repo in repositories configuration file
 while IFS= read -r line || [[ -n "$line" ]]; do
-   repo_name=$(echo "$line" | awk '{$1=$1;print}')
+   trimmed_line=$(echo "$line" | awk '{$1=$1;print}')
+
+   # Check if the line contains filename (separate by "=" char) 
+   # to get version information.
+   # Default version file is version.py
+   version_filename="version.py"
+   if [[ $trimmed_line == *"="* ]]; then
+      # Extract repository name and version file
+      repo_name="${trimmed_line%%=*}"
+      version_filename="${trimmed_line#*=}"
+   else
+      repo_name=$trimmed_line
+   fi
+
    echo
-   greenmsg "Processing repo: $line"
+   greenmsg "Processing repo: $repo_name"
    clone_update_repo ../$repo_name "https://github.com/$project/$repo_name.git" "$TAG_NAME"
-   tag_single_repo ../$repo_name
+   tag_single_repo ../$repo_name $version_filename
 done < "${repos_conf_file}"

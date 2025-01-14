@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=Start Appium Server
+Terminal=true
+Name=Appium Server
+Exec=/opt/rfwaio/devtools/appium
+Type=Application
+Icon=/opt/rfwaio/linux/icon/appium.png

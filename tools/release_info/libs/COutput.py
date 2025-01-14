@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2024 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 25.01.2024
+# 13.12.2024
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -50,6 +50,30 @@ def printfailure(sMsg, prefix=None):
    sys.stderr.write(sMsg)
 
 # --------------------------------------------------------------------------------------------------------------
+
+def IsVersionMatch(bundle_version, release_info_version):
+   """Little helper to identify version numbers (match between bundle version number and version number string in release info file)
+   """
+   is_version_match = False
+   splitparts = release_info_version.split(';')
+   for part in splitparts:
+      part = part.strip()
+      if part != "":
+         if ( (part == "*") or (bundle_version.startswith(part)) ):
+            is_version_match = True
+            break
+   return is_version_match
+
+# --------------------------------------------------------------------------------------------------------------
+
+def resolveVariable(sContent, dVarMapping):
+   """Helps to resolve variable (define with ###VAR### syntax) by its value in given content
+   """
+   sResolvedLine = sContent
+   for var, value in dVarMapping.items():
+      sResolvedLine = sResolvedLine.replace(f"###{var}###", value)
+   
+   return sResolvedLine
 
 class COutput():
    """produce the output (currently HTML and email)
@@ -84,7 +108,10 @@ class COutput():
       bundle_version_date      = PACKAGE_CONTEXT['bundle_version_date']
       sReleaseInfoFileHTMLName = f"release_info_{bundle_name}_{bundle_version}.html"
       sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(" ", "_")
+      sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace("(", "")
+      sReleaseInfoFileHTMLName = sReleaseInfoFileHTMLName.replace(")", "")
       sReleaseInfoFileHTML     = f"{REFERENCEPATH_CONFIG}/{sReleaseInfoFileHTMLName}"
+      sReleaseChangelogFileHTML= f"{REFERENCEPATH_CONFIG}/release_changelog.html"
 
       self.__oConfig.Set('RELEASEINFOFILEHTML', sReleaseInfoFileHTML)
 
@@ -96,7 +123,10 @@ class COutput():
       listLinesHTML.append(self.__oPattern.GetHLine())
 
       # header table
-      listLinesHTML.append(self.__oPattern.GetHeaderTable(bundle_name, bundle_version, bundle_version_date))
+      # (!!! temporary hack !!!)
+      framework_name    = "RobotFramework AIO"
+      bundle_name_fixed = bundle_name.replace("RobotFramework AIO", "Robot Framework")
+      listLinesHTML.append(self.__oPattern.GetHeaderTable(framework_name, bundle_name_fixed, bundle_version, bundle_version_date))
 
       listLinesHTML.append(self.__oPattern.GetHLine())
 
@@ -105,36 +135,61 @@ class COutput():
       RELEASE_MAIN_INFO = self.__oConfig.Get('RELEASE_MAIN_INFO')
       listVersionNumbersAll = list(RELEASE_MAIN_INFO.keys())
 
+      # prepare variable mapping for replacement in release main info 
+      lBundleVersion = bundle_version.split('.')
+      lIntermediateLabels = []
+      if (len(lBundleVersion) > 2) and (int(lBundleVersion[2]) == 0):
+         # check list of version from release_main_info to get intermediate release labels
+         # intermediate release labels are only required for major release (patch version is 0)
+         for versionNo in listVersionNumbersAll:
+            lVersionInfo = versionNo.split('.')
+            if (len(lVersionInfo) > 2) and (lVersionInfo[0] == lBundleVersion[0]) \
+                and (int(lVersionInfo[1]) == int(lBundleVersion[1])-1) and (int(lVersionInfo[2]) != 0):
+               lIntermediateLabels.append('.'.join(lVersionInfo[:3]))
+      sIntermediateLabels = ','.join(lIntermediateLabels) if len(lIntermediateLabels) > 0 else ""
+         
+      dVariableMapping = {
+         "VERSION": '.'.join(lBundleVersion[:4]),
+         "INTERMEDIATE_LABELS": sIntermediateLabels,
+         "LABEL": '.'.join(lBundleVersion[:3])
+      }
+
       # -- find version number matches
 
       # PrettyPrint(listVersionNumbersAll, sPrefix="listVersionNumbersAll")
 
       listVersionNumbersIdentified = []
       for sVersionNumber in listVersionNumbersAll:
-         if bundle_version.startswith(sVersionNumber):
+         if IsVersionMatch(bundle_version, sVersionNumber):
             listVersionNumbersIdentified.append(sVersionNumber)
 
       # PrettyPrint(listVersionNumbersIdentified, sPrefix="listVersionNumbersIdentified")
 
       # ---- lists of items for each section over all identified version numbers
 
-      listReleaseNotes    = []
-      listHighlights      = []
-      listAdditionalHints = []
-      listRequirements    = []
-      listLinksRaw        = []
+      listReleaseNotes          = []
+      listWarnings              = []
+      listHighlights            = []
+      listAdditionalInformation = []
+      listRequirements          = []
+      listRestrictions          = []
+      listLinksRaw              = []
 
       for sVersionNumber in listVersionNumbersIdentified:
          # -- list of sections for certain version number
          listSections = list(RELEASE_MAIN_INFO[sVersionNumber].keys())
          if "RELEASENOTES" in listSections:
             listReleaseNotes.extend(RELEASE_MAIN_INFO[sVersionNumber]['RELEASENOTES'])
+         if "WARNINGS" in listSections:
+            listWarnings.extend(RELEASE_MAIN_INFO[sVersionNumber]['WARNINGS'])
          if "HIGHLIGHTS" in listSections:
             listHighlights.extend(RELEASE_MAIN_INFO[sVersionNumber]['HIGHLIGHTS'])
-         if "ADDITIONALHINTS" in listSections:
-            listAdditionalHints.extend(RELEASE_MAIN_INFO[sVersionNumber]['ADDITIONALHINTS'])
+         if "ADDITIONALINFORMATION" in listSections:
+            listAdditionalInformation.extend(RELEASE_MAIN_INFO[sVersionNumber]['ADDITIONALINFORMATION'])
          if "REQUIREMENTS" in listSections:
             listRequirements.extend(RELEASE_MAIN_INFO[sVersionNumber]['REQUIREMENTS'])
+         if "RESTRICTIONS" in listSections:
+            listRestrictions.extend(RELEASE_MAIN_INFO[sVersionNumber]['RESTRICTIONS'])
          if "VERSIONEDLINKS" in listSections:
             listLinksRaw.extend(RELEASE_MAIN_INFO[sVersionNumber]['VERSIONEDLINKS'])
       # eof for sVersionNumber in listVersionNumbersIdentified:
@@ -148,7 +203,8 @@ class COutput():
 
       listofdictLinks = []
       for sLink in listLinksRaw:
-         listLinkParts = sLink.split(';')
+         sResolvedLink = resolveVariable(sLink, dVariableMapping)
+         listLinkParts = sResolvedLink.split(';')
          # PrettyPrint(listLinkParts, sPrefix="listLinkParts")
          nNrOfParts = len(listLinkParts)
          dictLink = {}
@@ -175,9 +231,11 @@ class COutput():
 
       # debug:
       # PrettyPrint(listReleaseNotes, sPrefix="listReleaseNotes")
+      # PrettyPrint(listWarnings, sPrefix="listReleaseNotes")
       # PrettyPrint(listHighlights, sPrefix="listHighlights")
-      # PrettyPrint(listAdditionalHints, sPrefix="listAdditionalHints")
+      # PrettyPrint(listAdditionalInformation, sPrefix="listAdditionalInformation")
       # PrettyPrint(listRequirements, sPrefix="listRequirements")
+      # PrettyPrint(listRestrictions, sPrefix="listRestrictions")
       # PrettyPrint(listLinksRaw, sPrefix="listLinksRaw")
       # PrettyPrint(listofdictLinks, sPrefix="listofdictLinks")
 
@@ -187,7 +245,8 @@ class COutput():
          # found 'RELEASENOTES' => write to output
          listLinesHTML.append(self.__oPattern.GetReleaseNotesTableBegin())
          for sReleaseNote in listReleaseNotes:
-            sReleaseNote_conv = pypandoc.convert_text(sReleaseNote, 'html', format='rst')
+            sReleaseNote_resolve = resolveVariable(sReleaseNote, dVariableMapping)
+            sReleaseNote_conv = pypandoc.convert_text(sReleaseNote_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sReleaseNote_conv = sReleaseNote_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -197,13 +256,31 @@ class COutput():
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
+      # -- 'WARNINGS'
+
+      if len(listWarnings) > 0:
+         # found 'WARNINGS' => write to output
+         listLinesHTML.append(self.__oPattern.GetWarningsTableBegin())
+         for sWarning in listWarnings:
+            sWarning_resolve = resolveVariable(sWarning, dVariableMapping)
+            sWarning_conv = pypandoc.convert_text(sWarning_resolve, 'html', format='rst')
+            # to open link in another explorer window:
+            sWarning_conv = sWarning_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sWarning_conv = sWarning_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sWarning_conv = sWarning_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetWarningsTableDataRow(sWarning_conv))
+         listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listLinesHTML.append(self.__oPattern.GetVDist())
+
       # -- 'HIGHLIGHTS'
 
       if len(listHighlights) > 0:
          # found 'HIGHLIGHTS' => write to output
          listLinesHTML.append(self.__oPattern.GetHighlightsTableBegin())
          for sHighlight in listHighlights:
-            sHighlight_conv = pypandoc.convert_text(sHighlight, 'html', format='rst')
+            sHighlight_resolve = resolveVariable(sHighlight, dVariableMapping)
+            sHighlight_conv = pypandoc.convert_text(sHighlight_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sHighlight_conv = sHighlight_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
@@ -213,19 +290,20 @@ class COutput():
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
-      # -- 'ADDITIONALHINTS'
+      # -- 'ADDITIONALINFORMATION'
 
-      if len(listAdditionalHints) > 0:
-         # found 'ADDITIONALHINTS' => write to output
-         listLinesHTML.append(self.__oPattern.GetAdditionalHintsTableBegin())
-         for sAdditionalHint in listAdditionalHints:
-            sAdditionalHint_conv = pypandoc.convert_text(sAdditionalHint, 'html', format='rst')
+      if len(listAdditionalInformation) > 0:
+         # found 'ADDITIONALINFORMATION' => write to output
+         listLinesHTML.append(self.__oPattern.GetAdditionalInformationTableBegin())
+         for sAdditionalInformation in listAdditionalInformation:
+            sAdditionalInformation_resolved = resolveVariable(sAdditionalInformation, dVariableMapping)
+            sAdditionalInformation_conv = pypandoc.convert_text(sAdditionalInformation_resolved, 'html', format='rst')
             # to open link in another explorer window:
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("a href=", "a target=\"_blank\" href=")
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
-            sAdditionalHint_conv = sAdditionalHint_conv.replace("</code>", "</font></code>")
-            listLinesHTML.append(self.__oPattern.GetAdditionalHintsTableDataRow(sAdditionalHint_conv))
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sAdditionalInformation_conv = sAdditionalInformation_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetAdditionalInformationTableDataRow(sAdditionalInformation_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
@@ -235,13 +313,31 @@ class COutput():
          # found 'REQUIREMENTS' => write to output
          listLinesHTML.append(self.__oPattern.GetRequirementsTableBegin())
          for sRequirement in listRequirements:
-            sRequirement_conv = pypandoc.convert_text(sRequirement, 'html', format='rst')
+            sRequirement_resolve = resolveVariable(sRequirement, dVariableMapping)
+            sRequirement_conv = pypandoc.convert_text(sRequirement_resolve, 'html', format='rst')
             # to open link in another explorer window:
             sRequirement_conv = sRequirement_conv.replace("a href=", "a target=\"_blank\" href=")
             # <code> tag fix: size and color
             sRequirement_conv = sRequirement_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
             sRequirement_conv = sRequirement_conv.replace("</code>", "</font></code>")
             listLinesHTML.append(self.__oPattern.GetRequirementsTableDataRow(sRequirement_conv))
+         listLinesHTML.append(self.__oPattern.GetTableFooter())
+         listLinesHTML.append(self.__oPattern.GetVDist())
+
+      # -- 'RESTRICTIONS'
+
+      if len(listRestrictions) > 0:
+         # found 'RESTRICTIONS' => write to output
+         listLinesHTML.append(self.__oPattern.GetRestrictionsTableBegin())
+         for sRestriction in listRestrictions:
+            sRestriction_resolve = resolveVariable(sRestriction, dVariableMapping)
+            sRestriction_conv = pypandoc.convert_text(sRestriction_resolve, 'html', format='rst')
+            # to open link in another explorer window:
+            sRestriction_conv = sRestriction_conv.replace("a href=", "a target=\"_blank\" href=")
+            # <code> tag fix: size and color
+            sRestriction_conv = sRestriction_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
+            sRestriction_conv = sRestriction_conv.replace("</code>", "</font></code>")
+            listLinesHTML.append(self.__oPattern.GetRestrictionsTableDataRow(sRestriction_conv))
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
 
@@ -265,7 +361,7 @@ class COutput():
          # -- find version number matches
          listVersionNumbersIdentified = []
          for sVersionNumber in listVersionNumbersAllPerComponent:
-            if bundle_version.startswith(sVersionNumber):
+            if IsVersionMatch(bundle_version, sVersionNumber):
                listVersionNumbersIdentified.append(sVersionNumber)
 
          for sVersion in listVersionNumbersIdentified:
@@ -273,13 +369,20 @@ class COutput():
             dictListOfChangesPerComponent[sComponent].extend(listChanges)
       # eof for sComponent in listComponentsAll:
 
+      listHTMLChangelog = []
       listIdentifiedComponents = list(dictListOfChangesPerComponent.keys())
       nCnt = 0
+      nCntCmpt = 1
       if len(listIdentifiedComponents) > 0:
          # someting found, therefore start a table
          listLinesHTML.append(self.__oPattern.GetChangesTableBegin())
+         listHTMLChangelog.append(self.__oPattern.GetChangeLogTableBegin())
          for sIdentifiedComponent in listIdentifiedComponents:
             listChanges = dictListOfChangesPerComponent[sIdentifiedComponent]
+            sHTMLChangelogCmpt = ''
+            if listChanges:
+               nCntCmpt = nCntCmpt + 1
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + f"<h3>{sIdentifiedComponent}</h3>"
             for sChange in listChanges:
                nCnt = nCnt + 1
                sChange_conv = pypandoc.convert_text(sChange, 'html', format='rst')
@@ -289,6 +392,10 @@ class COutput():
                sChange_conv = sChange_conv.replace("<code>", "<code><font font-family=\"courier new\" color=\"navy\" size=\"+1\">")
                sChange_conv = sChange_conv.replace("</code>", "</font></code>")
                listLinesHTML.append(self.__oPattern.GetChangesTableDataRow(nCnt, sIdentifiedComponent, sChange_conv))
+               sHTMLChangelogCmpt = sHTMLChangelogCmpt + sChange_conv
+            
+            if sHTMLChangelogCmpt:
+               listHTMLChangelog.append(self.__oPattern.GetChangeLogTableDataRow(sHTMLChangelogCmpt))
 
          listLinesHTML.append(self.__oPattern.GetTableFooter())
          listLinesHTML.append(self.__oPattern.GetVDist())
@@ -322,6 +429,14 @@ class COutput():
       del oReleaseInfoFileHTML
 
       listResults.append(f"Release info written to '{sReleaseInfoFileHTML}'")
+
+      # write changelog html file
+      oReleaseChangelogFileHTML = CFile(sReleaseChangelogFileHTML)
+      sChangelogContent = "\n".join(listHTMLChangelog).replace("\r\n", " ")
+      oReleaseChangelogFileHTML.Write(sChangelogContent)
+      del oReleaseChangelogFileHTML
+
+      listResults.append(f"Release changelog written to '{sReleaseChangelogFileHTML}'")
 
       # -- output to email
 

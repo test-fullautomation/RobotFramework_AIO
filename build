@@ -15,17 +15,26 @@ echo -e "${COL_GREEN}#          Compiling RobotFramework AIO setup...           
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
+# Load version information from versions.conf
+source ./install/versions.conf
+
+echo "VS Codium version $VERSION_VSCODIUM"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+
 RobotFrameworkVersion=""
 ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
-
+SubVersion=""
 
 arguments=""
 
 if [ "$#" -eq 0 ]; then
    echo you can run the build with optional arguments 
-   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
+   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --sub-version=extended
    echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
    echo repo_config_file contains the repository for building.
@@ -53,6 +62,9 @@ else
           --project-config-file=*)
 			 ProjectConfigFile=`cygpath -wa "${i#*=}"`
           ;;
+			--sub-version=*)
+			 SubVersion="${i#*=}"
+			 ;;
           *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
               echo -e $COL_RED"build terminated."$COL_RESET
@@ -70,7 +82,7 @@ fi
 
 if [ "$ITrackService" != "NONE" ]; then
 	echo -e $COL_GREEN"ITrackService         = $ITrackService"$COL_RESET
-	arguments+="//DITrackService=$ITrackService"
+	arguments+="//DITrackService=$ITrackService "
 fi
 
 if [ "$RobotFrameworkVersion" == "" ]; then
@@ -95,8 +107,15 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
-arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion"
+arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion "
 echo
+
+PackageFilenameLinux=RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+
+if [ "$SubVersion" != "" ]; then
+	arguments+="//DSubVersion=$SubVersion "
+	PackageFilenameLinux=RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64_$SubVersion.deb
+fi
 
 #read -n1 -r -p "Press space to continue..." key
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -260,7 +279,7 @@ function generate_version_info() {
 
 	add_line_to_file "Installer version:"
 	add_line_to_file "******************"
-	add_line_to_file "RobotFramework AIO (OSS)  ${RobotFrameworkVersion}"
+	add_line_to_file "RobotFramework AIO (${VARIANT}) ${RobotFrameworkVersion} (${SubVersion} core)"
 	add_line_to_file ""
 	add_line_to_file "Web sites:"
 	add_line_to_file "**********"
@@ -273,6 +292,14 @@ function generate_version_info() {
 	add_line_to_file "Author:"
 	add_line_to_file "*******"
 	add_line_to_file "Thomas Pollerspöck <thomas.pollerspoeck@de.bosch.com>"
+	add_line_to_file ""
+	add_line_to_file "Other tools:"
+	add_line_to_file "************"
+	add_line_to_file "    + VS Codium version: $VERSION_VSCODIUM"
+	add_line_to_file "    + Node.js version: $VERSION_NODEJS"
+	add_line_to_file "    + Android SDK Build Tool version: $VERSION_BUILD_TOOL"
+	add_line_to_file "    + Android SDK Platform Tool version: $VERSION_PLATFORM_TOOL"
+	add_line_to_file "    + Appium Inspector version: $VERSION_APPIUM_INSPECTOR"
 }
 
 
@@ -295,46 +322,71 @@ function build_debian()
 	rm -rf ./output_lx/${PACK_NAME}/
 
 	#now create package new
-	mkdir -p ./output_lx/${PACK_NAME}/opt/bosch/robfw
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tools
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	mkdir -p ./output_lx/${PACK_NAME}/usr/local/bin
 	mkdir -p ./output_lx/${PACK_NAME}/DEBIAN
 
+	# DEBIAN installation scripts
 	cp ./config/build/dpkg_build/control ./output_lx/${PACK_NAME}/DEBIAN
+	cp ./config/build/dpkg_build/preinst.sh ./output_lx/${PACK_NAME}/DEBIAN/preinst
+	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/preinst
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/postinst
 	cp ./config/build/dpkg_build/prerm.sh ./output_lx/${PACK_NAME}/DEBIAN/prerm
 	chmod 755 ./output_lx/${PACK_NAME}/DEBIAN/prerm
+
+	# executable scripts and applications
 	cp ./config/build/dpkg_build/robot.ico ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/codium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	cp ./config/build/dpkg_build/appium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	cp ./config/build/dpkg_build/appium-inspector.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/robot.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	cp ./config/build/dpkg_build/appium.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	cp ./config/build/dpkg_build/appiumInspector.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/linux/set_robotenv.sh
 	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
 	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
 
+	# Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
-	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial
-	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/tutorial/
-	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation
-	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest/documentation/
+	cp ./install/install-github-copilot-exts.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+
+	# Tutorial and Documentation packages
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial
+	cp -R -a ../robotframework-tutorial/[0-9][0-9][0-9]_* ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial/
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/documentation
+	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference*${SubVersion}.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/documentation/
+
+	# Python package: core framework and libraries
 	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
-	cp -R -a ./config/tools ./output_lx/${PACK_NAME}/opt/rfwaio/tools
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
 
+	# Devtools: Android package
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
+	cp -R -a ../devtools/. ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Appium-Inspector.AppImage
+	cp ./config/tools/appium.sh ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
+
+	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
+	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh
 
 	# Update version
 	cp ./version.txt ./output_lx/${PACK_NAME}/opt/rfwaio/
 
 	logresult "$?" "prepared package build" "prepare package build"
 
-	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+	dpkg-deb --root-owner-group --build ./output_lx/${PACK_NAME} ./output_lx/${PackageFilenameLinux}
 	logresult "$?" "built deb package" "build deb package"
 
-	dpkg -I ./output_lx/RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
+	dpkg -I ./output_lx/${PackageFilenameLinux}
 	goodmsg "done."
 }
 
@@ -360,7 +412,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 	./scripts/precompile.bat $ProjectConfigFile
-	./tools/InnoSetup5.5.1/ISCC "${arguments}" ./scripts/RobotFrameworkSetup.iss
+	./tools/InnoSetup5.5.1/ISCC ${arguments} ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
 }

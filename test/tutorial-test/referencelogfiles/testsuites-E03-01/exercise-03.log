@@ -13,10 +13,9 @@
 20230227 15:09:55.210 - INFO - ${teststring} = I am the 'robot_config' configuration of exercise 03
 20230227 15:09:55.210 - INFO - ${CONFIG} = {'WelcomeString': 'Hello... Robot Framework is running now!', 'Maximum_version': '1.0.0', 'Minimum_version': '0.6.0', 'Project': 'RobotFramework Testsuites', 'TargetName': 'Device_01', 'params': {}}
 20230227 15:09:55.210 - INFO - Running with configuration level 3
-20230227 15:09:55.210 - INFO - Parameters loaded from 'C:\RobotTest\tutorial\900_building_testsuites\exercise-03\config\robot_config.jsonp'
 20230227 15:09:55.210 - INFO - Robot Framework AIO version check passed!
+20230227 15:09:55.211 - INFO - Loaded configuration file 'C:\RobotTest\tutorial\900_building_testsuites\exercise-03\config\robot_config.jsonp'
 20230227 15:09:55.211 - INFO - Suite Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-03\'
-20230227 15:09:55.211 - INFO - CfgFile Path: 'C:\RobotTest\tutorial\900_building_testsuites\exercise-03\config\robot_config.jsonp'
 20230227 15:09:55.211 - INFO - Number of test suites: 1
 20230227 15:09:55.211 - INFO - Total number of testcases: 1
 20230227 15:09:55.211 - INFO - +- END SETUP: tm.Testsuite Setup (29)

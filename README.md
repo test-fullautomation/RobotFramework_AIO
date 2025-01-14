@@ -8,12 +8,34 @@
 
 -->
 
-# Robot Framework AIO  <!-- omit in toc -->
+# RobotFramework AIO (All In One) <!-- omit in toc -->
 [![Build RobotFramework AIO packages](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml/badge.svg?event=push)](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml)
 
-This respository holds the build tooling for a new Robot Framework AIO (All In 
-One) setup for both Windows and Linux.
+This respository holds the build tooling for a new RobotFramework AIO (All In 
+One) installer for both Windows and Linux.
 
+RobotFramework AIO is built out of many separate repositories. Therefore this repository (https://github.com/test-fullautomation/RobotFramework_AIO/) is **the meta-repository** for all related repositories.
+
+RobotFramework AIO is therefore also **not as pypi package** available, but it
+comes instead as separate Windows or Linux installer.
+
+#
+[![Attention](include/png/attention.png)](https://robotframework-aio.org)
+
+Attention! If you want to use RobotFramework AIO for test case development and/or test case execution, 
+then please download a RobotFramework AIO installer from here: https://robotframework-aio.org .
+
+
+If you want to contribute to develop RobotFramework AIO, and therefore build it 
+manually, then please proceed reading here.
+
+!! Consider also !! \
+In most cases it's not required to build manually. Our 
+RobotFramework AIO github ["Actions"](https://github.com/test-fullautomation/RobotFramework_AIO/actions) can do this for you.
+Contribution is also possible by just working on the repository where
+you want to contribute. Most of the repositories have no dependency on
+the overall build and run also stand-alone.
+#
 
 ## Table of Contents  <!-- omit in toc -->
 
@@ -39,6 +61,8 @@ One) setup for both Windows and Linux.
 ### Manual build
 Currently, RobotFramework AIO is supported to build with both **Windows** and 
 **Linux** environments.
+Consider that a manual build is in most cases not required. 
+RobotFramework AIO actions can build for you.
 
 #### Preconditions
 Building a RobotFramework AIO installer includes rendering the documentation. 

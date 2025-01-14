@@ -5,13 +5,13 @@
   "version"        : "0.2.0",
   "configurations" : [
     {
-      "type"     : "robotframework-lsp",
-      "name"     : "Robot Framework: Launch .robot file",
+      "type"     : "robotcode",
+      "name"     : "Robot Framework: Run .robot file",
       "request"  : "launch",
       "cwd"      : "${workspaceFolder}",
       "target"   : "${file}",
-      "terminal" : "integrated",
       "env"      : {},
+      "console"  : "integratedTerminal",
       "args"     : ["-T",
                     "-d", "${workspaceFolder}${pathSeparator}..${pathSeparator}logfiles",
                     "-b", "debug${pathSeparator}${fileBasenameNoExtension}.log",
