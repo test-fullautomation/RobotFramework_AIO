@@ -12,6 +12,7 @@
                      "RF Log 2 DB"      : "RobotLog2DB",
                      "RF Log 2 RQM"     : "RobotLog2RQM",
                      "RF TSM"           : ["robotframework-testsuitesmanagement", "TestsuitesManagement"],
-                     "RF atest"         : "atest"
+                     "RF atest"         : "atest",
+                     "QConnectBase"     : "robotframework-qconnect-base"
                    }
 }
