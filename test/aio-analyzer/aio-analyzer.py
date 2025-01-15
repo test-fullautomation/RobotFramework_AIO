@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 14.01.2025
+# 15.01.2025
 #
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -44,6 +44,7 @@ from PythonExtensionsCollection.Folder.CFolder import CFolder
 from PythonExtensionsCollection.Utils.CUtils import *
 
 from robot.libraries.BuiltIn import BuiltIn # used for Robot Framework core detection
+from robot import get_version
 
 col.init(autoreset=True)
 
@@ -334,10 +335,24 @@ dictVersionControl['CURRENT_BUNDLE_VERSION'] = None
 dictVersionControl['REQUIRED_MAX_VERSION']   = None
 dictVersionControl['REQUIRED_MIN_VERSION']   = None
 
+ROBOTFRAMEWORKVERSION = get_version()
+sOut = 40* " " + f"<<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
+print(COLBG + sOut)
+print()
+oLogFile.Write(sOut)
+oLogFile.Write()
+
 ROBOTFRAMEWORKCORE = "ORIGINAL"
 if is_extended_rfcore() is True:
    ROBOTFRAMEWORKCORE      = "EXTENDED"
 sOut = 39* " " + f"<<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
+print(COLBG + sOut)
+print()
+oLogFile.Write(sOut)
+oLogFile.Write()
+
+PYTHONVERSION = sys.version
+sOut = 12* " " + f"<<< Python version '{PYTHONVERSION}' >>>"
 print(COLBG + sOut)
 print()
 oLogFile.Write(sOut)
@@ -705,6 +720,21 @@ if ( (bVersionCheckExecuted is True) and (bVersionMismatch is False) ):
    oLogFile.Write()
    print(COLBG + sResult)
    print()
+
+
+# at end print again some basic information in console (for better readibility, no need to scroll up)
+
+sOut = f"<<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
+print(COLBY + sOut)
+print()
+
+sOut = f"<<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
+print(COLBY + sOut)
+print()
+
+sOut = f"<<< python version '{PYTHONVERSION}' >>>"
+print(COLBY + sOut)
+print()
 
 oLogFile.Write("Done")
 oLogFile.Write()
