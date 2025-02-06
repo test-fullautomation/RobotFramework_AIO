@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2025 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 #
 # aio-analyzer.py
 #
-# XC-CT/ECA3-Queckenstedt
+# XC-HWP/ESW3-Queckenstedt
 #
-# 01.06.2023
+# 15.01.2025
 #
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -42,6 +42,9 @@ from PythonExtensionsCollection.String.CString import CString
 from PythonExtensionsCollection.File.CFile import CFile
 from PythonExtensionsCollection.Folder.CFolder import CFolder
 from PythonExtensionsCollection.Utils.CUtils import *
+
+from robot.libraries.BuiltIn import BuiltIn # used for Robot Framework core detection
+from robot import get_version
 
 col.init(autoreset=True)
 
@@ -107,7 +110,7 @@ def get_version_as_int(sVersion=None, oLogFile=None):
          oLogFile.Write()
       return None
 
-   #                 30^2                     30^1                   30^0
+   #                 30^2                          30^1                            30^0
    version_number = (int(tupleVersions[0])*900) + (int(tupleVersions[1])*30) + int(tupleVersions[2])
 
    # debug
@@ -121,6 +124,18 @@ def get_version_as_int(sVersion=None, oLogFile=None):
 
 # eof def get_version_as_int(sVersion=None):
 
+# --------------------------------------------------------------------------------------------------------------
+
+def is_extended_rfcore():
+   bExtendedRFCore = False
+   sException      = "EXTENDED-CORE-DETECTION"
+   try:
+      BuiltIn().unknown(sException)
+   except Exception as ex:
+      if str(ex) == sException:
+         bExtendedRFCore = True
+      # otherwise exception would be: ''BuiltIn' object has no attribute 'unknown''!
+   return bExtendedRFCore
 
 # --------------------------------------------------------------------------------------------------------------
 # ENVIRONMENT
@@ -257,13 +272,6 @@ dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
 dictComponent = {}
-dictComponent['NAME']           = "QConnectionDLTLibrary"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/QConnectionDLTLibrary/version.py"
-dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
-dictComponent['VERSIONTYPE']    = None
-listofdictComponents.append(dictComponent)
-
-dictComponent = {}
 dictComponent['NAME']           = "RobotLog2RQM"
 dictComponent['VERSIONFILE']    = f"{sSitePackages}/RobotLog2RQM/version.py"
 dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
@@ -284,12 +292,21 @@ dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
 dictComponent['VERSIONTYPE']    = None
 listofdictComponents.append(dictComponent)
 
-dictComponent = {}
-dictComponent['NAME']           = "TMLLog2RobotLog"
-dictComponent['VERSIONFILE']    = f"{sSitePackages}/TMLLog2RobotLog/version.py"
-dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
-dictComponent['VERSIONTYPE']    = None
-listofdictComponents.append(dictComponent)
+# >>> status?
+# dictComponent = {}
+# dictComponent['NAME']           = "QConnectionDLTLibrary"
+# dictComponent['VERSIONFILE']    = f"{sSitePackages}/QConnectionDLTLibrary/version.py"
+# dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+# dictComponent['VERSIONTYPE']    = None
+# listofdictComponents.append(dictComponent)
+
+# >>> status?
+# dictComponent = {}
+# dictComponent['NAME']           = "TMLLog2RobotLog"
+# dictComponent['VERSIONFILE']    = f"{sSitePackages}/TMLLog2RobotLog/version.py"
+# dictComponent['VERSIONFORMAT']  = enVersionFormatType.format_1
+# dictComponent['VERSIONTYPE']    = None
+# listofdictComponents.append(dictComponent)
 
 # Debug:
 # PrettyPrint(listofdictComponents)
@@ -317,6 +334,29 @@ dictVersionControl['CURRENT_VERSION']        = None
 dictVersionControl['CURRENT_BUNDLE_VERSION'] = None
 dictVersionControl['REQUIRED_MAX_VERSION']   = None
 dictVersionControl['REQUIRED_MIN_VERSION']   = None
+
+ROBOTFRAMEWORKVERSION = get_version()
+sOut = 40* " " + f"<<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
+print(COLBG + sOut)
+print()
+oLogFile.Write(sOut)
+oLogFile.Write()
+
+ROBOTFRAMEWORKCORE = "ORIGINAL"
+if is_extended_rfcore() is True:
+   ROBOTFRAMEWORKCORE      = "EXTENDED"
+sOut = 39* " " + f"<<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
+print(COLBG + sOut)
+print()
+oLogFile.Write(sOut)
+oLogFile.Write()
+
+PYTHONVERSION = sys.version
+sOut = 12* " " + f"<<< Python version '{PYTHONVERSION}' >>>"
+print(COLBG + sOut)
+print()
+oLogFile.Write(sOut)
+oLogFile.Write()
 
 for dictComponent in listofdictComponents:
    NAME          = dictComponent['NAME']
@@ -680,6 +720,21 @@ if ( (bVersionCheckExecuted is True) and (bVersionMismatch is False) ):
    oLogFile.Write()
    print(COLBG + sResult)
    print()
+
+
+# at end print again some basic information in console (for better readibility, no need to scroll up)
+
+sOut = f"<<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
+print(COLBY + sOut)
+print()
+
+sOut = f"<<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
+print(COLBY + sOut)
+print()
+
+sOut = f"<<< python version '{PYTHONVERSION}' >>>"
+print(COLBY + sOut)
+print()
 
 oLogFile.Write("Done")
 oLogFile.Write()

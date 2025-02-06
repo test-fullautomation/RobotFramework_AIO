@@ -30,19 +30,11 @@
     "window.zoomLevel": 0,
     "editor.renderControlCharacters": false,
 
-    "http.proxy": "http://rb-proxy-apac.bosch.com:8080",
-    "https.proxy": "https://rb-proxy-apac.bosch.com:8080",
+    "http.proxy": "",
     "http.proxyAuthorization": null,
     "http.proxyStrictSSL": false,
     "editor.renderWhitespace": "all",
-    "robot.language-server.python": "${env:RobotPythonPath}/python3",
-    "robot.python.executable": "${env:RobotPythonPath}/python3",
-	"robot.lint.robocop.enabled ": true,
-    "robot.python.env": {
-    
-    },
     "python.defaultInterpreterPath": "${env:RobotPythonPath}/python3",
-    "python.pythonPath ": "${env:RobotPythonPath}/python3",
 
     "redhat.telemetry.enabled": false,
     "workbench.editorAssociations": {
@@ -63,7 +55,6 @@
     "security.workspace.trust.enabled": false,
     "security.workspace.trust.banner": "never",
     "security.workspace.trust.emptyWindow": true,
-    "timeline.excludeSources": [],
     "extensions.autoUpdate": false,
     "update.mode": "none",
     "robotcode.debug.outputTimestamps": true,

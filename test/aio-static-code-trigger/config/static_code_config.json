@@ -1,0 +1,24 @@
+{
+   "PYLINT": {
+      "RCFILE": "config/pylint_config.toml",
+      "OUTPUT": "pylint_output",
+      "COMPONENTS": [
+         "../python-genpackagedoc/GenPackageDoc",
+         "../python-extensions-collection/PythonExtensionsCollection",
+         "../python-jsonpreprocessor/JsonPreprocessor",
+         "../python-pytestlog2db/PyTestLog2DB",
+         "../python-microservice-base/MicroserviceBase",
+         "../python-testresultdbaccess/TestResultDBAccess",
+         "../python-microservice-cleware-switch/MicroserviceClewareSwitch",
+         "../robotframework-extensions-collection/RobotframeworkExtensions",
+         "../robotframework-qconnect-base/QConnectBase",
+         "../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement",
+         "../robotframework-dbus/RobotFramework_DBus",
+         "../robotframework-qconnect-winapp/QConnectWinapp",
+         "../robotframework-robotlog2rqm/RobotLog2RQM",
+         "../robotframework-robotlog2db/RobotLog2DB",
+         "../robotframework-doip/RobotFramework_DoIP",
+         "../robotframework-uds/RobotFramework_UDS"
+      ]
+   }
+}
