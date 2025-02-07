@@ -35,6 +35,12 @@ for target_dir in "${value_array[@]}"; do
     
     mkdir -p $destination_log_file 
     cp -rf $source_log_file/* $destination_log_file 
+    if [ $? -ne 0 ]; then
+      real_src_path=$(realpath $(dirname $source_log_file))
+      echo -e "\e[31mError:\e[0m No files to copy files from $real_src_path"
+      echo "Please correct the directory to contain all log files."
+      exit 1
+    fi
 done
 
 echo "All test logfiles have been successfully collected"
