@@ -1,5 +1,5 @@
 #!/bin/bash
-ROBFWPython=/opt/rfwaio/python3/install/bin/python3.13
+ROBFWPython=/opt/rfwaio/python3/bin/python3.13
 
 # Handle arguments from command
 if [ $# -eq 0 ] || [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then

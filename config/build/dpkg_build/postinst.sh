@@ -90,7 +90,7 @@ function update_vscodium_related(){
    #
    #############################################################################
    #chmod -R 0775 /opt/rfwaio/robotvscode/data/user-data/
-   PyPath=/opt/rfwaio/python3/install/bin
+   PyPath=/opt/rfwaio/python3/bin
    TestPath=${HOME}/RobotTest/testcases
    VsCodePath=/opt/rfwaio/robotvscode
    WpPath=`echo $TestPath | perl -MURI::file -e 'print URI::file->new(<STDIN>)."\n"'`
@@ -131,7 +131,7 @@ fi
 if [ ${CURRENT_USER} != 'root' ]; then
    HOME=/home/${CURRENT_USER}
 fi
-DLTCONNECTOR_PATH="/opt/rfwaio/python3/install/lib/python3.13/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
+DLTCONNECTOR_PATH="/opt/rfwaio/python3/lib/python3.13/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
 
 # Introduce group `robot-aio` which allow access for group of multiple users

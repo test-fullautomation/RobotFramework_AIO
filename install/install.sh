@@ -367,14 +367,14 @@ function packaging_python_linux() {
 	logresult "$?" "created Python repository" "create Python repository"
 
 	# Upgrade pip
-	$destDir/python3lx/install/bin/python3 -m pip install --upgrade pip
+	$destDir/python3lx/bin/python3 -m pip install --upgrade pip
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python3lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
+	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }

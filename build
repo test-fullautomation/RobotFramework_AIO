@@ -125,7 +125,7 @@ echo -e "${COL_GREEN}###########################################################
 CURDIR=$(pwd)
 if [ "$UNAME" == "Linux" ] ; then
 	PYDIR=$(cd ../python3lx; pwd)
-	PYBIN=${PYDIR}/install/bin/python3
+	PYBIN=${PYDIR}/bin/python3
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
