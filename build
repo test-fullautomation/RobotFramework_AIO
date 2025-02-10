@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Commandline argument 
+#Commandline argument
 #build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
 
 #
@@ -8,7 +8,7 @@
 #
 . ./include/bash/common.sh
 
-echo 
+echo
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}#          Compiling RobotFramework AIO setup...                                   #${COL_RESET}"
@@ -33,7 +33,7 @@ SubVersion=""
 arguments=""
 
 if [ "$#" -eq 0 ]; then
-   echo you can run the build with optional arguments 
+   echo you can run the build with optional arguments
    echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --sub-version=extended
    echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
@@ -49,7 +49,7 @@ else
           --itrack-service=*)
           ITrackService=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
           ITrackService=`echo $ITrackService | sed -e  's/\\\\/\//g'`
-          curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null 
+          curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null
           if [ "$?" -ne 0 ]; then
               echo -e $COL_RED"ITrackService not available:"$COL_RESET $ITrackService
               echo -e $COL_RED"build terminated."$COL_RESET
@@ -93,7 +93,7 @@ if [ "$RobotFrameworkVersion" == "" ]; then
 		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
 			# Triggered by a merged pull request branch
 			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
-		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
+		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then
 			# Triggered by other repository
 			RobotFrameworkVersion=`echo triggered_by_$REPOSITORY | sed -e "s/\//-/g"`
 		else
@@ -124,10 +124,10 @@ echo -e "${COL_GREEN}###########################################################
 
 CURDIR=$(pwd)
 if [ "$UNAME" == "Linux" ] ; then
-	PYDIR=$(cd ../python39lx; pwd)
+	PYDIR=$(cd ../python3lx; pwd)
 	PYBIN=${PYDIR}/install/bin/python3
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-	PYDIR=$(cd ../python39; pwd -W)
+	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
 else
 	errormsg "Operation system '$UNAME' is not supported."
@@ -155,7 +155,7 @@ function install_texlive () {
 	if [ ! -f "install-tl-unx.tar.gz" ]; then
 		curl -L https://mirror.foobar.to/CTAN/systems/texlive/tlnet/install-tl-unx.tar.gz -o ./install-tl-unx.tar.gz
 	fi
-	
+
 	zcat install-tl-unx.tar.gz | tar xf -
 	cd install-tl-20*
 	sudo perl ./install-tl --no-interaction
@@ -169,8 +169,8 @@ function check_and_install_texlive () {
 	fi
 	echo "install texlive"
 	# get last word of pdflatex version text
-	
-	
+
+
 	# If pdflatex exist
 	ver=`pdflatex -v | head -n 1 | awk 'NF>1{print $NF}'`
 	if [ ! -z "$ver" ]; then
@@ -197,8 +197,8 @@ function parse_repo () {
 	do
 	   reponame=${repo#${repo_type}.}
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		cd "../$reponame" 
-	   
+		cd "../$reponame"
+
 	   # if script is called without commandline paramteters,
 	   # then print "git status", else handover command line parameters
 	   # to git call
@@ -229,7 +229,7 @@ function parse_config () {
 	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
 	#echo $conf_section
 	for section in "${conf_section[@]}"
-	do 
+	do
 		section_server=$(get_server_url "$1" "$section")
 		echo "section server is $section_server"
 		if [ "$section_server" != "" ]; then
@@ -240,14 +240,14 @@ function parse_config () {
 			if [ "$sec_name" == "" ]; then
 				sec_name=${section}
 			fi
-		
+
 			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-			
+
 			sec_path=$(git config -f $1 --get ${section}.path);
 			if [ "$sec_path" == "" ]; then
 				sec_path="../${sec_name}"
 			fi
-			
+
 			sec_prebuild=$(git config -f $1 --get ${section}.prebuild);
 
 			cd "$sec_path"
@@ -304,7 +304,7 @@ function generate_version_info() {
 
 
 function build_debian()
-{	
+{
 	generate_version_info
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
@@ -364,7 +364,7 @@ function build_debian()
 	cp ../robotframework-documentation/book/RobotFrameworkAIO_Reference*${SubVersion}.pdf ./output_lx/${PACK_NAME}/opt/rfwaio/documentation/
 
 	# Python package: core framework and libraries
-	cp -R -a ../python39lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python39
+	cp -R -a ../python3lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python3
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
 
 	# Devtools: Android package

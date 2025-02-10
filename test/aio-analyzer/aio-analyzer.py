@@ -157,7 +157,7 @@ sSitePackages = None
 if sPlatformSystem == "Windows":
     sSitePackages = CString.NormalizePath(f"{sPythonPath}/Lib/site-packages")
 elif sPlatformSystem == "Linux":
-    sSitePackages = CString.NormalizePath(f"{sPythonPath}/../lib/python3.9/site-packages")
+    sSitePackages = CString.NormalizePath(f"{sPythonPath}/../lib/python3.13/site-packages")
 else:
    bSuccess = False
    sResult  = f"Operating system {sPlatformSystem} ({sOSName}) not supported"
@@ -744,4 +744,3 @@ del oLogFile
 sys.exit(SUCCESS)
 
 # --------------------------------------------------------------------------------------------------------------
-

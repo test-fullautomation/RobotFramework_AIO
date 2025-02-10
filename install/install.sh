@@ -320,8 +320,8 @@ function packaging_android() {
 ####################################################
 function packaging_python_windows() {
 	tar -xzf "$archived_python_file" -C "$sourceDir"
-	rm -rf "$destDir/python39"
-	mv "$sourceDir/python" "$destDir/python39"
+	rm -rf "$destDir/python3"
+	mv "$sourceDir/python" "$destDir/python3"
 
 
 	# !! ATTENTION !!
@@ -330,7 +330,7 @@ function packaging_python_windows() {
 	# Note: Use ._pth can cause other poblems: https://stackoverflow.com/questions/47851452/add-package-path-to-python-pth-file-using-environment-variables
 	#       There are no way to add script path to ._pth now
 	CURDIR=$(pwd)
-	PYDIR=$(cd $destDir/python39; pwd -W)
+	PYDIR=$(cd $destDir/python3; pwd -W)
 	cd $CURDIR
 
 	proxy_args=""
@@ -339,18 +339,18 @@ function packaging_python_windows() {
 	fi
 
 	# call pip to initialize pip
-	$destDir/python39/python.exe -m pip install --upgrade pip
-	$destDir/python39/python.exe -m pip install --upgrade setuptools
-	$destDir/python39/python.exe -m pip install wheel
+	$destDir/python3/python.exe -m pip install --upgrade pip
+	$destDir/python3/python.exe -m pip install --upgrade setuptools
+	$destDir/python3/python.exe -m pip install wheel
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	$destDir/python3/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
 	# Workaround for pyfranca
-	$destDir/python39/python.exe -m pip install pyfranca
+	$destDir/python3/python.exe -m pip install pyfranca
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
@@ -362,19 +362,19 @@ function packaging_python_windows() {
 ####################################################
 function packaging_python_linux() {
 	tar -I zstd -xvf $archived_python_file -C "$sourceDir"
-	rm -rf "$destDir/python39lx"
-	mv "$sourceDir/python" "$destDir/python39lx"
+	rm -rf "$destDir/python3lx"
+	mv "$sourceDir/python" "$destDir/python3lx"
 	logresult "$?" "created Python repository" "create Python repository"
 
 	# Upgrade pip
-	$destDir/python39lx/install/bin/python3 -m pip install --upgrade pip
+	$destDir/python3lx/install/bin/python3 -m pip install --upgrade pip
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python39lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
+	$destDir/python3lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
