@@ -158,4 +158,4 @@ requests_kerberos
 coverage
 udsoncan
 odxtools
-tabulate
+scikit-learn
