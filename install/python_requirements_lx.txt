@@ -1,116 +1,117 @@
 # External Python modules required to be installed for RobotFramework AIO
 # See atest/README.rst for more information.
 
-#Appium-Python-Client 
+robotframework==7.1.1
+#Appium-Python-Client
 aenum
-attrs      
-asciidoxy          
-# autobahn             
-# Automat 
+attrs
+asciidoxy
+# autobahn
+# Automat
 bcrypt
-certifi             
-cffi                 
-colorama             
-configparser         
-# constantly           
-# cssselect            
-# Cython     
+certifi
+cffi
+colorama
+configparser
+# constantly
+# cssselect
+# Cython
 cryptography
 cycler
 decorator
 doipclient
 docutils
-dotdict    
+dotdict
 # dotted-dict
-dotmap               
-doxypypy             
-easyprocess 
+dotmap
+doxypypy
+easyprocess
 httpserver
 idna
 jsonschema
-kiwisolver         
-# ecdsa                
-# envoy                
-futures              
+kiwisolver
+# ecdsa
+# envoy
+futures
 func_timeout
-# git-review           
-# gitapi               
-# gitdb2               
-# GitPython            
-# incremental          
-# kazoo                
-# libusb1              
-# lupa                 
-lxml                 
-# M2CryptoWin32        
-matplotlib   
-msl_loadlib        
-# mpmath               
-# multi-key-dict       
+# git-review
+# gitapi
+# gitdb2
+# GitPython
+# incremental
+# kazoo
+# libusb1
+# lupa
+lxml
+# M2CryptoWin32
+matplotlib
+msl_loadlib
+# mpmath
+# multi-key-dict
 #mysqlclient is required, but causes currently an error
 #when installed
 # Ticket: ROBFW-288
-mysqlclient         
-# ntlm-auth            
-numpy                
-ordereddict          
-paho-mqtt            
-paramiko             
-# parsel               
-path.py              
-# pbr  
-pika                
-pickleDB             
+mysqlclient
+# ntlm-auth
+numpy
+ordereddict
+paho-mqtt
+paramiko
+# parsel
+path.py
+# pbr
+pika
+pickleDB
 pillow
-# pip                  
-# Pmw                  
-# progressbar          
-psutil               
-# py                   
-pycparser   
-pydotdict         
-# pycrypto             
-# pydbus               
-# PyDispatcher         
-# pygobject            
-# pyHook               
+# pip
+# Pmw
+# progressbar
+psutil
+# py
+pycparser
+pydotdict
+# pycrypto
+# pydbus
+# PyDispatcher
+# pygobject
+# pyHook
 #pyodbc is required, but causes currently an error
 #when installed
 # Ticket: ROBFW-289
-#pyodbc  
+#pyodbc
 pycparser
 pyfranca
-PyNaCl             
-# pyOpenSSL            
-pyparsing            
+PyNaCl
+# pyOpenSSL
+pyparsing
 PyQt5
-pyscreenshot         
+pyscreenshot
 pyserial==3.4
-# pytest 
-pyrsistent           
-python-can   
+# pytest
+pyrsistent
+python-can
 python-dateutil
-pyshark  
-pyttsx    
+pyshark
+pyttsx
 prometheus_client
-# python-jenkins       
-# pythonnet            
-# PyUserInput          
-# pywin32              
-# pywinrm              
-PyYAML               
-pyzmq                
-QLed                 
-# queuelib  
-qtawesome           
-requests             
-# requests-ntlm  
+# python-jenkins
+# pythonnet
+# PyUserInput
+# pywin32
+# pywinrm
+PyYAML
+pyzmq
+QLed
+# queuelib
+qtawesome
+requests
+# requests-ntlm
 robotframework-appiumlibrary
-robotframework-ftplibrary     
+robotframework-ftplibrary
 robotframework-listenerlibrary
-robotframework-mqttlibrary    
-robotframework-pythonlibcore  
-robotframework-requests       
+robotframework-mqttlibrary
+robotframework-pythonlibcore
+robotframework-requests
 robotframework-sshlibrary
 robotframework-excellib
 robotframework-imagecompare
@@ -118,28 +119,28 @@ robotframework-dependencylibrary
 schedule
 scp
 # scapy
-scipy                
-# Scrapy            
-setuptools   
-# selenium             
-# service-identity                
-six                  
-# smmap                
-# smmap2               
-# sympy                
-# tinydb               
-# trollius             
-# Twisted              
-# txaio                
-urllib3              
+scipy
+# Scrapy
+setuptools
+# selenium
+# service-identity
+six
+# smmap
+# smmap2
+# sympy
+# tinydb
+# trollius
+# Twisted
+# txaio
+urllib3
 # w3lib
-#windows-curses 
+#windows-curses
 wave
-wrapt               
-xmltodict            
-# zc.thread            
-# zc.zk                
-# zope.interface       
+wrapt
+xmltodict
+# zc.thread
+# zc.zk
+# zope.interface
 tk
 pandas
 bokeh
@@ -166,3 +167,4 @@ requests_kerberos
 coverage
 udsoncan
 odxtools
+scikit-learn

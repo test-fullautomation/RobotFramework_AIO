@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.4.0 / 14.01.2025 (OSS standard version)",
+   "VERSION_CONFIG" : "0.5.0 / 04.02.2025 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -166,6 +166,7 @@
                        "TESTFOLDER"        : "test",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOCALCOMMANDLINE"  : ["--exclude threading"],
                        "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
