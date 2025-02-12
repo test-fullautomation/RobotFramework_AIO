@@ -166,8 +166,7 @@
                        "TESTFOLDER"        : "test",
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
+                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
 
