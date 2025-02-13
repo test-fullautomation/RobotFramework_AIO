@@ -8,10 +8,12 @@ Release info rules for **Minor Releases** and **Major Releases**
 * Each **Major Release** info contains the information for exactly this **Major Release** and additionally the release info of all **Minor Releases** after the previous **Major Release**.
 
 For each **Minor Release**, the version keys in the release files contain exactly two version specifications:
+
 * The version of the current **Minor Release**
 * The version of the next higher **Major Release**, which should also contain the information of the current **Minor Release**
 
 For each **Major Release**, the version keys in the release files contain exactly one version specification:
+
 * The version of the current **Major Release**
 
 Each version number consists of **Major Version**, **Minor Version**, and **Patch Version** - and ends with a period. The **Build Number** can be omitted unless it is intended to refer to a specific **Build Number**.
