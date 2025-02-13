@@ -231,7 +231,7 @@ function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
 	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
-	download_android_emulator_hypervisor-driver=https://github.com/google/android-emulator-hypervisor-driver/releases/download/v2.2/aehd-windows_v2_2_0.zip
+	download_android_emulator_hypervisor_driver=https://github.com/google/android-emulator-hypervisor-driver/releases/download/v2.2/aehd-windows_v2_2_0.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
@@ -245,7 +245,7 @@ function packaging_android() {
 	archived_android_platformtools=android-platformtools.zip
 	archived_nodejs=nodejs.${nodejs_ext}
 	archived_appium_inspector=appium-inspector.${appium_inspector_ext}
-	archived_android_emulator_hypervisor-driver=aehd-windows_v2_2_0.zip
+	download_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
 	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
