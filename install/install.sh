@@ -245,7 +245,7 @@ function packaging_android() {
 	archived_android_platformtools=android-platformtools.zip
 	archived_nodejs=nodejs.${nodejs_ext}
 	archived_appium_inspector=appium-inspector.${appium_inspector_ext}
-	download_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
+	archived_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
 	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
