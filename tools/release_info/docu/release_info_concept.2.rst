@@ -16,15 +16,16 @@ For each **Major Release**, the version keys in the release files contain exactl
 
 * The version of the current **Major Release**
 
-Each version number consists of **Major Version**, **Minor Version**, and **Patch Version** - and ends with a period. The **Build Number** can be omitted unless it is intended to refer to a specific **Build Number**.
+Each version number consists of: **Epoch Version**, **Major Version**, **Minor Version** and **Patch Version** - and ends with a period.
+The **Patch Version** can be omitted unless it is intended to refer to a specific **Patch Version**.
 
 Examples:
 
-* A "0.13.1.x" **Minor Release** requires version key "0.13.1.;0.14.0."
-* A "0.13.2.x" **Minor Release** requires version key "0.13.2.;0.14.0."
-* A "0.14.0.x" **Major Release** requires version key "0.14.0."
+* A *0.13.1.x* **Minor Release** requires version key ``"0.13.1.;0.14.0."``
+* A *0.13.2.x* **Minor Release** requires version key ``"0.13.2.;0.14.0."``
+* A *0.14.0.x* **Major Release** requires version key ``"0.14.0."``
 
 ----
 
-*Updated 13.02.2025 / XC-HWP/ESW3-Queckenstedt*
+*Updated 14.02.2025 / XC-HWP/ESW3-Queckenstedt*
 
