@@ -111,7 +111,7 @@ robotframework-requests
 robotframework-sshlibrary
 robotframework-excellib
 robotframework-seriallibrary
-robotframework-imagecompare
+robotframework-doctestlibrary
 robotframework-dependencylibrary
 schedule
 scp
