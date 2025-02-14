@@ -48,11 +48,11 @@ if [ "$UNAME" == "Linux" ] ; then
 	os_short=linux
 	arch=
 	platform=linux-x64
-	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20250205/cpython-3.11.11+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
+	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
 
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
-	archived_python_file=$sourceDir/cpython-3.11.11+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
+	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	nodejs_ext=tar.xz
@@ -63,11 +63,11 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os_short=win
 	arch=-x64
 	platform=win32-x64
-	download_python_url=https://github.com/astral-sh/python-build-standalone/releases/download/20250205/cpython-3.11.11+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	download_python_url=https://github.com/astral-sh/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
-	archived_python_file=$sourceDir/cpython-3.11.11+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 
