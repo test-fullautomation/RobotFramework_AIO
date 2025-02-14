@@ -320,7 +320,9 @@ function packaging_android() {
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${sourceDir}/${archived_android_emulator_hypervisor_driver}
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/devtools/Android
 
-	mkdir /s $destDir/devtools/Android/system-images/android-34/google_apis
+	mkdir  $destDir/devtools/Android/system-images
+	mkdir  $destDir/devtools/Android/system-images/android-34
+	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
