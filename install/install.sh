@@ -326,7 +326,7 @@ function packaging_android() {
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/devtools/Android/system-images/android-34/google_apis
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_google_apis} -d $destDir/devtools/Android/system-images/android-34/google_apis
 	mv $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13/x86_64 $destDir/devtools/Android/system-images/android-34/google_apis
 	rm -rf $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13
 
