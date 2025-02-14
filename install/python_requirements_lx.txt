@@ -9,6 +9,7 @@ asciidoxy
 # autobahn
 # Automat
 bcrypt
+cchardet==2.2.0a2
 certifi
 cffi
 colorama
@@ -168,3 +169,4 @@ coverage
 udsoncan
 odxtools
 scikit-learn
+packaging>=24
