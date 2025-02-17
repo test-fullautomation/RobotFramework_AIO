@@ -263,7 +263,7 @@ jobs:
 
     - name: Download avd package for Android self-test
       shell: bash
-      run: ../robotframework_selftest/helpers/Android/Selftest/download_package.sh
+      run: ../robotframework-selftest/helpers/Android/Selftest/download_package.sh
 
     - name: Run tests on Windows
       shell: bash
