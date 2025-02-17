@@ -357,7 +357,9 @@ jobs:
 
     - name: Download avd package for Android self-test
       shell: bash
-      run: chmod +x ./config/tools/download_avd_package.sh
+      run: |
+        chmod +x ./config/tools/download_avd_package.sh
+        ./config/tools/download_avd_package.sh
 
     - name: Run tests on Linux
       run: |
