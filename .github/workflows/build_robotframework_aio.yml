@@ -263,7 +263,7 @@ jobs:
 
     - name: Download avd package for Android self-test
       shell: bash
-      run: ../robotframework-selftest/helpers/Android/Selftest/download_package.sh
+      run: ../robotframework-selftest/helpers/Android/download_package.sh
 
     - name: Run tests on Windows
       shell: bash
@@ -354,6 +354,10 @@ jobs:
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3.9" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
+
+    - name: Download avd package for Android self-test
+      shell: bash
+      run: chmod +x ../robotframework-selftest/helpers/Android/download_package.sh
 
     - name: Run tests on Linux
       run: |
