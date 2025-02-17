@@ -1,4 +1,10 @@
-ANDROID_HOME=$RobotDevtools/Android
+#setlocal enabledelayedexpansion
+mypath=$(realpath $(dirname $0))
+sourceDir=$mypath/../download
+vscodeData=$mypath/../config/robotvscode/
+vscodeIcons=$mypath/../config/robotvscode/icons
+vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
+destDir=$(realpath $mypath/../..)
 
 function download_package(){
 	proxy_args=""
@@ -50,18 +56,17 @@ function packaging_android() {
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} "${ANDROID_HOME}/${archived_android_emulator_hypervisor_driver}"
-	/usr/bin/yes A | unzip "${ANDROID_HOME}/${archived_android_emulator_hypervisor_driver}" -d "$ANDROID_HOME/aehd-windows"
-   rm "${ANDROID_HOME}/${archived_android_emulator_hypervisor_driver}"
+	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${sourceDir}/${archived_android_emulator_hypervisor_driver}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/devtools/Android
 
-	mkdir  "$ANDROID_HOME/system-images"
-	mkdir  "$ANDROID_HOME/system-images/android-34"
-	mkdir  "$ANDROID_HOME/system-images/android-34/google_apis"
+	mkdir  $destDir/devtools/Android/system-images
+	mkdir  $destDir/devtools/Android/system-images/android-34
+	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} "${ANDROID_HOME}/${archived_android_google_apis}"
-	/usr/bin/yes A | unzip "${ANDROID_HOME}/${archived_android_google_apis}" -d "$ANDROID_HOME/system-images/android-34/google_apis"
-	rm "${ANDROID_HOME}/${archived_android_google_apis}"
+	download_package "Android Google APIs" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_google_apis} -d $destDir/devtools/Android/system-images/android-34/google_apis
+	rm -rf $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13
 }
 
 packaging_android
