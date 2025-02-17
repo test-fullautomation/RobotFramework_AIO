@@ -231,13 +231,11 @@ function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
 	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
-	download_android_emulator_hypervisor_driver=https://github.com/google/android-emulator-hypervisor-driver/releases/download/v2.2/aehd-windows_v2_2_0.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
 	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
 	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${VERSION_APPIUM_INSPECTOR}/Appium-Inspector-${os}-${VERSION_APPIUM_INSPECTOR}${arch}.${appium_inspector_ext}
-	download_android_google_apis=https://dl.google.com/android/repository/sys-img/google_apis/x86_64-34_r13.zip
 
 	archived_android_tools=android-tools.zip
 	archived_android_emulator=android-emulator.zip
@@ -245,8 +243,6 @@ function packaging_android() {
 	archived_android_platformtools=android-platformtools.zip
 	archived_nodejs=nodejs.${nodejs_ext}
 	archived_appium_inspector=appium-inspector.${appium_inspector_ext}
-	archived_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
-	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
 	rm -rf $destDir/devtools
@@ -315,19 +311,6 @@ function packaging_android() {
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
 	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
-
-	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${sourceDir}/${archived_android_emulator_hypervisor_driver}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/devtools/Android
-
-	mkdir  $destDir/devtools/Android/system-images
-	mkdir  $destDir/devtools/Android/system-images/android-34
-	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
-
-	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_google_apis} -d $destDir/devtools/Android/system-images/android-34/google_apis
-	rm -rf $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13
 
 	mkdir $destDir/devtools/Android/platforms
 }
