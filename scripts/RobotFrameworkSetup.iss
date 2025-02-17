@@ -694,6 +694,7 @@ end;
 
 [UninstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
+Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
@@ -704,6 +705,7 @@ Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConst
 
 [InstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
+Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
