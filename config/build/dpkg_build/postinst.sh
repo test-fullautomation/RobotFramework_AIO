@@ -228,10 +228,13 @@ else
          rm -f ${HOME}/RobotTest/testcases
       fi
       mkdir -p ${HOME}/RobotTest/testcases
+
+      if [ -d "/opt/rfwaio/robotvscode" ]; then
+         cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
+      fi
+      update_owner ${HOME}/RobotTest/testcases
+      echo -e "${MSG_DONE} ${action_msg} testcases folder."
    fi
-   cp -R -a /opt/rfwaio/testcases/. ${HOME}/RobotTest/testcases
-   update_owner ${HOME}/RobotTest/testcases
-   echo -e "${MSG_DONE} ${action_msg} testcases folder."
 fi
 
 # Configure Unitiy Launchers folder
