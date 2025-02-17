@@ -144,7 +144,7 @@ bokeh
 robotframework-robocop
 pylint
 #pandoc
-pypandoc_binary==1.15
+pypandoc_binary==1.13
 mobly
 pytest_mock
 odxtools
