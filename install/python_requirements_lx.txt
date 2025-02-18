@@ -170,4 +170,3 @@ odxtools
 scikit-learn
 regex
 xeus-robot
-jupyter
