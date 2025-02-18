@@ -159,3 +159,4 @@ coverage
 udsoncan
 odxtools
 scikit-learn
+regex
