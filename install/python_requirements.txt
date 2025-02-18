@@ -161,3 +161,4 @@ odxtools
 scikit-learn
 regex
 notebook
+xeus-robot
