@@ -16,7 +16,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.5.0 / 04.02.2025 (OSS standard version)",
+   "VERSION_CONFIG" : "0.6.0 / 18.02.2025 (OSS standard version)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -161,15 +161,16 @@
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOCALCOMMANDLINE"  : ["--exclude threading"],
-                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
-                    }
+                    # currently under construction:
+                    # {
+                       # "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
+                       # "TESTFOLDER"        : "test",
+                       # "TESTTYPE"          : "ROBOT",
+                       # "TESTEXECUTOR"      : "executerobottest.py",
+                       # "LOCALCOMMANDLINE"  : ["--exclude threading"],
+                       # "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
+                       # "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
+                    # }
                   ],
 
 
