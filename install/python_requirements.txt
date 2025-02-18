@@ -160,5 +160,3 @@ udsoncan
 odxtools
 scikit-learn
 regex
-xeus-robot
-notebook
