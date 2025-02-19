@@ -161,4 +161,11 @@ odxtools
 scikit-learn
 regex
 notebook
+xeus-python
+xtl
+pybind11
+pybind11_json
+nlohmann_json
+robotframework-interpreter
+robotframework-lsp
 xeus-robot==0.4.4
