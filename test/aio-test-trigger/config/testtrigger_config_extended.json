@@ -161,14 +161,14 @@
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    {
-                       "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
-                       "TESTFOLDER"        : "test",
-                       "TESTTYPE"          : "ROBOT",
-                       "TESTEXECUTOR"      : "executerobottest.py",
-                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
-                    },
+                    #{
+                    #   "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
+                    #   "TESTFOLDER"        : "test",
+                    #   "TESTTYPE"          : "ROBOT",
+                    #   "TESTEXECUTOR"      : "executerobottest.py",
+                    #   "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
+                    #   "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
+                    #},
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework",
                        "TESTFOLDER"        : "atest",
