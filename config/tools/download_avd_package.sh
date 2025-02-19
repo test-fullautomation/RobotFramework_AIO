@@ -3,17 +3,9 @@
 
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-sourceDir=$mypath/../download
-vscodeData=$mypath/../config/robotvscode/
-vscodeIcons=$mypath/../config/robotvscode/icons
-vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
-destDir=$(realpath $mypath/../..)
+destDir=$(realpath $mypath)
 
 use_cntlm="No"
-python_only="No"
-vscode_only="No"
-pandoc_only="No"
-android_only="No"
 
 UNAME=$(uname)
 
