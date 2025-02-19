@@ -1,5 +1,58 @@
+#!/bin/bash
+########################################################################################
+
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
+sourceDir=$mypath/../download
+vscodeData=$mypath/../config/robotvscode/
+vscodeIcons=$mypath/../config/robotvscode/icons
+vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
+destDir=$(realpath $mypath/../..)
+
+use_cntlm="No"
+python_only="No"
+vscode_only="No"
+pandoc_only="No"
+android_only="No"
+
+UNAME=$(uname)
+
+# Load Version definition of package tools
+source $mypath/versions.conf
+
+if [ "$UNAME" == "Linux" ] ; then
+	os=linux
+	os_short=linux
+	arch=
+	platform=linux-x64
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	os=windows
+	os_short=win
+	arch=-x64
+	platform=win32-x64
+else
+	errormsg "Operation system '$UNAME' is not supported."
+fi
+
+#
+# import common bash scripts
+#
+. $mypath/../include/bash/common.sh
+
+function restart_cntlm(){
+	if [ "$UNAME" == "Linux" ] ; then
+		sudo systemctl restart cntlm
+	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+		net stop cntlm
+		sleep 3
+		net start cntlm
+	fi
+	sleep 1
+}
+#
+#  download packages function
+#
+####################################################
 
 function download_package(){
 	proxy_args=""
@@ -44,10 +97,28 @@ function packaging_android() {
 	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
+	rm -rf $destDir/devtools
+	mkdir $destDir/devtools
 
 	npm_proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
 		npm_proxy_args="--proxy=http://localhost:3128"
+	fi
+
+	# download Node.js installer
+	echo "Downloading Node.js"
+	download_package "Node.js" $download_nodejs ${sourceDir}/${archived_nodejs}
+	if [ "$nodejs_ext" == "zip" ]; then
+		# Not using cntlm proxy for Windows runner
+		npm_proxy_args=""
+		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
+		mv $destDir/devtools/node-* $destDir/devtools/nodejs
+		npm_bin=$destDir/devtools/nodejs/npm
+	else
+	   mkdir $destDir/devtools/nodejs
+		tar -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
+		PATH="$destDir/devtools/nodejs/bin:$PATH"
+		npm_bin=$destDir/devtools/nodejs/bin/npm
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
@@ -64,4 +135,25 @@ function packaging_android() {
 	rm -rf $destDir/system-images/android-34/google_apis/x86_64-34_r13
 }
 
-packaging_android
+#
+#  Main functions for install
+#
+####################################################
+function cleanall() {
+	#Cleanup all downloaded raw data 
+	echo "Cleanup temporary data ..."
+	rm -rf "$sourceDir"
+	goodmsg "done"
+}
+
+function make_android() {
+	packaging_android
+}
+
+if [ ! -d "$sourceDir" ]; then
+	mkdir "$sourceDir"
+else
+	rm -R -- "$sourceDir"/*
+fi
+
+make_android
