@@ -9,9 +9,6 @@ use_cntlm="No"
 
 UNAME=$(uname)
 
-# Load Version definition of package tools
-source $mypath/versions.conf
-
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
 	os_short=linux
@@ -89,28 +86,11 @@ function packaging_android() {
 	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
-	rm -rf $destDir/devtools
 	mkdir $destDir/devtools
 
 	npm_proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
 		npm_proxy_args="--proxy=http://localhost:3128"
-	fi
-
-	# download Node.js installer
-	echo "Downloading Node.js"
-	download_package "Node.js" $download_nodejs ${sourceDir}/${archived_nodejs}
-	if [ "$nodejs_ext" == "zip" ]; then
-		# Not using cntlm proxy for Windows runner
-		npm_proxy_args=""
-		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
-		mv $destDir/devtools/node-* $destDir/devtools/nodejs
-		npm_bin=$destDir/devtools/nodejs/npm
-	else
-	   mkdir $destDir/devtools/nodejs
-		tar -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
-		PATH="$destDir/devtools/nodejs/bin:$PATH"
-		npm_bin=$destDir/devtools/nodejs/bin/npm
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
