@@ -160,6 +160,4 @@ udsoncan
 odxtools
 scikit-learn
 regex
-notebook
-xeus-python==0.13.5
-xeus-robot==0.4.4
+notebook==7.3.2
