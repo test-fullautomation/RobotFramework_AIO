@@ -1,10 +1,5 @@
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-sourceDir=$mypath/../download
-vscodeData=$mypath/../config/robotvscode/
-vscodeIcons=$mypath/../config/robotvscode/icons
-vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
-destDir=$(realpath $mypath/../..)
 
 function download_package(){
 	proxy_args=""
@@ -56,16 +51,16 @@ function packaging_android() {
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${sourceDir}/${archived_android_emulator_hypervisor_driver}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/devtools/Android
+	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${mypath}/${archived_android_emulator_hypervisor_driver}
+	/usr/bin/yes A | unzip ${mypath}/${archived_android_emulator_hypervisor_driver} -d $mypath/devtools/Android
 
 	mkdir  $destDir/devtools/Android/system-images
 	mkdir  $destDir/devtools/Android/system-images/android-34
 	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_google_apis} -d $destDir/devtools/Android/system-images/android-34/google_apis
+	download_package "Android Google APIs" ${download_android_google_apis} ${mypath}/${archived_android_google_apis}
+	/usr/bin/yes A | unzip ${mypath}/${archived_android_google_apis} -d $mypath/devtools/Android/system-images/android-34/google_apis
 	rm -rf $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13
 }
 
