@@ -26,7 +26,7 @@ fi
 #
 # import common bash scripts
 #
-. $mypath/../include/bash/common.sh
+. $mypath/../../include/bash/common.sh
 
 function restart_cntlm(){
 	if [ "$UNAME" == "Linux" ] ; then
@@ -86,7 +86,6 @@ function packaging_android() {
 	archived_android_google_apis=x86_64-34_r13.zip
 
 	echo "Packaging Android ..."
-	mkdir $destDir/devtools
 
 	npm_proxy_args=""
 	if [ "$use_cntlm" == "Yes" ]; then
@@ -97,9 +96,9 @@ function packaging_android() {
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${mypath}/${archived_android_emulator_hypervisor_driver}
 	/usr/bin/yes A | unzip ${mypath}/${archived_android_emulator_hypervisor_driver} -d $mypath/devtools/Android
 
-	mkdir  $destDir/system-images
-	mkdir  $destDir/system-images/android-34
-	mkdir  $destDir/system-images/android-34/google_apis
+	mkdir  $destDir/devtools/Android/system-images
+	mkdir  $destDir/devtools/Android/system-images/android-34
+	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${mypath}/${archived_android_google_apis}
@@ -121,11 +120,5 @@ function cleanall() {
 function make_android() {
 	packaging_android
 }
-
-if [ ! -d "$sourceDir" ]; then
-	mkdir "$sourceDir"
-else
-	rm -R -- "$sourceDir"/*
-fi
 
 make_android
