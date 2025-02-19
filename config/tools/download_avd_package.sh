@@ -54,14 +54,14 @@ function packaging_android() {
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${mypath}/${archived_android_emulator_hypervisor_driver}
 	/usr/bin/yes A | unzip ${mypath}/${archived_android_emulator_hypervisor_driver} -d $mypath/devtools/Android
 
-	mkdir  $destDir/devtools/Android/system-images
-	mkdir  $destDir/devtools/Android/system-images/android-34
-	mkdir  $destDir/devtools/Android/system-images/android-34/google_apis
+	mkdir  $destDir/system-images
+	mkdir  $destDir/system-images/android-34
+	mkdir  $destDir/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${mypath}/${archived_android_google_apis}
 	/usr/bin/yes A | unzip ${mypath}/${archived_android_google_apis} -d $mypath/devtools/Android/system-images/android-34/google_apis
-	rm -rf $destDir/devtools/Android/system-images/android-34/google_apis/x86_64-34_r13
+	rm -rf $destDir/system-images/android-34/google_apis/x86_64-34_r13
 }
 
 packaging_android
