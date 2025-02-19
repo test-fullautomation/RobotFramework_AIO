@@ -161,4 +161,4 @@ odxtools
 scikit-learn
 regex
 notebook==7.3.2
-xeus-robot==0.5.0
+xeus-robot
