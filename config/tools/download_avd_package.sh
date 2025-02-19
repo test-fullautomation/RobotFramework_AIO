@@ -94,7 +94,7 @@ function packaging_android() {
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${mypath}/${archived_android_emulator_hypervisor_driver}
+	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${devtoolsDir}/${archived_android_emulator_hypervisor_driver}
 	/usr/bin/yes A | unzip ${devtoolsDir}/${archived_android_emulator_hypervisor_driver} -d $devtoolsDir/Android
 	rm -rf $devtoolsDir/${archived_android_emulator_hypervisor_driver}
 
@@ -103,7 +103,7 @@ function packaging_android() {
 	mkdir  $devtoolsDir/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} ${mypath}/${archived_android_google_apis}
+	download_package "Android Google APIs" ${download_android_google_apis} ${devtoolsDir}/${archived_android_google_apis}
 	/usr/bin/yes A | unzip ${devtoolsDir}/${archived_android_google_apis} -d $devtoolsDir/devtools/Android/system-images/android-34/google_apis
 	rm -rf $devtoolsDir/system-images/android-34/google_apis/x86_64-34_r13/${archived_android_google_apis}
 }
