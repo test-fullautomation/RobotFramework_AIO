@@ -4,7 +4,7 @@
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
 destDir=$(realpath $mypath)
-devtoolsDir=$(realpath $RobotDevtools)
+devtoolsDir=$(realpath $RobotPythonPath)
 
 use_cntlm="No"
 
