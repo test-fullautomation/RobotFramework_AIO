@@ -3,7 +3,7 @@
 
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-destDir=$(realpath $mypath/../..)
+destDir=$(realpath $mypath/../../..)
 
 use_cntlm="No"
 
