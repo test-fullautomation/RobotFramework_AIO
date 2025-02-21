@@ -92,9 +92,9 @@ function packaging_android() {
 		npm_proxy_args="--proxy=http://localhost:3128"
 	fi
 
-	mkdir $destDir/devtools/Android/system-images
-	mkdir $destDir/devtools/Android/system-images/android-34
-	mkdir $destDir/devtools/Android/system-images/android-34/google_apis
+	mkdir -p $destDir/devtools/Android/system-images
+	mkdir -p $destDir/devtools/Android/system-images/android-34
+	mkdir -p $destDir/devtools/Android/system-images/android-34/google_apis
 
 	echo "Downloading Android Emulator hypervisor driver"
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${destDir}/${archived_android_emulator_hypervisor_driver}
