@@ -3,8 +3,7 @@
 
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-destDir=$(realpath $mypath)
-devtoolsDir=$(realpath $RobotPythonPath)
+destDir=$(realpath $mypath/../..)
 
 use_cntlm="No"
 
@@ -93,30 +92,19 @@ function packaging_android() {
 		npm_proxy_args="--proxy=http://localhost:3128"
 	fi
 
-	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${devtoolsDir}/${archived_android_emulator_hypervisor_driver}
-	/usr/bin/yes A | unzip ${devtoolsDir}/${archived_android_emulator_hypervisor_driver} -d $devtoolsDir/Android
-	rm -rf $devtoolsDir/${archived_android_emulator_hypervisor_driver}
+	mkdir $destDir/devtools/Android/system-images
+	mkdir $destDir/devtools/Android/system-images/android-34
+	mkdir $destDir/devtools/Android/system-images/android-34/google_apis
 
-	mkdir  $devtoolsDir/Android/system-images
-	mkdir  $devtoolsDir/Android/system-images/android-34
-	mkdir  $devtoolsDir/Android/system-images/android-34/google_apis
+	echo "Downloading Android Emulator hypervisor driver"
+	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${destDir}/${archived_android_emulator_hypervisor_driver}
+	/usr/bin/yes A | unzip ${destDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/Android
+	rm -rf $destDir/${archived_android_emulator_hypervisor_driver}
 
 	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} ${devtoolsDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${devtoolsDir}/${archived_android_google_apis} -d $devtoolsDir/devtools/Android/system-images/android-34/google_apis
-	rm -rf $devtoolsDir/system-images/android-34/google_apis/x86_64-34_r13/${archived_android_google_apis}
-}
-
-#
-#  Main functions for install
-#
-####################################################
-function cleanall() {
-	#Cleanup all downloaded raw data 
-	echo "Cleanup temporary data ..."
-	rm -rf "$sourceDir"
-	goodmsg "done"
+	download_package "Android Google APIs" ${download_android_google_apis} ${destDir}/${archived_android_google_apis}
+	/usr/bin/yes A | unzip ${destDir}/${archived_android_google_apis} -d $destDir/devtools/Android/system-images/android-34/google_apis
+	rm -rf $destDir/${archived_android_google_apis}
 }
 
 function make_android() {
