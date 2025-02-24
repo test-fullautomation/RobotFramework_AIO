@@ -355,7 +355,7 @@ jobs:
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3.9" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    - name: Download avd package for Android self-test
+    - name: Download and install avd package for Android self-test
       shell: bash
       run: |
         chmod +x ./config/tools/download_avd_package.sh
@@ -363,6 +363,7 @@ jobs:
 
     - name: Run tests on Linux
       run: |
+        sudo systemctl restart cntlm
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
