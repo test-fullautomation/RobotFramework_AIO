@@ -169,7 +169,5 @@ udsoncan
 odxtools
 scikit-learn
 regex
-notebook==7.3.2
-robotframework-interpreter==0.7.6
-robotframework-lsp==0.14.0
-xeus-robot==0.4.4
+notebook
+robotkernel
