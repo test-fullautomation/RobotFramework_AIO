@@ -160,3 +160,5 @@ udsoncan
 odxtools
 scikit-learn
 regex
+notebook
+robotkernel
