@@ -5,6 +5,14 @@
 mypath=$(realpath $(dirname $0))
 destDir=$(realpath "$ANDROID_HOME")
 
+mkdir -p $apispath
+mkdir -p $aehdpath
+
+aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
+apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
+
+echo $aehdpath
+echo $apispath
 use_cntlm="No"
 
 UNAME=$(uname)
@@ -92,16 +100,14 @@ function packaging_android() {
 		npm_proxy_args="--proxy=http://localhost:3128"
 	fi
 
-	mkdir -p $destDir/system-images/android-34/google_apis
-
 	echo "Downloading Android Emulator hypervisor driver"
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${destDir}/${archived_android_emulator_hypervisor_driver}
-	/usr/bin/yes A | unzip ${destDir}/${archived_android_emulator_hypervisor_driver} -d $destDir/aehd-windows
+	/usr/bin/yes A | unzip ${destDir}/${archived_android_emulator_hypervisor_driver} -d "$aehdpath"
 	rm -rf $destDir/${archived_android_emulator_hypervisor_driver}
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${destDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${destDir}/${archived_android_google_apis} -d $destDir/system-images/android-34/google_apis
+	/usr/bin/yes A | unzip ${destDir}/${archived_android_google_apis} -d "$apispath"
 	rm -rf $destDir/${archived_android_google_apis}
 }
 
