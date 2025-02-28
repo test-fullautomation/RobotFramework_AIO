@@ -3,7 +3,7 @@
 
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
-destDir=$(realpath "$RobotDevtools"/Android/)
+destDir=$(realpath "$ANDROID_HOME")
 
 use_cntlm="No"
 
