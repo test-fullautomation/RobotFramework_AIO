@@ -405,6 +405,8 @@ jobs:
     - name: Get entire pipeline artifacts
       run: |
         mkdir entire-artifacts
+        ls -la
+        ls -la ./RobotFramework_AIO/
         mv ./RobotFramework_AIO/*-aiotestlogfiles-* entire-artifacts
 
     - name: Upload test result as artifact
