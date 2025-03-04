@@ -393,7 +393,7 @@ jobs:
           ${{ runner.workspace }}/**/*/static_code_report/*
   
   entire-artifacts:
-    name: Log Artifacts
+    name: Entire Artifacts
     runs-on: ubuntu-latest
     needs: [install-test-windows, install-test-linux]
     if: ${{ ! failure() && ! cancelled() }}
@@ -404,8 +404,9 @@ jobs:
 
     - name: Get entire pipeline artifacts
       run: |
+        mkdir entire-artifacts
         mv *-aiotestlogfiles-* entire-artifacts
-        
+
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v4
