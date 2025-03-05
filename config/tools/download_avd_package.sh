@@ -102,13 +102,13 @@ function packaging_android() {
 
 	echo "Downloading Android Emulator hypervisor driver"
 	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${destDir}/${archived_android_emulator_hypervisor_driver}
-	/usr/bin/yes A | unzip ${destDir}/${archived_android_emulator_hypervisor_driver} -d "$aehdpath"
-	rm -rf $destDir/${archived_android_emulator_hypervisor_driver}
+	/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
+	rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" ${download_android_google_apis} ${destDir}/${archived_android_google_apis}
-	/usr/bin/yes A | unzip ${destDir}/${archived_android_google_apis} -d "$apispath"
-	rm -rf $destDir/${archived_android_google_apis}
+	/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
+	rm -rf "$destDir/${archived_android_google_apis}"
 }
 
 function make_android() {
