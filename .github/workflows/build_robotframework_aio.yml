@@ -406,7 +406,10 @@ jobs:
       run: |
         mkdir entire-artifacts
         ls -la
-        mv *-aiotestlogfiles-* entire-artifacts
+        pwd
+        mv linux-aiotestlogfiles-* entire-artifacts
+        mv windows-aiotestlogfiles-* entire-artifacts
+        ls -la entire-artifacts
 
     - name: Upload test result as artifact
       if: success() || failure()
