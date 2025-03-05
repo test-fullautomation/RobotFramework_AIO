@@ -406,8 +406,7 @@ jobs:
       run: |
         mkdir entire-artifacts
         ls -la
-        ls -la ./RobotFramework_AIO/
-        mv ./RobotFramework_AIO/*-aiotestlogfiles-* entire-artifacts
+        mv *-aiotestlogfiles-* entire-artifacts
 
     - name: Upload test result as artifact
       if: success() || failure()
