@@ -417,7 +417,7 @@ jobs:
       with:
         name: entire-artifacts
         path: |
-          ${{ runner.workspace }}/Robotframework_AIO/entire-artifacts
+          ${{ runner.workspace }}/Robotframework_AIO/entire-artifacts/*
   
   release:
     name: Release AIO
