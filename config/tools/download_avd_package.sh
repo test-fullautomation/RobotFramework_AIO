@@ -5,14 +5,22 @@
 mypath=$(realpath $(dirname $0))
 destDir=$(realpath "$ANDROID_HOME")
 
-mkdir -p "$ANDROID_HOME"/aehd-windows
-mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
+UNAME=$(uname)
+if [ "$UNAME" == "Linux" ] ; then
+	sudo mkdir -p "$ANDROID_HOME"/aehd-windows
+	sudo mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	mkdir -p "$ANDROID_HOME"/aehd-windows
+	mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
+else
+	errormsg "Operation system '$UNAME' is not supported."
+fi
 
 aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
 apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
 
-echo $aehdpath
-echo $apispath
+echo log $aehdpath
+echo log $apispath
 use_cntlm="No"
 
 UNAME=$(uname)
@@ -101,12 +109,12 @@ function packaging_android() {
 	fi
 
 	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" ${download_android_emulator_hypervisor_driver} ${destDir}/${archived_android_emulator_hypervisor_driver}
+	download_package "AEHD" "${download_android_emulator_hypervisor_driver}" "${destDir}/${archived_android_emulator_hypervisor_driver}"
 	/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
 	rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
 
 	echo "Downloading Android Google APIs"
-	download_package "Android Google APIs" ${download_android_google_apis} ${destDir}/${archived_android_google_apis}
+	download_package "Android Google APIs" "${download_android_google_apis}" "${destDir}/${archived_android_google_apis}"
 	/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
 	rm -rf "$destDir/${archived_android_google_apis}"
 }
