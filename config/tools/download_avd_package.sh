@@ -5,8 +5,8 @@
 mypath=$(realpath $(dirname $0))
 destDir=$(realpath "$ANDROID_HOME")
 
-mkdir -p $apispath
-mkdir -p $aehdpath
+mkdir -p "$ANDROID_HOME"/aehd-windows
+mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
 
 aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
 apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
