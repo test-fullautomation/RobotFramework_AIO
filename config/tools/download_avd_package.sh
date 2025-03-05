@@ -19,25 +19,7 @@ fi
 aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
 apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
 
-echo log $aehdpath
-echo log $apispath
 use_cntlm="No"
-
-UNAME=$(uname)
-
-if [ "$UNAME" == "Linux" ] ; then
-	os=linux
-	os_short=linux
-	arch=
-	platform=linux-x64
-elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-	os=windows
-	os_short=win
-	arch=-x64
-	platform=win32-x64
-else
-	errormsg "Operation system '$UNAME' is not supported."
-fi
 
 #
 # import common bash scripts
@@ -108,15 +90,21 @@ function packaging_android() {
 		npm_proxy_args="--proxy=http://localhost:3128"
 	fi
 
-	echo "Downloading Android Emulator hypervisor driver"
-	download_package "AEHD" "${download_android_emulator_hypervisor_driver}" "${destDir}/${archived_android_emulator_hypervisor_driver}"
-	/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
-	rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
+	if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+		echo "Downloading Android Emulator hypervisor driver"
+		download_package "AEHD" "${download_android_emulator_hypervisor_driver}" "${destDir}/${archived_android_emulator_hypervisor_driver}"
+		/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
+		rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
+	fi
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" "${download_android_google_apis}" "${destDir}/${archived_android_google_apis}"
-	/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
-	rm -rf "$destDir/${archived_android_google_apis}"
+	if [ "$UNAME" == "Linux" ] ; then
+		sudo /usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
+	else
+		/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
+		rm -rf "$destDir/${archived_android_google_apis}"
+	fi
 }
 
 function make_android() {
