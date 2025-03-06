@@ -410,6 +410,7 @@ jobs:
         mv linux-aiotestlogfiles-* entire-artifacts
         mv windows-aiotestlogfiles-* entire-artifacts
         ls -la entire-artifacts
+        ls -la ./entire-artifacts/linux-aiotestlogfiles-original/
 
     - name: Upload test result as artifact
       if: success() || failure()
@@ -417,7 +418,7 @@ jobs:
       with:
         name: entire-artifacts
         path: |
-          ${{ runner.workspace }}/Robotframework_AIO/entire-artifacts/*
+          ${{ runner.workspace }}/**/*/entire-artifacts/*
   
   release:
     name: Release AIO
