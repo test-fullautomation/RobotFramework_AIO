@@ -391,7 +391,31 @@ jobs:
           ${{ runner.workspace }}/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/**/*/static_code_report/*
+  
+  entire-artifacts:
+    name: Entire Artifacts
+    runs-on: ubuntu-latest
+    needs: [install-test-windows, install-test-linux]
+    if: ${{ ! failure() && ! cancelled() }}
 
+    steps:
+    - name: Download artifact from build workflow
+      uses: actions/download-artifact@v4
+
+    - name: Get entire pipeline artifacts
+      run: |
+        mkdir entire-artifacts
+        mv linux-aiotestlogfiles-* entire-artifacts
+        mv windows-aiotestlogfiles-* entire-artifacts
+
+    - name: Upload test result as artifact
+      if: success() || failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: entire-artifacts
+        path: |
+          ${{ runner.workspace }}/**/*/entire-artifacts/*
+  
   release:
     name: Release AIO
     runs-on: ubuntu-latest
