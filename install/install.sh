@@ -1,7 +1,7 @@
 #!/bin/bash
 ########################################################################################
 #
-# this script 
+# this script
 # 	- downloads VSCodium
 #   - adds preconfigured workspace
 #   - puts all to the directory ./build/../robotdeveclipse
@@ -48,10 +48,11 @@ if [ "$UNAME" == "Linux" ] ; then
 	os_short=linux
 	arch=
 	platform=linux-x64
-	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20210303/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
+	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
+
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
-	archived_python_file=$sourceDir/cpython-3.9.2-x86_64-unknown-linux-gnu-pgo-20210303T0937.tar.zst
+	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	nodejs_ext=tar.xz
@@ -62,11 +63,11 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os_short=win
 	arch=-x64
 	platform=win32-x64
-	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20221220/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	download_python_url=https://github.com/astral-sh/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
-	archived_python_file=$sourceDir/cpython-3.9.16+20221220-x86_64-pc-windows-msvc-shared-install_only.tar.gz
+	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
 	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 
@@ -153,7 +154,7 @@ function packaging_vscode() {
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
 	fi
-	
+
 	logresult "$?" "unzipped Visual Studio Codium" "unzip Visual Studio Codium"
 
 	mkdir "$sourceDir/vscodium/data"
@@ -204,7 +205,7 @@ function packaging_vscode() {
 			elif [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
 				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix"
 			fi
-			
+
 			"$sourceDir/vscodium/bin/codium" --install-extension "${sourceDir}/${name}-${version}.vsix" --user-data-dir "$sourceDir/vscodium/data"
 			logresult "$?" "installed ${name}-${version}.vsix Extension" "install ${name}-${version}.vsix Extension"
 		fi
@@ -216,7 +217,7 @@ function packaging_vscode() {
 
 	cp -R -a "$sourceDir/vscodium/." "$destDir/robotvscode/"
 	cp -R -a "$vscodeData/data/user-data/User/workspaceStorage" "$destDir/robotvscode/data/user-data/User"
-	logresult "$?" "created Robot VSCodium repository" "create Robot VSCodium repository" 
+	logresult "$?" "created Robot VSCodium repository" "create Robot VSCodium repository"
 }
 
 function packaging_pandoc_windows() {
@@ -270,7 +271,7 @@ function packaging_android() {
 	fi
 
 	# download appium packages:
-	# 	- appium server 
+	# 	- appium server
 	echo "Installing appium server"
 	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
@@ -283,7 +284,7 @@ function packaging_android() {
 	# APPIUM_HOME=./android appium driver install uiautomator2
 	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
 
-	# 	- appium inspector 
+	# 	- appium inspector
 	echo "Downloading Appium Inspector"
 	download_package "Appium Inspector" ${download_appium_inspector} ${sourceDir}/${archived_appium_inspector}
 	if [ "$appium_inspector_ext" == "zip" ]; then
@@ -291,7 +292,7 @@ function packaging_android() {
 	else
 		mv ${sourceDir}/${archived_appium_inspector} $destDir/devtools/Appium-Inspector.${appium_inspector_ext}
 	fi
-	
+
 
 	mkdir $destDir/devtools/Android
 	# download Android SDK Tools
@@ -319,8 +320,8 @@ function packaging_android() {
 ####################################################
 function packaging_python_windows() {
 	tar -xzf "$archived_python_file" -C "$sourceDir"
-	rm -rf "$destDir/python39"
-	mv "$sourceDir/python" "$destDir/python39"
+	rm -rf "$destDir/python3"
+	mv "$sourceDir/python" "$destDir/python3"
 
 
 	# !! ATTENTION !!
@@ -329,7 +330,7 @@ function packaging_python_windows() {
 	# Note: Use ._pth can cause other poblems: https://stackoverflow.com/questions/47851452/add-package-path-to-python-pth-file-using-environment-variables
 	#       There are no way to add script path to ._pth now
 	CURDIR=$(pwd)
-	PYDIR=$(cd $destDir/python39; pwd -W)
+	PYDIR=$(cd $destDir/python3; pwd -W)
 	cd $CURDIR
 
 	proxy_args=""
@@ -338,18 +339,18 @@ function packaging_python_windows() {
 	fi
 
 	# call pip to initialize pip
-	$destDir/python39/python.exe -m pip install --upgrade pip
-	$destDir/python39/python.exe -m pip install --upgrade setuptools
-	$destDir/python39/python.exe -m pip install wheel
-	
+	$destDir/python3/python.exe -m pip install --upgrade pip
+	$destDir/python3/python.exe -m pip install --upgrade setuptools
+	$destDir/python3/python.exe -m pip install wheel
+
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
-	# 
-	$destDir/python39/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	#
+	$destDir/python3/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
 	# Workaround for pyfranca
-	$destDir/python39/python.exe -m pip install pyfranca
+	$destDir/python3/python.exe -m pip install pyfranca
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
@@ -361,19 +362,19 @@ function packaging_python_windows() {
 ####################################################
 function packaging_python_linux() {
 	tar -I zstd -xvf $archived_python_file -C "$sourceDir"
-	rm -rf "$destDir/python39lx"
-	mv "$sourceDir/python" "$destDir/python39lx"
-	logresult "$?" "created Python repository" "create Python repository" 
+	rm -rf "$destDir/python3lx"
+	mv "$sourceDir/python" "$destDir/python3lx"
+	logresult "$?" "created Python repository" "create Python repository"
 
 	# Upgrade pip
-	$destDir/python39lx/install/bin/python3 -m pip install --upgrade pip
+	$destDir/python3lx/bin/python3 -m pip install --upgrade pip
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
-	# 
-	$destDir/python39lx/install/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
+	#
+	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
@@ -383,7 +384,7 @@ function packaging_python_linux() {
 #
 ####################################################
 function cleanall() {
-	#Cleanup all downloaded raw data 
+	#Cleanup all downloaded raw data
 	echo "Cleanup temporary data ..."
 	rm -rf "$sourceDir"
 	goodmsg "done"
@@ -407,7 +408,7 @@ function make_python() {
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		packaging_python_windows
 	fi
-	
+
 	goodmsg "make_python done"
 }
 

@@ -2,7 +2,6 @@
 Comment=VSCodium for RobotFramework AIO
 Terminal=false
 Name=VSCodium for RobotFramework
-Exec=bash -c "/opt/rfwaio/robotvscode/codium"
+Exec=bash -c "source /opt/rfwaio/linux/set_robotenv.sh && exec /opt/rfwaio/robotvscode/codium"
 Type=Application
 Icon=/opt/rfwaio/linux/icon/codium.png
-

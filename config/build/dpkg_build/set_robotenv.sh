@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #create environment variables
-export RobotPythonPath=/opt/rfwaio/python39/install/bin
-export RobotPythonSitePackagesPath=/opt/rfwaio/python39/install/lib/python3.9/site-packages
-export RobotScriptPath=/opt/rfwaio/python39/install/bin
+export RobotPythonPath=/opt/rfwaio/python3/bin
+export RobotPythonSitePackagesPath=/opt/rfwaio/python3/lib/python3.13/site-packages
+export RobotScriptPath=/opt/rfwaio/python3/bin
 export RobotVsCode=/opt/rfwaio/robotvscode
 export RobotToolsPath=/opt/rfwaio/tools
 export RobotTestPath=~/RobotTest/testcases

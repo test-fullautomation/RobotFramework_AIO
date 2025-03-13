@@ -9,6 +9,7 @@ asciidoxy
 # autobahn
 # Automat
 bcrypt
+cchardet==2.2.0a2
 certifi
 cffi
 colorama
@@ -114,7 +115,7 @@ robotframework-pythonlibcore
 robotframework-requests
 robotframework-sshlibrary
 robotframework-excellib
-robotframework-imagecompare
+robotframework-doctestlibrary
 robotframework-dependencylibrary
 schedule
 scp
@@ -168,4 +169,5 @@ coverage
 udsoncan
 odxtools
 scikit-learn
+packaging>=24
 regex

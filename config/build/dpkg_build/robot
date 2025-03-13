@@ -1,5 +1,5 @@
 #!/bin/bash
-ROBFWPython=/opt/rfwaio/python39/install/bin/python3.9
+ROBFWPython=/opt/rfwaio/python3/bin/python3
 
 # Handle arguments from command
 if [ $# -eq 0 ] || [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
@@ -12,7 +12,7 @@ elif [ "${1}" = "-aio" ] || [ "${1}" = "--version_aio" ]; then
   # robot framework aio version
   ${ROBFWPython} -m RobotFramework_TestsuitesManagement.Config.CConfig
 elif [ -f ${1} ]; then
-  # execute robot test file directly 
+  # execute robot test file directly
   ${ROBFWPython} -m robot "${@}"
 else
   ${ROBFWPython} -m robot "${@}"

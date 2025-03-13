@@ -10,7 +10,7 @@ on:
       - closed
       - opened
       - synchronize
-    branches: 
+    branches:
       - develop
   workflow_dispatch:
 
@@ -19,7 +19,7 @@ on:
       - TRIGGER_AIO
 
 env:
-  GITHUB_PAT : ${{ secrets.PAT_GITHUB }} 
+  GITHUB_PAT : ${{ secrets.PAT_GITHUB }}
   GH_TOKEN: ${{ github.token }}
   TRIGGER_BY: ${{ github.ref_type }}
   TAG_NAME: ${{ github.ref_name }}
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
     steps:
-    - name: Checkout source   
+    - name: Checkout source
       uses: actions/checkout@v4
 
     - name: Install dependencies
@@ -134,7 +134,7 @@ jobs:
           git commit -m "Auto update documents of ${{ matrix.version }} version in robotframework-documents"
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
-          
+
           curl -f -X POST https://api.github.com/repos/test-fullautomation/robotframework-documentation/dispatches \
           --header 'authorization: Bearer ${{ secrets.PAT_THONG }}' \
           -H 'Accept: application/vnd.github.everest-preview+json' \
@@ -225,9 +225,9 @@ jobs:
     needs: [ build-windows  , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
-      RobotPythonPath: "C:/Program Files/RobotFramework/python39"
+      RobotPythonPath: "C:/Program Files/RobotFramework/python3"
       RobotTutorialPath: "C:/RobotTest/tutorial"
-      RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python39/Lib/site-packages"
+      RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python3/Lib/site-packages"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
@@ -284,18 +284,18 @@ jobs:
         "%RobotPythonPath%\python" .\tools\release_info\release_info.py --configfile ".\release_info_config_OSS_${{ matrix.version }}.json"
         move .\tools\release_info\release_info_RobotFramework_AIO_*.html ..\
         move .\tools\release_info\release_changelog.html ..\
-    
+
     - name: Generate tutorial doc
       shell: cmd
       run: |
         "%RobotPythonPath%\python" ..\robotframework-tutorial\__setup\gen_doc_tutorial.py
-         
+
     - name: Upload test result as artifact
       if: success() || failure()
       uses: actions/upload-artifact@v4
       with:
         name: windows-aiotestlogfiles-${{ matrix.version }}
-        # long path issue on Windows when upload artifact 
+        # long path issue on Windows when upload artifact
         # https://github.com/actions/upload-artifact/issues/240
         path: |
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/aiotestlogfiles/*
@@ -349,12 +349,12 @@ jobs:
     - name: Run static code analysis on Linux
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
-          "$RobotPythonPath/python3.9" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
+          "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+        $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
         if [ $exit_code -ne 0 ]; then
@@ -364,20 +364,20 @@ jobs:
     - name: Run tests coverage on Linux
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
-          "$RobotPythonPath/python3.9" test/aio-test-trigger/aio-test-coverage.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+          "$RobotPythonPath/python3" test/aio-test-trigger/aio-test-coverage.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
 
     - name: Generate release info
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 tools/release_info/release_info.py --configfile ./release_info_config_OSS_${{ matrix.version }}.json
+        $RobotPythonPath/python3 tools/release_info/release_info.py --configfile ./release_info_config_OSS_${{ matrix.version }}.json
         mv ./tools/release_info/release_info_RobotFramework_AIO_*.html ../
-    
+
     - name: Generate tutorial doc
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3.9 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
+        $RobotPythonPath/python3 ../robotframework-tutorial/__setup/gen_doc_tutorial.py
 
     - name: Upload test result as artifact
       if: success() || failure()
@@ -457,7 +457,7 @@ jobs:
       run: |
         git config user.email "huavanthong14@gmail.com"
         git config user.name "Thong Hua"
-    
+
     - name: Checkout automation branch
       run: |
         tag_branch=automation/task/update_controlfile_version
@@ -468,7 +468,7 @@ jobs:
       run: |
         export AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}
         . ./include/bash/common.sh && update_debian_control_file
-      
+
     - name: Commit Changes
       run: |
         tag_branch=$(cat tag_branch.txt)
@@ -494,5 +494,5 @@ jobs:
         fi
 
     - name: Clean up
-      run: |  
+      run: |
         rm tag_branch.txt
