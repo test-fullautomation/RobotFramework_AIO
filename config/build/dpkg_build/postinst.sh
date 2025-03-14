@@ -42,7 +42,7 @@ function remove_android_package(){
    sed -i '/RobotDevtools/d' /opt/rfwaio/linux/set_robotenv.sh
    sed -i '/RobotNodeJS/d' /opt/rfwaio/linux/set_robotenv.sh
    sed -i '/RobotAppium/d' /opt/rfwaio/linux/set_robotenv.sh
-   sed -i '/RobotAndroidPlatformTools/d' /opt/rfwaio/linux/set_robotenv.sh   
+   sed -i '/RobotAndroidPlatformTools/d' /opt/rfwaio/linux/set_robotenv.sh
 }
 
 function update_android_related(){
@@ -67,10 +67,10 @@ function update_vscodium_related(){
    echo "Performing updates for Vscodium-related components..."
 
    #
-   # Configure Unitiy Launchers - "VSCodium for RobotFramework AIO" 
+   # Configure Unitiy Launchers - "VSCodium for RobotFramework AIO"
    #
-   ############################################################################### 
-   echo -e "${MSG_DONE} Creating/Updating 'VSCodium for RobotFramework AIO' App" 
+   ###############################################################################
+   echo -e "${MSG_DONE} Creating/Updating 'VSCodium for RobotFramework AIO' App"
    cp /opt/rfwaio/linux/robot.desktop ${APPS_PATH}/robot.desktop
    update_owner ${APPS_PATH}/robot.desktop
    chmod +x ${APPS_PATH}/robot.desktop
@@ -90,7 +90,7 @@ function update_vscodium_related(){
    #
    #############################################################################
    #chmod -R 0775 /opt/rfwaio/robotvscode/data/user-data/
-   PyPath=/opt/rfwaio/python39/install/bin
+   PyPath=/opt/rfwaio/python3/bin
    TestPath=${HOME}/RobotTest/testcases
    VsCodePath=/opt/rfwaio/robotvscode
    WpPath=`echo $TestPath | perl -MURI::file -e 'print URI::file->new(<STDIN>)."\n"'`
@@ -131,7 +131,7 @@ fi
 if [ ${CURRENT_USER} != 'root' ]; then
    HOME=/home/${CURRENT_USER}
 fi
-DLTCONNECTOR_PATH="/opt/rfwaio/python39/install/lib/python3.9/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
+DLTCONNECTOR_PATH="/opt/rfwaio/python3/lib/python3.13/site-packages/QConnectionDLTLibrary/tools/DLTConnector/linux/"
 DLTCONNECTOR_NAME="DLTConnector_v1.3.9.deb"
 
 # Introduce group `robot-aio` which allow access for group of multiple users
@@ -164,10 +164,10 @@ fi
 
 # Set schedule for installing DLTConnector (will active in future)
 #
-############################################################################### 
+###############################################################################
 #if [ -d "${DLTCONNECTOR_PATH}" ]; then
-#   echo "@reboot /opt/rfwaio/linux/install_dlt.sh" >> tmpfile 
-#   crontab -u ${SUDO_USER} tmpfile 
+#   echo "@reboot /opt/rfwaio/linux/install_dlt.sh" >> tmpfile
+#   crontab -u ${SUDO_USER} tmpfile
 #   rm tmpfile
 #fi
 
@@ -176,12 +176,12 @@ fi
 #
 #############################################################################
 if [ ! -d "${HOME}/RobotTest" ]; then
-   
+
    mkdir -p ${HOME}/RobotTest/logfiles
    mkdir -p ${HOME}/RobotTest/localconfig
    mkdir -p ${HOME}/RobotTest/testcases
    mkdir -p ${HOME}/RobotTest/tutorial
-   
+
    #
    # Create RobotTest Workspacce Folder
    #
@@ -192,6 +192,7 @@ if [ ! -d "${HOME}/RobotTest" ]; then
    cp -R -a /opt/rfwaio/tutorial/. ${HOME}/RobotTest/tutorial
    cp -R -a /opt/rfwaio/documentation/. ${HOME}/RobotTest/documentation
 
+   allow_user_group_permissions ${HOME}/RobotTest
    echo -e "${MSG_DONE} Creating initial workspace in ~/RobotTest"
 else
    #
@@ -200,7 +201,7 @@ else
    ###########################################################################
    echo -e "${MSG_INFO} Found workspace in ~/RobotTest."
    action_msg="Updated"
-   
+
    if [ -d ${HOME}/RobotTest/tutorial ]; then
       rm -rf ${HOME}/RobotTest/tutorial/*
    else
@@ -227,6 +228,12 @@ else
          rm -f ${HOME}/RobotTest/testcases
       fi
       mkdir -p ${HOME}/RobotTest/testcases
+
+      if [ -d "/opt/rfwaio/robotvscode" ]; then
+         cp -R -a /opt/rfwaio/robotvscode/RobotTest/testcases/. ${HOME}/RobotTest/testcases
+      fi
+      update_owner ${HOME}/RobotTest/testcases
+      echo -e "${MSG_DONE} ${action_msg} testcases folder."
    fi
 fi
 
@@ -234,7 +241,7 @@ fi
 APPS_PATH=${HOME}/.local/share/applications
 if [ -e "${APPS_PATH}" ]; then
    # Check whether it is file or directory
-   # remove it in case it is fine then create appropriate directory 
+   # remove it in case it is fine then create appropriate directory
    if [ -f "${APPS_PATH}" ]; then
       rm "${APPS_PATH}"
       mkdir -p "${APPS_PATH}"
@@ -248,7 +255,7 @@ fi
 SELECTED_CMPTS_FILE=/tmp/robfw_aio_selected_cmpts.tmp
 if [ -f "${SELECTED_CMPTS_FILE}" ];then
    readarray -t SELECTED_CMPTS < /tmp/robfw_aio_selected_cmpts.tmp
-   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Android " ]]; then  
+   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Android " ]]; then
       remove_android_package;
    else
       #
@@ -259,7 +266,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       update_android_related;
    fi
 
-   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then  
+   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then
       remove_vscodium_package;
    else
       #
@@ -270,7 +277,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
       update_vscodium_related;
    fi
-   
+
 
    rm ${SELECTED_CMPTS_FILE}
 else
@@ -285,7 +292,7 @@ fi
 #
 # configure login/non login shells
 #
-###############################################################################    
+###############################################################################
 
 # Delete old version environment setup
 if grep -q "/opt/bosch/robfw/linux/set_robotenv.sh" ${HOME}/.bashrc; then
@@ -298,7 +305,7 @@ fi
 
 if grep -q "/opt/rfwaio/linux/set_robotenv.sh" ${HOME}/.bashrc; then
    echo -e "${MSG_INFO} Robot configuration for .bashrc found, nothing to do. "
-else 
+else
    echo -e "${MSG_DONE} Add Robot configuration to .bashrc"
    echo "#configure environment for Robot" >> ${HOME}/.bashrc
    echo ". /opt/rfwaio/linux/set_robotenv.sh || export rfwaio_set_env=-1" >> ${HOME}/.bashrc
@@ -306,7 +313,7 @@ fi
 
 if grep -q "/opt/rfwaio/linux/set_robotenv.sh" ${HOME}/.profile; then
    echo -e "${MSG_INFO} Robot configuration for .profile found, nothing to do. "
-else 
+else
    echo -e "${MSG_DONE} Add Robot configuration to .profile"
    echo "#configure environment for Robot" >> ${HOME}/.profile
    echo ". /opt/rfwaio/linux/set_robotenv.sh" >> ${HOME}/.profile
@@ -315,7 +322,7 @@ fi
 #
 # Remind user for install DLTConnector
 #
-############################################################################### 
+###############################################################################
 if [ -d "${DLTCONNECTOR_PATH}" ]; then
    echo "For using QConnectionDLTLibrary, please install DTLConnector by below commands:"
    echo "sudo dpkg -i ${DLTCONNECTOR_PATH}${DLTCONNECTOR_NAME}"

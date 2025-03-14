@@ -2,6 +2,8 @@
 # See atest/README.rst for more information.
 
 robotframework==7.1.1
+cython
+cchardet==2.2.0a2
 #Appium-Python-Client
 Sphinx
 aenum
@@ -109,7 +111,7 @@ robotframework-requests
 robotframework-sshlibrary
 robotframework-excellib
 robotframework-seriallibrary
-robotframework-imagecompare
+robotframework-doctestlibrary
 robotframework-dependencylibrary
 schedule
 scp
@@ -159,6 +161,7 @@ coverage
 udsoncan
 odxtools
 scikit-learn
+packaging>=24
 regex
 notebook
 robotkernel

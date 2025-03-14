@@ -17,7 +17,7 @@ The actions described in this document require adjustments in additional reposit
 
 **Create a new repository for the component that shall be a part of the RobotFramework AIO**
 
-  Contact Thomas Pollerspoeck (Thomas.Pollerspoeck@de.bosch.com) to create a new repository. 
+  Contact Thomas Pollerspoeck (Thomas.Pollerspoeck@de.bosch.com) to create a new repository.
 
   Make sure to have the following information available:
 
@@ -54,7 +54,7 @@ The actions described in this document require adjustments in additional reposit
   (and also part of the setup dependencies). How this tool chain works is described in more detail within:
 
   `https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf <https://github.com/test-fullautomation/python-genpackagedoc/blob/develop/GenPackageDoc/GenPackageDoc.pdf>`_
-  
+
   Short form:
 
   1. Write the common part of the documentation either in RST format or in LaTeX format. The interface description of the new component will be added to the PDF file
@@ -103,7 +103,7 @@ The actions described in this document require adjustments in additional reposit
 
      Hint: Parts of the release information are taken out of a configuration file that is part of the installed bundle:
 
-     `RobotFramework\python39\Lib\site-packages\RobotFramework_TestsuitesManagement\Config\package_context.json <RobotFramework\python39\Lib\site-packages\RobotFramework_TestsuitesManagement\Config\package_context.json>`_
+     `RobotFramework\python3\Lib\site-packages\RobotFramework_TestsuitesManagement\Config\package_context.json <RobotFramework\python3\Lib\site-packages\RobotFramework_TestsuitesManagement\Config\package_context.json>`_
 
      The idea behind this is: The release mail shall contain information about what is installed currently. The user is responsible for selecting a proper configuration file
      that fits to the installation!

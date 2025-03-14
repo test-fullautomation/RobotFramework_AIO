@@ -2,6 +2,7 @@
 
 rm -rf /opt/rfwaio/robotvscode/
 rm -rf /opt/rfwaio/python39/
+rm -rf /opt/rfwaio/python3/
 rm -rf /opt/rfwaio/devtools/
 
 CURRENT_USER=${SUDO_USER}

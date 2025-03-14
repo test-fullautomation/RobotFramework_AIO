@@ -167,8 +167,7 @@
                        "TESTTYPE"          : "ROBOT",
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "LOCALCOMMANDLINE"  : ["--exclude threading"],
-                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml",
-                       "FILES_SAVE"        : "../../../../robotframework-qconnect-base/test/aiotestlogfiles"
+                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
                     }
                   ],
 

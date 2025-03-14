@@ -12,9 +12,9 @@
 
 #define MyAppName "RobotFramework AIO (All In One)"
 
-;Commandline argument 
+;Commandline argument
 ;iscc /DRobotFrameworkVersion=version /ITrackService=URL
-;allows to set a RobotFramework- and Setup version 
+;allows to set a RobotFramework- and Setup version
 ;If nothing is provided, then use an empty string. The resulting
 ;installer will be called RobotFramework_setup__.exe in this case
 ;otherwise it is called   RobotFramework_setup_RobotFrameworkVersion.exe
@@ -32,7 +32,7 @@
 #pragma message "RobotFrameworkVersion is   : " + RobotFrameworkVersion + RobotFrameworkSubVersion
 
 #ifdef ITrackService
-   #define DoInstallTracking 
+   #define DoInstallTracking
    #define InstallTrackingService StringChange(ITrackService,"\","/")
    #pragma message "ITrackService is: " + InstallTrackingService
 #else
@@ -111,8 +111,8 @@ Source: "R:\robotframework-tutorial\901_static_code_analysis\*"; Excludes: ".git
 Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#RobotFrameworkSubName}.pdf"; Excludes: ".git"; DestDir: {code:GetUsrDataDir}\documentation; Flags: ignoreversion recursesubdirs overwritereadonly; Permissions: users-full;
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
-Source: "R:\python39\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python39; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
- 
+Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
@@ -155,7 +155,7 @@ Name: "{group}\(Android) Appium Server"; Filename: {app}\devtools\Appium.bat; Co
 
 [Types]
 Name: Standard; Description: "Standard Installation"; Flags: iscustom
-Name: Full; Description: "Full installation of all components."; 
+Name: Full; Description: "Full installation of all components.";
 
 [Components]
 Name: "RobotFramework_AIO_All_In_One"; Description: "All in One required to develop and execute RobotFramework test cases"; Flags: fixed; Types: Standard Full;
@@ -170,9 +170,9 @@ Root: HKCR; SubKey: .resource; ValueType: string; ValueData: RobotFramework.reso
 
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: EditFlags; ValueData: 00000000; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: "Robot Framework Test Case File"; Flags: UninsDeleteKey; 
+Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: "Robot Framework Test Case File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey; 
+Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python39\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
@@ -180,16 +180,16 @@ Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Topic; Valu
 
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: EditFlags; ValueData: 00000000; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueData: "Robot Framework Resource File"; Flags: UninsDeleteKey; 
+Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueData: "Robot Framework Resource File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_resource.ico"; Flags: UninsDeleteKey;
 
 
 ;Environment variables
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonPath; ValueData: {app}\python39;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonSitePackagesPath; ValueData: {app}\python39\Lib\site-packages;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotScriptPath; ValueData: {app}\python39\scripts;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode; 
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonPath; ValueData: {app}\python3;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonSitePackagesPath; ValueData: {app}\python3\Lib\site-packages;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotScriptPath; ValueData: {app}\python3\scripts;
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotToolsPath; ValueData: {app}\tools;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTestPath; ValueData: {code:GetUsrDataDir}\testcases;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotLogPath; ValueData: {code:GetUsrDataDir}\logfiles;
@@ -217,15 +217,15 @@ Root: HKCU; SubKey: "Software\Microsoft\Internet Explorer\Styles"; ValueType: dw
 Root: HKCU; SubKey: "Console"; ValueType: dword; ValueName: VirtualTerminalLevel; ValueData: 00000001;
 
 [Dirs]
-Name: {code:GetUsrDataDir}\testcases; Flags: UninsNeverUninstall; 
-Name: {code:GetUsrDataDir}\testcases\config; Flags: UninsNeverUninstall; 
-Name: {code:GetUsrDataDir}\testcases\lib; Flags: UninsNeverUninstall; 
-Name: {code:GetUsrDataDir}\logfiles; Flags: UninsNeverUninstall; 
+Name: {code:GetUsrDataDir}\testcases; Flags: UninsNeverUninstall;
+Name: {code:GetUsrDataDir}\testcases\config; Flags: UninsNeverUninstall;
+Name: {code:GetUsrDataDir}\testcases\lib; Flags: UninsNeverUninstall;
+Name: {code:GetUsrDataDir}\logfiles; Flags: UninsNeverUninstall;
 Name: {code:GetUsrDataDir}\testcases\doc; Flags: UninsNeverUninstall;
-Name: {app}\robotvscode\data; Permissions: users-full; 
-Name: {app}\robotvscode\data\extensions; Permissions: users-full; 
-Name: {app}\robotvscode\data\user-data; Permissions: users-full; 
-Name: {app}\devtools; Permissions: users-full; 
+Name: {app}\robotvscode\data; Permissions: users-full;
+Name: {app}\robotvscode\data\extensions; Permissions: users-full;
+Name: {app}\robotvscode\data\user-data; Permissions: users-full;
+Name: {app}\devtools; Permissions: users-full;
 
 [INI]
 
@@ -233,7 +233,7 @@ Name: {app}\devtools; Permissions: users-full;
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
   WorkingDir: {app}; Flags: runhidden runasoriginaluser;
- 
+
 [UninstallRun]
 
 
@@ -265,7 +265,7 @@ function GetIndexByListPosition(ListPosition:Integer):Integer;
 var
   ProjectListCounter : Integer;
   res : Integer;
-  
+
 begin
    res := -1;
    for ProjectListCounter:=0 to ProjectHash.Name.Count-1 do
@@ -275,8 +275,8 @@ begin
             res:=StrToInt(ProjectHash.Index[ProjectListCounter]);
           end;
     end;
-    
-    Result:=res; 
+
+    Result:=res;
 end;
 
 //
@@ -286,7 +286,7 @@ function GetListPositionByIndex(Index:Integer):Integer;
 var
   ProjectListCounter : Integer;
   res : Integer;
-  
+
 begin
    res := -1;
    for ProjectListCounter:=0 to ProjectHash.Name.Count-1 do
@@ -296,8 +296,8 @@ begin
             res:=StrToInt(ProjectHash.ListPosition[ProjectListCounter]);
           end;
     end;
-    
-    Result:=res; 
+
+    Result:=res;
 end;
 
 //
@@ -310,21 +310,21 @@ var
   sCmdArgBuffer: String;
 begin
   //at first take over ownership
-  sCmdBuffer:='takeown'; 
+  sCmdBuffer:='takeown';
   sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'\*" /R');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
   sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'" /R');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
   //for debugging
   //MsgBox(sCmdArgBuffer,mbInformation, MB_OK);
-           
-  //now grant access rights 
-  sCmdBuffer:='icacls'; 
+
+  //now grant access rights
+  sCmdBuffer:='icacls';
   sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-           
+
   //now remove critical attributes
-  sCmdBuffer:='attrib'; 
+  sCmdBuffer:='attrib';
   sCmdArgBuffer:=ExpandConstant('-A -R -S "'+sPath+'" /S /D');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
 end;
@@ -377,7 +377,7 @@ end;
 //
 // Called after each SetupStep
 //////////////////////////////////////////////////////////////////////////////////
-procedure CurStepChanged(CurStep: TSetupStep); 
+procedure CurStepChanged(CurStep: TSetupStep);
 var
   bUninstallerExists : Boolean;
   ResultCode: Integer;
@@ -386,16 +386,16 @@ var
   sCmdArgBuffer: String;
   i : Integer;
   Version: TWindowsVersion;
-  
+
   sNewInstallation: String;
   sRobotFrameworkPath: String;
- 
+
 #ifdef DoInstallTracking
   WinHttpReq: Variant;
 #endif
 
 begin
-  sNewInstallation:='True';  
+  sNewInstallation:='True';
 
 
   //directly before installation validate if Files are already existing.
@@ -415,7 +415,7 @@ begin
 		end;
 	  except
 	  end;
-             
+
       //uninstaller can be 001,002,003... This loop is to hit the proper number
 //      for i:=0 to 9 do
 //       begin
@@ -430,19 +430,19 @@ begin
 //                Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
 //              except
 //              end;
-              
+
               //seperate try block, otherwise uninstaller will not be executed
               //if attrib fails.
 //              try
                 //now call the uninstaller.
-//                sUninstallCommand:=ExpandConstant('{app}\unins00'+IntToStr(i)+'.exe');  
+//                sUninstallCommand:=ExpandConstant('{app}\unins00'+IntToStr(i)+'.exe');
 //                Exec(sUninstallCommand,'/SILENT','',SW_SHOW,ewWaitUntilTerminated,ResultCode);
 //              except
 //              end;
 //            end;
 //       end;  // rof i:=0
     end; // fi CurStep=ssInstall then
-    
+
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
@@ -458,7 +458,7 @@ begin
       try
           WinHttpReq := CreateOleObject('WinHttp.WinHttpRequest.5.1');
           WinHttpReq.Open('GET', ExpandConstant('{#InstallTrackingService}?v={#MyAppVersion};u={username};m={computername};d={%USERDOMAIN};f='+sNewInstallation), false);
-          WinHttpReq.Send();  
+          WinHttpReq.Send();
       except
           //ignore any issue. Setup must complete...
       end;
@@ -466,7 +466,7 @@ begin
 
       SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
     end;
-    
+
 end;
 
 //
@@ -478,7 +478,7 @@ var
  ProjectListCounter : Integer;
  i:Integer;
  MsgInstallCopilotArgs: String;
- 
+
 begin
   InitProjectHash();
 
@@ -489,7 +489,7 @@ begin
              '  1. Double click with the mouse.'#13#13+
              '  2. Directly from the command line.'#13#13+
              '  4. Directly from batch files.');
-             
+
   //create MsgPage1
   MsgPage3 := CreateOutputMsgPage(MsgPage2.ID,
              'Update Information', 'How to update an already installed version?',
@@ -497,26 +497,26 @@ begin
              '  1. General hint: make a backup of your data.'#13#13+
              '  2. Simply install the new version.'#13#13+
              '  3. Setup will recognize an already installed version and update.'#13#13+#13#13+
-             'The uninstall-/install setup will take care of your test case files.');             
-  
-  //create page for selecting project  
-  ProjectPage := CreateCustomPage(MsgPage3.ID, 
-                           'RobotFramework AIO (All In One) configuration', 
+             'The uninstall-/install setup will take care of your test case files.');
+
+  //create page for selecting project
+  ProjectPage := CreateCustomPage(MsgPage3.ID,
+                           'RobotFramework AIO (All In One) configuration',
                            'Please select here your project!');
-  
+
   StaticText := TNewStaticText.Create(ProjectPage);
   StaticText.Top :=  ScaleY(0);
   StaticText.Caption := 'In order to configure the RobotFramework AIO (All In One) properly it is required to select '#13+'your project.'#13#13+'If your project is not listed, then please select "Generic":';
   StaticText.AutoSize := True;
   StaticText.Parent := ProjectPage.Surface;
-  
+
   ProjectListBox := TNewListBox.Create(ProjectPage);
   ProjectListBox.Top := ScaleY(58);
   ProjectListBox.Width := ProjectPage.SurfaceWidth;
   ProjectListBox.Height := ScaleY(150);
   ProjectListBox.Parent := ProjectPage.Surface;
-  
-  //build up the list based on the ProjectHash and contained 
+
+  //build up the list based on the ProjectHash and contained
   //ProjectListbox positions
   for ProjectListCounter:=0 to ProjectHash.Name.Count-1 do
    begin
@@ -530,17 +530,17 @@ begin
            end;
         end;
      end;
-  
+
   //set focus to previous project or "Generic" in case of first installation
   ProjectListbox.ItemIndex:=GetListPositionByIndex(StrToInt(GetPreviousData('SelectedProject','0')))
-    
+
   //create user data directory page
   UsrDataDirPage := CreateInputDirPage(wpSelectDir,
     'Select Test Case Data Directory', 'Where will the RobotFramework test case files be developed?',
     'Select the folder which Setup configures for the RobotFramework test case development, then click Next.',
     True, 'RobotTest');
   UsrDataDirPage.Add('');
-  
+
   //initialize user data directory page with last directory
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
@@ -550,9 +550,9 @@ begin
 
   InstructionLabel := TLabel.Create(WizardForm);
   InstructionLabel.Parent := InfoAfterPage.Surface;
-  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 + 
-                              'RobotFramework' + #13#13 + 
-                              'Execute the following command line in Windows PowerShell to download and ' + #13 + 
+  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
+                              'RobotFramework' + #13#13 +
+                              'Execute the following command line in Windows PowerShell to download and ' + #13 +
                               'install GitHub Copilot extension:';
   InstructionLabel.AutoSize := True;
   InstructionLabel.Top := ScaleY(0);
@@ -587,17 +587,17 @@ end;
 
 //
 // Returns selected project
-//////////////////////////////////////////////////////////////////////////////////  
+//////////////////////////////////////////////////////////////////////////////////
 function IsSelectedProject(InputProject:Integer):Boolean;
-begin  
+begin
   Result:=(GetIndexByListPosition(ProjectListBox.ItemIndex)=InputProject)
-end;  
+end;
 
 //
-// Returns user data dir 
+// Returns user data dir
 //////////////////////////////////////////////////////////////////////////////////
 function GetUsrDataDir(Param:String):String;
-begin  
+begin
   Result:=UsrDataDirPage.Values[0];
 end;
 
@@ -612,17 +612,17 @@ var
 begin
   { Fill the 'Ready Memo' with the normal settings and the custom settings }
   sProject:=ProjectListBox.Items.Strings[ProjectListBox.ItemIndex]
-  
+
   //custom settings
   sTextToDisplay:='Your project:' + NewLine
-  sTextToDisplay:=sTextToDisplay + '      ' + sProject 
+  sTextToDisplay:=sTextToDisplay + '      ' + sProject
   sTextToDisplay:=sTextToDisplay + NewLine + NewLine;
-  
+
   //normal settings
   sTextToDisplay:=sTextToDisplay+ MemoDirInfo + NewLine + NewLine;
-  
+
   //custom settings
-  sTextToDisplay:=sTextToDisplay + 'Test case directory:' + NewLine  
+  sTextToDisplay:=sTextToDisplay + 'Test case directory:' + NewLine
   sTextToDisplay:=sTextToDisplay + '     ' + GetUsrDataDir('') + NewLine + NewLine;
 
   Result:=sTextToDisplay;
@@ -637,7 +637,7 @@ begin
   SetPreviousData(PreviousDataKey, 'UsrDataDir', GetUsrDataDir(''));
 end;
 
-function NeedCreateEnvVar(keyname: String): Boolean; 
+function NeedCreateEnvVar(keyname: String): Boolean;
 begin
   if GetEnv(keyname) = '' then
     Result:=True
@@ -695,6 +695,7 @@ end;
 [UninstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
 Name: {app}\python39\*; Type: filesandordirs;
+Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
 Name: {app}\devtools\*; Type: filesandordirs;
@@ -705,6 +706,7 @@ Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConst
 [InstallDelete]
 Name: {app}\robotvscode\*; Type: filesandordirs;
 Name: {app}\python39\*; Type: filesandordirs;
+Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
 Name: {app}\selftest\*; Type: filesandordirs;
 Name: {app}\devtools\*; Type: filesandordirs;
