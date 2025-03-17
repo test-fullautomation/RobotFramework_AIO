@@ -171,3 +171,5 @@ odxtools
 scikit-learn
 packaging>=24
 regex
+notebook
+robotkernel
