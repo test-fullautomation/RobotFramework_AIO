@@ -260,7 +260,7 @@
      - Once logged in, you can utilize the extensions for AI-powered coding assistance and interactive chat features.
 "
                               ],
-                              "0.14.0." : [
+                              "0.14.1.;0.15.0." : [
 "
 **Python Upgrade**
 
@@ -278,6 +278,12 @@
   * `What's New in Python 3.12 <https://docs.python.org/3.13/whatsnew/3.12.html>`_
   * `What's New in Python 3.11 <https://docs.python.org/3.13/whatsnew/3.11.html>`_
   * `What's New in Python 3.10 <https://docs.python.org/3.13/whatsnew/3.10.html>`_
+
+**Python Packages**
+
+* Integrated **scikit-learn** library
+* Integrated **regex** library
+* Integrated **jupyter** and **robotkernel** library
 
 **Library Replacement**
 
@@ -324,6 +330,11 @@
   to reflect the new directory structure (restart is required after Installation).
   Users do not need to manually adjust any settings, as the installer ensures that all references to
   the Python path are correctly updated to point to the **python3** directory.
+
+**VSCodium Package**
+
+* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality. 
+  
 "
                               ]
                  }
