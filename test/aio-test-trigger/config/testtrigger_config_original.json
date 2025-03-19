@@ -162,6 +162,13 @@
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
+                     "COMPONENTROOTPATH" : "../../../../robotframework-selftest",
+                     "TESTFOLDER"        : "testcases",
+                     "TESTTYPE"          : "ROBOT",
+                     "TESTEXECUTOR"      : "executerobottest.py",
+                     "LOGFILE"           : "../../../../robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
                        "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
                        "TESTFOLDER"        : "test",
                        "TESTTYPE"          : "ROBOT",
