@@ -20,12 +20,12 @@
 #
 # Basically this component is stand-alone, but can also be used as part of an automation framework called
 # RobotFramework AIO. More information about this framework you can find here:
-# 
+#
 # https://github.com/test-fullautomation/RobotFramework_AIO
-# 
+#
 # This JSON file contains component specific release information for the RobotFramework AIO.
 # In case you use the component stand-alone only, you can ignore this file.
-# 
+#
 # --------------------------------------------------------------------------------------------------------------
 #
 # Format: extended JSON format with the possibility to comment out lines (by '#' at the beginning of the line).
@@ -94,10 +94,10 @@
 
 * Partition installation for Debian package:
 
-  The Debian installer package offers enhanced flexibility by allowing you to 
+  The Debian installer package offers enhanced flexibility by allowing you to
   customize the installation according to your needs.
 
-  You can now determine whether to include additional packages such as 
+  You can now determine whether to include additional packages such as
   **Android** and **Vscodium** during the installation process.
 
   * Select extensions:
@@ -105,7 +105,7 @@
     When executing the command to install Robotframework AIO, you will be prompted to select extensions for installation as below
 
     .. code-block::
- 
+
        Select one or more extra components:
           N : No extra package - only the core framework and libraries
           A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)
@@ -113,21 +113,21 @@
        Enter : All packages (default choice after 30s)
        Enter your choices (e.g., AC for both Android and VSCodium packages):
 
-    The default choice is to install all packages, including the core framework and all extensions. 
+    The default choice is to install all packages, including the core framework and all extensions.
 
     If no action is taken within 30 seconds, the installer will proceed with the default choice.
 
   * Besides, you can also provide your choice directly in command for the installation (for CI/CT system) as below examples:
-  
+
     * Only the core feature of Robotframework AIO
       .. code-block::
-  
-        yes 'N' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
-     
+
+        yes 'N' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb
+
     * Installation with both **Android** and **Vscodium** packages
       .. code-block::
-  
-        yes 'AC' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb 
+
+        yes 'AC' | sudo apt-get install ./setup_RobotFramework_AIO_Linux_<version>.deb
 
 **Python Packages**
 
@@ -185,7 +185,7 @@
 
     An user (BOT or integrator account) which have non-root permission can also be setup to use the installed robotframework-aio package on test machine as following steps:
 
-    * Add BOT or Integrator account to robot-aio group by execute below command with root user or add it as a **RUN** step of Docker file 
+    * Add BOT or Integrator account to robot-aio group by execute below command with root user or add it as a **RUN** step of Docker file
 
       .. code-block::
 
@@ -196,15 +196,15 @@
     * Execute **initRobotFrameworkAIO.sh** script to setup enviroment or add it as **CMD** step when starting Docker container
 
       .. code-block::
-      
+
         initRobotFrameworkAIO.sh
 
-    * Now, execute your Robotframework test case/suite. E.g 
+    * Now, execute your Robotframework test case/suite. E.g
 
       .. code-block::
 
         robot ~/RobotTest/testcases/HelloWorld.robot
-  
+
   * Added executable **appium** script to start the Appium server in command line (useful for Docker container)
 
     .. code-block::
@@ -226,11 +226,11 @@
 
 * **GitHub Copilot**
 
-  Due to licensing restrictions, the **GitHub Copilot** and **GitHub Copilot Chat** extensions 
+  Due to licensing restrictions, the **GitHub Copilot** and **GitHub Copilot Chat** extensions
   are not included in the pre-installed packages and must be installed manually.
 
-  To assist you, the **RobotFramework AIO** installer provides a ready-to-use command 
-  at the end of the installation process. This command is tailored to download and install 
+  To assist you, the **RobotFramework AIO** installer provides a ready-to-use command
+  at the end of the installation process. This command is tailored to download and install
   the correct versions of both extensions, ensuring compatibility with your environment.
 
   **Steps to Install GitHub Copilot Extensions**:
@@ -256,8 +256,85 @@
      - Log in to GitHub Copilot via VsCodium using your GitHub credentials.
 
   5. **Start Using GitHub Copilot**:
-  
+
      - Once logged in, you can utilize the extensions for AI-powered coding assistance and interactive chat features.
+"
+                              ],
+                              "0.14.1.;0.15.0." : [
+"
+**Python Upgrade**
+
+* The Python version has been upgraded from **3.9** to **3.13.2**.
+
+* This update includes performance improvements, security fixes, and new language features.
+
+* Before proceeding, users should ensure their scripts and libraries are fully compatible with **Python 3.13.2**.
+  It's important to test your environment and verify that no issues arise from the upgrade.
+
+* For more information on changes and improvements in each version,
+  please refer to the following release notes:
+
+  * `What's New in Python 3.13 <https://docs.python.org/3.13/whatsnew/3.13.html>`_
+  * `What's New in Python 3.12 <https://docs.python.org/3.13/whatsnew/3.12.html>`_
+  * `What's New in Python 3.11 <https://docs.python.org/3.13/whatsnew/3.11.html>`_
+  * `What's New in Python 3.10 <https://docs.python.org/3.13/whatsnew/3.10.html>`_
+
+**Python Packages**
+
+* Integrated **scikit-learn** library
+* Integrated **regex** library
+* Integrated **jupyter** and **robotkernel** library
+
+**Library Replacement**
+
+* The `robotframework-imagecompare <https://github.com/manykarim/robotframework-imagecompare>`_
+  package has been **replaced** by the `robotframework-doctestlibrary <https://github.com/manykarim/robotframework-doctestlibrary>`_ package.
+
+* Reason for Replacement:
+
+  The `ImageCompare` library is **not compatible** with Python 3.13.2.
+  However, the `Compare Images` keyword from `ImageCompare` is also available in the `DocTest` library,
+  which is maintained by the same author.
+  Migrating to `DocTest` is straightforward by updating the `Library` setting in Robot Framework.
+
+* Migration Guide:
+
+  Before (Using `robotframework-imagecompare`):
+
+  |   ``*** Settings ***``
+  |   ``Library    ImageCompare``
+  |
+  |   ``*** Test Cases ***``
+  |   ``Compare two Images and highlight differences``
+  |       ``Compare Images    Reference.jpg    Candidate.jpg``
+
+  After (Using `robotframework-doctestlibrary`):
+
+  |   ``*** Settings ***``
+  |   ``Library    DocTest.VisualTest``
+  |
+  |   ``*** Test Cases ***``
+  |   ``Compare two Images and highlight differences``
+  |       ``Compare Images    Reference.jpg    Candidate.jpg``
+
+  By making this change, you ensure compatibility with **Python 3.13.2** while
+  retaining the same functionality.
+
+**Environment/Installation**
+
+* The **python39** directory has been replaced with a more general **python3** directory.
+  The new directory structure no longer includes the minor version number in the folder name,
+  making it more adaptable for future updates.
+
+* Environment variables related to the Python path have been automatically updated by the installer
+  to reflect the new directory structure (restart is required after Installation).
+  Users do not need to manually adjust any settings, as the installer ensures that all references to
+  the Python path are correctly updated to point to the **python3** directory.
+
+**VSCodium Package**
+
+* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality. 
+
 "
                               ]
                  }
