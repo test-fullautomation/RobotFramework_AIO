@@ -266,7 +266,8 @@ jobs:
 
     - name: Download and install avd package for Android self-test
       shell: bash
-      run: config/tools/download_avd_package.sh
+      run: |
+        config/tools/download_avd_package.sh
 
     - name: Run tests on Windows
       shell: bash

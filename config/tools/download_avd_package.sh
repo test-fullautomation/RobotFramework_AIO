@@ -95,6 +95,8 @@ function packaging_android() {
 		download_package "AEHD" "${download_android_emulator_hypervisor_driver}" "${destDir}/${archived_android_emulator_hypervisor_driver}"
 		/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
 		rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
+
+		cmd.exe /c "${aehdpath}/silent_install.bat"
 	fi
 
 	echo "Downloading Android Google APIs"
