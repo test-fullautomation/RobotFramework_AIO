@@ -6,10 +6,7 @@ mypath=$(realpath $(dirname $0))
 destDir=$(realpath "$ANDROID_HOME")
 
 UNAME=$(uname)
-if [ "$UNAME" == "Linux" ] ; then
-	sudo mkdir -p "$ANDROID_HOME"/aehd-windows
-	sudo mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
-elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	mkdir -p "$ANDROID_HOME"/aehd-windows
 	mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
 else
@@ -99,9 +96,7 @@ function packaging_android() {
 
 	echo "Downloading Android Google APIs"
 	download_package "Android Google APIs" "${download_android_google_apis}" "${destDir}/${archived_android_google_apis}"
-	if [ "$UNAME" == "Linux" ] ; then
-		sudo /usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
-	else
+	if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
 		rm -rf "$destDir/${archived_android_google_apis}"
 	fi
