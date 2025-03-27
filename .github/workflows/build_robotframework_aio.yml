@@ -361,6 +361,7 @@ jobs:
     
     - name: AVD in linux
       run: |
+        sudo mkdir -p "${{ matrix.version }}/system-images/android-34/google_apis"
         sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst cpu-checker
         kvm-ok
         chmod +x ./config/tools/download_avd_package.sh
