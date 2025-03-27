@@ -358,6 +358,13 @@ jobs:
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
+    
+    - name: AVD in linux
+      run: |
+        sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst cpu-checker
+        kvm-ok
+        chmod +x ./config/tools/download_avd_package.sh
+        ./config/tools/download_avd_package.sh
 
     - name: Run tests on Linux
       run: |
