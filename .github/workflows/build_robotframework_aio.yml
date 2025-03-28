@@ -367,7 +367,8 @@ jobs:
         chmod +x ./config/tools/download_avd_package.sh
         ./config/tools/download_avd_package.sh
         sudo unzip /usr/local/lib/android/sdk/x86_64-34_r13.zip -d /usr/local/lib/android/sdk/system-images/android-34/google_apis/
-        sudo find / -name "avdmanager" 2>/dev/null
+        ls /opt/rfwaio/devtools/Android/tools/bin/avdmanager
+        ls /usr/local/lib/android/sdk/system-images/android-34/google_apis/x86_64/
 
     - name: Run tests on Linux
       run: |
