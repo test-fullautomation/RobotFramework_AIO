@@ -367,8 +367,7 @@ jobs:
         chmod +x ./config/tools/download_avd_package.sh
         ./config/tools/download_avd_package.sh
         sudo unzip /usr/local/lib/android/sdk/x86_64-34_r13.zip -d /usr/local/lib/android/sdk/system-images/android-34/google_apis/
-        ls /opt/rfwaio/devtools/Android/tools/bin/avdmanager
-        ls /usr/local/lib/android/sdk/system-images/android-34/google_apis/x86_64/
+        sudo apt install openjdk-8-jdk
         sudo /opt/rfwaio/devtools/Android/tools/bin/avdmanager create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device pixel_xl
 
     - name: Run tests on Linux
