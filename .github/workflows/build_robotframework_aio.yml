@@ -369,7 +369,7 @@ jobs:
         sudo unzip /usr/local/lib/android/sdk/x86_64-34_r13.zip -d /usr/local/lib/android/sdk/system-images/android-34/google_apis/
         ls /opt/rfwaio/devtools/Android/tools/bin/avdmanager
         ls /usr/local/lib/android/sdk/system-images/android-34/google_apis/x86_64/
-        /opt/rfwaio/devtools/Android/tools/bin/avdmanager create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device pixel_xl
+        sudo /opt/rfwaio/devtools/Android/tools/bin/avdmanager create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device pixel_xl
 
     - name: Run tests on Linux
       run: |
