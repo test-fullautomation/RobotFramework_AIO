@@ -372,7 +372,7 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 34
-      run: |
+        script: |
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
