@@ -367,12 +367,14 @@ jobs:
         chmod +x ./config/tools/download_avd_package.sh
         ./config/tools/download_avd_package.sh
         sudo unzip /usr/local/lib/android/sdk/x86_64-34_r13.zip -d /usr/local/lib/android/sdk/system-images/android-34/google_apis/
+        sudo apt install openjdk-8-jdk
+        sudo /opt/rfwaio/devtools/Android/tools/bin/avdmanager create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device pixel_xl
+
+    - name: Android Emulator Runner
+      uses: ReactiveCircus/android-emulator-runner@v2.33.0
 
     - name: Run tests on Linux
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 34
-        script: |
+      run: |
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
