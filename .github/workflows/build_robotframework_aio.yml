@@ -375,7 +375,7 @@ jobs:
         avd-name: my_avd
         target: google_apis
         arch: x86_64
-        emulator-port: 5037
+        emulator-port: 5584
         path: |
           /opt/rfwaio/devtools/Android/tools/bin/avdmanager
           /opt/rfwaio/devtools/Android/platform-tools/adb
