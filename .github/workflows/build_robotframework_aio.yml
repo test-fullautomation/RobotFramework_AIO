@@ -370,6 +370,8 @@ jobs:
 
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.33.0
+      with:
+        api-level: 34
 
     - name: Run tests on Linux
       run: |
