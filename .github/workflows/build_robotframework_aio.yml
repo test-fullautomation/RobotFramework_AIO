@@ -375,7 +375,7 @@ jobs:
         sudo udevadm trigger --name-match=kvm
 
     - name: Android Emulator Runner
-      uses: ReactiveCircus/android-emulator-runner@v2.33.0
+      uses: reactiveCircus/android-emulator-runner@v2.9.0
       with:
         api-level: 34
         avd-name: my_avd
