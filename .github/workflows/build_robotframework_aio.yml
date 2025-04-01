@@ -332,8 +332,8 @@ jobs:
     env:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
-      # ANDROID_HOME: "/usr/local/lib/android"
-      # APPIUM_HOME: "/usr/local/lib/nodejs/bin"
+      ANDROID_HOME: "/opt/rfwaio/devtools/Android"
+      APPIUM_HOME: "/opt/rfwaio/devtools/nodejs/"
 
     steps:
     - name: Checkout source
@@ -366,8 +366,6 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        find / -type d -name "command-line" 2>/dev/null
-        find / -name "appium" 2>/dev/null
 
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
