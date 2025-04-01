@@ -332,8 +332,6 @@ jobs:
     env:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
-      ANDROID_HOME: "/opt/rfwaio/devtools/Android"
-      APPIUM_HOME: "/opt/rfwaio/devtools/nodejs/"
 
     steps:
     - name: Checkout source
@@ -380,6 +378,8 @@ jobs:
 
     - name: Run tests on Linux
       run: |
+        export ANDROID_HOME="/opt/rfwaio/devtools/Android"
+        export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
