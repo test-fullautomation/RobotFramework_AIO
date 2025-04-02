@@ -376,7 +376,7 @@ jobs:
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/lib/node_modules/"
+          export APPIUM_HOME="/opt/rfwaio/devtools/appium"
           . /opt/rfwaio/linux/set_robotenv.sh
           "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
 
