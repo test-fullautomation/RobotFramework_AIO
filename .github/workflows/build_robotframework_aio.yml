@@ -365,7 +365,7 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        sudo /opt/rfwaio/devtools/nodejs/lib/node_modules/appium driver list --installed
+        sudo /usr/local/lib/node_modules/appium driver list --installed
 
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
@@ -377,7 +377,7 @@ jobs:
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
+          export APPIUM_HOME="/usr/local/lib/node_modules/"
           . /opt/rfwaio/linux/set_robotenv.sh
           "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
 
