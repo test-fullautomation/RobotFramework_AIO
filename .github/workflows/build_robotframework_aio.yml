@@ -378,6 +378,7 @@ jobs:
 
     - name: Run tests on Linux
       run: |
+        export RobotDevtools="/opt/rfwaio/devtools"
         export ANDROID_HOME="/opt/rfwaio/devtools/Android"
         export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
         . /opt/rfwaio/linux/set_robotenv.sh
