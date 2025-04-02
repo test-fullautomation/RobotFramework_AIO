@@ -365,8 +365,7 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        which appium
-        sudo /usr/local/lib/node_modules/appium driver list --installed
+        find / -name "appium" 2>/dev/null
 
     - name: Android Emulator Runner
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
