@@ -333,7 +333,8 @@ jobs:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
       RobotDevtools: "/opt/rfwaio/devtools"
-      APPIUM_HOME: "/opt/rfwaio/devtools/appium"
+      ANDROID_HOME: "/opt/rfwaio/devtools/Android"
+      APPIUM_HOME: "/opt/rfwaio/devtools/nodejs/"
 
     steps:
     - name: Checkout source
@@ -377,15 +378,12 @@ jobs:
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-          export APPIUM_HOME="/opt/rfwaio/devtools/appium"
+          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
           . /opt/rfwaio/linux/set_robotenv.sh
           "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
 
     - name: Run tests on Linux
       run: |
-        export RobotDevtools="/opt/rfwaio/devtools"
-        export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-        export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
