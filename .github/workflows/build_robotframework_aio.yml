@@ -361,7 +361,6 @@ jobs:
       run: |
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
-          sudo /opt/rfwaio/devtools/nodejs/lib/node_modules/appium driver list --installed
  
     - name: Enable KVM group perms
       run: |
