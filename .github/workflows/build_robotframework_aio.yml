@@ -333,6 +333,7 @@ jobs:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
       RobotDevtools: "/opt/rfwaio/devtools"
+      APPIUM_HOME: "/opt/rfwaio/devtools/appium"
 
     steps:
     - name: Checkout source
