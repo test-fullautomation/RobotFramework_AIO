@@ -334,7 +334,7 @@ jobs:
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
       RobotDevtools: "/opt/rfwaio/devtools"
       ANDROID_HOME: "/opt/rfwaio/devtools/Android"
-      APPIUM_HOME: "/opt/rfwaio/devtools/nodejs/"
+      APPIUM_HOME: "/opt/rfwaio/devtools/appium"
 
     steps:
     - name: Checkout source
@@ -369,7 +369,7 @@ jobs:
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
 
-    - name: Android Emulator Runner
+    - name: Run tests on Linux
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
       with:
         api-level: 34
@@ -379,19 +379,9 @@ jobs:
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/"
+          export APPIUM_HOME="/opt/rfwaio/devtools/appium"
           . /opt/rfwaio/linux/set_robotenv.sh
           "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
-
-    - name: Run tests on Linux
-      run: |
-        . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
-        # Get system error code from python program
-        exit_code=${PIPESTATUS[0]}
-        if [ $exit_code -ne 0 ]; then
-            exit 1
-        fi
 
     - name: Run tests coverage on Linux
       run: |
