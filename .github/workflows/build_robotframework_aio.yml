@@ -367,8 +367,6 @@ jobs:
         sudo udevadm trigger --name-match=kvm
         /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2
         /opt/rfwaio/devtools/nodejs/bin/appium driver list --installed
-        chmod -R 777 /home/runner/work/RobotFramework_AIO/robotframework-selftest/helpers/Android/SelfTest.apk
-        chmod -R 777 /home/runner/work/RobotFramework_AIO/robotframework-selftest/helpers/Android/calculator.apk
 
     - name: Run tests on Linux
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
