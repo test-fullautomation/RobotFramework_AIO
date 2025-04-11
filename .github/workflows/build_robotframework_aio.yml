@@ -324,6 +324,9 @@ jobs:
     env:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
+      RobotDevtools: "/opt/rfwaio/devtools"
+      ANDROID_HOME: "/opt/rfwaio/devtools/Android"
+      APPIUM_HOME: "/opt/rfwaio/devtools/nodejs/lib/node_modules"
 
     steps:
     - name: Checkout source
@@ -351,8 +354,22 @@ jobs:
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    - name: Run tests on Linux
+    - name: Enable KVM group perms
       run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+        /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2
+        /opt/rfwaio/devtools/nodejs/bin/appium driver list --installed
+
+    - name: Run tests on Linux
+      uses: ReactiveCircus/android-emulator-runner@v2.34.0
+      with:
+        api-level: 34
+        avd-name: my_avd
+        target: google_apis
+        arch: x86_64
+      script: |
         . /opt/rfwaio/linux/set_robotenv.sh
         $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
