@@ -284,6 +284,7 @@
 * Integrated **scikit-learn** library
 * Integrated **regex** library
 * Integrated **jupyter** and **robotkernel** library
+* Integrated all required libraries mpci: python-json-logger, influxdb-client, windows-curses, python-statemachine, reactivex
 
 **Library Replacement**
 
