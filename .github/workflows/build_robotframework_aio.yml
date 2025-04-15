@@ -272,7 +272,7 @@ jobs:
     - name: Install AEHD for windows
       shell: cmd
       run: |
-        "$RobotDevtools/Android/aehd-windows/silent_install.bat"
+        "%RobotDevtools%/Android/aehd-windows/silent_install.bat"
 
     - name: Run tests on Windows
       shell: bash
