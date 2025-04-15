@@ -268,6 +268,7 @@ jobs:
       shell: bash
       run: |
         config/tools/download_avd_packages.sh
+        "$RobotDevtools/Android/aehd-windows/silent_install.bat"
 
     - name: Run tests on Windows
       shell: bash
