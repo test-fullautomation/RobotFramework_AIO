@@ -269,6 +269,8 @@ jobs:
       shell: bash
       run: |
         config/tools/download_avd_packages.sh
+        find / -name "sdkmanager" 2>/dev/null
+        which sdkmanager
         "$ANDROID_SDK_ROOT/tools/bin/sdkmanager" --update
         "$ANDROID_SDK_ROOT/tools/bin/sdkmanager" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
         "$ANDROID_SDK_ROOT/tools/bin/sdkmanager" --licenses
