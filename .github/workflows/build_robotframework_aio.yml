@@ -270,9 +270,9 @@ jobs:
       run: |
         config/tools/download_avd_packages.sh
 
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager" --update
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager" --licenses
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager" --update
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager" --licenses
 
     - name: Run tests on Windows
       shell: bash

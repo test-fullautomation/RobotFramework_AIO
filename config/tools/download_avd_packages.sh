@@ -95,7 +95,7 @@ function packaging_android() {
 
 		echo "Downloading Android cmdline-tools"
 		download_package "Android cmdline-tools" "${download_android_cmdline_tools}" "${destDir}/${archived_android_cmdline_tools}"
-		/usr/bin/yes A | unzip "${destDir}/${archived_android_cmdline_tools}" -d .
+		/usr/bin/yes A | unzip "${destDir}/${archived_android_cmdline_tools}" -d "$ANDROID_HOME"
 		rm -rf "$destDir/${archived_android_cmdline_tools}"
 	fi
 
