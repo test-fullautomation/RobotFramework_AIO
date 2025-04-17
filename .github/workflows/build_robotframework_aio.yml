@@ -265,6 +265,9 @@ jobs:
       run: |
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
+    - name: Setup Android SDK Tools
+      uses: android-actions/setup-android@v3.2.2
+
     - name: Download and install avd package for Android self-test
       shell: bash
       run: |
