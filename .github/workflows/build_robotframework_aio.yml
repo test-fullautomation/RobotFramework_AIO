@@ -265,7 +265,7 @@ jobs:
       run: |
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    name: Setup java for Android
+    - name: Setup java for Android
       uses: actions/setup-java@v4
       with:
         java-version: '17'
