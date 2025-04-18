@@ -278,9 +278,9 @@ jobs:
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
         config/tools/download_avd_packages.sh
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --update
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --licenses
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android" --update
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android" --licenses
 
     - name: Run tests on Windows
       shell: bash
