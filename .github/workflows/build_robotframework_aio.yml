@@ -277,9 +277,13 @@ jobs:
         set SKIP_JDK_VERSION_CHECK=true
         export JAVA_HOME="C:\hostedtoolcache\windows\Java_Oracle_jdk\21\x64"
         config/tools/download_avd_packages.sh
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --update
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --licenses
+
+    - name: Download cmdline-tools
+      shell: cmd
+      run: |
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" --update
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" --licenses
 
     - name: Run tests on Windows
       shell: bash
