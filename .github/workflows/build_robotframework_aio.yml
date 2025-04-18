@@ -274,6 +274,8 @@ jobs:
     - name: Download and install avd package for Android self-test
       shell: bash
       run: |
+        echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+        echo "$JAVA_HOME/bin" >> $GITHUB_PATH
         config/tools/download_avd_packages.sh
         "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --update
         "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
