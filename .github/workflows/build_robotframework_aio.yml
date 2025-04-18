@@ -281,9 +281,9 @@ jobs:
     - name: Download cmdline-tools
       shell: cmd
       run: |
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" --update
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
-        "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/" --licenses
+        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" --update
+        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" --licenses
 
     - name: Run tests on Windows
       shell: bash
