@@ -266,10 +266,13 @@ jobs:
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
     - name: Download and install avd package for Android self-test
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: oracle
       shell: bash
       run: |
         config/tools/download_avd_packages.sh
-
         "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --update
         "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
         "C:/Program Files/RobotFramework/devtools/Android/cmdline-tools/bin/sdkmanager.bat" --licenses
