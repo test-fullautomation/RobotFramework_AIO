@@ -271,18 +271,18 @@ jobs:
         java-version: '21'
         distribution: oracle
 
+    - name: Download cmdline-tools
+      shell: cmd
+      run: |
+        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" --update
+        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+
     - name: Download and install avd package for Android self-test
       shell: bash
       run: |
         set SKIP_JDK_VERSION_CHECK=true
         export JAVA_HOME="C:\hostedtoolcache\windows\Java_Oracle_jdk\21\x64"
         config/tools/download_avd_packages.sh
-
-    - name: Download cmdline-tools
-      shell: cmd
-      run: |
-        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" --update
-        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
 
     - name: Run tests on Windows
       shell: bash
