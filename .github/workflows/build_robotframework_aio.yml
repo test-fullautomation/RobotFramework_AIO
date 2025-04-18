@@ -268,12 +268,13 @@ jobs:
     - name: Setup java for Android
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: oracle
 
     - name: Download and install avd package for Android self-test
       shell: bash
       run: |
+        set SKIP_JDK_VERSION_CHECK=true
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
         echo "$JAVA_HOME/bin" >> $GITHUB_PATH
         config/tools/download_avd_packages.sh
