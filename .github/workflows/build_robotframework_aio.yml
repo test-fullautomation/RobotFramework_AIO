@@ -274,7 +274,7 @@ jobs:
       shell: cmd
       run: |
         "C:/Program Files/RobotFramework/devtools/Android/tools/bin/avdmanager" create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device "pixel_xl"
-        "C:/Program Files/RobotFramework/devtools/Android/tools/emulator" -avd my_avd -no-window -gpu -no-snapshot -noaudio -no-boot-anim
+        "C:/Program Files/RobotFramework/devtools/Android/tools/emulator" -avd my_avd -no-window -no-snapshot -noaudio -no-boot-anim
 
     - name: Run tests on Windows
       shell: bash
