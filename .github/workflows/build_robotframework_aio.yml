@@ -265,17 +265,11 @@ jobs:
       run: |
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    - name: Setup java for Android
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: oracle
-
     - name: Download cmdline-tools
       shell: cmd
       run: |
-        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" --update
-        "%ANDROID_HOME%/cmdline-tools/bin/sdkmanager.bat" --sdk_root="%ANDROID_HOME%" "platforms;android-34" "build-tools;33.0.2" "platform-tools"
+        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/tools" --update
+        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/tools" "platform-tools"
 
     - name: Download and install avd package for Android self-test
       shell: bash
