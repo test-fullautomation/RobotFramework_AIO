@@ -231,7 +231,7 @@ jobs:
       RobotDevtools: "C:/Program Files/RobotFramework/devtools"
       ANDROID_HOME: "C:/Program Files/RobotFramework/devtools/Android"
       APPIUM_HOME: "C:/Program Files/RobotFramework/devtools/nodejs"
-      ANDROID_SDK_ROOT: "C:/Program Files/RobotFramework/devtools/Android"
+      ANDROID_SDK_ROOT: "C:/Program Files/RobotFramework/devtools/Android/"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
@@ -265,18 +265,16 @@ jobs:
       run: |
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    - name: Download cmdline-tools
-      shell: cmd
-      run: |
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/tools" --update
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager.bat" --sdk_root="C:/Program Files/RobotFramework/devtools/Android/tools" "platform-tools"
-
     - name: Download and install avd package for Android self-test
       shell: bash
       run: |
-        set SKIP_JDK_VERSION_CHECK=true
-        export JAVA_HOME="C:\hostedtoolcache\windows\Java_Oracle_jdk\21\x64"
         config/tools/download_avd_packages.sh
+
+    - name: Start avd
+      shell: cmd
+      run: |
+        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/avdmanager" create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device "pixel_xl"
+        "C:/Program Files/RobotFramework/devtools/Android/tools/emulator" -avd my_avd -no-window -gpu -no-snapshot -noaudio -no-boot-anim
 
     - name: Run tests on Windows
       shell: bash
