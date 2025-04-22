@@ -279,6 +279,7 @@ jobs:
       shell: bash
       run: |
         export ANDROID_AVD_HOME="C:/Users/runneradmin/.android/avd"
+        export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$PATH"
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
