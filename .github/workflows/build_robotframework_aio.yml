@@ -232,7 +232,6 @@ jobs:
       ANDROID_HOME: "C:/Program Files/RobotFramework/devtools/Android"
       APPIUM_HOME: "C:/Program Files/RobotFramework/devtools/nodejs"
       ANDROID_SDK_ROOT: "C:/Program Files/RobotFramework/devtools/Android"
-      ANDROID_AVD_HOME: "C:/Users/runneradmin/.android/avd"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
@@ -279,6 +278,7 @@ jobs:
     - name: Run tests on Windows
       shell: bash
       run: |
+        export ANDROID_AVD_HOME="C:/Users/runneradmin/.android/avd"
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
