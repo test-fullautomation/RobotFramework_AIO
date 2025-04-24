@@ -273,7 +273,6 @@ jobs:
     - name: Start avd
       shell: cmd
       run: |
-        "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager.bat" --list
         "C:/Program Files/RobotFramework/devtools/Android/aehd-windows/silent_install.bat"
 
     - name: Run tests on Windows
