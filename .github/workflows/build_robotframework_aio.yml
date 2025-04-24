@@ -235,6 +235,7 @@ jobs:
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
+      ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 300
 
     steps:
     - name: Support long path in git
