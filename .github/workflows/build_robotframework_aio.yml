@@ -273,6 +273,7 @@ jobs:
     - name: Start avd
       shell: cmd
       run: |
+        bcdedit /set hypervisorlaunchtype off
         "C:/Program Files/RobotFramework/devtools/Android/aehd-windows/silent_install.bat"
 
     - name: Run tests on Windows
