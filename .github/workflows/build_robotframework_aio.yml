@@ -274,7 +274,8 @@ jobs:
       shell: cmd
       run: |
         bcdedit /set hypervisorlaunchtype off
-        "C:/Program Files/RobotFramework/devtools/Android/aehd-windows/silent_install.bat"
+        echo y | "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager" "extras;intel;Hardware_Accelerated_Execution_Manager"
+        "C:/Program Files/RobotFramework/devtools/Android/extras/intel/Hardware_Accelerated_Execution_Manager/silent_install.bat"
 
     - name: Run tests on Windows
       shell: bash
