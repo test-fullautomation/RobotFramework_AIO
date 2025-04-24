@@ -270,13 +270,6 @@ jobs:
       run: |
         config/tools/download_avd_packages.sh
 
-    - name: Start avd
-      shell: cmd
-      run: |
-        bcdedit /set hypervisorlaunchtype off
-        echo y | "C:/Program Files/RobotFramework/devtools/Android/tools/bin/sdkmanager" "extras;intel;Hardware_Accelerated_Execution_Manager"
-        "C:/Program Files/RobotFramework/devtools/Android/extras/intel/Hardware_Accelerated_Execution_Manager/silent_install.bat"
-
     - name: Run tests on Windows
       shell: bash
       run: |
