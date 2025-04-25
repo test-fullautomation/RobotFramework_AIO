@@ -271,6 +271,11 @@ jobs:
       run: |
         config/tools/download_avd_packages.sh
 
+    - name: Turnoff Hyper-V
+      shell: cmd
+      run: |
+        bcdedit /set hypervisorlaunchtype off
+
     - name: Run tests on Windows
       shell: bash
       run: |
