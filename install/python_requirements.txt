@@ -118,7 +118,7 @@ scp
 # scapy
 scipy
 # Scrapy
-setuptools
+setuptools==79.0.1
 # selenium
 # service-identity
 six
