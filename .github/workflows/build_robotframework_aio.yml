@@ -374,8 +374,6 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2
-        /opt/rfwaio/devtools/nodejs/bin/appium driver list --installed
 
     - name: Run tests on Linux
       uses: ReactiveCircus/android-emulator-runner@v2.34.0
@@ -385,12 +383,13 @@ jobs:
         target: google_apis
         arch: x86_64
         script: |
-          export RobotDevtools="/opt/rfwaio/devtools"
-          export ANDROID_HOME="/opt/rfwaio/devtools/Android"
-          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/lib/node_modules"
-          export ANDROID_SDK_ROOT="/opt/rfwaio/devtools/Android/sdk"
           . /opt/rfwaio/linux/set_robotenv.sh
-          "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+          export ANDROID_HOME=/opt/rfwaio/devtools/Android
+          export APPIUM_HOME=/opt/rfwaio/devtools/nodejs/lib
+          export ANDROID_SDK_ROOT=/opt/rfwaio/devtools/Android/sdk
+          $RobotAndroidPlatformTools/adb devices
+          $RobotNodeJS/node $RobotAppium/appium driver list --installed
+          "$RobotPythonPath/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
           if [ $exit_code -ne 0 ]; then
