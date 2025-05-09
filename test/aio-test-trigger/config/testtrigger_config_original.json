@@ -169,15 +169,6 @@
                        # "LOCALCOMMANDLINE"  : ["--exclude threading"],
                        # "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
                     # }
-                    {
-                     "COMPONENTROOTPATH" : "../../../../robotframework-selftest",
-                     "TESTFOLDER"        : "testcases",
-                     "TESTTYPE"          : "ROBOT",
-                     "TESTEXECUTOR"      : "executerobottest.py",
-                     "LOGFILE"           : "../../../../robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml",
-                     "LOCALCOMMANDLINE"  : ["--variable env:Github_Action", "--exclude QConnectSelfTest", "--exclude SerialSelfTest", "--exclude DLTSelfTestApp"],
-                     "FILES_SAVE"        : "../../../../robotframework-selftest/testcases/aiotestlogfiles"
-                    }
                   ],
 
 

@@ -376,6 +376,15 @@ jobs:
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
+    - name: Run tests on Linux
+      run: |
+        . /opt/rfwaio/linux/set_robotenv.sh
+          "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+          # Get system error code from python program
+          exit_code=${PIPESTATUS[0]}
+          if [ $exit_code -ne 0 ]; then
+              exit 1
+          fi
     - name: Enable KVM group perms
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -397,7 +406,11 @@ jobs:
           export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/lib/node_modules"
           export ANDROID_SDK_ROOT="/opt/rfwaio/devtools/Android/sdk"
           . /opt/rfwaio/linux/set_robotenv.sh
-          "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+          "/opt/rfwaio/python3/bin/python3" \
+          "/home/runner/work/RobotFramework_AIO/robotframework-selftest/testcases/executerobottest.py" \
+          --logfile="/home/runner/work/RobotFramework_AIO/robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml" \
+          --robotcommandline="--variable env:Github_Action \
+          --exclude QConnectSelfTest --exclude SerialSelfTest --exclude DLTSelfTestApp" | tee console_log.txt
           # Get system error code from python program
           exit_code=${PIPESTATUS[0]}
           if [ $exit_code -ne 0 ]; then
