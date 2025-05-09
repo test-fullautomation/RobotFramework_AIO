@@ -120,6 +120,7 @@ function download_package(){
 	package_name=$1
 	package_url=$2
 	package_out=$3
+	alternative_url=$4
 
 	retry_counter=0
 	max_retries=5
@@ -127,17 +128,30 @@ function download_package(){
 
 	echo curl $proxy_args "$package_url" -o "$package_out"
 	while [[ "$retry_counter" -lt "$max_retries" && "$success" == "false" ]];do
-		curl $proxy_args -L -k "$package_url" -o "$package_out"
+		response=$(curl $proxy_args -L -k "$package_url" -o "$package_out" -w "\n%{http_code}")
+		http_status=$(echo "$response" | tail -n1)
 
-		if [ $? -eq 0 ]; then
+		if [[ $? -eq 0 && "$http_status" -eq 200 ]]; then
 			success=true
 			goodmsg "Successfully downloaded $package_name"
 		else
-			((retry_counter++))
-			echo "Failed to download $package_url (attempt: $retry_counter)"
-			sleep 1
-			if [ "$use_cntlm" == "Yes" ]; then
-				restart_cntlm
+			if [[ -n $alternative_url ]]; then
+				response=$(curl $proxy_args -L -k "$alternative_url" -o "$package_out" -w "\n%{http_code}")
+				http_status=$(echo "$response" | tail -n1)
+
+				if [[ $? -eq 0 && "$http_status" -eq 200 ]]; then
+					success=true
+					goodmsg "Successfully downloaded $package_name"
+				fi
+			fi
+
+			if [ "$success" == "false" ]; then
+				((retry_counter++))
+				echo "Failed to download $package_url (attempt: $retry_counter)"
+				sleep 1
+				if [ "$use_cntlm" == "Yes" ]; then
+					restart_cntlm
+				fi
 			fi
 		fi
 	done
@@ -195,6 +209,8 @@ function packaging_vscode() {
 		if [ "$name" == "debugpy" ]; then
 			url=https://open-vsx.org/api/${publisher}/${name}/${platform}/${version}/file/${publisher}.${name}-${version}@${platform}.vsix
 		fi
+
+		microsoft_url=https://${publisher}.gallery.vsassets.io/_apis/public/gallery/PUBLISHER/${publisher}/extension/${name}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
 		our_url=https://github.com/${publisher}/${name}/releases/download/${name}-${version}/${name}.vsix
 
 		if [[ -n "$name" ]]; then
@@ -203,7 +219,7 @@ function packaging_vscode() {
             	download_package "${name}-${version} Extension" "$our_url" "$sourceDir/${name}-${version}.vsix"
         	# Download the Open-VSX Community extension.
 			elif [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
-				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix"
+				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix" "$microsoft_url"
 			fi
 
 			"$sourceDir/vscodium/bin/codium" --install-extension "${sourceDir}/${name}-${version}.vsix" --user-data-dir "$sourceDir/vscodium/data"

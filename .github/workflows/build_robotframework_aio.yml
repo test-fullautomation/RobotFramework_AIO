@@ -123,14 +123,14 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         run: |
           cd ../robotframework-documentation
-          doc_branch=automation/task/update-rfw-documents
+          doc_branch=automation/task/update-rfw-documents-${{ matrix.version }}
           git config user.email "huavanthong14@gmail.com"
           git config user.name "Thong Hua"
           git checkout -b $doc_branch
           git remote add doc-repo https://${{ secrets.PAT_THONG }}@github.com/test-fullautomation/robotframework-documentation.git
-          git add RobotFrameworkAIO/Components.html
+          git add RobotFrameworkAIO/Components*.html
           git add RobotFrameworkAIO/RobotFrameworkAIO_Reference*.pdf
-          git add RobotFrameworkAIO/Components.rst
+          git add RobotFrameworkAIO/Components*.rst
           git commit -m "Auto update documents of ${{ matrix.version }} version in robotframework-documents"
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
@@ -228,9 +228,14 @@ jobs:
       RobotPythonPath: "C:/Program Files/RobotFramework/python3"
       RobotTutorialPath: "C:/RobotTest/tutorial"
       RobotPythonSitePackagesPath: "C:/Program Files/RobotFramework/python3/Lib/site-packages"
+      RobotDevtools: "C:/Program Files/RobotFramework/devtools"
+      ANDROID_HOME: "C:/Program Files/RobotFramework/devtools/Android"
+      APPIUM_HOME: "C:/Program Files/RobotFramework/devtools/nodejs"
+      ANDROID_SDK_ROOT: "C:/Program Files/RobotFramework/devtools/Android"
       GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
+      ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 300
 
     steps:
     - name: Support long path in git
@@ -261,9 +266,21 @@ jobs:
       run: |
         "$RobotPythonPath/python" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
+    - name: Download and install avd package for Android self-test
+      shell: bash
+      run: |
+        config/tools/download_avd_packages.sh
+
+    - name: Turnoff Hyper-V
+      shell: cmd
+      run: |
+        bcdedit /set hypervisorlaunchtype off
+
     - name: Run tests on Windows
       shell: bash
       run: |
+        export ANDROID_AVD_HOME="C:/Users/runneradmin/.android/avd"
+        export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$PATH"
         "$RobotPythonPath/python" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
         # Get system error code from python program
         exit_code=${PIPESTATUS[0]}
@@ -324,6 +341,7 @@ jobs:
     env:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
+      RobotDevtools: "/opt/rfwaio/devtools"
 
     steps:
     - name: Checkout source
@@ -351,15 +369,33 @@ jobs:
           . /opt/rfwaio/linux/set_robotenv.sh
           "$RobotPythonPath/python3" test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee console_log.txt
 
-    - name: Run tests on Linux
+    - name: Enable KVM group perms
       run: |
-        . /opt/rfwaio/linux/set_robotenv.sh
-        $RobotPythonPath/python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
-        # Get system error code from python program
-        exit_code=${PIPESTATUS[0]}
-        if [ $exit_code -ne 0 ]; then
-            exit 1
-        fi
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+        /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2
+        /opt/rfwaio/devtools/nodejs/bin/appium driver list --installed
+
+    - name: Run tests on Linux
+      uses: ReactiveCircus/android-emulator-runner@v2.34.0
+      with:
+        api-level: 34
+        avd-name: my_avd
+        target: google_apis
+        arch: x86_64
+        script: |
+          export RobotDevtools="/opt/rfwaio/devtools"
+          export ANDROID_HOME="/opt/rfwaio/devtools/Android"
+          export APPIUM_HOME="/opt/rfwaio/devtools/nodejs/lib/node_modules"
+          export ANDROID_SDK_ROOT="/opt/rfwaio/devtools/Android/sdk"
+          . /opt/rfwaio/linux/set_robotenv.sh
+          "/opt/rfwaio/python3/bin/python3" test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee console_log.txt
+          # Get system error code from python program
+          exit_code=${PIPESTATUS[0]}
+          if [ $exit_code -ne 0 ]; then
+              exit 1
+          fi
 
     - name: Run tests coverage on Linux
       run: |
@@ -391,7 +427,7 @@ jobs:
           ${{ runner.workspace }}/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/**/*/static_code_report/*
-  
+
   entire-artifacts:
     name: Entire Artifacts
     runs-on: ubuntu-latest
@@ -415,7 +451,7 @@ jobs:
         name: entire-artifacts
         path: |
           ${{ runner.workspace }}/**/*/entire-artifacts/*
-  
+
   release:
     name: Release AIO
     runs-on: ubuntu-latest
