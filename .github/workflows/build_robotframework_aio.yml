@@ -386,8 +386,8 @@ jobs:
         echo "ANDROID_AVD_HOME=$HOME/.android/avd" >> $GITHUB_ENV
         echo "Installing sdk ..."
         echo "y" | sdkmanager "system-images;android-30;google_apis;x86_64"
-        echo "Creating 'test' avd ..."
-        echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
+        echo "Creating 'my_avd' avd ..."
+        echo "no" | avdmanager create avd -n my_avd -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
         # Add emulator and tools to PATH
         echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
@@ -401,7 +401,7 @@ jobs:
         emulator -list-avds
 
         # Start emulator
-        emulator -avd test -no-audio -no-window -no-boot-anim &
+        emulator -avd my_avd -no-audio -no-window -no-boot-anim &
         adb wait-for-device
         # Wait until system boot is complete
         boot_completed=""
