@@ -373,6 +373,8 @@ function build_debian()
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Appium-Inspector.AppImage
 	cp ./config/tools/appium.sh ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/appium
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Android/tools/*
+	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/devtools/Android/tools/bin/*
 
 	# initial script to setup environment for multiple users
 	cp ./config/build/dpkg_build/postinst.sh ./output_lx/${PACK_NAME}/usr/local/bin/initRobotFrameworkAIO.sh

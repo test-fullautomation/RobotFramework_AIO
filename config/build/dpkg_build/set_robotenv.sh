@@ -14,7 +14,8 @@ export RobotDevtools=/opt/rfwaio/devtools
 export RobotNodeJS=/opt/rfwaio/devtools/nodejs/bin
 export RobotAppium=/opt/rfwaio/devtools/nodejs/bin
 export RobotAndroidPlatformTools=/opt/rfwaio/devtools/Android/platform-tools
-
+export ANDROID_HOME=${ANDROID_HOME:=/opt/rfwaio/devtools/Android}
+export APPIUM_HOME=${APPIUM_HOME:=/opt/rfwaio/devtools/nodejs/lib}
 
 # Check if JAVA_HOME is already set
 if [ -z "$JAVA_HOME" ]; then
