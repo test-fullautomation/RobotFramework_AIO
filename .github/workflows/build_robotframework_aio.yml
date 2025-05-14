@@ -384,16 +384,19 @@ jobs:
         . /opt/rfwaio/linux/set_robotenv.sh
         echo $ANDROID_HOME
 
-        # Create Android AVD directory
+        # Setting Android environment to AIO Devtools
         mkdir -p $HOME/.android/avd
         export ANDROID_AVD_HOME=$HOME/.android/avd
         echo "ANDROID_AVD_HOME=$HOME/.android/avd" >> $GITHUB_ENV
+        export ANDROID_HOME="$RobotDevtools/Android"
+        export ANDROID_SDK_ROOT="$RobotDevtoolsAndroid"
+        echo "ANDROID_HOME=$RobotDevtools/Android" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=$RobotDevtools/Android" >> $GITHUB_ENV
 
         # Add emulator and tools to PATH
         echo "$RobotDevtools/Android/emulator" >> $GITHUB_PATH
         echo "$RobotDevtools/Android/platform-tools" >> $GITHUB_PATH
         echo "$RobotDevtools/Android/cmdline-tools/bin" >> $GITHUB_PATH
-
 
         # Reload PATH in current shell
         export PATH=$PATH:$RobotDevtools/Android/emulator:$RobotDevtools/Android/platform-tools:$RobotDevtools/Android/cmdline-tools/bin
@@ -401,6 +404,8 @@ jobs:
 
         echo "Installing sdk ..."
         echo "y" | sdkmanager --sdk_root=$RobotDevtools/Android "system-images;android-30;google_apis;x86_64"
+        echo "Available SDK:"
+        sdkmanager --sdk_root=$RobotDevtools/Android --list
         echo "Creating 'my_avd' avd ..."
         echo "no" | avdmanager create avd -n my_avd -k "system-images;android-30;google_apis;x86_64" --device "pixel"
 
@@ -432,7 +437,7 @@ jobs:
     - name: Run tests on Linux
       run: |
         . /opt/rfwaio/linux/set_robotenv.sh
-        # export ANDROID_SDK_ROOT="/opt/rfwaio/devtools/Android/sdk"
+        # export ANDROID_SDK_ROOT="/opt/rfwaio/devtools/Android"
 
         # Verify Android ADV and Appium
         $RobotAndroidPlatformTools/adb devices
