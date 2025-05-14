@@ -271,18 +271,6 @@ jobs:
       run: |
         config/tools/download_avd_packages.sh
 
-    - name: Turnoff Hyper-V
-      shell: cmd
-      run: |
-        bcdedit /set hypervisorlaunchtype off
-        "C:\Program Files\RobotFramework\devtools\Android\tools\bin\avdmanager" create avd -n my_avd -k "system-images;android-34;google_apis;x86_64" --force --device "pixel_xl"
-        "C:\Program Files\RobotFramework\devtools\Android\emulator\emulator" -avd my_avd -accel auto -gpu swiftshader_indirect -verbose
-
-    - name: Turnoff Hyper-V
-      shell: cmd
-      run: |
-        "C:\Program Files\RobotFramework\devtools\Android\emulator\emulator" -avd my_avd -accel auto -gpu swiftshader_indirect -verbose
-
     - name: Run tests on Windows
       shell: bash
       run: |
