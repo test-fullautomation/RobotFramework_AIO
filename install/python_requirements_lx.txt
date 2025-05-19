@@ -17,7 +17,7 @@ configparser
 # constantly
 # cssselect
 # Cython
-cryptography
+cryptography==43.0.1
 cycler
 decorator
 doipclient
