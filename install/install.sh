@@ -313,7 +313,7 @@ function packaging_android() {
 
 
 	mkdir $destDir/devtools/Android
-	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools/latest
+	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools/
 	# download Android SDK Tools
 	echo "Downloading Android SDK Tools"
 	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
@@ -321,9 +321,8 @@ function packaging_android() {
 
 	echo "Downloading Android Commandline Tools"
 	download_package "Android Commandline Tools" ${download_android_commandline_tools} ${sourceDir}/${archived_android_cmdline_tools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_cmdline_tools} -d $destDir/devtools/Android/sdk/cmdline-tools/latest/
-	mv $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools/* $destDir/devtools/Android/sdk/cmdline-tools/latest/
-	rm -rf $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_cmdline_tools} -d $destDir/devtools/Android/sdk/cmdline-tools/
+	mv $destDir/devtools/Android/sdk/cmdline-tools/cmdline-tools/ $destDir/devtools/Android/sdk/cmdline-tools/latest/
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
