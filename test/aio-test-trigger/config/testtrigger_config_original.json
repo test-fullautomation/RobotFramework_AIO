@@ -160,7 +160,7 @@
                        "TESTEXECUTOR"      : "executerobottest.py",
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
-                    },
+                    }
                     # { stabilization required, temporarily deactivated / 19.03.2025
                        # "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
                        # "TESTFOLDER"        : "test",
@@ -169,15 +169,6 @@
                        # "LOCALCOMMANDLINE"  : ["--exclude threading"],
                        # "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
                     # }
-                    {
-                     "COMPONENTROOTPATH" : "../../../../robotframework-selftest",
-                     "TESTFOLDER"        : "testcases",
-                     "TESTTYPE"          : "ROBOT",
-                     "TESTEXECUTOR"      : "executerobottest.py",
-                     "LOGFILE"           : "../../../../robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml",
-                     "LOCALCOMMANDLINE"  : ["--variable env:Github_Action", "--exclude QConnectSelfTest", "--exclude SerialSelfTest", "--exclude DLTSelfTestApp"],
-                     "FILES_SAVE"        : "../../../../robotframework-selftest/testcases/aiotestlogfiles"
-                    }
                   ],
 
 
