@@ -320,7 +320,7 @@ function packaging_android() {
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android
 
 	echo "Downloading Android Commandline Tools"
-	download_package "Android Commandline Tools" ${download_android_commandline_tools} ${sourceDir}/${archived_android_tools}
+	download_package "Android Commandline Tools" ${download_android_commandline_tools} ${sourceDir}/${archived_android_cmdline_tools}
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_cmdline_tools} -d $destDir/devtools/Android/sdk/cmdline-tools/latest/
 	mv $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools/* $destDir/devtools/Android/sdk/cmdline-tools/latest/
 	rm -rf $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools
