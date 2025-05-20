@@ -247,6 +247,7 @@ function packaging_pandoc_windows() {
 function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
+	download_android_commandline_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-7302050_latest.zip   # Compatible with Java 11
 	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
@@ -254,6 +255,7 @@ function packaging_android() {
 	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
 	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${VERSION_APPIUM_INSPECTOR}/Appium-Inspector-${os}-${VERSION_APPIUM_INSPECTOR}${arch}.${appium_inspector_ext}
 
+	archived_android_cmdline_tools=cmdline_tools.zip
 	archived_android_tools=android-tools.zip
 	archived_android_emulator=android-emulator.zip
 	archived_android_buildtools=android-buildtools.zip
@@ -311,10 +313,17 @@ function packaging_android() {
 
 
 	mkdir $destDir/devtools/Android
+	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools/latest
 	# download Android SDK Tools
 	echo "Downloading Android SDK Tools"
 	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
 	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android
+
+	echo "Downloading Android Commandline Tools"
+	download_package "Android Commandline Tools" ${download_android_commandline_tools} ${sourceDir}/${archived_android_tools}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_cmdline_tools} -d $destDir/devtools/Android/sdk/cmdline-tools/latest/
+	mv $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools/* $destDir/devtools/Android/sdk/cmdline-tools/latest/
+	rm -rf $destDir/devtools/Android/sdk/cmdline-tools/latest/cmdline-tools
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
