@@ -16,7 +16,7 @@ fi
 
 aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
 apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
-
+linux_apispath=$(realpath "$ANDROID_HOME"/sdk/system-images/android-34/google_apis)
 use_cntlm="No"
 
 #
@@ -104,6 +104,9 @@ function packaging_android() {
 	download_package "Android Google APIs" "${download_android_google_apis}" "${destDir}/${archived_android_google_apis}"
 	if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${apispath}"
+		rm -rf "$destDir/${archived_android_google_apis}"
+	else
+		/usr/bin/yes A | unzip "${destDir}/${archived_android_google_apis}" -d "${linux_apispath}"
 		rm -rf "$destDir/${archived_android_google_apis}"
 	fi
 }
