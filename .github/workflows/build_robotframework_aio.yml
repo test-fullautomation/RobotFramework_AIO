@@ -361,7 +361,7 @@ jobs:
 
     - name: Download and install avd package for Android self-test
       run: |
-        ./config/tools/download_avd_packages.sh
+        sh ./config/tools/download_avd_packages.sh
         \yes | "$RobotDevtools"/Android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
         "$RobotDevtools"/Android/sdk/cmdline-tools/latest/bin/sdkmanager --install emulator
 
