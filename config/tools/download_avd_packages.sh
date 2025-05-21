@@ -4,22 +4,26 @@
 #setlocal enabledelayedexpansion
 mypath=$(realpath $(dirname $0))
 destDir=$(realpath "$ANDROID_HOME")
-
+aehdpath=$(realpath $(dirname $0))
+apispath=$(realpath $(dirname $0))
+linux_apispath=$(realpath $(dirname $0))
 UNAME=$(uname)
 if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	mkdir -p "$ANDROID_HOME"/platforms
 	mkdir -p "$ANDROID_HOME"/aehd-windows
 	mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
-elif [ "$UNAME" == "Linux" ] ; then
+
+	aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
+	apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
+elif [[ "$UNAME" == "Linux" ]] ; then
 	mkdir -p "$ANDROID_HOME"/sdk/platforms
 	mkdir -p "$ANDROID_HOME"/sdk/system-images/android-34/google_apis
+
+	linux_apispath=$(realpath "$ANDROID_HOME"/sdk/system-images/android-34/google_apis)
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
 
-aehdpath=$(realpath "$ANDROID_HOME"/aehd-windows)
-apispath=$(realpath "$ANDROID_HOME"/system-images/android-34/google_apis)
-linux_apispath=$(realpath "$ANDROID_HOME"/sdk/system-images/android-34/google_apis)
 use_cntlm="No"
 
 #
