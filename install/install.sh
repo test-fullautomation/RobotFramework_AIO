@@ -325,7 +325,6 @@ function packaging_android() {
 	mv $destDir/devtools/Android/sdk/cmdline-tools/cmdline-tools/ $destDir/devtools/Android/sdk/cmdline-tools/latest/
 	ls $destDir/devtools/Android/sdk
 	ls $destDir/devtools/Android/sdk/cmdline-tools/latest
-	$destDir/devtools/Android/sdk/cmdline-tools/latest/bin/sdkmanager emulator
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
