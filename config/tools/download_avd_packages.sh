@@ -10,6 +10,9 @@ if [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	mkdir -p "$ANDROID_HOME"/platforms
 	mkdir -p "$ANDROID_HOME"/aehd-windows
 	mkdir -p "$ANDROID_HOME"/system-images/android-34/google_apis
+elif [ "$UNAME" == "Linux" ] ; then
+	mkdir -p "$ANDROID_HOME"/sdk/platforms
+	mkdir -p "$ANDROID_HOME"/sdk/system-images/android-34/google_apis
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
