@@ -359,6 +359,10 @@ jobs:
       with:
         name: linux-package-${{ matrix.version }}
 
+    - name: Download and install avd package for Android self-test
+      run: |
+        . config/tools/download_avd_packages.sh
+
     - name: Install on Linux
       run: |
         sudo apt-get update
