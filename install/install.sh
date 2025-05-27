@@ -179,6 +179,27 @@ function packaging_vscode() {
 		vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 		if [[ -f "$vscodium_setting_file" ]]; then
 			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$vscodium_setting_file"
+			# add workbench.colorCustomizations for terminal colors
+			if grep -q '"workbench.colorCustomizations"' "$vscodium_setting_file"; then
+				# replace existing workbench.colorCustomizations
+				sed -i -E '/"workbench.colorCustomizations":\s*\{[^}]*\}/c\
+				"workbench.colorCustomizations": {\
+					"terminal.integrated.customGlyphs": true,\
+					"terminal.ansiMagenta": "#C71585",\
+					"terminal.ansiBrightMagenta": "#FF69B4",\
+					"terminal.ansiRed": "#FF4040",\
+					"terminal.ansiBrightRed": "#FF0000"\
+				}' "$vscodium_setting_file"
+			else
+				# append workbench.colorCustomizations before closing brace
+				sed -i -E '$ s/}/    "workbench.colorCustomizations": {\
+					"terminal.integrated.customGlyphs": true,\
+					"terminal.ansiMagenta": "#C71585",\
+					"terminal.ansiBrightMagenta": "#FF69B4",\
+					"terminal.ansiRed": "#FF4040",\
+					"terminal.ansiBrightRed": "#FF0000"\
+				}\n}/' "$vscodium_setting_file"
+			fi
 		else
 			echo "Vscodium setting file '$vscodium_setting_file' does not exist"
 		fi
