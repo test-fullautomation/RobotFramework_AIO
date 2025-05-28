@@ -188,22 +188,22 @@ function packaging_vscode() {
 	if grep -q '"workbench.colorCustomizations"' "$vscodium_setting_file"; then
 		echo "Replace existing workbench.colorCustomizations"
 		sed -i -E '/"workbench.colorCustomizations":\s*\{[^}]*\}/c\
-		"workbench.colorCustomizations": {\
-			"terminal.integrated.customGlyphs": true,\
-			"terminal.ansiMagenta": "#C71585",\
-			"terminal.ansiBrightMagenta": "#FF69B4",\
-			"terminal.ansiRed": "#FF4040",\
-			"terminal.ansiBrightRed": "#FF0000"\
-		},' "$vscodium_setting_file"
+    "workbench.colorCustomizations": {\
+        "terminal.integrated.customGlyphs": true,\
+        "terminal.ansiMagenta": "#C71585",\
+        "terminal.ansiBrightMagenta": "#FF69B4",\
+        "terminal.ansiRed": "#FF4040",\
+        "terminal.ansiBrightRed": "#FF0000"\
+    },' "$vscodium_setting_file"
 	else
 		echo "append workbench.colorCustomizations before closing brace"
 		sed -i -E '$ s/}/    "workbench.colorCustomizations": {\
-			"terminal.integrated.customGlyphs": true,\
-			"terminal.ansiMagenta": "#C71585",\
-			"terminal.ansiBrightMagenta": "#FF69B4",\
-			"terminal.ansiRed": "#FF4040",\
-			"terminal.ansiBrightRed": "#FF0000"\
-		},\n}/' "$vscodium_setting_file"
+        "terminal.integrated.customGlyphs": true,\
+        "terminal.ansiMagenta": "#C71585",\
+        "terminal.ansiBrightMagenta": "#FF69B4",\
+        "terminal.ansiRed": "#FF4040",\
+        "terminal.ansiBrightRed": "#FF0000"\
+    },\n}/' "$vscodium_setting_file"
 	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
