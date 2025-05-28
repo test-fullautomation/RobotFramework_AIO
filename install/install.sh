@@ -252,9 +252,7 @@ function packaging_android() {
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
 	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
 	download_appium_inspector=https://github.com/appium/appium-inspector/releases/download/v${VERSION_APPIUM_INSPECTOR}/Appium-Inspector-${os}-${VERSION_APPIUM_INSPECTOR}${arch}.${appium_inspector_ext}
-	download_android_google_apis=https://dl.google.com/android/repository/sys-img/google_apis/x86_64-34_r13.zip
 
-	archived_android_google_apis=x86_64.zip
 	archived_android_tools=android-tools.zip
 	archived_android_emulator=android-emulator.zip
 	archived_android_buildtools=android-buildtools.zip
