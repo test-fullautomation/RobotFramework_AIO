@@ -330,10 +330,6 @@ function packaging_android() {
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
 	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android/sdk
-
-	echo "Download Android Image x86_64"
-	download_package "Android Image x86_64" ${download_android_google_apis} ${sourceDir}/${archived_android_google_apis}
-	usr/bin/yes A | unzip ${sourceDir}/${archived_android_google_apis} -d $destDir/devtools/Android/sdk/system-images/android-34/google_apis
 }
 
 #
