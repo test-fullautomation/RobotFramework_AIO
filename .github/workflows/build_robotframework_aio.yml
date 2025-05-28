@@ -371,6 +371,11 @@ jobs:
           if [ $exit_code -ne 0 ]; then
               exit 1
           fi
+
+    - name: Download and install avd package for Android self-test
+      run: |
+        . "/home/runner/work/RobotFramework_AIO/RobotFramework_AIO/config/tools/download_avd_packages.sh"
+
     - name: Enable KVM group perms
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
