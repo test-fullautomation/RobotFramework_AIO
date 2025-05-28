@@ -311,13 +311,14 @@ function packaging_android() {
 	fi
 
 
-	mkdir -p $destDir/devtools/Android/sdk/latest
+	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools
 	mkdir -p $destDir/devtools/Android/sdk/platforms
 	mkdir -p $destDir/devtools/Android/sdk/system-images/android-34/google_apis
 	# download Android SDK Tools
 	echo "Downloading Android Cmdline Tools"
 	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android/sdk/latest
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android/sdk/cmdline-tools
+	mv $destDir/devtools/Android/sdk/cmdline-tools/cmdline-tools $destDir/devtools/Android/sdk/cmdline-tools/latest
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
