@@ -325,8 +325,8 @@ function packaging_android() {
 
 	echo "Downloading Android Build Tools"
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools/sdk
-	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${VERSION_BUILD_TOOL}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/sdk
+	mv $destDir/devtools/Android/sdk/build-tools/android-* $destDir/devtools/Android/sdk/build-tools/${VERSION_BUILD_TOOL}
 
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
