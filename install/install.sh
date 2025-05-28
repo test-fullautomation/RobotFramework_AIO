@@ -194,7 +194,7 @@ function packaging_vscode() {
 			"terminal.ansiBrightMagenta": "#FF69B4",\
 			"terminal.ansiRed": "#FF4040",\
 			"terminal.ansiBrightRed": "#FF0000"\
-		}' "$vscodium_setting_file"
+		},' "$vscodium_setting_file"
 	else
 		echo "append workbench.colorCustomizations before closing brace"
 		sed -i -E '$ s/}/    "workbench.colorCustomizations": {\
@@ -203,7 +203,7 @@ function packaging_vscode() {
 			"terminal.ansiBrightMagenta": "#FF69B4",\
 			"terminal.ansiRed": "#FF4040",\
 			"terminal.ansiBrightRed": "#FF0000"\
-		}\n}/' "$vscodium_setting_file"
+		},\n}/' "$vscodium_setting_file"
 	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
