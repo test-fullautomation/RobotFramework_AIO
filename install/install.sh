@@ -310,6 +310,7 @@ function packaging_android() {
 
 
 	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools
+	mkdir -p $destDir/devtools/Android/sdk/build-tools
 	mkdir -p $destDir/devtools/Android/sdk/platforms
 	mkdir -p $destDir/devtools/Android/sdk/system-images/android-34/google_apis
 	# download Android SDK Tools
@@ -324,7 +325,7 @@ function packaging_android() {
 
 	echo "Downloading Android Build Tools"
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/sdk
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/sdk/build-tools
 	mv $destDir/devtools/Android/sdk/build-tools/android-* $destDir/devtools/Android/sdk/build-tools/${VERSION_BUILD_TOOL}
 
 	echo "Download Android Emulator"
