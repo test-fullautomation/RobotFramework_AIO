@@ -8,7 +8,7 @@ attrs
 asciidoxy
 # autobahn
 # Automat
-bcrypt
+bcrypt==4.2.1
 cchardet==2.2.0a2
 certifi
 cffi
