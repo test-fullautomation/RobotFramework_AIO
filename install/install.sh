@@ -174,14 +174,36 @@ function packaging_vscode() {
 	mkdir "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
 
+	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 	# add proxy configuration in vscodium setting if given
 	if [ "$VSCODIUM_PROXY" != "" ] ; then
-		vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 		if [[ -f "$vscodium_setting_file" ]]; then
 			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$vscodium_setting_file"
 		else
 			echo "Vscodium setting file '$vscodium_setting_file' does not exist"
 		fi
+	fi
+
+	echo "Add workbench.colorCustomizations for terminal colors"
+	if grep -q '"workbench.colorCustomizations"' "$vscodium_setting_file"; then
+		echo "Replace existing workbench.colorCustomizations"
+		sed -i -E '/"workbench.colorCustomizations":\s*\{[^}]*\}/c\
+    "workbench.colorCustomizations": {\
+        "terminal.integrated.customGlyphs": true,\
+        "terminal.ansiMagenta": "#C71585",\
+        "terminal.ansiBrightMagenta": "#FF69B4",\
+        "terminal.ansiRed": "#FF4040",\
+        "terminal.ansiBrightRed": "#FF0000"\
+    },' "$vscodium_setting_file"
+	else
+		echo "append workbench.colorCustomizations before closing brace"
+		sed -i -E '$ s/}/    "workbench.colorCustomizations": {\
+        "terminal.integrated.customGlyphs": true,\
+        "terminal.ansiMagenta": "#C71585",\
+        "terminal.ansiBrightMagenta": "#FF69B4",\
+        "terminal.ansiRed": "#FF4040",\
+        "terminal.ansiBrightRed": "#FF0000"\
+    },\n}/' "$vscodium_setting_file"
 	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
