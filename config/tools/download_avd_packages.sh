@@ -76,10 +76,9 @@ function download_package(){
 function packaging_android() {
 	download_android_emulator_hypervisor_driver=https://github.com/google/android-emulator-hypervisor-driver/releases/download/v2.2/aehd-windows_v2_2_0.zip
 	download_android_google_apis=https://dl.google.com/android/repository/sys-img/google_apis/x86_64-34_r13.zip
-	# download_android_cmdline_tools=https://dl.google.com/android/repository/commandlinetools-win-13114758_latest.zip
+
 	archived_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
 	archived_android_google_apis=x86_64-34_r13.zip
-	# archived_android_cmdline_tools=commandlinetools-win-13114758_latest.zip
 	echo "Packaging Android ..."
 
 	npm_proxy_args=""
@@ -92,11 +91,6 @@ function packaging_android() {
 		download_package "AEHD" "${download_android_emulator_hypervisor_driver}" "${destDir}/${archived_android_emulator_hypervisor_driver}"
 		/usr/bin/yes A | unzip "${destDir}/${archived_android_emulator_hypervisor_driver}" -d "${aehdpath}"
 		rm -rf "$destDir/${archived_android_emulator_hypervisor_driver}"
-
-		# echo "Downloading Android cmdline-tools"
-		# download_package "Android cmdline-tools" "${download_android_cmdline_tools}" "${destDir}/${archived_android_cmdline_tools}"
-		# /usr/bin/yes A | unzip "${destDir}/${archived_android_cmdline_tools}" -d "$ANDROID_HOME"
-		# rm -rf "$destDir/${archived_android_cmdline_tools}"
 	fi
 
 	echo "Downloading Android Google APIs"
