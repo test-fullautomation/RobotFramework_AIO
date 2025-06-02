@@ -268,9 +268,8 @@ function packaging_pandoc_windows() {
 
 function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
-	download_android_tools=https://dl.google.com/android/repository/sdk-tools-${os}-4333796.zip
-	# download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-11076708_latest.zip
-	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
+	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-6858069_latest.zip # Compatible with java 11
+	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-13402964.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
 	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
@@ -332,24 +331,28 @@ function packaging_android() {
 	fi
 
 
-	mkdir $destDir/devtools/Android
+	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools
+	mkdir -p $destDir/devtools/Android/sdk/build-tools
+	mkdir -p $destDir/devtools/Android/sdk/platforms
+	mkdir -p $destDir/devtools/Android/sdk/system-images/android-34/google_apis
 	# download Android SDK Tools
-	echo "Downloading Android SDK Tools"
+	echo "Downloading Android Cmdline Tools"
 	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android/sdk/cmdline-tools
+	mv $destDir/devtools/Android/sdk/cmdline-tools/cmdline-tools $destDir/devtools/Android/sdk/cmdline-tools/latest
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android/sdk
 
 	echo "Downloading Android Build Tools"
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
-	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${VERSION_BUILD_TOOL}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/sdk/build-tools
+	mv $destDir/devtools/Android/sdk/build-tools/android-* $destDir/devtools/Android/sdk/build-tools/${VERSION_BUILD_TOOL}
 
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
-	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
+	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android/sdk
 }
 
 #
