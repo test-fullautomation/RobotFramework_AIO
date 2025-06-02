@@ -1,7 +1,7 @@
 # External Python modules required to be installed for RobotFramework AIO
 # See atest/README.rst for more information.
 
-robotframework==7.1.1
+robotframework~=7.3.0
 cython
 cchardet==2.2.0a2
 #Appium-Python-Client
