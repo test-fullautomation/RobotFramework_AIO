@@ -247,7 +247,7 @@ function packaging_pandoc_windows() {
 function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
 	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-6858069_latest.zip # Compatible with java 11
-	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-11331898.zip
+	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-13402964.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
 	download_nodejs=https://nodejs.org/dist/v${VERSION_NODEJS}/node-v${VERSION_NODEJS}-${os_short}-x64.${nodejs_ext}
