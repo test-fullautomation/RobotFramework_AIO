@@ -390,7 +390,7 @@ function packaging_python_windows() {
 	# Workaround for pyfranca
 	$destDir/python3/python.exe -m pip install pyfranca
 	# Copy file to handle traceback color python
-	cp $mypath/../config/python/ $destDir/python3/Lib/site-packages/
+	cp -r $mypath/../config/python/ $destDir/python3/Lib/site-packages/
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
@@ -417,7 +417,7 @@ function packaging_python_linux() {
 	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	# Copy file to handle traceback color python
-	cp $mypath/../config/python/ $destDir/python3lx/bin/python3/lib/python3.13/site-packages
+	cp -r $mypath/../config/python/ $destDir/python3lx/bin/python3/lib/python3.13/site-packages
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
