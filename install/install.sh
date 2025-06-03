@@ -417,7 +417,7 @@ function packaging_python_linux() {
 	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
 	#fi
 	# Copy file to handle traceback color python
-	cp -r $mypath/../config/python/ $destDir/python3/lib/python3.13/site-packages
+	cp -r $mypath/../config/python/ $destDir/python/lib/python3.13/site-packages
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
