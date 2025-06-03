@@ -418,7 +418,7 @@ function packaging_python_linux() {
 	#fi
 	# Copy file to handle traceback color python
 	ls /home/runner/work/RobotFramework_AIO/
-	cp -r $mypath/../config/python/ $destDir/python/lib/python3.13/site-packages
+	cp -r $mypath/../config/python/ $destDir/python3lx/lib/python3.13/site-packages
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
