@@ -61,6 +61,8 @@ function update_android_related(){
    cp /opt/rfwaio/linux/appiumInspector.desktop ${APPS_PATH}/appiumInspector.desktop
    update_owner ${APPS_PATH}/appiumInspector.desktop
    chmod +x ${APPS_PATH}/appiumInspector.desktop
+
+   allow_user_group_permissions /opt/rfwaio/devtools/Android
 }
 
 function update_vscodium_related(){
