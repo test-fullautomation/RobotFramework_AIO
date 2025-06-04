@@ -390,7 +390,7 @@ function packaging_python_windows() {
 	# Workaround for pyfranca
 	$destDir/python3/python.exe -m pip install pyfranca
 	# Copy file to handle traceback color python
-	cp -rv $mypath/../config/python/ $destDir/python3/Lib/site-packages/
+	cp -rv $mypath/../config/python/* $destDir/python3/Lib/site-packages/
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 
@@ -418,7 +418,7 @@ function packaging_python_linux() {
 	#fi
 	# Copy file to handle traceback color python
 	ls /home/runner/work/RobotFramework_AIO/
-	cp -rv $mypath/../config/python/ $destDir/python3lx/lib/python3.13/site-packages
+	cp -rv $mypath/../config/python/* $destDir/python3lx/lib/python3.13/site-packages
 
 	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
