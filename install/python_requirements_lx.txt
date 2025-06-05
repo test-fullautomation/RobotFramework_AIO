@@ -1,14 +1,14 @@
 # External Python modules required to be installed for RobotFramework AIO
 # See atest/README.rst for more information.
 
-robotframework==7.1.1
+robotframework==7.3.0
 #Appium-Python-Client
 aenum
 attrs
 asciidoxy
 # autobahn
 # Automat
-bcrypt
+bcrypt==4.2.1
 cchardet==2.2.0a2
 certifi
 cffi
