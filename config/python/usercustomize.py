@@ -3,13 +3,13 @@ import traceback
 
 def customize_color_traceback(exc_type, exc_value, exc_traceback):
     """
-    Customizes the default Python traceback with neon pink-lilac and bright red colors.
+    Customizes the default Python traceback with dark lilac and bright red colors.
 
     This function replaces the system's default exception hook to display unhandled
     exceptions using colored ANSI escape sequences.
 
     """
-    neon_pink_lilac = "\033[38;2;255;160;255m"
+    dark_lilac = "\033[38;2;228;39;255m"
     bright_red = "\033[38;2;255;60;60m"
     reset = "\033[0m"
 
@@ -20,9 +20,9 @@ def customize_color_traceback(exc_type, exc_value, exc_traceback):
 
     for frame in tb.stack:
         # Build file path with quotes colored
-        colored_path = f'{neon_pink_lilac}"{frame.filename}"{reset}'
-        colored_lineno = f'{neon_pink_lilac}{frame.lineno}{reset}'
-        colored_func = f'{neon_pink_lilac}{frame.name}{reset}'
+        colored_path = f'{dark_lilac}"{frame.filename}"{reset}'
+        colored_lineno = f'{dark_lilac}{frame.lineno}{reset}'
+        colored_func = f'{dark_lilac}{frame.name}{reset}'
         print(f'  File {colored_path}, line {colored_lineno}, in {colored_func}')
 
         # Code line (bright red) if available
@@ -35,6 +35,6 @@ def customize_color_traceback(exc_type, exc_value, exc_traceback):
             print(f"{bright_red}{caret_line}{reset}")
 
     # Print exception type and message in lilac
-    print(f"{neon_pink_lilac}{''.join(tb.format_exception_only())}{reset}")
+    print(f"{dark_lilac}{''.join(tb.format_exception_only())}{reset}")
 
 sys.excepthook = customize_color_traceback
