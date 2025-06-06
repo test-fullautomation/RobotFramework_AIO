@@ -1,42 +1,42 @@
 # External Python modules required to be installed for RobotFramework AIO
 # See atest/README.rst for more information.
 
-robotframework~=7.3.0
-cython
+robotframework==7.3.0
+cython==3.1.1
 cchardet==2.2.0a2
 #Appium-Python-Client
-Sphinx
-aenum
-asciidoxy
-attrs
+Sphinx==8.2.3
+aenum==3.1.16
+asciidoxy==0.5.2
+attrs==25.3.0
 # autobahn
 # Automat
 bcrypt==4.2.1
-certifi
-cffi
-colorama
-configparser
+certifi==2025.4.26
+cffi==1.17.1
+colorama==0.4.6
+configparser==7.2.0
 # constantly
 # cssselect
 # Cython
 cryptography==43.0.1
-cycler
-decorator
-docutils
-dotdict
+cycler==0.12.1
+decorator==5.2.1
+docutils==0.21.2
+dotdict==0.1
 # dotted-dict
-dotmap
-doxypypy
-doipclient
-easyprocess
-httpserver
-idna
-jsonschema
-kiwisolver
+dotmap==1.3.30
+doxypypy==0.8.8.7
+doipclient==1.1.5
+easyprocess==1.1
+httpserver==1.1.0
+idna==3.10
+jsonschema==4.24.0
+kiwisolver==1.4.8
 # ecdsa
 # envoy
 # futures
-func_timeout
+func_timeout==4.3.5
 # git-review
 # gitapi
 # gitdb2
@@ -45,83 +45,83 @@ func_timeout
 # kazoo
 # libusb1
 # lupa
-lxml
+lxml==5.4.0
 # M2CryptoWin32
-matplotlib
-msl_loadlib
+matplotlib==3.10.3
+msl_loadlib==0.10.0
 # mpmath
 # multi-key-dict
-mysqlclient
+mysqlclient==2.2.7
 # ntlm-auth
-numpy
-ordereddict
-paho-mqtt
-paramiko
+numpy==2.2.6
+ordereddict==1.1
+paho-mqtt==2.1.0
+paramiko==3.5.1
 # parsel
-path.py
+path.py==12.5.0
 # pbr
-pika
-pickleDB
-pillow
+pika==1.3.2
+pickleDB==1.3.2
+pillow==11.2.1
 # pip
 # Pmw
 # progressbar
-psutil
+psutil==7.0.0
 # py
-pycparser
+pycparser==2.22
 # pycrypto
 # pydbus
 # PyDispatcher
 # pygobject
 # pyHook
-pyodbc
-pycparser
-pydotdict
-PyNaCl
+pyodbc==5.2.0
+pycparser==2.22
+pydotdict==3.3.11
+PyNaCl==1.5.0
 # pyOpenSSL
-pyparsing
-PyQt5
-pyscreenshot
+pyparsing==3.2.3
+PyQt5==5.15.11
+pyscreenshot==3.1
 pyserial==3.4
 # pytest
-pyrsistent
-python-can
-python-dateutil
-pyshark
-pyttsx
-prometheus_client
+pyrsistent==0.20.0
+python-can==4.5.0
+python-dateutil==2.9.0.post0
+pyshark==0.6
+pyttsx==1.1
+prometheus_client==0.22.1
 # python-jenkins
 # pythonnet
 # PyUserInput
-pywin32
+pywin32==310
 # pywinrm
-PyYAML
-pyzmq
-QLed
+PyYAML==6.0.2
+pyzmq==26.4.0
+QLed==1.3.1
 # queuelib
-qtawesome
-requests
+qtawesome==1.3.1
+requests==2.32.3
 # requests-ntlm
-robotframework-appiumlibrary
-robotframework-ftplibrary
-robotframework-listenerlibrary
-robotframework-mqttlibrary
-robotframework-pythonlibcore
-robotframework-requests
-robotframework-sshlibrary
-robotframework-excellib
-robotframework-seriallibrary
-robotframework-doctestlibrary
-robotframework-dependencylibrary
-schedule
-scp
+robotframework-appiumlibrary==2.1.0
+robotframework-ftplibrary==1.9
+robotframework-listenerlibrary==1.0.3
+robotframework-mqttlibrary==0.7.1.post3
+robotframework-pythonlibcore==4.4.1
+robotframework-requests==0.9.7
+robotframework-sshlibrary==3.8.0
+robotframework-excellib==2.0.1
+robotframework-seriallibrary==0.4.3
+robotframework-doctestlibrary==0.23.1
+robotframework-dependencylibrary==4.0.1
+schedule==1.2.2
+scp==0.15.0
 # scapy
-scipy
+scipy==1.15.3
 # Scrapy
 setuptools==79.0.1
 # selenium
 # service-identity
-six
+six==1.17.0
 # smmap
 # smmap2
 # sympy
@@ -129,46 +129,46 @@ six
 # trollius
 # Twisted
 # txaio
-urllib3
+urllib3==2.4.0
 # w3lib
 #windows-curses
-wave
-wrapt
-xmltodict
+wave==0.0.2
+wrapt==1.17.2
+xmltodict==0.14.2
 # zc.thread
 # zc.zk
 # zope.interface
-tk
-pandas
-bokeh
-robotframework-robocop
-pylint
+tk==0.1.0
+pandas==2.2.3
+bokeh==3.7.3
+robotframework-robocop==6.3.0
+pylint==3.3.7
 #pandoc
 pypandoc_binary==1.13
-mobly
-pytest_mock
-odxtools
-xmlschema
-pyinstaller
-pre-commit
-pre-commit-hooks
-robotframework-tidy
-black
-isort
-ruff
-requests_kerberos
-coverage
-udsoncan
-odxtools
-scikit-learn
-packaging>=24
-regex
-notebook
-robotkernel
-python-json-logger
-influxdb-client
-windows-curses
-python-statemachine
+mobly==1.13
+pytest_mock==3.14.1
+odxtools==10.2.1
+xmlschema==4.0.1
+pyinstaller==6.14.0
+pre-commit==4.2.0
+pre-commit-hooks==5.0.0
+robotframework-tidy==4.17.0
+black==25.1.0
+isort==6.0.1
+ruff==0.11.12
+requests_kerberos==0.15.0
+coverage==7.8.2
+udsoncan==1.25.0
+odxtools==10.2.1
+scikit-learn==1.6.1
+packaging==25.0
+regex==2024.11.6
+notebook==7.4.3
+robotkernel==1.6
+python-json-logger==3.3.0
+influxdb-client==1.49.0
+windows-curses==2.4.1
+python-statemachine==2.5.0
 QtAwesome==1.3.1
-reactivex
-portalocker
+reactivex==4.0.4
+portalocker==3.1.1
