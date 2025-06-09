@@ -79,6 +79,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
         fi
 
         # Write to CSV
-        printf "%-5s,%-30s,%15s,%15s,%s\n" "pypi" "$package_name" "$current_version" "$new_version" "https://pypi.org/project/$package_name/" >> "$output_file
+        printf "%-5s,%-30s,%15s,%15s,%s\n" "pypi" "$package_name" "$current_version" "$new_version" "https://pypi.org/project/$package_name/" >> "$output_file"
     fi
 done < "$input_file"
