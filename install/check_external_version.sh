@@ -31,7 +31,7 @@ if [[ ! -f "$input_file" ]]; then
 fi
 
 # Create or clear the output CSV file
-echo "source,package_name,current_version,new_version,link_to_new_version" > "$output_file"
+printf "%-5s,%-30s,%15s,%15s,%s\n" "source" "package_name" "current_version" "new_version" "link_to_new_version" > "$output_file"
 
 # Function to fetch the latest version from PyPI
 get_latest_version() {
@@ -79,6 +79,6 @@ while IFS= read -r line || [[ -n "$line" ]]; do
         fi
 
         # Write to CSV
-        echo "pypi,$package_name,$current_version,$new_version,https://pypi.org/project/$package_name/" >> "$output_file"
+        printf "%-5s,%-30s,%15s,%15s,%s\n" "pypi" "$package_name" "$current_version" "$new_version" "https://pypi.org/project/$package_name/" >> "$output_file
     fi
 done < "$input_file"
