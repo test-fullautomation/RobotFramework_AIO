@@ -261,6 +261,12 @@ jobs:
       shell: cmd
       run: ./scripts/install-windows.bat
 
+    - name: Check external dependencies version
+      shell: bash
+      run: |
+        chmod +x ./install/check_external_version.sh
+        ./install/check_external_version.sh -i ./install/check_external_version.sh -o package_version_report.csv
+
     - name: Run static code analysis on Windows
       shell: bash
       run: |
@@ -313,6 +319,7 @@ jobs:
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/testlogfiles/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/testlogfiles/*
           ${{ runner.workspace }}/Robotframework_AIO/console_log.txt
+          ${{ runner.workspace }}/Robotframework_AIO/package_version_report.csv
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
           ${{ runner.workspace }}/[Pp]ython*/**/*/*/coverage_report/*
           ${{ runner.workspace }}/[Rr]obotframework*/**/*/*/coverage_report/*
@@ -356,6 +363,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install ./*.deb --fix-missing
+
+    - name: Check external dependencies version
+      run: |
+        chmod +x ./install/check_external_version.sh
+        ./install/check_external_version.sh -i ./install/check_external_version.sh -o package_version_report.csv
 
     - name: Run static code analysis on Linux
       run: |
@@ -424,6 +436,7 @@ jobs:
           ${{ runner.workspace }}/**/*/aiotestlogfiles/*
           ${{ runner.workspace }}/**/*/testlogfiles/*
           ${{ runner.workspace }}/**/*/console_log.txt
+          ${{ runner.workspace }}/**/*/package_version_report.csv
           ${{ runner.workspace }}/**/*/*/coverage_report/*
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/**/*/static_code_report/*
