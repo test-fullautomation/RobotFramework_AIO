@@ -7,7 +7,7 @@ source $mypath/versions.conf
 
 # Function to display usage
 usage() {
-    echo "Usage: $0 -i <input_file> -o <output_file> [-v <vscode_input_file>]"
+    echo "Usage: $0 -i <input_file> -v <vscode_input_file> -o <output_file>"
     echo "  -i, --input        Path to the Python requirements file (e.g., python_requirements.txt)"
     echo "  -v, --vscode-input Path to the VS Code extensions CSV file (e.g., vscode_requirements.csv, optional)"
     echo "  -o, --output       Path to the output CSV file (e.g., package_updates.csv)"
@@ -85,7 +85,7 @@ check_vscodium_version() {
         fi
     fi
 
-    # Write to CSV with right-aligned fields
+    # Write to CSV
     printf "%-5s,%-30s,%15s,%15s,%s\n" "github" "$package_name" "$VERSION_VSCODIUM" "$new_version" "$link" >> "$output_file"
 }
 
@@ -149,14 +149,14 @@ while IFS= read -r line || [[ -n "$line" ]]; do
         elif [[ "$new_version" == "Error fetching version" ]]; then
             echo "Error: Failed to fetch version for package '$package_name' from PyPI."
         elif [[ "$new_version" =~ ^[0-9][0-9a-zA-Z.]*$ ]]; then
-            # Basic validation: ensure new_version starts with a digit
+            # Ensure new_version starts with a digit
             :
         else
             echo "Error: Invalid version format for package '$package_name' (current: $current_version)."
             new_version="Invalid version format"
         fi
 
-        # Write to CSV with right-aligned fields
+        # Write to CSV
         printf "%-5s,%-30s,%15s,%15s,%s\n" "pypi" "$package_name" "$current_version" "$new_version" "https://pypi.org/project/$package_name/" >> "$output_file"
     fi
 done < "$input_file"
