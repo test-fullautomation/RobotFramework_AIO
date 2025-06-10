@@ -89,7 +89,6 @@ check_vscodium_version() {
     printf "%-5s,%-30s,%15s,%15s,%s\n" "github" "$package_name" "$VERSION_VSCODIUM" "$new_version" "$link" >> "$output_file"
 }
 
-# Function to check VS Code/VSCodium extensions
 check_vscode_extensions() {
     local vscode_input_file=$1
     # Read CSV line by line (no header assumed)
@@ -103,21 +102,27 @@ check_vscode_extensions() {
         package_name="$publisher.$extension"
         link="https://marketplace.visualstudio.com/items?itemName=$package_name"
 
-        # Fetch latest version from VS Code Marketplace
+        # Fetch latest version from Open VSX Registry
         local response
-        response=$(curl -s -m 5 "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/$publisher/vsextensions/$extension/latest/vspackage")
+        response=$(curl -s -m 5 "https://open-vsx.org/api/$publisher/$extension")
         if [[ $? -ne 0 ]]; then
             new_version="Error fetching version"
-            echo "Error: Failed to fetch latest version for extension '$package_name' from VS Code Marketplace."
+            echo "Error: Failed to fetch latest version for extension '$package_name' from Open VSX Registry."
         else
-            new_version=$(echo "$response" | jq -r '.version // empty')
-            if [[ -z "$new_version" ]]; then
-                new_version="Not found"
-                echo "Error: Extension '$package_name' not found on VS Code Marketplace."
+            # Check if response is valid JSON
+            if echo "$response" | jq -e . >/dev/null 2>&1; then
+                new_version=$(echo "$response" | jq -r '.version // empty')
+                if [[ -z "$new_version" ]]; then
+                    new_version="Not found"
+                    echo "Error: Extension '$package_name' not found on Open VSX Registry."
+                fi
+            else
+                new_version="Invalid response"
+                echo "Error: Invalid response for extension '$package_name' from Open VSX Registry."
             fi
         fi
 
-        # Write to CSV
+        # Write to CSV with right-aligned fields, using current_version from file
         printf "%-5s,%-30s,%15s,%15s,%s\n" "vscode_marketplace" "$package_name" "$current_version" "$new_version" "$link" >> "$output_file"
     done < "$vscode_input_file"
 }
