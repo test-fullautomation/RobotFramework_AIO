@@ -147,9 +147,11 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     fi
 
     # Parse package==version using regex
-    if [[ "$line" =~ ^([a-zA-Z0-9_-]+)==([0-9a-zA-Z.]+) ]]; then
+    if [[ "$line" =~ ^([a-zA-Z0-9_-]+)(\[.*\])?(==|>=|<=|!=|~=)([0-9a-zA-Z.]+) ]]; then
         package_name="${BASH_REMATCH[1]}"
-        current_version="${BASH_REMATCH[2]}"
+        extras="${BASH_REMATCH[2]}"
+        version_specifier="${BASH_REMATCH[3]}"
+        current_version="${BASH_REMATCH[4]}"
         new_version=$(get_latest_pypi_version "$package_name")
 
         # Log errors to console
