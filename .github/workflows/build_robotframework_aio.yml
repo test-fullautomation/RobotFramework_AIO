@@ -265,7 +265,7 @@ jobs:
       shell: bash
       run: |
         chmod +x ./install/check_external_version.sh
-        ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../../package_version_report.csv
+        ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
     - name: Run static code analysis on Windows
       shell: bash
@@ -367,7 +367,7 @@ jobs:
     - name: Check external dependencies version
       run: |
         chmod +x ./install/check_external_version.sh
-        ./install/check_external_version.sh -i ./install/python_requirements_lx.txt -v ./install/vscode_requirement.csv -o ../../package_version_report.csv
+        ./install/check_external_version.sh -i ./install/python_requirements_lx.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
     - name: Run static code analysis on Linux
       run: |

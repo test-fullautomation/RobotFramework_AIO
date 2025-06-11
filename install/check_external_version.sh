@@ -31,6 +31,10 @@ if [[ -z "$input_file" || -z "$output_file" ]]; then
     usage
 fi
 
+if [[ -n "$output_file" ]]; then
+    output_file=$(realpath "$output_file" 2>/dev/null || echo "$output_file")
+fi
+
 # Check if input file exists
 if [[ ! -f "$input_file" ]]; then
     echo "Error: Input file '$input_file' not found."
@@ -165,3 +169,5 @@ while IFS= read -r line || [[ -n "$line" ]]; do
         printf "%-5s,%-30s,%15s,%15s,%s\n" "pypi" "$package_name" "$current_version" "$new_version" "https://pypi.org/project/$package_name/" >> "$output_file"
     fi
 done < "$input_file"
+
+echo "Report file saved in: $output_file"
