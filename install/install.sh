@@ -331,28 +331,28 @@ function packaging_android() {
 	fi
 
 
-	mkdir -p $destDir/devtools/Android/sdk/cmdline-tools
-	mkdir -p $destDir/devtools/Android/sdk/build-tools
-	mkdir -p $destDir/devtools/Android/sdk/platforms
-	mkdir -p $destDir/devtools/Android/sdk/system-images/android-34/google_apis
+	mkdir -p $destDir/devtools/Android/cmdline-tools
+	mkdir -p $destDir/devtools/Android/build-tools
+	mkdir -p $destDir/devtools/Android/platforms
+	mkdir -p $destDir/devtools/Android/system-images/android-34/google_apis
 	# download Android SDK Tools
 	echo "Downloading Android Cmdline Tools"
 	download_package "Android SDK Tools" ${download_android_tools} ${sourceDir}/${archived_android_tools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android/sdk/cmdline-tools
-	mv $destDir/devtools/Android/sdk/cmdline-tools/cmdline-tools $destDir/devtools/Android/sdk/cmdline-tools/latest
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_tools} -d $destDir/devtools/Android/cmdline-tools
+	mv $destDir/devtools/Android/cmdline-tools/cmdline-tools $destDir/devtools/Android/cmdline-tools/latest
 
 	echo "Downloading Android Platform Tools"
 	download_package "Android Platform Tools" ${download_android_platformtools} ${sourceDir}/${archived_android_platformtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android/sdk
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_platformtools} -d $destDir/devtools/Android
 
 	echo "Downloading Android Build Tools"
 	download_package "Android Build Tools" ${download_android_buildtools} ${sourceDir}/${archived_android_buildtools}
-	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/sdk/build-tools
-	mv $destDir/devtools/Android/sdk/build-tools/android-* $destDir/devtools/Android/sdk/build-tools/${VERSION_BUILD_TOOL}
+	/usr/bin/yes A | unzip ${sourceDir}/${archived_android_buildtools} -d $destDir/devtools/Android/build-tools
+	mv $destDir/devtools/Android/build-tools/android-* $destDir/devtools/Android/build-tools/${VERSION_BUILD_TOOL}
 
 	echo "Download Android Emulator"
 	download_package "Android Emulator" ${download_android_emulator} ${sourceDir}/${archived_android_emulator}
-	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android/sdk
+	usr/bin/yes A | unzip ${sourceDir}/${archived_android_emulator} -d $destDir/devtools/Android
 }
 
 #
