@@ -196,7 +196,7 @@
             - **original**
               uses the latest original Robot Framework core.
           
-          - VSCodium uses `RobotCode <https://robotcode.io/>`_ now instead of deprecated robotframeork-lsp for syntax highlighting.
+          - VSCodium uses `RobotCode <https://robotcode.io/>`_ now instead of deprecated robotframework-lsp for syntax highlighting.
 
           - Support to install `GitHub Copilot <https://github.com/features/copilot>`_.
 
