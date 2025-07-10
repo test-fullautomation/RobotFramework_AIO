@@ -13,6 +13,7 @@
                      "RF Log 2 RQM"     : "RobotLog2RQM",
                      "RF TSM"           : ["robotframework-testsuitesmanagement", "TestsuitesManagement"],
                      "RF atest"         : "atest",
-                     "QConnectBase"     : "robotframework-qconnect-base"
+                     "QConnectBase"     : "robotframework-qconnect-base",
+                     "EventBusClient"   : "python-rabbitmq-messagebus"
                    }
 }
