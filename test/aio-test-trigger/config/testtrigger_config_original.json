@@ -2,8 +2,6 @@
 #
 # Test Trigger configuration file
 #
-# OSS version without testing for changes in robotframework repo
-#
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
 # The reference for relative paths is the position of this file.
@@ -16,7 +14,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.7.0 / 10.07.2025 (OSS standard version)",
+   "VERSION_CONFIG" : "0.7.0 / 10.07.2025 (OSS version, original Robot Framework core)",
 
 # Section "COMPONENTS":
 # ---------------------
