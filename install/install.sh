@@ -57,7 +57,7 @@ if [ "$UNAME" == "Linux" ] ; then
 
 	nodejs_ext=tar.xz
 	appium_inspector_ext=AppImage
-
+	android_tools_version=6858069 # Compatible with java 11
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os=windows
 	os_short=win
@@ -73,6 +73,7 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 
 	nodejs_ext=zip
 	appium_inspector_ext=zip
+	android_tools_version=13114758
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -268,7 +269,7 @@ function packaging_pandoc_windows() {
 
 function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
-	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-6858069_latest.zip # Compatible with java 11
+	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-${android_tools_version}_latest.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-13402964.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
