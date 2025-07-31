@@ -2,8 +2,6 @@
 #
 # Test Trigger configuration file
 #
-# OSS version without testing for changes in robotframework repo
-#
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
 # The reference for relative paths is the position of this file.
@@ -16,7 +14,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.6.0 / 19.03.2025 (OSS standard version)",
+   "VERSION_CONFIG" : "0.7.0 / 10.07.2025 (OSS version, original Robot Framework core)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -95,6 +93,14 @@
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=MicroserviceClewareSwitch"],
                        "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
+                    # { 10.07.2025 / being prepared for upcoming EventBusClient test
+                       # "COMPONENTROOTPATH" : "../../../../python-rabbitmq-messagebus",
+                       # "TESTFOLDER"        : "test/pytest",
+                       # "TESTTYPE"          : "PYTEST",
+                       # "TESTEXECUTOR"      : "executepytest.py",
+                       # "LOCALCOMMANDLINE"  : ["--junit-prefix=EventBusClient"],
+                       # "LOGFILE"           : "../../../../python-rabbitmq-messagebus/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    # },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-testresultdbaccess",
                        "TESTFOLDER"        : "pytest",
