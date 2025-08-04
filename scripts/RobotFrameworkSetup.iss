@@ -257,6 +257,7 @@ var
   InstructionLabel: TLabel;
   InstructionMemo: TMemo;
   ScriptPath: string;
+  MsgInstallCopilotArgs: String;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -477,7 +478,6 @@ var
  StaticText : TNewStaticText;
  ProjectListCounter : Integer;
  i:Integer;
- MsgInstallCopilotArgs: String;
 
 begin
   InitProjectHash();
@@ -571,10 +571,10 @@ begin
   InstructionMemo.ReadOnly := True;
   InstructionMemo.ScrollBars := ssVertical;
   InstructionMemo.Cursor := crArrow;
-  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  //InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
   // Select all text in the memo
-  InstructionMemo.SelStart := 0;
-  InstructionMemo.SelLength := Length(InstructionMemo.Text)
+  //InstructionMemo.SelStart := 0;
+  //InstructionMemo.SelLength := Length(InstructionMemo.Text)
 
 end;
 
@@ -591,6 +591,20 @@ end;
 function IsSelectedProject(InputProject:Integer):Boolean;
 begin
   Result:=(GetIndexByListPosition(ProjectListBox.ItemIndex)=InputProject)
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+var
+  MsgInstallCopilotArgs: string;
+begin
+  if CurPageID = InfoAfterPage.ID then
+  begin
+    ScriptPath := ExpandConstant('{app}') + '\robotvscode\install-github-copilot-exts.ps1';
+    InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+    // Select all text in the memo
+    InstructionMemo.SelStart := 0;
+    InstructionMemo.SelLength := Length(InstructionMemo.Text)
+  end;
 end;
 
 //
