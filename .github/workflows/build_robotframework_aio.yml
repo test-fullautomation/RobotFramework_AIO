@@ -267,6 +267,20 @@ jobs:
         chmod +x ./install/check_external_version.sh
         ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
+    - name: Start RabbitMQ container
+      shell: bash
+      run: |
+          cur_dir=$(pwd)
+          cd ../python-rabbitmq-messagebus/test/docker
+          docker compose up -d
+          cd "$cur_dir"
+
+          for i in {1..30}; do
+            nc -z localhost 5672 && echo "RabbitMQ is up" && break
+            echo "Waiting for RabbitMQ to start..."
+            sleep 2
+          done
+
     - name: Run static code analysis on Windows
       shell: bash
       run: |
@@ -343,6 +357,16 @@ jobs:
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
       RobotDevtools: "/opt/rfwaio/devtools"
 
+    # services:
+    #   rabbitmq:
+    #     image: rabbitmq:3-management
+    #     ports:
+    #       - 5672:5672
+    #       - 15672:15672
+    #     env:
+    #       RABBITMQ_DEFAULT_USER: guest
+    #       RABBITMQ_DEFAULT_PASS: guest
+
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
@@ -368,6 +392,19 @@ jobs:
       run: |
         chmod +x ./install/check_external_version.sh
         ./install/check_external_version.sh -i ./install/python_requirements_lx.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
+
+    - name: Start RabbitMQ container
+      run: |
+          cur_dir=$(pwd)
+          cd ../python-rabbitmq-messagebus/test/docker
+          docker compose up -d
+          cd "$cur_dir"
+
+          for i in {1..30}; do
+            nc -z localhost 5672 && echo "RabbitMQ is up" && break
+            echo "Waiting for RabbitMQ to start..."
+            sleep 2
+          done
 
     - name: Run static code analysis on Linux
       run: |
