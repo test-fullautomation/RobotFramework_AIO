@@ -267,19 +267,55 @@ jobs:
         chmod +x ./install/check_external_version.sh
         ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
-    - name: Start RabbitMQ container
-      shell: bash
+    - name: Install RabbitMQ
+      shell: pwsh
       run: |
-          cur_dir=$(pwd)
-          cd ../python-rabbitmq-messagebus/test/docker
-          docker compose up -d
-          cd "$cur_dir"
+        choco install -y erlang --version 26.2.5
+        erl -version
 
-          for i in {1..30}; do
-            nc -z localhost 5672 && echo "RabbitMQ is up" && break
-            echo "Waiting for RabbitMQ to start..."
-            sleep 2
-          done
+        curl -L -o rabbitmq.zip https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.12.1/rabbitmq-server-windows-3.12.1.zip
+        mkdir rabbitmq
+        tar -xf rabbitmq.zip -C rabbitmq
+        $rabbitPath = Join-Path $PWD "rabbitmq\rabbitmq_server-3.12.1"
+        $env:RABBITMQ_HOME = $rabbitPath
+        $env:PATH = "$rabbitPath\sbin;$env:PATH"
+
+        dir $rabbitPath
+
+        $pluginUrl = "https://github.com/rabbitmq/rabbitmq-rtopic-exchange/releases/download/v3.12.0/rabbitmq_rtopic_exchange-3.12.0.ez"
+        $pluginDir = "$rabbitPath\plugins"
+        $pluginDest = Join-Path $pluginDir "rabbitmq_rtopic_exchange.ez"
+
+        if (-not (Test-Path $pluginDir)) {
+          New-Item -ItemType Directory -Path $pluginDir | Out-Null
+        }
+
+        Invoke-WebRequest -Uri $pluginUrl -OutFile $pluginDest
+
+        rabbitmq-plugins.bat enable rabbitmq_rtopic_exchange
+        rabbitmq-plugins.bat list -m | findstr rabbitmq_rtopic_exchange
+
+        Start-Process -FilePath "$rabbitPath\sbin\rabbitmq-server.bat" -ArgumentList "-detached" -WindowStyle Hidden
+        Start-Sleep -Seconds 10
+        rabbitmq-diagnostics.bat ping
+
+        # Wait for RabbitMQ port 5672 to be open
+        $maxAttempts = 30
+        $waitSeconds = 2
+        for ($i=0; $i -lt $maxAttempts; $i++) {
+          try {
+            $tcpClient = New-Object System.Net.Sockets.TcpClient
+            $tcpClient.Connect('localhost', 5672)
+            if ($tcpClient.Connected) {
+              Write-Host "RabbitMQ is ready."
+              $tcpClient.Close()
+              break
+            }
+          } catch {
+            Write-Host "Waiting for RabbitMQ to start..."
+          }
+          Start-Sleep -Seconds $waitSeconds
+        }
 
     - name: Run static code analysis on Windows
       shell: bash
