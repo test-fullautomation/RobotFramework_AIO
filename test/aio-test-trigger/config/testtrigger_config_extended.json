@@ -14,7 +14,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.6.0 / 10.07.2025 (OSS version, extended Robot Framework core)",
+   "VERSION_CONFIG" : "0.7.0 / 15.08.2025 (OSS version, extended Robot Framework core)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -167,13 +167,13 @@
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    # { stabilization required, temporarily deactivated / 19.03.2025
-                       # "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
-                       # "TESTFOLDER"        : "test",
-                       # "TESTTYPE"          : "ROBOT",
-                       # "TESTEXECUTOR"      : "executerobottest.py",
-                       # "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
-                    # },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
+                       "TESTFOLDER"        : "test",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
+                    },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework",
                        "TESTFOLDER"        : "atest",
