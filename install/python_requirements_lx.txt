@@ -149,7 +149,7 @@ robotframework-robocop==6.3.0
 pylint==3.3.7
 Sphinx==8.2.3
 pandoc==2.4
-pypandoc_binary==1.13
+pypandoc_binary==1.15
 mobly==1.13
 pytest_mock==3.14.1
 odxtools==10.2.1
