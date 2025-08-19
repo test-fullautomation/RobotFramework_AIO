@@ -311,7 +311,7 @@ function packaging_android() {
 	# download appium packages:
 	# 	- appium server
 	echo "Installing appium server"
-	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium@${VERSION_APPIUM_SERVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
 
 	#  - UIAutomator2 driver for appium
