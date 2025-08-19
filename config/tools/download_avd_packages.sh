@@ -75,10 +75,10 @@ function download_package(){
 
 function packaging_android() {
 	download_android_emulator_hypervisor_driver=https://github.com/google/android-emulator-hypervisor-driver/releases/download/v2.2/aehd-windows_v2_2_0.zip
-	download_android_google_apis=https://dl.google.com/android/repository/sys-img/google_apis/x86_64-34_r13.zip
+	download_android_google_apis=https://dl.google.com/android/repository/sys-img/google_apis/x86_64-35_r06.zip
 
 	archived_android_emulator_hypervisor_driver=aehd-windows_v2_2_0.zip
-	archived_android_google_apis=x86_64-34_r13.zip
+	archived_android_google_apis=x86_64-35_r06.zip
 	echo "Packaging Android ..."
 
 	npm_proxy_args=""
