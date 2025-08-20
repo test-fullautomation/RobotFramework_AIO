@@ -42,6 +42,7 @@ echo "Node.js version $VERSION_NODEJS"
 echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
 echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+echo "Appium Server version $VERSION_APPIUM_SERVER"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
