@@ -16,7 +16,7 @@ echo "Select one or more extra components:"
 for option in "${EXTRA_CMPTS[@]}"; do
    echo "$option"
 done
-read -rt 30 -p "Enter your choices (e.g., AC for both Android and VSCodium packages): " choices
+read -rt 30 -p "Enter your choices (e.g., AV for both Android and VSCodium packages): " choices
 
 # Set default value if input is empty
 if [ -z "$choices" ]; then
