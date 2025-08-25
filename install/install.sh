@@ -42,6 +42,7 @@ echo "Node.js version $VERSION_NODEJS"
 echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
 echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+echo "Appium Server version $VERSION_APPIUM_SERVER"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
@@ -311,7 +312,7 @@ function packaging_android() {
 	# download appium packages:
 	# 	- appium server
 	echo "Installing appium server"
-	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium@${VERSION_APPIUM_SERVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
 
 	#  - UIAutomator2 driver for appium
