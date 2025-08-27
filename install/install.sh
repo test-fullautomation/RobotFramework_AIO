@@ -208,6 +208,15 @@ function packaging_vscode() {
     },\n}/' "$vscodium_setting_file"
 	fi
 
+	echo "Update or add robotframeworkWelcome.hasSeenWelcome setting to false"
+   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
+       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
+       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+   else
+       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
+       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
+   fi
+
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
 	for extfile in $vscodeData/extensions/*.vsix; do
