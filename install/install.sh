@@ -31,6 +31,7 @@ python_only="No"
 vscode_only="No"
 pandoc_only="No"
 android_only="No"
+use_cache="No"
 
 UNAME=$(uname)
 
@@ -43,6 +44,40 @@ echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
 echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
 echo "Appium Server version $VERSION_APPIUM_SERVER"
+
+function parse_arg() {
+	while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-c) echo "Using cntlm";use_cntlm="Yes"; shift 1;;
+
+		--use-cntlm) echo "Using cntlm";use_cntlm="Yes"; shift;;
+		--python) echo "Create Python repo only";python_only="Yes"; shift;;
+		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
+		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
+		--android) echo "Create android repo only";android_only="Yes"; shift;;
+		--cache-folder=*)
+			cache_folder="${1#*=}"
+			cache_folder="${cache_folder//\\//}"
+			use_cache="Yes"
+			echo "Cache folder: $cache_folder"
+			shift
+			;;
+
+		-*) echo "unknown option: $1" >&2; exit 1;;
+	esac
+	done
+}
+
+parse_arg "$@"
+if [[ "$use_cache" == "No" ]]; then
+	rm -R -- "$sourceDir"/*
+else
+	sourceDir=$cache_folder
+	echo "Using cache folder '$sourceDir' for installing dependencies tools"
+fi
+if [ ! -d "$sourceDir" ]; then
+	mkdir "$sourceDir"
+fi
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
@@ -84,21 +119,6 @@ fi
 #
 . $mypath/../include/bash/common.sh
 
-function parse_arg() {
-	while [ "$#" -gt 0 ]; do
-	case "$1" in
-		-c) echo "Using cntlm";use_cntlm="Yes"; shift 1;;
-
-		--use-cntlm) echo "Using cntlm";use_cntlm="Yes"; shift;;
-		--python) echo "Create Python repo only";python_only="Yes"; shift;;
-		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
-		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
-		--android) echo "Create android repo only";android_only="Yes"; shift;;
-
-		-*) echo "unknown option: $1" >&2; exit 1;;
-	esac
-	done
-}
 function restart_cntlm(){
 	if [ "$UNAME" == "Linux" ] ; then
 		sudo systemctl restart cntlm
@@ -127,6 +147,11 @@ function download_package(){
 	retry_counter=0
 	max_retries=5
 	success=false
+
+	if [ -f "$package_out" ]; then
+		echo "Using cached file '$package_out'"
+		return 0
+	fi
 
 	echo curl $proxy_args "$package_url" -o "$package_out"
 	while [[ "$retry_counter" -lt "$max_retries" && "$success" == "false" ]];do
@@ -166,7 +191,7 @@ function download_package(){
 function packaging_vscode() {
 	if [ "$UNAME" == "Linux" ] ; then
 		mkdir -p "$sourceDir/vscodium"
-		tar -xvvf "$archived_vscode_file" -C "$sourceDir/vscodium"
+		tar --force-local -xvvf "$archived_vscode_file" -C "$sourceDir/vscodium"
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
 	fi
@@ -313,7 +338,7 @@ function packaging_android() {
 		npm_bin=$destDir/devtools/nodejs/npm
 	else
 	   mkdir $destDir/devtools/nodejs
-		tar -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
+		tar --force-local -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
 		PATH="$destDir/devtools/nodejs/bin:$PATH"
 		npm_bin=$destDir/devtools/nodejs/bin/npm
 	fi
@@ -371,7 +396,7 @@ function packaging_android() {
 #
 ####################################################
 function packaging_python_windows() {
-	tar -xzf "$archived_python_file" -C "$sourceDir"
+	tar --force-local -xzf "$archived_python_file" -C "$sourceDir"
 	rm -rf "$destDir/python3"
 	mv "$sourceDir/python" "$destDir/python3"
 
@@ -415,7 +440,7 @@ function packaging_python_windows() {
 #
 ####################################################
 function packaging_python_linux() {
-	tar -I zstd -xvf $archived_python_file -C "$sourceDir"
+	tar --force-local -I zstd -xvf $archived_python_file -C "$sourceDir"
 	rm -rf "$destDir/python3lx"
 	mv "$sourceDir/python" "$destDir/python3lx"
 	logresult "$?" "created Python repository" "create Python repository"
@@ -448,17 +473,17 @@ function cleanall() {
 }
 
 function make_vscode() {
-	if [ ! -f "$archived_vscode_file" ]; then
-		download_package "Visual Studio Code" "$download_vscode_url" "$archived_vscode_file"
-	fi
+	# if [ ! -f "$archived_vscode_file" ]; then
+	download_package "Visual Studio Code" "$download_vscode_url" "$archived_vscode_file"
+	# fi
 	packaging_vscode
 	goodmsg "make_vscode done"
 }
 
 function make_python() {
-	if [ ! -f "$archived_python_file" ]; then
-		download_package "Python" "$download_python_url" "$archived_python_file"
-	fi
+	# if [ ! -f "$archived_python_file" ]; then
+	download_package "Python" "$download_python_url" "$archived_python_file"
+	# fi
 
 	if [ "$UNAME" == "Linux" ] ; then
 		packaging_python_linux
@@ -489,7 +514,7 @@ function make_all() {
 	make_python
 	make_vscode
 	make_android
-	make_pandoc
+	# make_pandoc
 	goodmsg "make_all done"
 }
 
@@ -499,13 +524,6 @@ echo -e "${COL_GREEN}#          Creating VSCode and Python Repository from OSS .
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-parse_arg "$@"
-
-if [ ! -d "$sourceDir" ]; then
-	mkdir "$sourceDir"
-else
-	rm -R -- "$sourceDir"/*
-fi
 
 if [[ "$python_only" == "Yes" ]]; then
 	make_python
