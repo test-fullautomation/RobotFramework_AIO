@@ -2,41 +2,41 @@
 # See atest/README.rst for more information.
 
 robotframework==7.3.0
-cython==3.1.1
 cchardet==2.2.0a2
+cython
 #Appium-Python-Client
-Sphinx==8.2.3
-aenum==3.1.16
-asciidoxy==0.5.2
-attrs==25.3.0
+Sphinx
+aenum
+asciidoxy
+attrs
 # autobahn
 # Automat
-bcrypt==4.2.1
-certifi==2025.4.26
-cffi==1.17.1
-colorama==0.4.6
-configparser==7.2.0
+bcrypt
+certifi
+cffi
+colorama
+configparser
 # constantly
 # cssselect
 # Cython
-cryptography==43.0.1
-cycler==0.12.1
-decorator==5.2.1
-docutils==0.21.2
-dotdict==0.1
+cryptography
+cycler
+decorator
+docutils
+dotdict
 # dotted-dict
-dotmap==1.3.30
-doxypypy==0.8.8.7
-doipclient==1.1.5
-easyprocess==1.1
-httpserver==1.1.0
-idna==3.10
-jsonschema==4.24.0
-kiwisolver==1.4.8
+dotmap
+doxypypy
+doipclient
+easyprocess
+httpserver
+idna
+jsonschema
+kiwisolver
 # ecdsa
 # envoy
 # futures
-func_timeout==4.3.5
+func_timeout
 # git-review
 # gitapi
 # gitdb2
@@ -45,20 +45,20 @@ func_timeout==4.3.5
 # kazoo
 # libusb1
 # lupa
-lxml==5.4.0
+lxml
 # M2CryptoWin32
-matplotlib==3.10.3
-msl_loadlib==0.10.0
+matplotlib
+msl_loadlib
 # mpmath
 # multi-key-dict
-mysqlclient==2.2.7
+mysqlclient
 # ntlm-auth
-numpy==2.2.6
-ordereddict==1.1
-paho-mqtt==2.1.0
-paramiko==3.5.1
+numpy
+ordereddict
+paho-mqtt
+paramiko
 # parsel
-path.py==12.5.0
+path.py
 # pbr
 pika==1.3.2
 pickleDB==1.3.2
