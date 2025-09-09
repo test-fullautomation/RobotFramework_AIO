@@ -151,7 +151,8 @@ function clone_update_repo () {
       if [ "$?" -ne 0 ]; then
          errormsg   "Given tag/branch '$commit_branch_tag' is not existing"
       fi
-      git -C "$repo_path" pull origin $commit_branch_tag
+      # git -C "$repo_path" pull origin $commit_branch_tag
+      git -C "$repo_path" reset --hard origin/$commit_branch_tag
       logresult "$?" "switched to '$commit_branch_tag'" "checkout to '$commit_branch_tag' from '$repo_url'"
    fi
 }
