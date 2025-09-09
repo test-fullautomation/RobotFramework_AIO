@@ -363,7 +363,7 @@ function packaging_android() {
 	if [ "$appium_inspector_ext" == "zip" ]; then
 		/usr/bin/yes A | unzip ${sourceDir}/${archived_appium_inspector} -d $destDir/devtools/Appium-Inspector
 	else
-		mv ${sourceDir}/${archived_appium_inspector} $destDir/devtools/Appium-Inspector.${appium_inspector_ext}
+		cp ${sourceDir}/${archived_appium_inspector} $destDir/devtools/Appium-Inspector.${appium_inspector_ext}
 	fi
 
 
