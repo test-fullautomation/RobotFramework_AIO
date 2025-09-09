@@ -42,6 +42,7 @@ echo "Node.js version $VERSION_NODEJS"
 echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
 echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+echo "Appium Server version $VERSION_APPIUM_SERVER"
 
 if [ "$UNAME" == "Linux" ] ; then
 	os=linux
@@ -57,7 +58,7 @@ if [ "$UNAME" == "Linux" ] ; then
 
 	nodejs_ext=tar.xz
 	appium_inspector_ext=AppImage
-
+	android_tools_version=6858069 # Compatible with java 11
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os=windows
 	os_short=win
@@ -73,6 +74,7 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 
 	nodejs_ext=zip
 	appium_inspector_ext=zip
+	android_tools_version=13114758
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -206,6 +208,15 @@ function packaging_vscode() {
     },\n}/' "$vscodium_setting_file"
 	fi
 
+	echo "Update or add robotframeworkWelcome.hasSeenWelcome setting to false"
+   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
+       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
+       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+   else
+       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
+       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
+   fi
+
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
 	for extfile in $vscodeData/extensions/*.vsix; do
@@ -268,7 +279,7 @@ function packaging_pandoc_windows() {
 
 function packaging_android() {
 	# https://dl.google.com/android/repository/tools_r25.2.3-macosx.zip
-	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-6858069_latest.zip # Compatible with java 11
+	download_android_tools=https://dl.google.com/android/repository/commandlinetools-${os_short}-${android_tools_version}_latest.zip
 	download_android_emulator=https://redirector.gvt1.com/edgedl/android/repository/emulator-${os}_x64-13402964.zip
 	download_android_buildtools=https://dl.google.com/android/repository/build-tools_r${VERSION_BUILD_TOOL}-${os}.zip
 	download_android_platformtools=https://dl.google.com/android/repository/platform-tools_r${VERSION_PLATFORM_TOOL}-${os}.zip
@@ -310,7 +321,7 @@ function packaging_android() {
 	# download appium packages:
 	# 	- appium server
 	echo "Installing appium server"
-	$npm_bin install --prefix $destDir/devtools/nodejs appium -g --verbose ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium@${VERSION_APPIUM_SERVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
 
 	#  - UIAutomator2 driver for appium

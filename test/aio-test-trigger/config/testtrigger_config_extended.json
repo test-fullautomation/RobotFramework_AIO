@@ -2,8 +2,6 @@
 #
 # Test Trigger configuration file
 #
-# OSS standard version (without robotframework/atest)
-#
 # **************************************************************************************************************
 # Format: extended json format with the possibility to comment out lines (by '#' at the beginning of the line).
 # The reference for relative paths is the position of this file.
@@ -16,7 +14,7 @@
 # Section "VERSION_CONFIG":
 # -------------------------
 
-   "VERSION_CONFIG" : "0.5.0 / 19.03.2025 (OSS standard version)",
+   "VERSION_CONFIG" : "0.7.0 / 15.08.2025 (OSS version, extended Robot Framework core)",
 
 # Section "COMPONENTS":
 # ---------------------
@@ -96,6 +94,14 @@
                        "LOGFILE"           : "../../../../python-microservice-cleware-switch/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
+                       "COMPONENTROOTPATH" : "../../../../python-rabbitmq-messagebus",
+                       "TESTFOLDER"        : "test/pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["--junit-prefix=EventBusClient"],
+                       "LOGFILE"           : "../../../../python-rabbitmq-messagebus/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
                        "COMPONENTROOTPATH" : "../../../../python-testresultdbaccess",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
@@ -161,13 +167,13 @@
                        "LOCALCOMMANDLINE"  : ["--exclude atestExcluded"],
                        "LOGFILE"           : "../../../../robotframework-testsuitesmanagement/atest/aiotestlogfiles/aiotestlogfile.xml"
                     },
-                    # { stabilization required, temporarily deactivated / 19.03.2025
-                       # "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
-                       # "TESTFOLDER"        : "test",
-                       # "TESTTYPE"          : "ROBOT",
-                       # "TESTEXECUTOR"      : "executerobottest.py",
-                       # "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
-                    # },
+                    {
+                       "COMPONENTROOTPATH" : "../../../../robotframework-qconnect-base",
+                       "TESTFOLDER"        : "test",
+                       "TESTTYPE"          : "ROBOT",
+                       "TESTEXECUTOR"      : "executerobottest.py",
+                       "LOGFILE"           : "../../../../robotframework-qconnect-base/test/aiotestlogfiles/aiotestlogfile.xml"
+                    },
                     {
                        "COMPONENTROOTPATH" : "../../../../robotframework",
                        "TESTFOLDER"        : "atest",

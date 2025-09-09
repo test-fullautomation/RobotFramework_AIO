@@ -111,7 +111,7 @@
           A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)
           V : Vscodium package
        Enter : All packages (default choice after 30s)
-       Enter your choices (e.g., AC for both Android and VSCodium packages):
+       Enter your choices (e.g., AV for both Android and VSCodium packages):
 
     The default choice is to install all packages, including the core framework and all extensions.
 

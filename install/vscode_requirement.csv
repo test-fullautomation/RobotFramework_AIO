@@ -7,3 +7,4 @@ jebbs,plantuml,2.17.5
 hediet,vscode-drawio,1.6.6
 ms-python,debugpy,2024.8.0
 ms-python,pylint,2024.2.0
+ms-pyright,pyright,1.1.372

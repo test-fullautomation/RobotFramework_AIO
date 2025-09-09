@@ -320,7 +320,7 @@ begin
 
   //now grant access rights
   sCmdBuffer:='icacls';
-  sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F');
+  sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F /T /C');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
 
   //now remove critical attributes
