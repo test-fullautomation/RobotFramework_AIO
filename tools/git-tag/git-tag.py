@@ -22,14 +22,17 @@
 # This tool helps to tag git repos via REST APIs of git server.
 #
 # History:
-# 
+#
 # Jan 2023:
 #  - initial OSS version
 #
 # May 2023:
 #  - add configurable information `infix_tag` for string to be inserted into tag
 #  - implement commandline arguments verifications
-# 
+#
+# Sep 2025:
+#  - add support Gerrit git server type
+#
 # ******************************************************************************
 
 from abc import ABCMeta, abstractmethod
@@ -40,8 +43,8 @@ from jsonschema import validate
 import os
 import argparse
 
-VERSION = "0.1.0"
-VERSION_DATE = "10.05.2023"
+VERSION = "0.2.0"
+VERSION_DATE = "19.09.2025"
 
 PREFIX_INTERMEDIATE_TAG = "dev/"
 PREFIX_RELEASED_TAG = "rel/"
@@ -57,6 +60,10 @@ CONFIG_SCHEMA = {
          "required" : ["base_url"]
       },
       "bitbucket": {
+         "$ref": "#/$defs/git-server",
+         "required" : ["base_url"]
+      },
+      "gerrit": {
          "$ref": "#/$defs/git-server",
          "required" : ["base_url"]
       },
@@ -86,7 +93,8 @@ CONFIG_SCHEMA = {
    "anyOf": [
       {"required": ["github"]},
       {"required": ["gitlab"]},
-      {"required": ["bitbucket"]}
+      {"required": ["bitbucket"]},
+      {"required": ["gerrit"]}
    ],
 }
 
@@ -107,7 +115,9 @@ class GitServer(object):
       self.project = project
       self.repo    = repo
       self.PAT     = PAT
-      
+
+      self.tag_in_post_url = False
+
       if not self.PAT:
          err_msg(f"No provided {self._GIT_SERVER_TYPE.upper()}_PAT")
       self.token_type = "Bearer"
@@ -151,12 +161,12 @@ class GitServer(object):
          return f"intermediate version {tag_name.replace(PREFIX_INTERMEDIATE_TAG, '')}"
       elif tag_name.startswith(PREFIX_RELEASED_TAG):
          return f"released version {tag_name.replace(PREFIX_RELEASED_TAG, '')}"
-      
+
       return ""
 
    def _successful_get_request(self, url):
       res = self._get_request(url)
-      
+
       if res.status_code == 200:
          return True
       return False
@@ -168,10 +178,10 @@ class GitServer(object):
       return self._successful_get_request(self.tag_api_url(tag_name))
 
    def _get_request(self, url):
-      return requests.get(url, headers=self.request_header)
+      return requests.get(url, headers=self.request_header, verify=False)
 
    def _post_request(self, url, json_data):
-      return requests.post(url, json=json_data, headers=self.request_header)
+      return requests.post(url, json=json_data, headers=self.request_header, verify=False)
 
    def _create_tag_obj(self, tag_name, sha):
       # This method is only overwritten by the implementation of Github class
@@ -179,8 +189,12 @@ class GitServer(object):
       return sha
 
    def _create_tag_ref(self, tag_name, sha):
-      res = self._post_request(self.tag_api_url(tag_name=None, tag=False), 
-                               self._tag_payload(tag_name, sha, ref=True))
+      request_url = self.tag_api_url(tag_name=None, tag=False)
+      if self.tag_in_post_url:
+         request_url = self.tag_api_url(tag_name, tag=False)
+
+      request_payload = self._tag_payload(tag_name, sha, ref=True)
+      res = self._post_request(request_url, request_payload)
 
       if (res.status_code == 201) or (res.status_code == 200):
          log_msg("create tag reference successfully")
@@ -192,7 +206,7 @@ class GitServer(object):
 
    def latest_commit_sha(self):
       res = self._get_request(f"{self.repo_api_url}/commits/{self.default_branch}")
-      
+
       if res.status_code == 200:
          return self._commit_sha_from_reponse(res.text)
       else:
@@ -202,7 +216,7 @@ class GitServer(object):
       if not sha:
          sha = self._reference_to_tag()
          # print(f"debug: {sha}")
-      
+
       log_msg(f"{self._GIT_SERVER_TYPE}.{self.repo}: creating new tag {tag_name}")
       ref_sha = self._create_tag_obj(tag_name, sha)
       self._create_tag_ref(tag_name, ref_sha)
@@ -226,11 +240,11 @@ class GitCommand(object):
       if self.git_service.is_existing_tag(tag_name):
          print(f"Tag {tag_name} is already existing on {self.git_service.repo}")
       else:
-         # log_msg(f"Create new tag for {tag_name}")
+         # log_msg(f"DEBUG: Create new tag for {tag_name} on {self.git_service.default_branch}")
          self.git_service.tag(tag_name, sha)
 
 class Github(GitServer):
-   
+
    _GIT_SERVER_TYPE = "github"
 
    def __init__(self, repo, project, PAT, base_url):
@@ -245,7 +259,7 @@ class Github(GitServer):
    @property
    def default_branch(self):
       res = self._get_request(self.repo_api_url)
-      
+
       if res.status_code == 200:
          return json.loads(res.text)['default_branch']
       else:
@@ -280,11 +294,11 @@ class Github(GitServer):
             "object"  : sha,
             "type"    : "commit"
          }
-   
+
    def _create_tag_obj(self, tag_name, sha):
-      # Github requires to create the tag object 
+      # Github requires to create the tag object
       # then create the refs/tags/[tag] reference for above tag object
-      res = self._post_request(self.tag_api_url(tag_name=None, ref=False), 
+      res = self._post_request(self.tag_api_url(tag_name=None, ref=False),
                          self._tag_payload(tag_name, sha, ref=False))
 
       if res.status_code == 201:
@@ -294,7 +308,7 @@ class Github(GitServer):
       return json.loads(res.text)['sha']
 
 class Gitlab(GitServer):
-   
+
    _GIT_SERVER_TYPE = "gitlab"
 
    def __init__(self, repo, project, PAT, base_url):
@@ -309,7 +323,7 @@ class Gitlab(GitServer):
    @property
    def default_branch(self):
       res = self._get_request(f"{self.repo_api_url[:-5]}/branches")
-      
+
       if res.status_code == 200:
          branches = json.loads(res.text)
          for branch in branches:
@@ -338,7 +352,7 @@ class Gitlab(GitServer):
       return self.default_branch
 
 class Bitbucket(GitServer):
-   
+
    _GIT_SERVER_TYPE = "bitbucket"
 
    def __init__(self, repo, project, PAT, base_url):
@@ -356,7 +370,7 @@ class Bitbucket(GitServer):
    @property
    def default_branch(self):
       res = self._get_request(f"{self.repo_api_url}/branches/default")
-      
+
       if res.status_code == 200:
          return json.loads(res.text)['displayId']
       else:
@@ -378,13 +392,55 @@ class Bitbucket(GitServer):
    def _commit_sha_from_reponse(self, res_data):
       return json.loads(res_data)['id']
 
+class Gerrit(GitServer):
+
+   _GIT_SERVER_TYPE = "gerrit"
+
+   def __init__(self, repo, project, PAT, base_url):
+      super().__init__(repo, project, PAT, base_url)
+      if self.project:
+         self.repo_id = self.encode_url('/'.join([self.project, self.repo]))
+      else:
+         self.repo_id = self.encode_url(self.repo)
+      self.token_type = "Basic"
+      self.tag_in_post_url = True
+
+   @property
+   def repo_api_url(self):
+      return f"{self.url}/a/projects/{self.repo_id}"
+
+   @property
+   def default_branch(self):
+      res = self._get_request(f"{self.repo_api_url}/branches/HEAD")
+
+      if res.status_code == 200:
+         return f"refs/heads/{json.loads(res.text.lstrip(")]}'\n"))['revision']}"
+      else:
+         err_msg(res.text.lstrip(")]}'\n"))
+
+   def tag_api_url(self, tag_name=None, tag=True, ref=True):
+      url = f"{self.repo_api_url}/tags"
+      if tag_name:
+         url += f"/{self.encode_url(tag_name)}"
+      return url
+
+   def _tag_payload(self, tag_name, sha, ref=False):
+      return {
+         "revision"   : sha,
+         "message"    : self._tag_message(tag_name)
+      }
+
+   def _reference_to_tag(self):
+      return self.default_branch
+
+
 def __process_commandline():
 
    str_desc = """git-tag tool helps to tag git repos via REST APIs of git server.
 Tool support 3 types of git server: Github, Gitlab and Bitbucket.
-Due to security, the credentials (PAT: Personal Access Token) to access the 
+Due to security, the credentials (PAT: Personal Access Token) to access the
 repos should be set as environment variables: <git-server-type>_PAT (upper case).
-E.g: GITHUB_PAT, GITLAB_PAT and BITBUCKET_PAT"""
+E.g: GITHUB_PAT, GITLAB_PAT, BITBUCKET_PAT and GERRIT_PAT"""
 
    str_sample_config="""
 Schema for config *.json file:
@@ -425,10 +481,10 @@ Example:
 
    cmdlineparser=argparse.ArgumentParser(prog="git-tag", description=str_desc,
                                          formatter_class=argparse.RawTextHelpFormatter)
-   cmdlineparser.add_argument('-v', '--version', action='version', 
+   cmdlineparser.add_argument('-v', '--version', action='version',
                               version=f'v{VERSION} ({VERSION_DATE})',
                               help='version of git-tag tool')
-   cmdlineparser.add_argument('tag_name', type=str, 
+   cmdlineparser.add_argument('tag_name', type=str,
                               help='tag name which is used for tagging repos.'+\
                               '\nE.g: rel/0.5.2.1.')
    cmdlineparser.add_argument('config_file', type=str,
@@ -470,13 +526,13 @@ if __name__=="__main__":
          if git_type != 'github':
             err_msg("'base_url' should be provided for git server other than Github.")
       else:
-         base_url = repo_data['base_url']
+         base_url = repo_data['base_url'].rstrip('/')
 
-      if not repo_data['project']:
+      if not repo_data['project'] and git_type != 'gerrit':
          err_msg("'project' should be provided in the configuration *.json file.")
 
       for repo, commit_sha in repo_data["repos"].items():
-         git = GitCommand(git_type, repo=repo, project=repo_data['project'], 
+         git = GitCommand(git_type, repo=repo, project=repo_data['project'],
                           PAT=PAT, base_url=base_url)
 
          # Change tag name to <rel|dev>/<infix_tag>/<version> if configured
