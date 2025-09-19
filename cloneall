@@ -60,13 +60,23 @@ function parse_repo () {
 			errormsg "not supported repo type '$repo_type'"
 		fi
 		echo -e "$COL_BLUE$BG_WHITE---- $repo$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-		
+
 
 		# switch repo to given released tag $TAG_NAME
 		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
-			clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$TAG_NAME"
+			if [[ "$repo_type" == "gerrit" ]]; then
+				# add /aio (if not given) in tag for cloning gerrit repos
+				if [[ "$TAG_NAME" != rel/aio/* && "$TAG_NAME" != dev/aio/* ]]; then
+					AIO_TAG=$(echo "$TAG_NAME" | sed -E 's#^(rel|dev)/#\1/aio/#')
+				else
+					AIO_TAG="$TAG_NAME"
+				fi
+				clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$AIO_TAG"
+			else
+				clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$TAG_NAME"
+			fi
 		else
-			# Allow to specify commit/branch of repos to be built 
+			# Allow to specify commit/branch of repos to be built
 			commit_branch=$(git config -f $conf_file --get $repo)
 			clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$commit_branch"
 		fi
@@ -83,7 +93,7 @@ function parse_config () {
 	conf_section=($(git config -f $1 --list --name-only | sed "s/.[^.]*$//" | uniq))
 	#echo $conf_section
 	for section in "${conf_section[@]}"
-	do 
+	do
 		section_server=$(get_server_url "$1" "$section")
 		if [ "$section_server" != "" ]; then
 			parse_repo $1 $section
@@ -92,11 +102,11 @@ function parse_config () {
 			if [ "$sec_name" == "" ]; then
 				sec_name=${section}
 			fi
-			
+
 			echo
 			greenmsg "processing section $sec_name"
 			echo -e "$COL_BLUE$BG_WHITE---- $sec_name$COL_RESET$COL_BLUE$BG_WHITE -----------------------------------------$COL_RESET"
-			
+
 			sec_path=$(git config -f $1 --get ${section}.path)
 			if [ "$sec_path" == "" ]; then
 				sec_path="$SCRIPT_DIR/../${sec_name}"
@@ -105,7 +115,7 @@ function parse_config () {
 			if [ "$sec_url" == "" ]; then
 				sec_url=$(get_url "github" ${sec_name})
 			fi
-			
+
 			clone_update_repo "$sec_path" "$sec_url"
 			echo
 			echo
@@ -119,7 +129,7 @@ echo -e "${COL_GREEN}#          Cloning repositories                            
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
-#iterate over all repositories and apply now the clone command                    
+#iterate over all repositories and apply now the clone command
 for i in "$@"
 do
    case $i in
@@ -141,7 +151,7 @@ else
 fi
 
 # Receive event from other repos and update repository config file
-if [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then 
+if [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then
 	echo -e "${COL_GREEN}#          Trigger AIO from repository: $REPOSITORY; branch: $PULL_REQUEST_BRANCH    #${COL_RESET}"
 
 	grep -q $REPOSITORY $config_file
