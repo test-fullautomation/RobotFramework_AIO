@@ -12,20 +12,5 @@
          ".*__init__.*",
          ".*version.*"
       ]
-   },
-   {
-      "repository_path": "../robotframework-qconnect-base",
-      "output_directory": "QConnectBase",
-      "source_folders": [
-         "QConnectBase"
-      ],
-      "include_patterns": [
-         "connection_manager.*",
-         "qlogger.*"
-      ],
-      "exclude_patterns": [
-         ".*__init__.*",
-         ".*version.*"
-      ]
    }
 ]
