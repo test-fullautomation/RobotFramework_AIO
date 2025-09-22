@@ -302,6 +302,11 @@ function generate_version_info() {
 	add_line_to_file "    + Appium Inspector version: $VERSION_APPIUM_INSPECTOR"
 }
 
+function build_libdoc_document()
+{
+	echo "Building libdoc document"
+	${PYBIN} ./test/aio-generate-libdoc/generate_libdoc.py
+}
 
 function build_debian()
 {
@@ -310,6 +315,7 @@ function build_debian()
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
 	parse_config $ConfigFile
+	build_libdoc_document
 
 	cd $CURDIR
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -404,6 +410,7 @@ function build_windows() {
 	generate_version_info
 	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
+	build_libdoc_document
 
 	cd $CURDIR
 

@@ -156,7 +156,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RobotFrameworkAIO_Reference_${{ matrix.version }}
-          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+          path: |
+            ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+            ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
 
   build-windows:
     strategy:
