@@ -1,0 +1,31 @@
+[
+   {
+      "repository_path": "../robotframework-uds",
+      "output_directory": "RobotFramework_UDS",
+      "source_folders": [
+         "RobotFramework_UDS"
+      ],
+      "include_patterns": [
+         "UDSKeywords.*"
+      ],
+      "exclude_patterns": [
+         ".*__init__.*",
+         ".*version.*"
+      ]
+   },
+   {
+      "repository_path": "../robotframework-qconnect-base",
+      "output_directory": "QConnectBase",
+      "source_folders": [
+         "QConnectBase"
+      ],
+      "include_patterns": [
+         "connection_manager.*",
+         "qlogger.*"
+      ],
+      "exclude_patterns": [
+         ".*__init__.*",
+         ".*version.*"
+      ]
+   }
+]
