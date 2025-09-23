@@ -1,4 +1,8 @@
-import os, sys, json, re, subprocess
+import os
+import sys
+import json
+import re
+import subprocess
 from PythonExtensionsCollection.String.CString import CString
 
 sPythonPath = CString.NormalizePath(sys.executable)
@@ -38,12 +42,12 @@ def generate_libdoc_for_files():
                                 output_folder_path = CString.NormalizePath(f"{repository_path}/{output_directory}")
 
                                 # Ensure the output directory exists
-                                os.makedirs(os.path.dirname(output_folder_path), exist_ok=True)
+                                os.makedirs(output_folder_path, exist_ok=True)
                                 output_file_path = os.path.splitext(file)[0] + '.html'
                                 output_file_path = CString.NormalizePath(f"{output_folder_path}/{output_file_path}")
                                 try:
                                     subprocess.run([sPythonPath, '-m', 'robot.libdoc', source_path, output_file_path], check=True)
-                                    print("Documentation generated successfully.")
+                                    print(f"Documentation generated successfully for: {source_path}")
                                 except subprocess.CalledProcessError as e:
                                     print(f"Error occurred while generating documentation: {e}")
                                 except Exception as e:
@@ -59,16 +63,13 @@ def should_process_file(file, include_patterns, exclude_patterns, include_regex,
     """Determine if a file should be processed based on include and exclude patterns."""
     if len(include_patterns) == 0 and len(exclude_patterns) > 0:
         # Case 1: No include patterns, only exclude patterns
-        return file.endswith('.py') and not any(regex.search(file) for regex in exclude_regex)
+        return not any(regex.search(file) for regex in exclude_regex)
     elif len(include_patterns) > 0 and len(exclude_patterns) > 0:
         # Case 2: Both include and exclude patterns
         return any(regex.search(file) for regex in include_regex) and not any(regex.search(file) for regex in exclude_regex)
     elif len(include_patterns) > 0 and len(exclude_patterns) == 0:
         # Case 3: Only include patterns
         return any(regex.search(file) for regex in include_regex)
-    elif len(include_patterns) == 0 and len(exclude_patterns) == 0:
-        # Case 4: No include or exclude patterns
-        return file.endswith('.py')
     return False
 
 generate_libdoc_for_files()
