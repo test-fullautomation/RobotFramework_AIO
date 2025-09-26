@@ -103,6 +103,13 @@ jobs:
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
           sed -i "s|\$GITHUB_COPILOT_EXT_ARG|${GITHUB_COPILOT_EXT_ARG}|g" ./config/build/dpkg_build/postinst.sh
 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: linux-pip-${{ hashFiles('**/python_requirements_lx.txt') }}
+          restore-keys: |
+            linux-pip-
 
       - name: Clone repositories
         run: |
@@ -194,6 +201,14 @@ jobs:
 
           # Update placeholders install-github-copilot-exts.sh script
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.ps1
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: $env:LOCALAPPDATA\pip\Cache
+          key: windows-pip-${{ hashFiles('**/python_requirements.txt') }}
+          restore-keys: |
+            windows-pip-
 
       - name: Clone repositories
         shell: bash
