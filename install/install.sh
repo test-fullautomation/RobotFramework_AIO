@@ -199,7 +199,7 @@ function packaging_vscode() {
 
 	logresult "$?" "unzipped Visual Studio Codium" "unzip Visual Studio Codium"
 
-	mkdir "$sourceDir/vscodium/data"
+	mkdir -p "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
 
 	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
