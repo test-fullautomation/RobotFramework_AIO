@@ -189,9 +189,10 @@ function download_package(){
 }
 
 function packaging_vscode() {
+	rm -rf "$sourceDir/vscodium"
 	if [ "$UNAME" == "Linux" ] ; then
 		mkdir -p "$sourceDir/vscodium"
-		tar --force-local -xvvf "$archived_vscode_file" -C "$sourceDir/vscodium"
+		tar --force-local -xf "$archived_vscode_file" -C "$sourceDir/vscodium"
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
 	fi
@@ -396,6 +397,7 @@ function packaging_android() {
 #
 ####################################################
 function packaging_python_windows() {
+	rm -rf "$sourceDir/python"
 	tar --force-local -xzf "$archived_python_file" -C "$sourceDir"
 	rm -rf "$destDir/python3"
 	mv "$sourceDir/python" "$destDir/python3"
@@ -440,6 +442,7 @@ function packaging_python_windows() {
 #
 ####################################################
 function packaging_python_linux() {
+	rm -rf "$sourceDir/python"
 	tar --force-local -I zstd -xvf $archived_python_file -C "$sourceDir"
 	rm -rf "$destDir/python3lx"
 	mv "$sourceDir/python" "$destDir/python3lx"
