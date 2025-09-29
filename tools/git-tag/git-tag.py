@@ -414,7 +414,7 @@ class Gerrit(GitServer):
       res = self._get_request(f"{self.repo_api_url}/branches/HEAD")
 
       if res.status_code == 200:
-         return f"refs/heads/{json.loads(res.text.lstrip(")]}'\n"))['revision']}"
+         return f"refs/heads/" + json.loads(res.text.lstrip(")]}'\n"))['revision']
       else:
          err_msg(res.text.lstrip(")]}'\n"))
 
