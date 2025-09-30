@@ -98,6 +98,9 @@ Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; 
 ;;; will be overwritten with each new installation/update
 ;;;
 
+; RobotFramework icons
+Source: "R:\robotvscode\icons\*"; Excludes: ".git,logs"; DestDir: {app}\icons; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+
 ; Update version
 Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion; Permissions: everyone-full;
 
@@ -173,7 +176,7 @@ Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: E
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: "Robot Framework Test Case File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
@@ -183,7 +186,7 @@ Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: E
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueData: "Robot Framework Resource File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_resource.ico"; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_resource.ico"; Flags: UninsDeleteKey;
 
 
 ;Environment variables
