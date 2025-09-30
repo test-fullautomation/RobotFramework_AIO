@@ -334,8 +334,15 @@
 
 **VSCodium Package**
 
-* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality. 
-  
+* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality.
+
+"
+                              ],
+                              "0.14.2.;0.15.0." : [
+"
+**Windows Installer**
+
+* VSCodium (includes extensions and configurations) is now a separate selectable component in the Windows AIO installer.
 "
                               ]
                  }

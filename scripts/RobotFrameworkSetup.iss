@@ -5,7 +5,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;
 #ifndef SETUPVersion
-   #define SETUPVersion "0.1.4.0"
+   #define SETUPVersion "0.1.5.0"
 #endif
 #pragma message "SETUPVersion is : " + SETUPVersion
 ;Change History
@@ -92,11 +92,14 @@ Source: ..\config\RobotTest\testcases\.vscode\*; DestDir: {code:GetUsrDataDir}\t
 ;;; post install script
 ;;;
 ;update visual stuidio code follow installer path
-Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; Permissions: users-full;
+Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; Permissions: users-full; Components: VsCodium;
 
 ;;;
 ;;; will be overwritten with each new installation/update
 ;;;
+
+; RobotFramework icons
+Source: "R:\robotvscode\icons\*"; Excludes: ".git,logs"; DestDir: {app}\icons; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ; Update version
 Source: ..\version.txt; DestDir: {app}; Flags: ignoreversion; Permissions: everyone-full;
@@ -117,8 +120,8 @@ Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: i
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
-Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
-Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full;
+Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
+Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -137,14 +140,14 @@ Source: "..\config\tools\Appium.bat"; Excludes: ".git"; DestDir: {app}\devtools;
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases;
+Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases; Components: VsCodium;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir};
+Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}; Components: VsCodium;
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases;
 
@@ -159,6 +162,7 @@ Name: Full; Description: "Full installation of all components.";
 
 [Components]
 Name: "RobotFramework_AIO_All_In_One"; Description: "All in One required to develop and execute RobotFramework test cases"; Flags: fixed; Types: Standard Full;
+Name: "VsCodium"; Description: "VSCodium Editor"; Types: Standard Full;
 Name: "Android"; Description: "Android package for developing test case"; Types: Standard Full;
 Name: "Android\sdk_tools"; Description: "Android SDK Tools: command line tools, platform tools, build tools."; Types: Standard Full;
 Name: "Android\nodejs"; Description: "Node.js environment which is also contains appium server."; Types: Full;
@@ -172,9 +176,9 @@ Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: E
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: "Robot Framework Test Case File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python39\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Topic; ValueType: string; ValueData: System; Flags: UninsDeleteKey;
 
@@ -182,19 +186,21 @@ Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: E
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: dword; ValueName: BrowserFlags; ValueData: 00000008; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueData: "Robot Framework Resource File"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.resource.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string; ValueData:  "{app}\robotvscode\icons\robotframework_icon_resource.ico"; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.resource.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_resource.ico"; Flags: UninsDeleteKey;
 
 
 ;Environment variables
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonPath; ValueData: {app}\python3;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotPythonSitePackagesPath; ValueData: {app}\python3\Lib\site-packages;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotScriptPath; ValueData: {app}\python3\scripts;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotToolsPath; ValueData: {app}\tools;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTestPath; ValueData: {code:GetUsrDataDir}\testcases;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotLogPath; ValueData: {code:GetUsrDataDir}\logfiles;
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotTutorialPath; ValueData: {code:GetUsrDataDir}\tutorial;
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5;
+
+; VsCodium related environment variables
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode; Components: "VsCodium";
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5;  Components: "VsCodium";
 
 
 ; ROBFW Doesn't change ANDROID_HOME
@@ -222,9 +228,9 @@ Name: {code:GetUsrDataDir}\testcases\config; Flags: UninsNeverUninstall;
 Name: {code:GetUsrDataDir}\testcases\lib; Flags: UninsNeverUninstall;
 Name: {code:GetUsrDataDir}\logfiles; Flags: UninsNeverUninstall;
 Name: {code:GetUsrDataDir}\testcases\doc; Flags: UninsNeverUninstall;
-Name: {app}\robotvscode\data; Permissions: users-full;
-Name: {app}\robotvscode\data\extensions; Permissions: users-full;
-Name: {app}\robotvscode\data\user-data; Permissions: users-full;
+Name: {app}\robotvscode\data; Permissions: users-full; Components: VsCodium;
+Name: {app}\robotvscode\data\extensions; Permissions: users-full; Components: VsCodium;
+Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsCodium;
 Name: {app}\devtools; Permissions: users-full;
 
 [INI]
@@ -232,7 +238,7 @@ Name: {app}\devtools; Permissions: users-full;
 [RUN]
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
-  WorkingDir: {app}; Flags: runhidden runasoriginaluser;
+  WorkingDir: {app}; Flags: runhidden runasoriginaluser; Components: VsCodium;
 
 [UninstallRun]
 
@@ -464,7 +470,8 @@ begin
       end;
 #endif
 
-      SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
+      if IsComponentSelected('VsCodium') then
+          SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
     end;
 
 end;
@@ -575,7 +582,7 @@ begin
   // Select all text in the memo
   InstructionMemo.SelStart := 0;
   InstructionMemo.SelLength := Length(InstructionMemo.Text)
-
+  InfoAfterPage.Surface.Hide;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -692,8 +699,19 @@ begin
   Result := True;
 end;
 
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if (CurPageID = InfoAfterPage.ID) then
+  begin
+    if IsComponentSelected('VsCodium') then
+      InfoAfterPage.Surface.Show
+    else
+      WizardForm.NextButton.OnClick(nil); // skip page
+  end;
+end;
+
 [UninstallDelete]
-Name: {app}\robotvscode\*; Type: filesandordirs;
+Name: {app}\robotvscode\*; Type: filesandordirs; Components: VsCodium;
 Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
@@ -704,7 +722,7 @@ Name: {code:GetUsrDataDir}\documentation; Type: filesandordirs;
 Type: files; Name: "{app}\unins00*.*"; Check: ShouldRemoveUninsFiles(ExpandConstant('{app}'))
 
 [InstallDelete]
-Name: {app}\robotvscode\*; Type: filesandordirs;
+Name: {app}\robotvscode\*; Type: filesandordirs; Components: VsCodium;
 Name: {app}\python39\*; Type: filesandordirs;
 Name: {app}\python3\*; Type: filesandordirs;
 Name: {app}\tools\*; Type: filesandordirs;
