@@ -31,10 +31,6 @@
          "DoipKeywords.*"
       ],
       "exclude_patterns": [
-         "__init.*",
-         "constants.*",
-         "RobotFramework_DoIP.*",
-         "version.*"
       ]
    },
    {
@@ -79,6 +75,17 @@
       ],
       "include_patterns": [
          "robotlog2rqm.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-testsuitesmanagement",
+      "output_directory": "RobotFramework_TestsuitesManagement",
+      "source_folders": [
+         "RobotFramework_TestsuitesManagement"
+      ],
+      "include_patterns": [
+         "CSetup.*"
       ],
       "exclude_patterns": []
    }
