@@ -200,7 +200,7 @@ Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 
 ; VsCodium related environment variables
 Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: RobotVsCode; ValueData: {app}\robotvscode; Components: "VsCodium";
-Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.17.5;  Components: "VsCodium";
+Root: HKLM; SubKey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: GENDOC_PLANTUML_PATH; ValueData: {app}\robotvscode\data\extensions\jebbs.plantuml-2.18.1;  Components: "VsCodium";
 
 
 ; ROBFW Doesn't change ANDROID_HOME
