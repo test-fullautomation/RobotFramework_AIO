@@ -343,6 +343,10 @@
 **Windows Installer**
 
 * VSCodium (includes extensions and configurations) is now a separate selectable component in the Windows AIO installer.
+
+**VSCodium Package**
+
+* Upgrade extension PlantUML to version 2.18.1
 "
                               ]
                  }
