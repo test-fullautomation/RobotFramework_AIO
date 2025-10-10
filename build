@@ -305,7 +305,7 @@ function generate_version_info() {
 function build_libdoc_document()
 {
 	echo "Building libdoc document"
-	${PYBIN} ./test/aio-generate-libdoc/generate_libdoc.py
+	${PYBIN} ./tools/libdoc/generate_libdoc.py
 }
 
 function build_debian()
