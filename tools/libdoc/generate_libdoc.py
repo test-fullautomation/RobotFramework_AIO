@@ -82,6 +82,8 @@ def process_config(config):
 def generate_libdoc(file, root, version, repository_path, output_directory):
     """Generate libdoc for a single file."""
     try:
+        if repository_path not in sys.path:
+            sys.path.append(CString.NormalizePath(f"{repository_path}"))
         source_path = CString.NormalizePath(f"{root}/{file}")
         output_folder_path = CString.NormalizePath(f"{repository_path}/{output_directory}")
         os.makedirs(output_folder_path, exist_ok=True)
