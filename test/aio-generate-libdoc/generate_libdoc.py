@@ -31,6 +31,7 @@ import json
 import re
 import subprocess
 from PythonExtensionsCollection.String.CString import CString
+from bs4 import BeautifulSoup
 from importlib.util import spec_from_file_location, module_from_spec
 
 sPythonPath = CString.NormalizePath(sys.executable)
@@ -92,6 +93,8 @@ def generate_libdoc(file, root, version, repository_path, output_directory):
             check=True
         )
         print(f"Documentation generated successfully for: {source_path}")
+
+        add_readme_link_to_libdoc(output_file_path, repository_path)
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while generating documentation for {file}: {e}")
     except Exception as e:
@@ -120,5 +123,65 @@ def should_process_file(file, include_regex, exclude_regex):
     if exclude_regex and any(regex.search(file) for regex in exclude_regex):
         return False
     return True
+
+def add_readme_link_to_libdoc(output_path, repository_path):
+    try:
+        # Generate the README URL
+        repository_name = os.path.basename(os.path.normpath(repository_path))
+        readme_url = f"https://github.com/test-fullautomation/{repository_name}/blob/develop/README.md"
+
+        # Read the HTML content from the file
+        with open(output_path, "r", encoding="utf-8") as file:
+            html_content = file.read()
+
+        # Parse the HTML content
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        # Find the <script> tag with id="base-template"
+        script_tag = soup.find("script", id="base-template")
+        if not script_tag:
+            print("Script tag with id 'base-template' not found.")
+            return
+
+        # Extract and parse the content of the <script> tag
+        script_content = script_tag.string
+        script_soup = BeautifulSoup(script_content, "html.parser")
+
+        # Find the metadata table
+        metadata_table = script_soup.find("table", class_="metadata")
+        if not metadata_table:
+            print("Table with class 'metadata' not found inside the script content.")
+            return
+
+        # Create a new row for the README link
+        new_row = script_soup.new_tag("tr")
+
+        # Add a new <th> for the row
+        new_th = script_soup.new_tag("th")
+        new_th.string = "README:"
+        new_row.append(new_th)
+
+        # Add a new <td> with the README link
+        new_td = script_soup.new_tag("td")
+        new_a = script_soup.new_tag("a", href=readme_url)
+        new_a.string = "Github"
+        new_td.append(new_a)
+        new_row.append(new_td)
+
+        # Append the new row to the metadata table
+        metadata_table.append(new_row)
+
+        # Update the script tag content
+        script_tag.string = str(script_soup)
+
+        # Write the updated HTML back to the file
+        with open(output_path, "w", encoding="utf-8") as file:
+            file.write(str(soup))
+
+        print("README link successfully added to the libdoc.")
+    except FileNotFoundError:
+        print(f"Error: File not found at path '{output_path}'.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 generate_libdoc_for_files()
