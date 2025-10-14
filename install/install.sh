@@ -336,6 +336,7 @@ function packaging_android() {
 		npm_proxy_args=""
 		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
 		mv $destDir/devtools/node-* $destDir/devtools/nodejs
+		PATH="$destDir/devtools/nodejs:$PATH"
 		npm_bin=$destDir/devtools/nodejs/npm
 	else
 	   mkdir $destDir/devtools/nodejs
