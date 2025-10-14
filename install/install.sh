@@ -234,14 +234,23 @@ function packaging_vscode() {
     },\n}/' "$vscodium_setting_file"
 	fi
 
-	echo "Update or add robotframeworkWelcome.hasSeenWelcome setting to false"
-   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
-       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
-       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
-   else
-       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
-       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
-   fi
+	echo "Update or add robotframeworkWelcome settings"
+	if grep -q '"robotframeworkWelcome.keepCustomWelcome": true' "$vscodium_setting_file"; then
+		echo "robotframeworkWelcome.keepCustomWelcome is true, updating robotframeworkWelcome.hasSeenWelcome to false"
+		sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+	else
+		echo "robotframeworkWelcome.keepCustomWelcome is false or does not exist, adding full settings"
+		if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
+			echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
+			sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+		else
+			echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
+			sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
+		fi
+
+		# Add the additional settings
+		sed -i -E '$ s/}/    "robotframeworkWelcome.keepCustomWelcome": false,\n    "robotframeworkWelcome.welcomeUrl": "",\n    "robotframeworkWelcome.css": [],\n    "robotframeworkWelcome.html": [],\n    "robotframeworkWelcome.js": [],\n    "robotframeworkWelcome.img": [],\n}/' "$vscodium_setting_file"
+	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
