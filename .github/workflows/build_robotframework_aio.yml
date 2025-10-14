@@ -165,6 +165,24 @@ jobs:
           name: RobotFrameworkAIO_Reference_${{ matrix.version }}
           path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
 
+      - name: Build welcome extension
+      - run: |
+          # Copy all HTML files to the target directory
+          cp ${{ runner.workspace }}/robotframework-dbus/RobotFramework_DBus/*.html ../vscode-welcome/assets/html/
+          cp ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html ../vscode-welcome/assets/html/
+          cp ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html ../vscode-welcome/assets/html/
+          cp ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html ../vscode-welcome/assets/html/
+          cp ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html ../vscode-welcome/assets/html/
+          cp ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html ../vscode-welcome/assets/html/
+          chmod +x ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
+          ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-welcome-*.vsix
+          path: ${{ runner.workspace }}/vscode-welcome/vscode-welcome-*.vsix
+
   build-windows:
     strategy:
       fail-fast: false
