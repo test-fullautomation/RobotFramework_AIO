@@ -174,7 +174,6 @@ jobs:
 
       - name: Build welcome extension
         run: |
-          # Copy all HTML files to the target directory
           cp ${{ runner.workspace }}/robotframework-dbus/RobotFramework_DBus/*.html ../vscode-welcome/assets/html/
           cp ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html ../vscode-welcome/assets/html/
           cp ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html ../vscode-welcome/assets/html/
