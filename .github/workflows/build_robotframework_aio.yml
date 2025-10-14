@@ -163,7 +163,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RobotFrameworkAIO_Reference_${{ matrix.version }}
-          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+          path: |
+            ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+            ${{ runner.workspace }}/robotframework-dbus/RobotFramework_DBus/*.html
+            ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html
+            ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html
+            ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
+            ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
+            ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
 
       - name: Build welcome extension
       - run: |
@@ -174,8 +181,8 @@ jobs:
           cp ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html ../vscode-welcome/assets/html/
           cp ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html ../vscode-welcome/assets/html/
           cp ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html ../vscode-welcome/assets/html/
-          chmod +x ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
-          ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
+          chmod +x ../vscode-welcome/build_vsix.sh
+          ../vscode-welcome/build_vsix.sh
 
       - name: Upload extension
         uses: actions/upload-artifact@v4
