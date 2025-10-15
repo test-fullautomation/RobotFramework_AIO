@@ -127,7 +127,11 @@ jobs:
           ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
 
       - name: Build welcome extension
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.12
         run: |
+          npm install -g @vscode/vsce
           for dir in robotframework-dbus/RobotFramework_DBus \
                      robotframework-doip/RobotFramework_DoIP \
                      robotframework-extensions-collection/RobotframeworkExtensions \
