@@ -128,12 +128,16 @@ jobs:
 
       - name: Build welcome extension
         run: |
-          cp ${{ runner.workspace }}/robotframework-dbus/RobotFramework_DBus/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-          cp ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-          cp ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-          cp ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-          cp ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-          cp ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
+          for dir in robotframework-dbus/RobotFramework_DBus \
+                     robotframework-doip/RobotFramework_DoIP \
+                     robotframework-extensions-collection/RobotframeworkExtensions \
+                     robotframework-qconnect-base/QConnectBase \
+                     robotframework-robotlog2db/RobotLog2DB \
+                     robotframework-robotlog2rqm/RobotLog2RQM; do
+            if [ -d "${{ runner.workspace }}/$dir" ]; then
+              cp ${{ runner.workspace }}/$dir/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
+            fi
+          done
           chmod +x ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
           ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
 
