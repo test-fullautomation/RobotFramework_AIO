@@ -144,8 +144,9 @@ jobs:
               cp ${{ runner.workspace }}/$dir/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
             fi
           done
-          chmod +x ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
-          ${{ runner.workspace }}/vscode-welcome/build_vsix.sh
+          cd ${{ runner.workspace }}/vscode-welcome/
+          chmod +x ./build_vsix.sh
+          ./build_vsix.sh
 
       - name: Update all documents
         if: ${{ github.ref_type == 'tag' }}
