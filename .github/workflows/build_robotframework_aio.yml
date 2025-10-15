@@ -197,7 +197,7 @@ jobs:
       - name: Upload extension
         uses: actions/upload-artifact@v4
         with:
-          name: vscode-welcome-*.vsix
+          name: vscode-welcome-vsix
           path: ${{ runner.workspace }}/vscode-welcome/vscode-welcome-*.vsix
 
   build-windows:
