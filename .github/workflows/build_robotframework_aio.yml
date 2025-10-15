@@ -126,10 +126,12 @@ jobs:
           chmod +x ./build
           ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
 
-      - name: Build welcome extension
+      - name: Setup nodejs
         uses: actions/setup-node@v6
         with:
           node-version: 22.12
+
+      - name: Build welcome extension
         run: |
           npm install -g @vscode/vsce
           for dir in robotframework-dbus/RobotFramework_DBus \
