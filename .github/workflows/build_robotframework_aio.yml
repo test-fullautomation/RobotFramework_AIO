@@ -126,28 +126,6 @@ jobs:
           chmod +x ./build
           ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
 
-      - name: Setup nodejs
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.12
-
-      - name: Build welcome extension
-        run: |
-          npm install -g @vscode/vsce
-          for dir in robotframework-dbus/RobotFramework_DBus \
-                     robotframework-doip/RobotFramework_DoIP \
-                     robotframework-extensions-collection/RobotframeworkExtensions \
-                     robotframework-qconnect-base/QConnectBase \
-                     robotframework-robotlog2db/RobotLog2DB \
-                     robotframework-robotlog2rqm/RobotLog2RQM; do
-            if [ -d "${{ runner.workspace }}/$dir" ]; then
-              cp ${{ runner.workspace }}/$dir/*.html ${{ runner.workspace }}/vscode-welcome/assets/html/
-            fi
-          done
-          cd ${{ runner.workspace }}/vscode-welcome/
-          chmod +x ./build_vsix.sh
-          ./build_vsix.sh
-
       - name: Update all documents
         if: ${{ github.ref_type == 'tag' }}
         run: |
@@ -193,12 +171,6 @@ jobs:
             ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
             ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
             ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
-
-      - name: Upload extension
-        uses: actions/upload-artifact@v4
-        with:
-          name: vscode-welcome-vsix
-          path: ${{ runner.workspace }}/vscode-welcome/vscode-welcome-*.vsix
 
   build-windows:
     strategy:

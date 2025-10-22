@@ -189,6 +189,7 @@ function download_package(){
 }
 
 function packaging_vscode() {
+	MY_PUBLISHER="test-fullautomation"
 	rm -rf "$sourceDir/vscodium"
 	if [ "$UNAME" == "Linux" ] ; then
 		mkdir -p "$sourceDir/vscodium"
@@ -201,6 +202,20 @@ function packaging_vscode() {
 
 	mkdir -p "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
+
+	echo "Copy vscode-welcome extension"
+
+	# Find the .vsix file and copy it
+	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
+	cp -rf "$vsix_file" "$vscodeData/extensions/"
+
+	ls "$mypath/../config/robotvscode/data/extensions"
+
+	# Extract the name of the .vsix file
+	vsix_name=$(basename $vsix_file .vsix)
+
+	mkdir -p "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
+	echo "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
 
 	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 	# add proxy configuration in vscodium setting if given
