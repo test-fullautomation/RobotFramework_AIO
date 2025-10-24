@@ -57,28 +57,6 @@
       "exclude_patterns": []
    },
    {
-      "repository_path": "../robotframework-robotlog2db",
-      "output_directory": "RobotLog2DB",
-      "source_folders": [
-         "RobotLog2DB"
-      ],
-      "include_patterns": [
-         "robotlog2db.*"
-      ],
-      "exclude_patterns": []
-   },
-   {
-      "repository_path": "../robotframework-robotlog2rqm",
-      "output_directory": "RobotLog2RQM",
-      "source_folders": [
-         "RobotLog2RQM"
-      ],
-      "include_patterns": [
-         "robotlog2rqm.*"
-      ],
-      "exclude_patterns": []
-   },
-   {
       "repository_path": "../robotframework-testsuitesmanagement",
       "output_directory": "RobotFramework_TestsuitesManagement",
       "source_folders": [
@@ -86,6 +64,17 @@
       ],
       "include_patterns": [
          "CSetup.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-prometheus",
+      "output_directory": "PrometheusInterface",
+      "source_folders": [
+         "PrometheusInterface"
+      ],
+      "include_patterns": [
+         "prometheus_interface.*"
       ],
       "exclude_patterns": []
    }
