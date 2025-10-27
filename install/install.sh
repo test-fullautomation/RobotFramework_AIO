@@ -209,13 +209,10 @@ function packaging_vscode() {
 	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
 	cp -rf "$vsix_file" "$vscodeData/extensions/"
 
-	ls "$mypath/../config/robotvscode/data/extensions"
-
 	# Extract the name of the .vsix file
 	vsix_name=$(basename $vsix_file .vsix)
 
 	mkdir -p "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
-	echo "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
 
 	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 	# add proxy configuration in vscodium setting if given
@@ -247,24 +244,6 @@ function packaging_vscode() {
         "terminal.ansiRed": "#FF4040",\
         "terminal.ansiBrightRed": "#FF0000"\
     },\n}/' "$vscodium_setting_file"
-	fi
-
-	echo "Update or add robotframeworkWelcome settings"
-	if grep -q '"robotframeworkWelcome.keepCustomWelcome": true' "$vscodium_setting_file"; then
-		echo "robotframeworkWelcome.keepCustomWelcome is true, updating robotframeworkWelcome.hasSeenWelcome to false"
-		sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
-	else
-		echo "robotframeworkWelcome.keepCustomWelcome is false or does not exist, adding full settings"
-		if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
-			echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
-			sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
-		else
-			echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
-			sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
-		fi
-
-		# Add the additional settings
-		sed -i -E '$ s/}/    "robotframeworkWelcome.keepCustomWelcome": false,\n    "robotframeworkWelcome.welcomeUrl": "",\n}/' "$vscodium_setting_file"
 	fi
 
 	# Ensure "workbench.startupEditor" is set to "none"
