@@ -264,7 +264,16 @@ function packaging_vscode() {
 		fi
 
 		# Add the additional settings
-		sed -i -E '$ s/}/    "robotframeworkWelcome.keepCustomWelcome": false,\n    "robotframeworkWelcome.welcomeUrl": "",\n    "robotframeworkWelcome.css": [],\n    "robotframeworkWelcome.html": [],\n    "robotframeworkWelcome.js": [],\n    "robotframeworkWelcome.img": [],\n}/' "$vscodium_setting_file"
+		sed -i -E '$ s/}/    "robotframeworkWelcome.keepCustomWelcome": false,\n    "robotframeworkWelcome.welcomeUrl": "",\n}/' "$vscodium_setting_file"
+	fi
+
+	# Ensure "workbench.startupEditor" is set to "none"
+	if grep -q '"workbench.startupEditor"' "$vscodium_setting_file"; then
+	    echo "workbench.startupEditor exists, updating to none"
+	    sed -i -E 's/"workbench.startupEditor":\s*"[^"]*"/"workbench.startupEditor": "none"/' "$vscodium_setting_file"
+	else
+	    echo "Append workbench.startupEditor with none before closing brace"
+	    sed -i -E '$ s/}/    "workbench.startupEditor": "none",\n}/' "$vscodium_setting_file"
 	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
@@ -283,7 +292,6 @@ function packaging_vscode() {
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
-	MY_PUBLISHER="test-fullautomation"
 
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
