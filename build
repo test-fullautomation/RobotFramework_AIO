@@ -314,6 +314,7 @@ function build_libdoc_document()
 	for dir in ../robotframework-dbus/RobotFramework_DBus \
               ../robotframework-doip/RobotFramework_DoIP \
               ../robotframework-uds/RobotFramework_UDS \
+              ../robotframework-prometheus/PrometheusInterface \
               ../robotframework-extensions-collection/RobotframeworkExtensions \
               ../robotframework-qconnect-base/QConnectBase; do
        if [ -d "$dir" ]; then
