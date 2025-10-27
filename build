@@ -304,14 +304,17 @@ function generate_version_info() {
 
 function build_libdoc_document()
 {
-	echo "Building libdoc documents"
-	# Define variables
-	assets_dir="../robotvscode/data/extensions/test-fullautomation.vscode-welcome-0.0.2/assets/html"
-	mkdir -p $assets_dir
+   echo "Building libdoc documents"
+   MY_PUBLISHER="test-fullautomation"
 
-	${PYBIN} ./tools/libdoc/generate_libdoc.py
-	# Copy libdoc documents to vscode welcome extension
-	for dir in ../robotframework-dbus/RobotFramework_DBus \
+   # Resolve the assets directory dynamically using wildcard
+   assets_dir=$(ls -d ../robotvscode/data/extensions/$MY_PUBLISHER.vscode-welcome-*/assets/html | head -n 1)
+
+   mkdir -p $assets_dir
+
+   ${PYBIN} ./tools/libdoc/generate_libdoc.py
+   # Copy libdoc documents to vscode welcome extension
+   for dir in ../robotframework-dbus/RobotFramework_DBus \
               ../robotframework-doip/RobotFramework_DoIP \
               ../robotframework-uds/RobotFramework_UDS \
               ../robotframework-prometheus/PrometheusInterface \
