@@ -8,6 +8,7 @@ on:
 
 env:
    INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
+   TAG_NAME: ${{ github.ref_name }}
 
 jobs:
    release-info:
@@ -20,14 +21,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4.3.0
         with:
-         python-version: "3.9" 
+         python-version: "3.9"
 
       - name: Install dependencies
         run: |
             sudo apt-get update
             sudo apt-get install -y pandoc
             python -m pip install -r tools/release_info/requirements.txt
-      
+
       - name: Clone repositories
         run: |
             chmod +x ./cloneall
@@ -36,6 +37,7 @@ jobs:
       - name: Generate release info
         run: |
             export AIO_VERSION_DATE=$(date +%m.%Y)
+            export AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}
             export RobotPythonSitePackagesPath=${{ runner.workspace }}/robotframework-testsuitesmanagement
 
             VARIANTS=("extended" "original")
@@ -45,7 +47,7 @@ jobs:
                . ./include/bash/common.sh && create_testsuitmanagement_package_context_file
                python tools/release_info/release_info.py --configfile ./release_info_config_OSS_${variant}.json
             done
-      
+
       - name: Upload as artifacts
         if: success() || failure()
         uses: actions/upload-artifact@v4
