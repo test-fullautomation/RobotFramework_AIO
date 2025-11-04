@@ -1,6 +1,6 @@
 # **************************************************************************************************************
 #
-#  Copyright 2020-2023 Robert Bosch GmbH
+#  Copyright 2020-2025 Robert Bosch GmbH
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -19,6 +19,6 @@
 # Version and date of aio-analyzer
 #
 NAME         = "RobotFramework AIO Analyzer"
-VERSION      = "0.5.0"
-VERSION_DATE = "01.06.2023"
+VERSION      = "0.6.0"
+VERSION_DATE = "04.11.2025"
 

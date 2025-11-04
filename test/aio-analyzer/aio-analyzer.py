@@ -20,7 +20,7 @@
 #
 # XC-HWP/ESW3-Queckenstedt
 #
-# 15.01.2025
+# 04.11.2025
 #
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -51,6 +51,7 @@ col.init(autoreset=True)
 COLBR = col.Style.BRIGHT + col.Fore.RED
 COLBY = col.Style.BRIGHT + col.Fore.YELLOW
 COLBG = col.Style.BRIGHT + col.Fore.GREEN
+COLBB = col.Style.BRIGHT + col.Fore.BLUE
 
 SUCCESS          = 0
 ERROR            = 1
@@ -724,16 +725,24 @@ if ( (bVersionCheckExecuted is True) and (bVersionMismatch is False) ):
 
 # at end print again some basic information in console (for better readibility, no need to scroll up)
 
-sOut = f"<<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
-print(COLBY + sOut)
+sOut = f"\n                                 <<< SUMMARY >>>"
+print(COLBB + sOut)
 print()
 
-sOut = f"<<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
-print(COLBY + sOut)
+sOut = f"         <<< '{sBundleName}' / '{sBundleVersion}' / '{sBundleVersionDate}' >>>"
+print(COLBG + sOut)
 print()
 
-sOut = f"<<< python version '{PYTHONVERSION}' >>>"
-print(COLBY + sOut)
+sOut = f"                      <<< Robot Framework version '{ROBOTFRAMEWORKVERSION}' >>>"
+print(COLBG + sOut)
+print()
+
+sOut = f"                     <<< Robot Framework core '{ROBOTFRAMEWORKCORE}' >>>"
+print(COLBG + sOut)
+print()
+
+sOut = f"<<< python version '{PYTHONVERSION}' >>>\n"
+print(COLBG + sOut)
 print()
 
 oLogFile.Write("Done")
