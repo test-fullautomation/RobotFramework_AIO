@@ -1,0 +1,92 @@
+[
+   {
+      "repository_path": "../robotframework-uds",
+      "output_directory": "RobotFramework_UDS",
+      "source_folders": [
+         "RobotFramework_UDS"
+      ],
+      "include_patterns": [
+         "UDSKeywords.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-dbus",
+      "output_directory": "RobotFramework_DBus",
+      "source_folders": [
+         "RobotFramework_DBus"
+      ],
+      "include_patterns": [
+         "dbus_manager.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-doip",
+      "output_directory": "RobotFramework_DoIP",
+      "source_folders": [
+         "RobotFramework_DoIP"
+      ],
+      "include_patterns": [
+         "DoipKeywords.*"
+      ],
+      "exclude_patterns": [
+      ]
+   },
+   {
+      "repository_path": "../robotframework-extensions-collection",
+      "output_directory": "RobotframeworkExtensions",
+      "source_folders": [
+         "RobotframeworkExtensions"
+      ],
+      "include_patterns": [
+         "Collection.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-qconnect-base",
+      "output_directory": "QConnectBase",
+      "source_folders": [
+         "QConnectBase"
+      ],
+      "include_patterns": [
+         "connection_manager.*",
+         "qlogger.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-robotlog2db",
+      "output_directory": "RobotLog2DB",
+      "source_folders": [
+         "RobotLog2DB"
+      ],
+      "include_patterns": [
+         "robotlog2db.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-robotlog2rqm",
+      "output_directory": "RobotLog2RQM",
+      "source_folders": [
+         "RobotLog2RQM"
+      ],
+      "include_patterns": [
+         "robotlog2rqm.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-testsuitesmanagement",
+      "output_directory": "RobotFramework_TestsuitesManagement",
+      "source_folders": [
+         "RobotFramework_TestsuitesManagement"
+      ],
+      "include_patterns": [
+         "CSetup.*"
+      ],
+      "exclude_patterns": []
+   }
+]
