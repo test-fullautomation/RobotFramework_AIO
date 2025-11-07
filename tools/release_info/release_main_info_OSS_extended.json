@@ -953,36 +953,24 @@ Feel free to contact us when you use or intend to use **RobotFramework AIO**. We
              - \".\" (dot)-syntax allows easy navigation through object hierarchies.
                         "],
                 "HIGHLIGHTS"      : ["
-          **New**
-     
-          - RobotFramework AIO comes now in two variants:
-            
-            - **extended**
-              uses the Robot Framework fork extended by the RobotFramework AIO team. Details about extensions you find here: `https://robotframework-aio.org <https://robotframework-aio.org/index.html#label_extensions>`_.
+          **New** (Details in chapter 'Changes' below)
 
-            - **original**
-              uses the latest original Robot Framework core.
-          
-          - VSCodium uses `RobotCode <https://robotcode.io/>`_ now instead of deprecated robotframework-lsp for syntax highlighting.
+          - new component `python-rabbitmq-messagebus (EventBusClient) <https://github.com/test-fullautomation/python-rabbitmq-messagebus>`_ for interprocess communication based on RabbitMQ.
 
-          - Support to install `GitHub Copilot <https://github.com/features/copilot>`_.
+          - `JsonPreprocessor <https://github.com/test-fullautomation/python-jsonpreprocessor>`_ supports python inline code.
 
-          - DoIP and USD keyword library support now multiple named connections in parallel.
+          - `robotframework-qconnect-base <https://github.com/test-fullautomation/robotframework-qconnect-base>`_ improved stability, testing and documentation.
 
-                   
+          - `robotframework-testsuitesmanagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement>`_ provides initial python API for RobotFramework AIO bundle version check. 
+
+
           **General**
           
           - Improved continuous test as part of pipeline.
           
           - RobotFramework core version 6.1 as base.
           
-          - All preinstalled OSS **RobotFramework AIO** libraries available in OSS Python package index `pypi <https://pypi.org/>`_ now as part of release process: e.g. 
-            
-            `robotframework-testsuitesmanagement <https://pypi.org/project/robotframework-testsuitesmanagement/>`_,
-            `robotframework-qconnect-base <https://pypi.org/project/robotframework-qconnect-base/>`_,
-            `robotframework-robotlog2db <https://pypi.org/project/robotframework-robotlog2db/>`_,
-            `JsonPreprocessor <https://pypi.org/project/JsonPreprocessor/>`_,
-            `GenPackageDoc <https://pypi.org/project/GenPackageDoc/>`_, ...
+          - All preinstalled OSS **RobotFramework AIO** libraries also available in OSS Python package index `pypi <https://pypi.org/user/ThPoll/>`_.
           
           - Improved installation and pre-configuration.
           

@@ -65,6 +65,12 @@ function parse_repo () {
 		# switch repo to given released tag $TAG_NAME
 		if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
 			if [[ "$repo_type" == "gerrit" ]]; then
+				if [[ "$SKIP_GERRIT_TAGS" =~ ^([Tt][Rr][Uu][Ee]|1|[Yy][Ee][Ss])$ ]]; then
+					warningmsg "Skipping tag switch for gerrit repo $repo_name as per configuration - SKIP_GERRIT_TAGS is set to a truthy value"
+					commit_branch=$(git config -f $conf_file --get $repo)
+					clone_update_repo "$SCRIPT_DIR/../$repo_name" "$repo_url" "$commit_branch"
+					continue
+				fi
 				# add /aio (if not given) in tag for cloning gerrit repos
 				if [[ "$TAG_NAME" != rel/aio/* && "$TAG_NAME" != dev/aio/* ]]; then
 					AIO_TAG=$(echo "$TAG_NAME" | sed -E 's#^(rel|dev)/#\1/aio/#')
