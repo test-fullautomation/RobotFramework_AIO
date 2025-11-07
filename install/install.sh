@@ -189,6 +189,7 @@ function download_package(){
 }
 
 function packaging_vscode() {
+	MY_PUBLISHER="test-fullautomation"
 	rm -rf "$sourceDir/vscodium"
 	if [ "$UNAME" == "Linux" ] ; then
 		mkdir -p "$sourceDir/vscodium"
@@ -201,6 +202,17 @@ function packaging_vscode() {
 
 	mkdir -p "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
+
+	echo "Copy vscode-welcome extension"
+
+	# Find the .vsix file and copy it
+	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
+	cp -rf "$vsix_file" "$vscodeData/extensions/"
+
+	# Extract the name of the .vsix file
+	vsix_name=$(basename $vsix_file .vsix)
+
+	mkdir -p "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
 
 	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 	# add proxy configuration in vscodium setting if given
@@ -234,14 +246,14 @@ function packaging_vscode() {
     },\n}/' "$vscodium_setting_file"
 	fi
 
-	echo "Update or add robotframeworkWelcome.hasSeenWelcome setting to false"
-   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
-       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
-       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
-   else
-       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
-       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
-   fi
+	# Ensure "workbench.startupEditor" is set to "none"
+	if grep -q '"workbench.startupEditor"' "$vscodium_setting_file"; then
+	    echo "workbench.startupEditor exists, updating to none"
+	    sed -i -E 's/"workbench.startupEditor":\s*"[^"]*"/"workbench.startupEditor": "none"/' "$vscodium_setting_file"
+	else
+	    echo "Append workbench.startupEditor with none before closing brace"
+	    sed -i -E '$ s/}/    "workbench.startupEditor": "none",\n}/' "$vscodium_setting_file"
+	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
@@ -259,7 +271,6 @@ function packaging_vscode() {
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
-	MY_PUBLISHER="test-fullautomation"
 
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
