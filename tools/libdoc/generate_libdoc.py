@@ -166,7 +166,7 @@ def add_readme_link_to_libdoc(output_path, repository_path):
         # Add a new <td> with the README link
         new_td = script_soup.new_tag("td")
         new_a = script_soup.new_tag("a", href=readme_url)
-        new_a.string = "Github"
+        new_a.string = "GitHub"
         new_td.append(new_a)
         new_row.append(new_td)
 
