@@ -53,6 +53,12 @@ function parse_repo () {
 	for repo in "${list_repos[@]}"
 	do
 		repo_name=${repo#${repo_type}.}
+		# Special case: Rename the repo "robotframework-aio-website" to "RobotFramework_AIO_website"
+		# This is likely done to handle a specific repository name that uses underscores and uppercase letters.
+		if [ "$repo_name" == "robotframework-aio-website" ]; then
+			repo_name="RobotFramework_AIO_website"
+		fi
+
 		server_url=$(get_server_url "${conf_file}" "${repo_type}")
 		if [[ "$server_url" != "" ]]; then
 			repo_url=$(get_url ${repo_type} ${server_url} ${repo_name})
