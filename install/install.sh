@@ -207,7 +207,7 @@ function packaging_vscode() {
 
 	# Find the .vsix file and copy it
 	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
-	cp -rf "$vsix_file" "$vscodeData/extensions/"
+	# cp -rf "$vsix_file" "$vscodeData/extensions/"
 
 	# Extract the name of the .vsix file
 	vsix_name=$(basename $vsix_file .vsix)
