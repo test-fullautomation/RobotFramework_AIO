@@ -155,27 +155,13 @@ jobs:
 
       - name: Update libdoc documents to RobotFramework AIO website
         run: |
-          mkdir -p ../RobotFramework_AIO_website/html/libdoc
-
-          for dir in ../robotframework-dbus/RobotFramework_DBus \
-            ../robotframework-doip/RobotFramework_DoIP \
-            ../robotframework-uds/RobotFramework_UDS \
-            ../robotframework-prometheus/PrometheusInterface \
-            ../robotframework-extensions-collection/RobotframeworkExtensions \
-            ../robotframework-qconnect-base/QConnectBase; do
-            if [ -d "$dir" ]; then
-              libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
-              cp -a "$libdoc" "../RobotFramework_AIO_website/html/libdoc"
-            fi
-          done
-
           cd ../RobotFramework_AIO_website
           doc_branch=automation/task/update-rfw-libdoc-documents-${{ matrix.version }}
           git config user.email "trimai3001@gmail.com"
           git config user.name "Tri Mai"
           git checkout -b $doc_branch
           git remote add doc-repo https://${{ secrets.PAT_GITHUB }}@github.com/test-fullautomation/RobotFramework_AIO_website.git
-          git add RobotFramework_AIO_website/html/libdoc/*.html
+          git add html/libdoc/*.html
           git commit -m "Auto update libdoc documents of ${{ matrix.version }} version in RobotFramework_AIO_website"
           git push -u -f doc-repo $doc_branch
           echo -e "\e[32;01mPush all changes completely ... \e[0m"
