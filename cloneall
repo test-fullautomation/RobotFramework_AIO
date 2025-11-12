@@ -72,8 +72,11 @@ function parse_repo () {
 					continue
 				fi
 				# add /aio (if not given) in tag for cloning gerrit repos
-				if [[ "$TAG_NAME" != rel/aio/* && "$TAG_NAME" != dev/aio/* ]]; then
-					AIO_TAG=$(echo "$TAG_NAME" | sed -E 's#^(rel|dev)/#\1/aio/#')
+				if [ -z "$GERRIT_INFIX_TAG" ];then
+					GERRIT_INFIX_TAG=aio/
+				fi
+				if [[ "$TAG_NAME" != rel/${GERRIT_INFIX_TAG}* && "$TAG_NAME" != dev/${GERRIT_INFIX_TAG}* ]]; then
+					AIO_TAG=$(echo "$TAG_NAME" | sed -E "s#^(rel|dev)/#\1/${GERRIT_INFIX_TAG}#")
 				else
 					AIO_TAG="$TAG_NAME"
 				fi
