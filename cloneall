@@ -72,7 +72,7 @@ function parse_repo () {
 					continue
 				fi
 				# add /aio (if not given) in tag for cloning gerrit repos
-				if [ -z "$GERRIT_INFIX_TAG" ];then
+				if [ -z "$GERRIT_INFIX_TAG" ] ; then
 					GERRIT_INFIX_TAG=aio/
 				fi
 				if [[ "$TAG_NAME" != rel/${GERRIT_INFIX_TAG}* && "$TAG_NAME" != dev/${GERRIT_INFIX_TAG}* ]]; then
