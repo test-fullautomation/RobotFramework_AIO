@@ -154,12 +154,9 @@ jobs:
           echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
       - name: Update libdoc documents to RobotFramework AIO website
-        if: ${{ github.ref_type == 'tag' }}
         run: |
           cd ../RobotFramework_AIO_website
           doc_branch=automation/task/update-rfw-libdoc-documents-${{ matrix.version }}
-          git config user.email "trimai3001@gmail.com"
-          git config user.name "Tri Mai"
           git checkout -b $doc_branch
           git remote add doc-repo https://${{ secrets.PAT_GITHUB }}@github.com/test-fullautomation/RobotFramework_AIO_website.git
           git add html/libdoc/*.html
