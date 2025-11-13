@@ -247,10 +247,10 @@ function packaging_vscode() {
 	fi
 
    if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
-       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
+       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to true"
        sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": true/' "$vscodium_setting_file"
    else
-       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
+       echo "Append robotframeworkWelcome.hasSeenWelcome with true before closing brace"
        sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": true,\n}/' "$vscodium_setting_file"
    fi
 
