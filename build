@@ -309,8 +309,10 @@ function build_libdoc_document()
 
    # Resolve the assets directory dynamically using wildcard
    assets_dir=$(ls -d ../robotvscode/data/extensions/$MY_PUBLISHER.vscode-welcome-*/assets/html | head -n 1)
+   website_dir=../RobotFramework_AIO_website/html/libdoc
 
    mkdir -p $assets_dir
+	mkdir -p $website_dir
 
    ${PYBIN} ./tools/libdoc/generate_libdoc.py
    # Copy libdoc documents to vscode welcome extension
@@ -323,6 +325,7 @@ function build_libdoc_document()
        if [ -d "$dir" ]; then
            libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
            cp -a "$libdoc" "$assets_dir"
+			  cp -a "$libdoc" "$website_dir"
        fi
    done
 }
