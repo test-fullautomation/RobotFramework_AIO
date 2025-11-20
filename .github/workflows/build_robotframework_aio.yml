@@ -153,6 +153,31 @@ jobs:
 
           echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
+      - name: Update libdoc documents to RobotFramework AIO website
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          cd ../RobotFramework_AIO_website
+          doc_branch=automation/task/update-rfw-libdoc-documents-${{ matrix.version }}
+          git config user.email ${{ secrets.GIT_USER_EMAIL }}
+          git config user.name ${{ secrets.GIT_USER_NAME }}
+          git checkout -b $doc_branch
+          git remote add doc-repo https://${{ secrets.PAT_GITHUB }}@github.com/test-fullautomation/RobotFramework_AIO_website.git
+          git add html/libdoc/*.html
+          git commit -m "Auto update libdoc documents of ${{ matrix.version }} version in RobotFramework_AIO_website"
+          git push -u -f doc-repo $doc_branch
+          echo -e "\e[32;01mPush all changes completely ... \e[0m"
+
+          curl -f -X POST https://api.github.com/repos/test-fullautomation/RobotFramework_AIO_website/dispatches \
+          --header 'authorization: Bearer ${{ secrets.PAT_GITHUB }}' \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : "'"$doc_branch"'"}}'
+          if [ $? -ne 0 ]; then
+            echo "Error: curl command failed to trigger a document jobs"
+            exit 1
+          fi
+
+          echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
+
       - name: Upload built package
         uses: actions/upload-artifact@v4
         with:
