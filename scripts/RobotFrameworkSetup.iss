@@ -120,7 +120,6 @@ Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: i
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
-Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
