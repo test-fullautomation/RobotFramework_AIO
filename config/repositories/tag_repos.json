@@ -24,7 +24,9 @@
          "robotframework-prometheus": "",
          "testresultwebapp": "",
          "vscode-jsonp": "",
+         "vscode-welcome": "",
          "robotframework-dbus": "",
+         "RobotFramework_AIO_website": "",
          "robotframework-qconnect-winapp": ""
       }
    }
