@@ -1,12 +1,6 @@
 # External Python modules required to be installed for RobotFramework AIO (Linux)
 # See atest/README.rst for more information.
 #
-# This file lists packages that should always use the latest version.
 # For pinned versions ensuring reproducible builds, see python_requirements_lx.lock
-#
-# Add packages here when you want to continuously update to the latest version.
-# Example:
-# some-package  # Will install the latest version available
-
 # Import all pinned versions from the lock file
 -r python_requirements_lx.lock
