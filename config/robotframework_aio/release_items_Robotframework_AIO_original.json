@@ -347,6 +347,12 @@
 **VSCodium Package**
 
 * Upgrade extension PlantUML to version 2.18.1
+"                              ],
+                              "0.14.3.;0.15.0." : [
+"
+**VSCodium Package**
+
+* Fixed a VSCodium startup failure on Linux caused by incorrect SUID sandbox (``chrome-sandbox``) permissions.
 "
                               ]
                  }
