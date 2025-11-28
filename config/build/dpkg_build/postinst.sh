@@ -275,6 +275,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       #############################################################################
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
       allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+      chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
       update_vscodium_related;
    fi
 
