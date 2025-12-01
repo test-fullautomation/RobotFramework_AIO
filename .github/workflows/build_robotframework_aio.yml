@@ -154,7 +154,7 @@ jobs:
           echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
       - name: Update libdoc documents to RobotFramework AIO website
-        if: ${{ github.ref_type == 'tag' && matrix.version == 'extended' }}
+        if: ${{ matrix.version == 'extended' }}
         run: |
           cd ../RobotFramework_AIO_website
           doc_branch=automation/task/update-rfw-libdoc-documents-${{ matrix.version }}
