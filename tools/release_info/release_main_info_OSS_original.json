@@ -434,26 +434,22 @@
                 "HIGHLIGHTS"      : ["
           **New** (Details in chapter 'Changes' below)
 
-          - new component `python-rabbitmq-messagebus (EventBusClient) <https://github.com/test-fullautomation/python-rabbitmq-messagebus>`_ for interprocess communication based on RabbitMQ.
+          - `JsonPreprocessor <https://github.com/test-fullautomation/python-jsonpreprocessor>`_ JsonPreprocessor supports the explicit embedding of binary values (in Hexadecimal Escape Notation).
 
-          - `JsonPreprocessor <https://github.com/test-fullautomation/python-jsonpreprocessor>`_ supports python inline code.
+          - `robotframework-qconnect-base <https://github.com/test-fullautomation/robotframework-qconnect-base>`_ improved stability, testing, logging and documentation.
 
-          - `robotframework-qconnect-base <https://github.com/test-fullautomation/robotframework-qconnect-base>`_ improved stability, testing and documentation.
-
-          - `robotframework-testsuitesmanagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement>`_ provides initial python API for RobotFramework AIO bundle version check. 
+          - `robotframework-robotlog2rqm <https://github.com/test-fullautomation/robotframework-robotlog2rqm>`_ provides new tool "RQMTool".
 
   
           **General**                   
           
           - Improved continuous test as part of pipeline.
           
-          - RobotFramework core version 7.1.1. as base.
+          - RobotFramework core version 7.3.0 as base.
           
           - All preinstalled OSS **RobotFramework AIO** libraries also available in OSS Python package index `pypi <https://pypi.org/user/ThPoll/>`_.
           
           - Improved installation and pre-configuration.
-          
-          - Massive improvement of stability and usability of our `RobotFramework_TestsuitesManagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf>`_.
           
           - VSCodium recognize “.jsonp” as JSON files with extended syntax used by `RobotFramework_TestsuitesManagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf>`_.
           
@@ -497,18 +493,22 @@
           #                              
           #                              "],
                 "VERSIONEDLINKS"  : [
-                                      "https://github.com/test-fullautomation/python-extensions-collection/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-extensions-collection",
+                                      "https://github.com/test-fullautomation/RobotFramework_AIO/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; RobotFramework_AIO (build)",
+                                      "https://github.com/test-fullautomation/python-extensions-collection/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-extensions-collection",									  
                                       "https://github.com/test-fullautomation/python-genpackagedoc/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-genpackagedoc",
+                                      "https://github.com/test-fullautomation/python-issue-sync-tool/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-issue-sync-tool",									  
                                       "https://github.com/test-fullautomation/python-jsonpreprocessor/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-jsonpreprocessor",
                                       "https://github.com/test-fullautomation/python-microservice-base/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-microservice-base",
                                       "https://github.com/test-fullautomation/python-microservice-cleware-switch/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-microservice-cleware-switch",
                                       "https://github.com/test-fullautomation/python-pytestlog2db/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-pytestlog2db",
+									           "https://github.com/test-fullautomation/python-rabbitmq-messagebus/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-rabbitmq-messagebus",
+					                       "https://github.com/test-fullautomation/python-testresultdbaccess/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; python-testresultdbaccess",
+                                      "https://github.com/test-fullautomation/robotframework/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework",									  
                                       "https://github.com/test-fullautomation/robotframework-dbus/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-dbus",
                                       "https://github.com/test-fullautomation/robotframework-documentation/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-documentation",
                                       "https://github.com/test-fullautomation/robotframework-doip/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-doip",
-                                      "https://github.com/test-fullautomation/robotframework-uds/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-uds",
-                                      "https://github.com/test-fullautomation/robotframework-extensions-collection/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-extensions-collectionnnn",
-                                      "https://github.com/test-fullautomation/robotframework-lsp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-lsp",
+                                      "https://github.com/test-fullautomation/robotframework-extensions-collection/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-extensions-collection",
+                                      "https://github.com/test-fullautomation/robotframework-prometheus/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-prometheus",
                                       "https://github.com/test-fullautomation/robotframework-qconnect-base/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-qconnect-base",
                                       "https://github.com/test-fullautomation/robotframework-qconnect-winapp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-qconnect-winapp",
                                       "https://github.com/test-fullautomation/robotframework-robotlog2db/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-robotlog2db",
@@ -516,9 +516,11 @@
                                       "https://github.com/test-fullautomation/robotframework-selftest/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-selftest",
                                       "https://github.com/test-fullautomation/robotframework-testsuitesmanagement/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-testsuitesmanagement",
                                       "https://github.com/test-fullautomation/robotframework-tutorial/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-tutorial",
-                                  "",  "https://github.com/test-fullautomation/RobotFramework_AIO/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; RobotFramework_AIO (build)",
+									           "https://github.com/test-fullautomation/robotframework-uds/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; robotframework-uds",
+									           "https://github.com/test-fullautomation/RobotFramework_AIO_website/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; RobotFramework_AIO_website",
                                       "https://github.com/test-fullautomation/testresultwebapp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; testresultwebapp",
-                                      "https://github.com/test-fullautomation/vscode-jsonp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; vscode-jsonp"
+                                      "https://github.com/test-fullautomation/vscode-jsonp/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; vscode-jsonp",
+									           "https://github.com/test-fullautomation/vscode-welcome/pulls?q=is%3Apr+is%3Aclosed+label%3A###LABEL###,###INTERMEDIATE_LABELS###; merged pull-requests; vscode-welcome"
                                     ]
                },
 
