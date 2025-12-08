@@ -196,6 +196,8 @@ jobs:
             ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
             ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
             ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
+            ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
+            ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
 
   build-windows:
     strategy:
