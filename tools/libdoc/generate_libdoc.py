@@ -66,10 +66,7 @@ def is_class_path(pattern):
         'connection.*::QConnectBase.connection_manager.ConnectionManager' -> True
         'qlogger.*' -> False
     """
-    if '::' in pattern:
-        return True
-    else:
-        return False
+    return '::' in pattern
 
 def has_valid_class_path(pattern):
     """
@@ -103,11 +100,14 @@ def process_config(config):
         for root, _, files in os.walk(folder_path):
             root = CString.NormalizePath(root)
             # Handle patterns that reference a class path (with '::')
+            patterns_to_remove = []
             for pattern in include_patterns:
                 if is_class_path(pattern) and has_valid_class_path(pattern):
                     # Generate libdoc for class path pattern
                     generate_libdoc(pattern, root, version, repository_path, output_directory, is_class_path=True)
-                    include_patterns.remove(pattern)  # Remove processed class path pattern
+                    patterns_to_remove.append(pattern)  # Mark for removal after loop
+            for pattern in patterns_to_remove:
+                include_patterns.remove(pattern)
             # Handle regular file patterns
             for file in files:
                 if file.endswith('.py') and should_process_file(file, include_regex, exclude_regex):
@@ -123,8 +123,8 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
         output_folder_path = CString.NormalizePath(f"{repository_path}/{output_directory}")
         os.makedirs(output_folder_path, exist_ok=True)
         if is_class_path:
-            class_name = file.split('::')[0].split('.')[0]
-            output_file_path = CString.NormalizePath(f"{output_folder_path}/{class_name}.html")
+            pattern_prefix = file.split('::')[0].split('.')[0]
+            output_file_path = CString.NormalizePath(f"{output_folder_path}/{pattern_prefix}.html")
             source_path = file.split('::')[1]
         else:
             output_file_path = CString.NormalizePath(f"{output_folder_path}/{os.path.splitext(file)[0]}.html")
