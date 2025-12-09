@@ -463,7 +463,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install ./*.deb --fix-missing
-        sudo rm -f ./*.deb
 
     - name: Check external dependencies version
       run: |
@@ -497,6 +496,14 @@ jobs:
           if [ $exit_code -ne 0 ]; then
               exit 1
           fi
+
+    - name: Free up disk space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+        df -h
 
     - name: Enable KVM group perms
       run: |
