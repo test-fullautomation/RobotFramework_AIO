@@ -463,7 +463,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install ./*.deb --fix-missing
-        sudo rm -f ./*.deb
 
     - name: Check external dependencies version
       run: |
@@ -503,7 +502,7 @@ jobs:
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf /opt/ghc
         sudo rm -rf /usr/local/share/boost
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
         df -h
 
     - name: Enable KVM group perms
@@ -522,7 +521,6 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: pixel_xl
-
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"
