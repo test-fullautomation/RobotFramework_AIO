@@ -120,7 +120,8 @@ Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: i
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
-Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
+Source: "R:\robotvscode\*"; DestDir: {tmp}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
+Source: "R:\robotvscode\*"; Excludes: ".git,logs,data\extensions,data\user-data\User\globalStorage"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
@@ -237,8 +238,8 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
-  WorkingDir: {app}; Flags: runhidden runasoriginaluser; Components: VsCodium;
+  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -InstallPath ""{tmp}\robotvscode"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
+  WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
 
@@ -304,6 +305,34 @@ begin
     end;
 
     Result:=res;
+end;
+
+//
+// Backup VSCode user data folders to temp directory
+/////////////////////////////////////////////////////////////////////
+procedure BackupVSCodeData();
+var
+  ResultCode: Integer;
+  SourceExtensions: String;
+  DestBackup: String;
+begin
+  SourceExtensions := ExpandConstant('{app}\robotvscode\data\extensions');
+  DestBackup := ExpandConstant('{tmp}\vscode_backup');
+
+  // Create backup directory
+  if not DirExists(DestBackup) then
+    CreateDir(DestBackup);
+
+  // Backup extensions using xcopy
+  if DirExists(SourceExtensions) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceExtensions + '" "' + DestBackup + '\extensions\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up extensions folder')
+    else
+      Log('Failed to backup extensions, error code: ' + IntToStr(ResultCode));
+  end;
 end;
 
 //
@@ -417,6 +446,10 @@ begin
 		if (IsUpgrade()) then
 		begin
 			sNewInstallation:='False';
+
+			// Backup VSCode extensions before uninstalling old version
+			BackupVSCodeData();
+
 			UnInstallOldVersion();
 		end;
 	  except
@@ -456,6 +489,8 @@ begin
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
           Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\robotvscode\data\extensions');
+          Win7GiveWriteAccess('{app}\robotvscode\data\user-data');
           Win7GiveWriteAccess('{app}\devtools');
         end;
 
