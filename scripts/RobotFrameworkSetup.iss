@@ -315,7 +315,7 @@ var
   DestBackup: String;
 begin
   SourceExtensions := ExpandConstant('{app}\robotvscode\data\extensions');
-  SourceGlobalStorage := ExpandConstant('{app}\robotvscode\data\user-data\User');
+  SourceGlobalStorage := ExpandConstant('{app}\robotvscode\data\user-data\User\globalStorage');
   DestBackup := ExpandConstant('{tmp}\vscode_backup');
 
   // Create backup directory
