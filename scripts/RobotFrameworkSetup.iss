@@ -121,7 +121,7 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; DestDir: {tmp}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
-Source: "R:\robotvscode\*"; Excludes: ".git,logs,data\extensions,data\user-data\User\globalStorage"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
+Source: "R:\robotvscode\*"; Excludes: ".git,logs,data\extensions"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
