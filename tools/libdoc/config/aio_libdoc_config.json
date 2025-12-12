@@ -1,0 +1,81 @@
+[
+   {
+      "repository_path": "../robotframework-uds",
+      "output_directory": "RobotFramework_UDS",
+      "source_folders": [
+         "RobotFramework_UDS"
+      ],
+      "include_patterns": [
+         "UDSKeywords.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-dbus",
+      "output_directory": "RobotFramework_DBus",
+      "source_folders": [
+         "RobotFramework_DBus"
+      ],
+      "include_patterns": [
+         "dbus_manager.*::RobotFramework_DBus.dbus_manager.DBusManager"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-doip",
+      "output_directory": "RobotFramework_DoIP",
+      "source_folders": [
+         "RobotFramework_DoIP"
+      ],
+      "include_patterns": [
+         "DoipKeywords.*"
+      ],
+      "exclude_patterns": [
+      ]
+   },
+   {
+      "repository_path": "../robotframework-extensions-collection",
+      "output_directory": "RobotframeworkExtensions",
+      "source_folders": [
+         "RobotframeworkExtensions"
+      ],
+      "include_patterns": [
+         "Collection.*"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-qconnect-base",
+      "output_directory": "QConnectBase",
+      "source_folders": [
+         "QConnectBase"
+      ],
+      "include_patterns": [
+         "connection_manager.*::QConnectBase.connection_manager.ConnectionManager",
+         "qlogger.*::QConnectBase.qlogger.QLogger"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-testsuitesmanagement",
+      "output_directory": "RobotFramework_TestsuitesManagement",
+      "source_folders": [
+         "RobotFramework_TestsuitesManagement"
+      ],
+      "include_patterns": [
+         "CKeywords.*::RobotFramework_TestsuitesManagement.Keywords.CKeywords.CSetupKeywords"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-prometheus",
+      "output_directory": "PrometheusInterface",
+      "source_folders": [
+         "PrometheusInterface"
+      ],
+      "include_patterns": [
+         "prometheus_interface.*"
+      ],
+      "exclude_patterns": []
+   }
+]

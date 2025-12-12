@@ -334,8 +334,25 @@
 
 **VSCodium Package**
 
-* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality. 
+* Integrate `Pylint <https://github.com/microsoft/vscode-pylint>`_ extension  to help developers improve code quality.
 
+"
+                              ],
+                              "0.14.2.;0.15.0." : [
+"
+**Windows Installer**
+
+* VSCodium (includes extensions and configurations) is now a separate selectable component in the Windows AIO installer.
+
+**VSCodium Package**
+
+* Upgrade extension PlantUML to version 2.18.1
+"                              ],
+                              "0.14.3.;0.15.0." : [
+"
+**VSCodium Package**
+
+* Fixed a VSCodium startup failure on Linux caused by incorrect SUID sandbox (``chrome-sandbox``) permissions.
 "
                               ]
                  }

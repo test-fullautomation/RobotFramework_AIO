@@ -25,7 +25,7 @@ env:
   TAG_NAME: ${{ github.ref_name }}
   REF_NAME: ${{ github.ref_name }}
   DEFAULT_REF: ${{ github.base_ref }}
-  GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.17.5"
+  GENDOC_PLANTUML_PATH: "../robotvscode/data/extensions/jebbs.plantuml-2.18.1"
   INSTALLER_LOCATION: "https://github.com/test-fullautomation/RobotFramework_AIO/releases"
   GITHUB_COPILOT_REF_URL: "https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/managing-your-copilot-subscription"
   GITHUB_COPILOT_EXT_ARG: ""
@@ -103,6 +103,13 @@ jobs:
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.sh
           sed -i "s|\$GITHUB_COPILOT_EXT_ARG|${GITHUB_COPILOT_EXT_ARG}|g" ./config/build/dpkg_build/postinst.sh
 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: linux-pip-${{ hashFiles('**/python_requirements_lx.txt') }}
+          restore-keys: |
+            linux-pip-
 
       - name: Clone repositories
         run: |
@@ -146,6 +153,31 @@ jobs:
 
           echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
 
+      - name: Update libdoc documents to RobotFramework AIO website
+        if: ${{ github.ref_type == 'tag' && matrix.version == 'extended' }}
+        run: |
+          cd ../RobotFramework_AIO_website
+          doc_branch=automation/task/update-rfw-libdoc-documents-${{ matrix.version }}
+          git config user.email ${{ secrets.GIT_USER_EMAIL }}
+          git config user.name ${{ secrets.GIT_USER_NAME }}
+          git checkout -b $doc_branch
+          git remote add doc-repo https://${{ secrets.PAT_GITHUB }}@github.com/test-fullautomation/RobotFramework_AIO_website.git
+          git add html/libdoc/*.html
+          git commit -m "Auto update libdoc documents of ${{ matrix.version }} version in RobotFramework_AIO_website"
+          git push -u -f doc-repo $doc_branch
+          echo -e "\e[32;01mPush all changes completely ... \e[0m"
+
+          curl -f -X POST https://api.github.com/repos/test-fullautomation/RobotFramework_AIO_website/dispatches \
+          --header 'authorization: Bearer ${{ secrets.PAT_GITHUB }}' \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          --data '{"event_type": "Document", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'", "branch" : "'"$doc_branch"'"}}'
+          if [ $? -ne 0 ]; then
+            echo "Error: curl command failed to trigger a document jobs"
+            exit 1
+          fi
+
+          echo -e "\e[32;01m Trigger jobs for pull request  successfully...\e[0m"
+
       - name: Upload built package
         uses: actions/upload-artifact@v4
         with:
@@ -156,7 +188,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: RobotFrameworkAIO_Reference_${{ matrix.version }}
-          path: ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+          path: |
+            ${{ runner.workspace }}/robotframework-documentation/RobotFrameworkAIO/RobotFrameworkAIO_Reference_${{ matrix.version }}.pdf
+            ${{ runner.workspace }}/robotframework-dbus/RobotFramework_DBus/*.html
+            ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html
+            ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html
+            ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
+            ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
+            ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
+            ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
+            ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
 
   build-windows:
     strategy:
@@ -195,6 +236,14 @@ jobs:
           # Update placeholders install-github-copilot-exts.sh script
           sed -i "s|\$PLACEHOLDER_REF_URL|${GITHUB_COPILOT_REF_URL}|g" ./install/install-github-copilot-exts.ps1
 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: $env:LOCALAPPDATA\pip\Cache
+          key: windows-pip-${{ hashFiles('**/python_requirements.txt') }}
+          restore-keys: |
+            windows-pip-
+
       - name: Clone repositories
         shell: bash
         run: |
@@ -232,7 +281,7 @@ jobs:
       ANDROID_HOME: "C:/Program Files/RobotFramework/devtools/Android"
       APPIUM_HOME: "C:/Program Files/RobotFramework/devtools/nodejs"
       ANDROID_SDK_ROOT: "C:/Program Files/RobotFramework/devtools/Android"
-      GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.17.5"
+      GENDOC_PLANTUML_PATH: "C:/Program Files/RobotFramework/robotvscode/data/extensions/jebbs.plantuml-2.18.1"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
       ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 300
@@ -448,6 +497,14 @@ jobs:
               exit 1
           fi
 
+    - name: Free up disk space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+        df -h
+
     - name: Enable KVM group perms
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -463,6 +520,7 @@ jobs:
         avd-name: my_avd
         target: google_apis
         arch: x86_64
+        profile: pixel_xl
         script: |
           export RobotDevtools="/opt/rfwaio/devtools"
           export ANDROID_HOME="/opt/rfwaio/devtools/Android"

@@ -189,17 +189,30 @@ function download_package(){
 }
 
 function packaging_vscode() {
+	MY_PUBLISHER="test-fullautomation"
+	rm -rf "$sourceDir/vscodium"
 	if [ "$UNAME" == "Linux" ] ; then
 		mkdir -p "$sourceDir/vscodium"
-		tar --force-local -xvvf "$archived_vscode_file" -C "$sourceDir/vscodium"
+		tar --force-local -xf "$archived_vscode_file" -C "$sourceDir/vscodium"
 	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
 	fi
 
 	logresult "$?" "unzipped Visual Studio Codium" "unzip Visual Studio Codium"
 
-	mkdir "$sourceDir/vscodium/data"
+	mkdir -p "$sourceDir/vscodium/data"
 	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
+
+	echo "Copy vscode-welcome extension"
+
+	# Find the .vsix file and copy it
+	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
+	cp -rf "$vsix_file" "$vscodeData/extensions/"
+
+	# Extract the name of the .vsix file
+	vsix_name=$(basename $vsix_file .vsix)
+
+	mkdir -p "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
 
 	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
 	# add proxy configuration in vscodium setting if given
@@ -233,14 +246,22 @@ function packaging_vscode() {
     },\n}/' "$vscodium_setting_file"
 	fi
 
-	echo "Update or add robotframeworkWelcome.hasSeenWelcome setting to false"
    if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
-       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to false"
-       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+       echo "robotframeworkWelcome.hasSeenWelcome exists, updating to true"
+       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": true/' "$vscodium_setting_file"
    else
-       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
-       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
+       echo "Append robotframeworkWelcome.hasSeenWelcome with true before closing brace"
+       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": true,\n}/' "$vscodium_setting_file"
    fi
+
+	# Ensure "workbench.startupEditor" is set to "none"
+	if grep -q '"workbench.startupEditor"' "$vscodium_setting_file"; then
+	    echo "workbench.startupEditor exists, updating to none"
+	    sed -i -E 's/"workbench.startupEditor":\s*"[^"]*"/"workbench.startupEditor": "none"/' "$vscodium_setting_file"
+	else
+	    echo "Append workbench.startupEditor with none before closing brace"
+	    sed -i -E '$ s/}/    "workbench.startupEditor": "none",\n}/' "$vscodium_setting_file"
+	fi
 
 	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
 	chmod +x "$sourceDir/vscodium/bin/codium"
@@ -258,7 +279,6 @@ function packaging_vscode() {
 	fi
 
 	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
-	MY_PUBLISHER="test-fullautomation"
 
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
@@ -335,6 +355,7 @@ function packaging_android() {
 		npm_proxy_args=""
 		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
 		mv $destDir/devtools/node-* $destDir/devtools/nodejs
+		PATH="$destDir/devtools/nodejs:$PATH"
 		npm_bin=$destDir/devtools/nodejs/npm
 	else
 	   mkdir $destDir/devtools/nodejs
@@ -396,6 +417,7 @@ function packaging_android() {
 #
 ####################################################
 function packaging_python_windows() {
+	rm -rf "$sourceDir/python"
 	tar --force-local -xzf "$archived_python_file" -C "$sourceDir"
 	rm -rf "$destDir/python3"
 	mv "$sourceDir/python" "$destDir/python3"
@@ -426,13 +448,12 @@ function packaging_python_windows() {
 	# fully transparent for the existing system.
 	#
 	$destDir/python3/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	logresult "$?" "installed required packages for Python" "install required packages for Python"
 	# Workaround for pyfranca
 	$destDir/python3/python.exe -m pip install pyfranca
+	logresult "$?" "installed pyfranca package" "install pyfranca package"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3/Lib/site-packages/
-
-	logresult "$?" "installed required packges for Python" "install required packges for Python"
-
 }
 
 #
@@ -440,6 +461,7 @@ function packaging_python_windows() {
 #
 ####################################################
 function packaging_python_linux() {
+	rm -rf "$sourceDir/python"
 	tar --force-local -I zstd -xvf $archived_python_file -C "$sourceDir"
 	rm -rf "$destDir/python3lx"
 	mv "$sourceDir/python" "$destDir/python3lx"
@@ -454,11 +476,9 @@ function packaging_python_linux() {
 	# fully transparent for the existing system.
 	#
 	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
-	#fi
+	logresult "$?" "installed required packages for Python" "install required packages for Python"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3lx/lib/python3.13/site-packages
-
-	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
 
 #

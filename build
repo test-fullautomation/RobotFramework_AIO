@@ -302,6 +302,33 @@ function generate_version_info() {
 	add_line_to_file "    + Appium Inspector version: $VERSION_APPIUM_INSPECTOR"
 }
 
+function build_libdoc_document()
+{
+   echo "Building libdoc documents"
+   MY_PUBLISHER="test-fullautomation"
+
+   # Resolve the assets directory dynamically using wildcard
+   assets_dir=$(ls -d ../robotvscode/data/extensions/$MY_PUBLISHER.vscode-welcome-*/assets/html | head -n 1)
+   website_dir=../RobotFramework_AIO_website/html/libdoc
+
+   mkdir -p $assets_dir
+	mkdir -p $website_dir
+
+   ${PYBIN} ./tools/libdoc/generate_libdoc.py
+   # Copy libdoc documents to vscode welcome extension
+   for dir in ../robotframework-dbus/RobotFramework_DBus \
+              ../robotframework-doip/RobotFramework_DoIP \
+              ../robotframework-uds/RobotFramework_UDS \
+              ../robotframework-prometheus/PrometheusInterface \
+              ../robotframework-extensions-collection/RobotframeworkExtensions \
+              ../robotframework-qconnect-base/QConnectBase; do
+       if [ -d "$dir" ]; then
+           libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
+           cp -a "$libdoc" "$assets_dir"
+			  cp -a "$libdoc" "$website_dir"
+       fi
+   done
+}
 
 function build_debian()
 {
@@ -310,6 +337,7 @@ function build_debian()
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
 	parse_config $ConfigFile
+	build_libdoc_document
 
 	cd $CURDIR
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -404,6 +432,7 @@ function build_windows() {
 	generate_version_info
 	create_testsuitmanagement_package_context_file
 	parse_config $ConfigFile
+	build_libdoc_document
 
 	cd $CURDIR
 
