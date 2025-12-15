@@ -1,13 +1,13 @@
 #!/bin/bash
 
 VSCODIUM="$RobotVsCode/bin/codium"
-REQUIRED_VERSION=1.90.2
+REQUIRED_VERSION=1.106.37943
 
 PUBLISHER="GitHub"
 declare -A EXTENSIONS
 EXTENSIONS=(
-   ["copilot-chat"]="0.16.1"
-   ["copilot"]="1.212.0"
+   ["copilot-chat"]="0.33.5"
+   ["copilot"]="1.388.0"
 )
 
 NTID=$(whoami)
@@ -113,7 +113,7 @@ for extension in "${!EXTENSIONS[@]}"; do
    # Construct the download URL
    url="https://${PUBLISHER}.gallery.vsassets.io/_apis/public/gallery/PUBLISHER/${PUBLISHER}/extension/${extension}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
 #    url="https://marketplace.visualstudio.com/_apis/public/gallery/PUBLISHERs/${PUBLISHER}/vsEXTENSIONS/${extension}/${version}/vspackage"
-   
+
    # download the VSIX file
 	retry_counter=0
 	max_retries=5

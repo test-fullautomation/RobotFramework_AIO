@@ -1,10 +1,10 @@
 # PowerShell Script
 $VSCODIUM = "$env:RobotVsCode\bin\codium.cmd"
-$REQUIRED_VERSION = "1.90.2"
+$REQUIRED_VERSION = "1.106.37943"
 $PUBLISHER = "GitHub"
 $EXTENSIONS = @{
-    "copilot-chat" = "0.16.1"
-    "copilot"      = "1.212.0"
+    "copilot-chat" = "0.33.5"
+    "copilot"      = "1.388.0"
 }
 
 # Initialize variables
@@ -122,7 +122,7 @@ foreach ($extension in $EXTENSIONS.Keys) {
             } else {
                 Invoke-WebRequest -Uri $url -OutFile "$env:TMP\$($PUBLISHER).$extension-$version.vsix"
             }
-            
+
             $success = $True
             # Write-Host "Extension $PUBLISHER.$extension-$version downloaded successfully."
         } catch {
