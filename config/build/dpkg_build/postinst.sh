@@ -107,6 +107,17 @@ function update_vscodium_related(){
       echo "For using Github Copilot extensions with VsCodium, please install them by executing below script:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
    fi
+
+   # Restore user's VSCode extensions for reinstalled Vscodium
+   if [ -d "/tmp/vscode_backup/extensions" ]; then
+      echo "Restoring user's VSCode extensions..."
+      mv /opt/rfwaio/robotvscode/data/extensions /tmp/
+      cp -R /tmp/vscode_backup/extensions /opt/rfwaio/robotvscode/data/
+
+      echo "Clean up temporary backup files..."
+      rm -rf /tmp/vscode_backup
+      rm -rf /tmp/extensions
+   fi
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"
