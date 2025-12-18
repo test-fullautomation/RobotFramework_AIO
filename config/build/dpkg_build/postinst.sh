@@ -113,11 +113,17 @@ function update_vscodium_related(){
       echo "Restoring user's VSCode extensions..."
       mv /opt/rfwaio/robotvscode/data/extensions /tmp/
       cp -R /tmp/vscode_backup/extensions /opt/rfwaio/robotvscode/data/
-
-      echo "Clean up temporary backup files..."
-      rm -rf /tmp/vscode_backup
-      rm -rf /tmp/extensions
    fi
+
+   # Restore user's VSCode global storage for reinstalled Vscodium
+   if [ -d "/tmp/vscode_backup/globalStorage" ]; then
+      echo "Restoring user's VSCode global storage..."
+      cp -R /tmp/vscode_backup/globalStorage /opt/rfwaio/robotvscode/data/user-data/User/
+   fi
+
+   echo "Clean up temporary backup files..."
+   rm -rf /tmp/vscode_backup
+   rm -rf /tmp/extensions
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"

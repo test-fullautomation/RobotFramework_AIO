@@ -3,12 +3,22 @@
 # Backup VSCode extensions/global storage
 backup_vscode_extensions() {
    echo "Backing up VSCode user data..."
-   if [ -d "/opt/rfwaio/robotvscode/data/extensions" ]; then
-      mkdir -p /tmp/vscode_backup/
-      cp -R /opt/rfwaio/robotvscode/data/extensions /tmp/vscode_backup/
-      echo "Backed up extensions to /tmp/vscode_backup/extensions"
-   else
-      echo "Extensions directory not found, skipping backup"
+
+   local VSCODE_DATA_DIR="/opt/rfwaio/robotvscode/data"
+   local BACKUP_DIR="/tmp/vscode_backup"
+
+   mkdir -p "$BACKUP_DIR"
+
+   # Backup extensions
+   if [ -d "$VSCODE_DATA_DIR/extensions" ]; then
+      cp -R "$VSCODE_DATA_DIR/extensions" "$BACKUP_DIR/"
+      echo "Backed up extensions"
+   fi
+
+   # Backup global storage
+   if [ -d "$VSCODE_DATA_DIR/user-data/User/globalStorage" ]; then
+      cp -R "$VSCODE_DATA_DIR/user-data/User/globalStorage" "$BACKUP_DIR/"
+      echo "Backed up global storage"
    fi
 }
 
