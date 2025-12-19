@@ -2,6 +2,6 @@
 Comment=Start Appium Inspector
 Terminal=false
 Name=Appium Inspector
-Exec=/opt/rfwaio/devtools/Appium-Inspector.AppImage
+Exec=/opt/rfwaio/devtools/Appium-Inspector.AppImage --no-sandbox
 Type=Application
 Icon=/opt/rfwaio/linux/icon/appium-inspector.png
