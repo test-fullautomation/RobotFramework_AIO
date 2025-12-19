@@ -45,6 +45,20 @@ function remove_android_package(){
    sed -i '/RobotAndroidPlatformTools/d' /opt/rfwaio/linux/set_robotenv.sh
 }
 
+merge_extensions() {
+   local backup_file="$1"
+   local new_file="$2"
+   local output_file="$3"
+
+   echo "Merging extensions with jq..."
+   # Merge: keep all new extensions + add backup extensions not in new
+   jq -s '
+      (.[0] | map({key: .identifier.id, value: .}) | from_entries) as $backup |
+      (.[1] | map({key: .identifier.id, value: .}) | from_entries) as $new |
+      ($backup + $new) | to_entries | map(.value)
+   ' "$backup_file" "$new_file" > "$output_file"
+}
+
 function update_android_related(){
    echo "Performing updates for Android-related components..."
 
@@ -109,21 +123,31 @@ function update_vscodium_related(){
    fi
 
    # Restore user's VSCode extensions for reinstalled Vscodium
-   if [ -d "/tmp/vscode_backup/extensions" ]; then
+   local BACKUP_DIR="/tmp/vscode_backup"
+   local EXT_BACKUP_DIR="$BACKUP_DIR/extensions"
+   local STORAGE_BACKUP_DIR="$BACKUP_DIR/globalStorage"
+   local VSCODE_DATA_DIR="/opt/rfwaio/robotvscode/data"
+   local EXT_NEW_DIR="/tmp/extensions"
+
+   if [ -d "$EXT_BACKUP_DIR" ]; then
       echo "Restoring user's VSCode extensions..."
-      mv /opt/rfwaio/robotvscode/data/extensions /tmp/
-      cp -R /tmp/vscode_backup/extensions /opt/rfwaio/robotvscode/data/
+      mv "$VSCODE_DATA_DIR/extensions" "$EXT_NEW_DIR"
+
+      cp -R /tmp/vscode_backup/extensions $VSCODE_DATA_DIR
+      cp -R /tmp/extensions $VSCODE_DATA_DIR
+
+      merge_extensions "$EXT_BACKUP_DIR/extensions.json" "$EXT_NEW_DIR/extensions.json" "$VSCODE_DATA_DIR/extensions/extensions.json"
    fi
 
    # Restore user's VSCode global storage for reinstalled Vscodium
-   if [ -d "/tmp/vscode_backup/globalStorage" ]; then
+   if [ -d "$STORAGE_BACKUP_DIR" ]; then
       echo "Restoring user's VSCode global storage..."
-      cp -R /tmp/vscode_backup/globalStorage /opt/rfwaio/robotvscode/data/user-data/User/
+      cp -R "$STORAGE_BACKUP_DIR" "$VSCODE_DATA_DIR/user-data/User/"
    fi
 
    echo "Clean up temporary backup files..."
-   rm -rf /tmp/vscode_backup
-   rm -rf /tmp/extensions
+   rm -rf "$BACKUP_DIR"
+   rm -rf "$EXT_NEW_DIR"
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"
