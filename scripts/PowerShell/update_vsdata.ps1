@@ -1,9 +1,43 @@
 # Accept parameters from Inno Setup installer
 param(
     [string]$AppPath,
-    [string]$InstallPath,
     [string]$BackupVSCodeDataPath
 )
+
+function Merge-Extensions {
+    param(
+        [string]$BackupFile,
+        [string]$NewFile,
+        [string]$OutputFile
+    )
+
+    Write-Host "Merging extensions..."
+
+    # Read and parse JSON files
+    $backupExtensions = Get-Content -Path $BackupFile -Raw | ConvertFrom-Json
+    $newExtensions = Get-Content -Path $NewFile -Raw | ConvertFrom-Json
+
+    # Create hashtable with backup extensions (keyed by identifier.id)
+    $mergedHash = @{}
+    foreach ($ext in $backupExtensions) {
+        $key = $ext.identifier.id
+        $mergedHash[$key] = $ext
+    }
+
+    # Add/overwrite with new extensions (new takes precedence)
+    foreach ($ext in $newExtensions) {
+        $key = $ext.identifier.id
+        $mergedHash[$key] = $ext
+    }
+
+    # Convert back to array
+    $mergedExtensions = @($mergedHash.Values)
+
+    # Write to output file
+    $mergedExtensions | ConvertTo-Json -Depth 100 | Set-Content -Path $OutputFile -Encoding UTF8
+
+    Write-Host "Extensions merged successfully to $OutputFile"
+}
 
 $Env:RobotTestPath=[System.Environment]::GetEnvironmentVariable("RobotTestPath","Machine")
 $Env:RobotVsCode=[System.Environment]::GetEnvironmentVariable("RobotVsCode","Machine")
@@ -27,12 +61,21 @@ $StorageContent = (Get-Content -Path $StoragePathFile)
 # Check if excluded files/folders exist (indicating existing installation with user data)
 $RobotVsCodeDataPath = "$Env:RobotVsCode\data\"
 
-# if (-Not (Test-Path -Path "D:\work\robotfw_build\RobotFramework_AIO\Output\extensions")) {
-if (-Not (Test-Path -Path "$BackupVSCodeDataPath\extensions")) {
-    Copy-Item -Path "$InstallPath\data\extensions" -Destination $RobotVsCodeDataPath -Recurse -Force
-}
-else {
+if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
+    Move-Item -Path "$RobotVsCodeDataPath\extensions" -Destination "$BackupVSCodeDataPath\extensions_new" -Force
+
     Copy-Item -Path "$BackupVSCodeDataPath\extensions" -Destination $RobotVsCodeDataPath -Recurse -Force
+
+    Merge-Extensions -BackupFile "$BackupVSCodeDataPath\extensions\extensions.json" -NewFile "$RobotVsCodeDataPath\extensions\extensions.json" -OutputFile "$RobotVsCodeDataPath\extensions\extensions.json"
+
+    # Copy items from extensions_new except extensions.json
+    Get-ChildItem -Path "$BackupVSCodeDataPath\extensions_new" -Exclude "extensions.json" | ForEach-Object {
+        Copy-Item -Path $_.FullName -Destination "$RobotVsCodeDataPath\extensions" -Recurse -Force
+    }
+}
+
+if (Test-Path -Path "$BackupVSCodeDataPath\globalStorage") {
+    Copy-Item -Path "$BackupVSCodeDataPath\globalStorage" -Destination "$RobotVsCodeDataPath\user-data\User" -Recurse -Force
 }
 
 $SettingContent = (Get-Content -Path $SettingsPathFile) -replace '{RobotPythonPath}', $PyPath
@@ -58,7 +101,6 @@ $KeyBindingContent = '
     }
 ]'
 
-echo $SettingContent
 ($SettingContent -replace '// Other specific settings',$SettingWindows -replace '{RobotToolsPath}',$ToolsPath) | Set-Content -Path $SettingsPathFile
 ($StorageContent -replace '{RobotTestPath}',$WpPath -replace '{RobotVsCode}',$VscodePath) | Set-Content -Path $StoragePathFile
 Set-Content -Path $Env:RobotVsCode\data\user-data\User\keybindings.json -Value $KeyBindingContent

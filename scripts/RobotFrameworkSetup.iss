@@ -120,8 +120,7 @@ Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: i
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;Visual Studio Code installation
-Source: "R:\robotvscode\*"; DestDir: {tmp}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
-Source: "R:\robotvscode\*"; Excludes: ".git,logs,data\extensions"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
+Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
@@ -238,7 +237,7 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -InstallPath ""{tmp}\robotvscode"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
+  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
   WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
@@ -314,9 +313,11 @@ procedure BackupVSCodeData();
 var
   ResultCode: Integer;
   SourceExtensions: String;
+  SourceGlobalStorage: String;
   DestBackup: String;
 begin
   SourceExtensions := ExpandConstant('{app}\robotvscode\data\extensions');
+  SourceGlobalStorage := ExpandConstant('{app}\robotvscode\data\user-data\User\globalStorage');
   DestBackup := ExpandConstant('{tmp}\vscode_backup');
 
   // Create backup directory
@@ -332,6 +333,17 @@ begin
       Log('Successfully backed up extensions folder')
     else
       Log('Failed to backup extensions, error code: ' + IntToStr(ResultCode));
+  end;
+
+  // Backup global storage using xcopy
+  if DirExists(SourceGlobalStorage) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceGlobalStorage + '" "' + DestBackup + '\globalStorage\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up global storage folder')
+    else
+      Log('Failed to backup global storage, error code: ' + IntToStr(ResultCode));
   end;
 end;
 
