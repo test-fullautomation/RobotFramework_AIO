@@ -322,7 +322,7 @@ function build_libdoc_document()
               ../robotframework-prometheus/PrometheusInterface \
               ../robotframework-extensions-collection/RobotframeworkExtensions \
               ../robotframework-qconnect-base/QConnectBase \
-			  ../robotframework-qconnect-winapp/QConnectWinapp; do
+			     ../robotframework-qconnect-winapp/QConnectWinapp; do
       if [ -d "$dir" ]; then
          libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
          cp -a "$libdoc" "$assets_dir"
