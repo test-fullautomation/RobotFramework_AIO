@@ -133,8 +133,8 @@ function update_vscodium_related(){
       echo "Restoring user's VSCode extensions..."
       mv "$VSCODE_DATA_DIR/extensions" "$EXT_NEW_DIR"
 
-      cp -R /tmp/vscode_backup/extensions $VSCODE_DATA_DIR
-      cp -R /tmp/extensions $VSCODE_DATA_DIR
+      cp -R "$EXT_BACKUP_DIR" $VSCODE_DATA_DIR
+      cp -R "$EXT_NEW_DIR" $VSCODE_DATA_DIR
 
       merge_extensions "$EXT_BACKUP_DIR/extensions.json" "$EXT_NEW_DIR/extensions.json" "$VSCODE_DATA_DIR/extensions/extensions.json"
    fi

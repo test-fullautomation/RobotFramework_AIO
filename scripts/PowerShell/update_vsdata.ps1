@@ -66,7 +66,7 @@ if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
 
     Copy-Item -Path "$BackupVSCodeDataPath\extensions" -Destination $RobotVsCodeDataPath -Recurse -Force
 
-    Merge-Extensions -BackupFile "$BackupVSCodeDataPath\extensions\extensions.json" -NewFile "$RobotVsCodeDataPath\extensions\extensions.json" -OutputFile "$RobotVsCodeDataPath\extensions\extensions.json"
+    Merge-Extensions -BackupFile "$BackupVSCodeDataPath\extensions\extensions.json" -NewFile "$RobotVsCodeDataPath\extensions_new\extensions.json" -OutputFile "$RobotVsCodeDataPath\extensions\extensions.json"
 
     # Copy items from extensions_new except extensions.json
     Get-ChildItem -Path "$BackupVSCodeDataPath\extensions_new" -Exclude "extensions.json" | ForEach-Object {

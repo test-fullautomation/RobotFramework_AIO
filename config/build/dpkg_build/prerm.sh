@@ -29,6 +29,9 @@ remove_application_files() {
    rm -rf /opt/rfwaio/python3/
    rm -rf /opt/rfwaio/devtools/
 
+   # When run via sudo, $HOME may be /root even though we want to clean up
+   # files from the invoking user's home directory, so derive HOME from
+   # SUDO_USER (or the current user) when that user is not root.
    CURRENT_USER=${SUDO_USER:-$(whoami)}
    if [ "${CURRENT_USER}" != 'root' ]; then
       HOME=/home/${CURRENT_USER}
