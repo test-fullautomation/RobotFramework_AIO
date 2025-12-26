@@ -85,6 +85,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+          df -h
+
       - name: Install dependencies and set environment variables
         run: |
           sudo apt-get update
