@@ -356,7 +356,7 @@
 * Fixed a VSCodium startup failure on Linux caused by incorrect SUID sandbox (``chrome-sandbox``) permissions.
 "
                               ],
-                              "0.15.0." : [
+                              "0.14.4.;0.15.0." : [
 "
 **VSCodium Package**
 
@@ -364,7 +364,7 @@
 
 * Add **Roo Code** extension to enable AI-assisted code generation in VSCodium
 
-* Upgrade VsCodium extensions to youger versions as below:
+* Upgrade VsCodium extensions to younger versions as below:
 
   * **Python** extension to version **2025.16.0**
   * **RobotCode** extension to version **2.1.0**
