@@ -321,12 +321,13 @@ function build_libdoc_document()
               ../robotframework-uds/RobotFramework_UDS \
               ../robotframework-prometheus/PrometheusInterface \
               ../robotframework-extensions-collection/RobotframeworkExtensions \
-              ../robotframework-qconnect-base/QConnectBase; do
-       if [ -d "$dir" ]; then
-           libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
-           cp -a "$libdoc" "$assets_dir"
-			  cp -a "$libdoc" "$website_dir"
-       fi
+              ../robotframework-qconnect-base/QConnectBase \
+			     ../robotframework-qconnect-winapp/QConnectWinapp; do
+      if [ -d "$dir" ]; then
+         libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
+         cp -a "$libdoc" "$assets_dir"
+		   cp -a "$libdoc" "$website_dir"
+      fi
    done
 }
 

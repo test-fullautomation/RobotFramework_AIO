@@ -57,6 +57,17 @@
       "exclude_patterns": []
    },
    {
+      "repository_path": "../robotframework-qconnect-winapp",
+      "output_directory": "QConnectWinapp",
+      "source_folders": [
+         "QConnectWinapp"
+      ],
+      "include_patterns": [
+         "winapp_client.*::QConnectWinapp.WinappDriver.winapp_client.WinAppClient"
+      ],
+      "exclude_patterns": []
+   },
+   {
       "repository_path": "../robotframework-testsuitesmanagement",
       "output_directory": "RobotFramework_TestsuitesManagement",
       "source_folders": [

@@ -116,6 +116,16 @@ def process_config(config):
 def generate_libdoc(file, root, version, repository_path, output_directory, is_class_path=False):
     """Generate libdoc for a single file or class path."""
     output_file_path = ""
+    base_name = ""
+    # Extract base name before .py, .*, or ::
+    if isinstance(file, str):
+        # If class path, extract before '::'
+        if '::' in file:
+            base_name = re.split(r'\.py$|\.\*$', file.split('::')[0])[0]
+        else:
+            base_name = re.split(r'\.py$|\.\*$', file)[0]
+    else:
+        base_name = file
     try:
         if repository_path not in sys.path:
             sys.path.append(CString.NormalizePath(f"{repository_path}"))
@@ -134,7 +144,7 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
         os.chdir(root)
         try:
             subprocess.run(
-                [sPythonPath, '-m', 'robot.libdoc', '--version', version, source_path, output_file_path],
+                [sPythonPath, '-m', 'robot.libdoc', '--version', version, '--name', base_name, source_path, output_file_path],
                 check=True
             )
         finally:
