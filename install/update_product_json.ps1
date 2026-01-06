@@ -1,6 +1,5 @@
 param(
-    # [string]$ProductJsonPath = "$env:RobotVsCode\resources\app\product.json"
-    [string]$ProductJsonPath = "C:/MyData/4.RobotFramework/Robot-ws/Github/RobotFramework_AIO/install/product.json"
+    [string]$ProductJsonPath = "$env:RobotVsCode\resources\app\product.json"
 )
 
 # Validate file exists
