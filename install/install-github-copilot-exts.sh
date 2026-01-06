@@ -149,5 +149,22 @@ for extension in "${!EXTENSIONS[@]}"; do
    echo
 done
 
+# Update VSCodium product.json to ensure GitHub Copilot extension works properly
+UPDATE_SCRIPT="$RobotVsCode/update_product_json.sh"
+
+if [ -f "$UPDATE_SCRIPT" ]; then
+    bash "$UPDATE_SCRIPT"
+    EXIT_CODE=$?
+
+    if [[ $EXIT_CODE -eq 0 ]]; then
+        echo "product.json updated successfully."
+    else
+        echo "Failed to update product.json. Exit code: $EXIT_CODE"
+        exit $EXIT_CODE
+    fi
+else
+    echo "update_product_json.sh not found, skipping product.json update."
+fi
+
 echo "Please refer to the following article to get a GitHub Copilot license or subscription:"
 echo "$PLACEHOLDER_REF_URL"

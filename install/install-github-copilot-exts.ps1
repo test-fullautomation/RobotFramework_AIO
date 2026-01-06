@@ -151,5 +151,24 @@ foreach ($extension in $EXTENSIONS.Keys) {
     Remove-Item "$env:TMP\$($PUBLISHER).$extension-$version.vsix"
     Write-Host
 }
+
+# Update VSCodium product.json to ensure GitHub Copilot extension works properly
+$UpdateScript = Join-Path $env:RobotVsCode "update_product_json.ps1"
+
+if (Test-Path $UpdateScript) {
+    & $UpdateScript
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "product.json updated successfully."
+    }
+    else {
+        Write-Error "Failed to update product.json. Exit code: $LASTEXITCODE"
+        exit $LASTEXITCODE
+    }
+}
+else {
+    Write-Host "update_product_json.ps1 not found, skipping product.json update."
+}
+
 Write-Host "Please refer to the following article to get a GitHub Copilot license or subscription:"
 Write-Host "$PLACEHOLDER_REF_URL"
