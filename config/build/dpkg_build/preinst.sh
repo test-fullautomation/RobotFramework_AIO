@@ -7,9 +7,11 @@ EXTRA_CMPTS=(
    "    N : No extra package - only the core framework and libraries"
    "    A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)" 
    "    V : Vscodium package"
+   "        V1 : Install Vscodium (fresh setup with no previous configuration)"
+   "        V2 : Upgrade Vscodium (overwrite existing installation while preserving extensions/settings)"
    "Enter : All packages (default choice after 30s)"
    )
-DEFAULT_OPT="AV"
+DEFAULT_OPT="AV2"
 
 # Display the menu and read user input with timeout
 echo "Select one or more extra components:"
@@ -36,8 +38,12 @@ for choice in $(echo "$choices" | grep -o .); do
             SELECTED_CMPTS+=("Android")
             # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/android
             ;;
-        "V" | "v")
-            SELECTED_CMPTS+=("Vscodium")
+        "V1" | "v1")
+            SELECTED_CMPTS+=("Vscodium (fresh install)")
+            # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/vscode
+            ;;
+         "V2" | "v2")
+            SELECTED_CMPTS+=("Vscodium (upgrade/overwrite)")
             # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/vscode
             ;;
         *)

@@ -307,17 +307,24 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       update_android_related;
    fi
 
-   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then
-      remove_vscodium_package;
-   else
-      #
+   if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]] || \
+   [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (upgrade/overwrite) " ]]; then
+
       # Update permission of Vscodium-related data
-      #
-      #############################################################################
+      ###########################################################################
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
       allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+
+      # Extra step only for fresh install
+      if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then
+         rm -rf "/tmp/vscode_backup"
+      fi
+
       update_vscodium_related;
+   else
+      remove_vscodium_package;
    fi
+
 
 
    rm ${SELECTED_CMPTS_FILE}

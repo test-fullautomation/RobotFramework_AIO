@@ -233,6 +233,9 @@ Name: {app}\robotvscode\data\extensions; Permissions: users-full; Components: Vs
 Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsCodium;
 Name: {app}\devtools; Permissions: users-full;
 
+[Tasks]
+Name: "vscodium_reinstall"; Description: "Remove existing extensions and user data"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
+
 [INI]
 
 [RUN]
@@ -436,6 +439,7 @@ var
 
   sNewInstallation: String;
   sRobotFrameworkPath: String;
+  VSCodiumRemoveDataSelected: Boolean;
 
 #ifdef DoInstallTracking
   WinHttpReq: Variant;
@@ -443,6 +447,7 @@ var
 
 begin
   sNewInstallation:='True';
+  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
 
 
   //directly before installation validate if Files are already existing.
@@ -459,8 +464,9 @@ begin
 		begin
 			sNewInstallation:='False';
 
-			// Backup VSCode extensions before uninstalling old version
-			BackupVSCodeData();
+      // Backup VSCode extensions before uninstalling old version
+      if not VSCodiumRemoveDataSelected then
+        BackupVSCodeData();
 
 			UnInstallOldVersion();
 		end;
