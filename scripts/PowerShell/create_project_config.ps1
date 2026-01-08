@@ -2,7 +2,6 @@ param(
     [string]$configFile = "$((Split-Path $MyInvocation.MyCommand.Path -Parent) + '\..\..\config\projects\project.json')"
 )
 
-cat $configFile
 $ScriptPath = Split-Path $MyInvocation.MyCommand.Path -Parent
 $json = Get-Content -Path $configFile -Raw | ConvertFrom-Json
 Write-Host "Project config path: $configFile"
