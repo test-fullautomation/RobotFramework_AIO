@@ -88,11 +88,6 @@ Source: ..\config\RobotTest\testcases\*; DestDir: {code:GetUsrDataDir}\testcases
 ;Manually add the launch.json file in hidden folder .vscode
 Source: ..\config\RobotTest\testcases\.vscode\*; DestDir: {code:GetUsrDataDir}\testcases\.vscode; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Permissions: users-full;
 
-;;;
-;;; post install script
-;;;
-;update visual stuidio code follow installer path
-Source: .\PowerShell\update_vsdata.ps1; DestDir: "{tmp}"; Flags: ignoreversion; Permissions: users-full; Components: VsCodium;
 
 ;;;
 ;;; will be overwritten with each new installation/update
@@ -123,6 +118,8 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\update_product_json.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
+;post install script - update visual stuidio code follow installer path
+Source: .\PowerShell\update_vsdata.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: users-full; Components: VsCodium;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -238,7 +235,7 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
+  Parameters: "-ExecutionPolicy Bypass -File ""{app}\robotvscode\update_vsdata.ps1"""; \
   WorkingDir: {app}; Flags: runhidden runasoriginaluser; Components: VsCodium;
 
 [UninstallRun]
