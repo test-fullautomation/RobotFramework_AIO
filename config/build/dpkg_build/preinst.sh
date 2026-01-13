@@ -1,15 +1,17 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # Define the options with corresponding characters
 EXTRA_CMPTS=(
    "    N : No extra package - only the core framework and libraries"
    "    A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)" 
    "    V : Vscodium package"
-   "        V1 : Install Vscodium (fresh setup with no previous configuration)"
-   "        V2 : Upgrade Vscodium (overwrite existing installation while preserving extensions/settings)"
-   "Enter : All packages (default choice after 30s)"
+   "        1 : Fresh Install of VSCodium"
+   "            - Performs a clean setup with default settings."
+   "            - No previous extensions or user configurations are retained."
+   "        2 : Upgrade Existing VSCodium"
+   "            - Updates the current installation to the latest version."
+   "            - Preserves all existing extensions and user settings."
+   "Enter : All packages (default choice after 30s, includes Android + Vscodium Upgrade [V2])"
    )
 DEFAULT_OPT="AV2"
 
@@ -28,30 +30,16 @@ fi
 # mkdir /opt/ngoan-dev
 # Process user input
 SELECTED_CMPTS=()
-for choice in $(echo "$choices" | grep -o .); do
-    case $choice in
-        "N" | "n")
-            SELECTED_CMPTS=()
-            break
-            ;;
-        "A" | "a")
-            SELECTED_CMPTS+=("Android")
-            # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/android
-            ;;
-        "V1" | "v1")
-            SELECTED_CMPTS+=("Vscodium (fresh install)")
-            # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/vscode
-            ;;
-         "V2" | "v2")
-            SELECTED_CMPTS+=("Vscodium (upgrade/overwrite)")
-            # cp -r /usr/share/ngoan-dev/core /opt/ngoan-dev/vscode
-            ;;
-        *)
-            echo "Invalid choice: $choice"
-            exit 1
-            ;;
-    esac
-done
+if [[ "$choices" =~ [Nn] ]]; then
+   SELECTED_CMPTS=() # No extras overrides everything
+elif [[ "$choices" =~ [Aa] ]]; then
+   SELECTED_CMPTS+=("Android")
+fi
+if [[ "$choices" =~ V1|v1 ]]; then
+   SELECTED_CMPTS+=("Vscodium (fresh install)")
+elif [[ "$choices" =~ V2|v2|V|v ]]; then
+   SELECTED_CMPTS+=("Vscodium (upgrade/overwrite)")
+fi
 
 # Print selected options
 if [ ${#SELECTED_CMPTS[@]} -eq 0 ]; then
