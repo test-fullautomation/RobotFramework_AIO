@@ -316,8 +316,12 @@ begin
   //at first take over ownership
   sCmdBuffer:='takeown';
   sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'\*" /R');
+  Log("Taking ownership of all descendants of " + sPath);
+  Log("Executing command: " + sCmdBuffer + ' ' + sCmdArgBuffer);
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
   sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'" /R');
+  Log("Taking ownership of folder: " + sPath);
+  Log("Executing command: " + sCmdBuffer + ' ' + sCmdArgBuffer);
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
   //for debugging
   //MsgBox(sCmdArgBuffer,mbInformation, MB_OK);
@@ -326,11 +330,15 @@ begin
   sCmdBuffer:='icacls';
   sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F /T /C');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  Log("Granting full access to: " + sPath);
+  Log("Executing command: " + sCmdBuffer + ' ' + sCmdArgBuffer);
 
   //now remove critical attributes
   sCmdBuffer:='attrib';
   sCmdArgBuffer:=ExpandConstant('-A -R -S "'+sPath+'" /S /D');
   Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  Log("Removing critical attributes from: " + sPath);
+  Log("Executing command: " + sCmdBuffer + ' ' + sCmdArgBuffer);
 end;
 
 { ///////////////////////////////////////////////////////////////////// }
@@ -451,6 +459,8 @@ begin
   if CurStep=ssPostInstall then
     begin
       GetWindowsVersionEx(Version);
+      Log("NT-Platform: " + BoolToStr(Version.NTPlatform, True));
+      Log("Windows version: " + Version.Major + "." + Version.Minor);
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
           Win7GiveWriteAccess('{app}\robotvscode\data');
