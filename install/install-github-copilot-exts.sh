@@ -1,13 +1,13 @@
 #!/bin/bash
 
 VSCODIUM="$RobotVsCode/bin/codium"
-REQUIRED_VERSION=1.90.2
+REQUIRED_VERSION=1.106.37943
 
 PUBLISHER="GitHub"
 declare -A EXTENSIONS
 EXTENSIONS=(
-   ["copilot-chat"]="0.16.1"
-   ["copilot"]="1.212.0"
+   ["copilot-chat"]="0.33.5"
+   ["copilot"]="1.388.0"
 )
 
 NTID=$(whoami)
@@ -113,7 +113,7 @@ for extension in "${!EXTENSIONS[@]}"; do
    # Construct the download URL
    url="https://${PUBLISHER}.gallery.vsassets.io/_apis/public/gallery/PUBLISHER/${PUBLISHER}/extension/${extension}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
 #    url="https://marketplace.visualstudio.com/_apis/public/gallery/PUBLISHERs/${PUBLISHER}/vsEXTENSIONS/${extension}/${version}/vspackage"
-   
+
    # download the VSIX file
 	retry_counter=0
 	max_retries=5
@@ -148,6 +148,23 @@ for extension in "${!EXTENSIONS[@]}"; do
    rm "$USER_TMP/${PUBLISHER}.${extension}-${version}.vsix"
    echo
 done
+
+# Update VSCodium product.json to ensure GitHub Copilot extension works properly
+UPDATE_SCRIPT="$RobotVsCode/update_product_json.sh"
+
+if [ -f "$UPDATE_SCRIPT" ]; then
+    bash "$UPDATE_SCRIPT"
+    EXIT_CODE=$?
+
+    if [[ $EXIT_CODE -eq 0 ]]; then
+        echo "product.json updated successfully."
+    else
+        echo "Failed to update product.json. Exit code: $EXIT_CODE"
+        exit $EXIT_CODE
+    fi
+else
+    echo "update_product_json.sh not found, skipping product.json update."
+fi
 
 echo "Please refer to the following article to get a GitHub Copilot license or subscription:"
 echo "$PLACEHOLDER_REF_URL"

@@ -17,7 +17,7 @@
          "RobotFramework_DBus"
       ],
       "include_patterns": [
-         "dbus_manager.*"
+         "dbus_manager.*::RobotFramework_DBus.dbus_manager.DBusManager"
       ],
       "exclude_patterns": []
    },
@@ -51,8 +51,19 @@
          "QConnectBase"
       ],
       "include_patterns": [
-         "connection_manager.*",
-         "qlogger.*"
+         "connection_manager.*::QConnectBase.connection_manager.ConnectionManager",
+         "qlogger.*::QConnectBase.qlogger.QLogger"
+      ],
+      "exclude_patterns": []
+   },
+   {
+      "repository_path": "../robotframework-qconnect-winapp",
+      "output_directory": "QConnectWinapp",
+      "source_folders": [
+         "QConnectWinapp"
+      ],
+      "include_patterns": [
+         "winapp_client.*::QConnectWinapp.WinappDriver.winapp_client.WinAppClient"
       ],
       "exclude_patterns": []
    },
@@ -63,7 +74,7 @@
          "RobotFramework_TestsuitesManagement"
       ],
       "include_patterns": [
-         "CSetup.*"
+         "CKeywords.*::RobotFramework_TestsuitesManagement.Keywords.CKeywords.CSetupKeywords"
       ],
       "exclude_patterns": []
    },

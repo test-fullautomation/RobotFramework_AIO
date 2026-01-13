@@ -448,13 +448,12 @@ function packaging_python_windows() {
 	# fully transparent for the existing system.
 	#
 	$destDir/python3/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
+	logresult "$?" "installed required packages for Python" "install required packages for Python"
 	# Workaround for pyfranca
 	$destDir/python3/python.exe -m pip install pyfranca
+	logresult "$?" "installed pyfranca package" "install pyfranca package"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3/Lib/site-packages/
-
-	logresult "$?" "installed required packges for Python" "install required packges for Python"
-
 }
 
 #
@@ -477,11 +476,9 @@ function packaging_python_linux() {
 	# fully transparent for the existing system.
 	#
 	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
-	#fi
+	logresult "$?" "installed required packages for Python" "install required packages for Python"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3lx/lib/python3.13/site-packages
-
-	logresult "$?" "installed required packges for Python" "install required packges for Python"
 }
 
 #

@@ -58,6 +58,30 @@ def generate_libdoc_for_files():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
+def is_class_path(pattern):
+    """
+    Checks if the pattern contains '::', indicating it is intended to reference a class path.
+    Returns True if '::' is present, otherwise False.
+    Example:
+        'connection.*::QConnectBase.connection_manager.ConnectionManager' -> True
+        'qlogger.*' -> False
+    """
+    return '::' in pattern
+
+def has_valid_class_path(pattern):
+    """
+    Returns True if the string contains '::' and the part after '::' is a valid Python class/module path.
+    """
+    try:
+        _, class_path = pattern.split('::', 1)
+        if not re.match(r'^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$', class_path):
+            print(f"[ERROR] Invalid class path in pattern: '{pattern}' (class path: '{class_path}')")
+            return False
+        return True
+    except Exception as e:
+        print(f"[ERROR] Exception while checking class path in pattern: '{pattern}' - {e}")
+        return False
+
 def process_config(config):
     """Process a single configuration object."""
     repository_path = config['repository_path']
@@ -75,25 +99,57 @@ def process_config(config):
         version = get_version_from_source_path(folder_path)
         for root, _, files in os.walk(folder_path):
             root = CString.NormalizePath(root)
+            # Handle patterns that reference a class path (with '::')
+            patterns_to_remove = []
+            for pattern in include_patterns:
+                if is_class_path(pattern) and has_valid_class_path(pattern):
+                    # Generate libdoc for class path pattern
+                    generate_libdoc(pattern, root, version, repository_path, output_directory, is_class_path=True)
+                    patterns_to_remove.append(pattern)  # Mark for removal after loop
+            for pattern in patterns_to_remove:
+                include_patterns.remove(pattern)
+            # Handle regular file patterns
             for file in files:
                 if file.endswith('.py') and should_process_file(file, include_regex, exclude_regex):
                     generate_libdoc(file, root, version, repository_path, output_directory)
 
-def generate_libdoc(file, root, version, repository_path, output_directory):
-    """Generate libdoc for a single file."""
+def generate_libdoc(file, root, version, repository_path, output_directory, is_class_path=False):
+    """Generate libdoc for a single file or class path."""
+    output_file_path = ""
+    base_name = ""
+    # Extract base name before .py, .*, or ::
+    if isinstance(file, str):
+        # If class path, extract before '::'
+        if '::' in file:
+            base_name = re.split(r'\.py$|\.\*$', file.split('::')[0])[0]
+        else:
+            base_name = re.split(r'\.py$|\.\*$', file)[0]
+    else:
+        base_name = file
     try:
         if repository_path not in sys.path:
             sys.path.append(CString.NormalizePath(f"{repository_path}"))
         source_path = CString.NormalizePath(f"{root}/{file}")
         output_folder_path = CString.NormalizePath(f"{repository_path}/{output_directory}")
         os.makedirs(output_folder_path, exist_ok=True)
+        if is_class_path:
+            pattern_prefix = file.split('::')[0].split('.')[0]
+            output_file_path = CString.NormalizePath(f"{output_folder_path}/{pattern_prefix}.html")
+            source_path = file.split('::')[1]
+        else:
+            output_file_path = CString.NormalizePath(f"{output_folder_path}/{os.path.splitext(file)[0]}.html")
 
-        output_file_path = CString.NormalizePath(f"{output_folder_path}/{os.path.splitext(file)[0]}.html")
-
-        subprocess.run(
-            [sPythonPath, '-m', 'robot.libdoc', '--version', version, source_path, output_file_path],
-            check=True
-        )
+        # Change to the directory containing the Python file before generating libdoc
+        original_cwd = os.getcwd()
+        os.chdir(root)
+        try:
+            subprocess.run(
+                [sPythonPath, '-m', 'robot.libdoc', '--version', version, '--name', base_name, source_path, output_file_path],
+                check=True
+            )
+        finally:
+            # Always restore the original working directory
+            os.chdir(original_cwd)
         print(f"Documentation generated successfully for: {source_path}")
 
         add_readme_link_to_libdoc(output_file_path, repository_path)

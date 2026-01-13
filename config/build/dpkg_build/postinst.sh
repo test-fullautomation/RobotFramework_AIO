@@ -314,6 +314,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       ###########################################################################
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
       allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+      chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
 
       # Extra step only for fresh install
       if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then

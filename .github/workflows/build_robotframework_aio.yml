@@ -85,6 +85,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+          df -h
+
       - name: Install dependencies and set environment variables
         run: |
           sudo apt-get update
@@ -194,8 +202,9 @@ jobs:
             ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html
             ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html
             ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
-            ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
-            ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
+            ${{ runner.workspace }}/robotframework-qconnect-winapp/QConnectWinapp/*.html
+            ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
+            ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
 
   build-windows:
     strategy:
@@ -461,7 +470,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install ./*.deb --fix-missing
-        sudo rm -f ./*.deb
 
     - name: Check external dependencies version
       run: |
@@ -495,6 +503,14 @@ jobs:
           if [ $exit_code -ne 0 ]; then
               exit 1
           fi
+
+    - name: Free up disk space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+        df -h
 
     - name: Enable KVM group perms
       run: |

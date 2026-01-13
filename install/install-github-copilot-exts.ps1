@@ -1,10 +1,10 @@
 # PowerShell Script
 $VSCODIUM = "$env:RobotVsCode\bin\codium.cmd"
-$REQUIRED_VERSION = "1.90.2"
+$REQUIRED_VERSION = "1.106.37943"
 $PUBLISHER = "GitHub"
 $EXTENSIONS = @{
-    "copilot-chat" = "0.16.1"
-    "copilot"      = "1.212.0"
+    "copilot-chat" = "0.33.5"
+    "copilot"      = "1.388.0"
 }
 
 # Initialize variables
@@ -122,7 +122,7 @@ foreach ($extension in $EXTENSIONS.Keys) {
             } else {
                 Invoke-WebRequest -Uri $url -OutFile "$env:TMP\$($PUBLISHER).$extension-$version.vsix"
             }
-            
+
             $success = $True
             # Write-Host "Extension $PUBLISHER.$extension-$version downloaded successfully."
         } catch {
@@ -151,5 +151,24 @@ foreach ($extension in $EXTENSIONS.Keys) {
     Remove-Item "$env:TMP\$($PUBLISHER).$extension-$version.vsix"
     Write-Host
 }
+
+# Update VSCodium product.json to ensure GitHub Copilot extension works properly
+$UpdateScript = Join-Path $env:RobotVsCode "update_product_json.ps1"
+
+if (Test-Path $UpdateScript) {
+    & $UpdateScript
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "product.json updated successfully."
+    }
+    else {
+        Write-Error "Failed to update product.json. Exit code: $LASTEXITCODE"
+        exit $LASTEXITCODE
+    }
+}
+else {
+    Write-Host "update_product_json.ps1 not found, skipping product.json update."
+}
+
 Write-Host "Please refer to the following article to get a GitHub Copilot license or subscription:"
 Write-Host "$PLACEHOLDER_REF_URL"
