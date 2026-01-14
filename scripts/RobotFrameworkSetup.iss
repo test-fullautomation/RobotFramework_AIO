@@ -234,12 +234,15 @@ Name: {app}\robotvscode\data\extensions; Permissions: users-full; Components: Vs
 Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsCodium;
 Name: {app}\devtools; Permissions: users-full;
 
+[Tasks]
+Name: "vscodium_reinstall"; Description: "Remove existing extensions and user data"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
+
 [INI]
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
-  WorkingDir: {app}; Flags: runhidden runasoriginaluser; Components: VsCodium;
+  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
+  WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
 
@@ -305,6 +308,47 @@ begin
     end;
 
     Result:=res;
+end;
+
+//
+// Backup VSCode user data folders to temp directory
+/////////////////////////////////////////////////////////////////////
+procedure BackupVSCodeData();
+var
+  ResultCode: Integer;
+  SourceExtensions: String;
+  SourceGlobalStorage: String;
+  DestBackup: String;
+begin
+  SourceExtensions := ExpandConstant('{app}\robotvscode\data\extensions');
+  SourceGlobalStorage := ExpandConstant('{app}\robotvscode\data\user-data\User\globalStorage');
+  DestBackup := ExpandConstant('{tmp}\vscode_backup');
+
+  // Create backup directory
+  if not DirExists(DestBackup) then
+    CreateDir(DestBackup);
+
+  // Backup extensions using xcopy
+  if DirExists(SourceExtensions) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceExtensions + '" "' + DestBackup + '\extensions\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up extensions folder')
+    else
+      Log('Failed to backup extensions, error code: ' + IntToStr(ResultCode));
+  end;
+
+  // Backup global storage using xcopy
+  if DirExists(SourceGlobalStorage) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceGlobalStorage + '" "' + DestBackup + '\globalStorage\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up global storage folder')
+    else
+      Log('Failed to backup global storage, error code: ' + IntToStr(ResultCode));
+  end;
 end;
 
 //
@@ -396,6 +440,7 @@ var
 
   sNewInstallation: String;
   sRobotFrameworkPath: String;
+  VSCodiumRemoveDataSelected: Boolean;
 
 #ifdef DoInstallTracking
   WinHttpReq: Variant;
@@ -403,6 +448,7 @@ var
 
 begin
   sNewInstallation:='True';
+  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
 
 
   //directly before installation validate if Files are already existing.
@@ -418,6 +464,11 @@ begin
 		if (IsUpgrade()) then
 		begin
 			sNewInstallation:='False';
+
+      // Backup VSCode extensions before uninstalling old version
+      if not VSCodiumRemoveDataSelected then
+        BackupVSCodeData();
+
 			UnInstallOldVersion();
 		end;
 	  except
@@ -457,6 +508,8 @@ begin
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
           Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\robotvscode\data\extensions');
+          Win7GiveWriteAccess('{app}\robotvscode\data\user-data');
           Win7GiveWriteAccess('{app}\devtools');
         end;
 

@@ -45,6 +45,20 @@ function remove_android_package(){
    sed -i '/RobotAndroidPlatformTools/d' /opt/rfwaio/linux/set_robotenv.sh
 }
 
+merge_extensions() {
+   local backup_file="$1"
+   local new_file="$2"
+   local output_file="$3"
+
+   echo "Merging extensions with jq..."
+   # Merge: keep all new extensions + add backup extensions not in new
+   jq -s '
+      (.[0] | map({key: .identifier.id, value: .}) | from_entries) as $backup |
+      (.[1] | map({key: .identifier.id, value: .}) | from_entries) as $new |
+      ($backup + $new) | to_entries | map(.value)
+   ' "$backup_file" "$new_file" > "$output_file"
+}
+
 function update_android_related(){
    echo "Performing updates for Android-related components..."
 
@@ -107,6 +121,33 @@ function update_vscodium_related(){
       echo "For using Github Copilot extensions with VsCodium, please install them by executing below script:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
    fi
+
+   # Restore user's VSCode extensions for reinstalled Vscodium
+   local BACKUP_DIR="/tmp/vscode_backup"
+   local EXT_BACKUP_DIR="$BACKUP_DIR/extensions"
+   local STORAGE_BACKUP_DIR="$BACKUP_DIR/globalStorage"
+   local VSCODE_DATA_DIR="/opt/rfwaio/robotvscode/data"
+   local EXT_NEW_DIR="/tmp/extensions"
+
+   if [ -d "$EXT_BACKUP_DIR" ]; then
+      echo "Restoring user's VSCode extensions..."
+      mv "$VSCODE_DATA_DIR/extensions" "$EXT_NEW_DIR"
+
+      cp -R "$EXT_BACKUP_DIR" $VSCODE_DATA_DIR
+      cp -R "$EXT_NEW_DIR" $VSCODE_DATA_DIR
+
+      merge_extensions "$EXT_BACKUP_DIR/extensions.json" "$EXT_NEW_DIR/extensions.json" "$VSCODE_DATA_DIR/extensions/extensions.json"
+   fi
+
+   # Restore user's VSCode global storage for reinstalled Vscodium
+   if [ -d "$STORAGE_BACKUP_DIR" ]; then
+      echo "Restoring user's VSCode global storage..."
+      cp -R "$STORAGE_BACKUP_DIR" "$VSCODE_DATA_DIR/user-data/User/"
+   fi
+
+   echo "Clean up temporary backup files..."
+   rm -rf "$BACKUP_DIR"
+   rm -rf "$EXT_NEW_DIR"
 }
 
 echo "Creating/Updating RobotFramework AIO runtime environment"
@@ -266,18 +307,25 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       update_android_related;
    fi
 
-   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then
-      remove_vscodium_package;
-   else
-      #
+   if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]] || \
+   [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (upgrade/overwrite) " ]]; then
+
       # Update permission of Vscodium-related data
-      #
-      #############################################################################
+      ###########################################################################
       allow_user_group_permissions /opt/rfwaio/robotvscode/data
       allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
       chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
+
+      # Extra step only for fresh install
+      if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then
+         rm -rf "/tmp/vscode_backup"
+      fi
+
       update_vscodium_related;
+   else
+      remove_vscodium_package;
    fi
+
 
 
    rm ${SELECTED_CMPTS_FILE}

@@ -1,20 +1,62 @@
 #!/bin/bash
 
-rm -rf /opt/rfwaio/robotvscode/
-rm -rf /opt/rfwaio/python39/
-rm -rf /opt/rfwaio/python3/
-rm -rf /opt/rfwaio/devtools/
+# Backup VSCode extensions/global storage
+backup_vscode_extensions() {
+   echo "Backing up VSCode user data..."
 
-CURRENT_USER=${SUDO_USER}
-if [ -z ${CURRENT_USER} ]; then
-   CURRENT_USER=$(whoami)
-fi
-# When executing as root user $HOME can be /root
-# Otherwises, /home/<user> should be used
-if [ ${CURRENT_USER} != 'root' ]; then
-   HOME=/home/${CURRENT_USER}
-fi
+   local VSCODE_DATA_DIR="/opt/rfwaio/robotvscode/data"
+   local BACKUP_DIR="/tmp/vscode_backup"
 
-rm -rf ${HOME}/.local/share/applications/robot.desktop
-rm -rf ${HOME}/.local/share/applications/appium.desktop
-rm -rf ${HOME}/.local/share/applications/appiumInspector.desktop
+   mkdir -p "$BACKUP_DIR"
+
+   # Backup extensions
+   if [ -d "$VSCODE_DATA_DIR/extensions" ]; then
+      cp -R "$VSCODE_DATA_DIR/extensions" "$BACKUP_DIR/"
+      echo "Backed up extensions"
+   fi
+
+   # Backup global storage
+   if [ -d "$VSCODE_DATA_DIR/user-data/User/globalStorage" ]; then
+      cp -R "$VSCODE_DATA_DIR/user-data/User/globalStorage" "$BACKUP_DIR/"
+      echo "Backed up global storage"
+   fi
+}
+
+# Remove application files from /opt/rfwaio
+remove_application_files() {
+   rm -rf /opt/rfwaio/robotvscode/
+   rm -rf /opt/rfwaio/python39/
+   rm -rf /opt/rfwaio/python3/
+   rm -rf /opt/rfwaio/devtools/
+
+   # When run via sudo, $HOME may be /root even though we want to clean up
+   # files from the invoking user's home directory, so derive HOME from
+   # SUDO_USER (or the current user) when that user is not root.
+   CURRENT_USER=${SUDO_USER:-$(whoami)}
+   if [ "${CURRENT_USER}" != 'root' ]; then
+      HOME=/home/${CURRENT_USER}
+   fi
+
+   rm -rf ${HOME}/.local/share/applications/robot.desktop
+   rm -rf ${HOME}/.local/share/applications/appium.desktop
+   rm -rf ${HOME}/.local/share/applications/appiumInspector.desktop
+}
+
+case "$1" in
+   upgrade)
+      echo "Upgrading RobotFramework AIO..."
+      backup_vscode_extensions
+      remove_application_files
+      ;;
+
+   remove)
+      echo "Removing RobotFramework AIO..."
+      remove_application_files
+      ;;
+
+   *)
+      echo "prerm called with unknown argument: $1"
+      ;;
+esac
+
+exit 0
