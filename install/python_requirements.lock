@@ -6,7 +6,7 @@ robotframework==7.3.0
 cython==3.2.1
 cchardet==2.2.0a2
 #Appium-Python-Client
-Sphinx==8.2.3
+Sphinx==9.1.0
 aenum==3.1.16
 asciidoxy==0.5.2
 attrs==25.4.0
