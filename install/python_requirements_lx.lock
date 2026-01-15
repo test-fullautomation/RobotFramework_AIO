@@ -148,7 +148,7 @@ pandas==2.3.3
 bokeh==3.8.1
 robotframework-robocop==6.10.0
 pylint==4.0.2
-Sphinx==8.2.3
+Sphinx==9.1.0
 pandoc==2.4
 pypandoc_binary==1.16.2
 mobly==1.13
