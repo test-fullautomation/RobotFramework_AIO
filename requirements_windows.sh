@@ -32,6 +32,7 @@ extraPackages=(
     "trimspaces"
     "listings"
     "pdfcol"
+    "caption"
 )
 
 # Download and extract TexLive installer package
