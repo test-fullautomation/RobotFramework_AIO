@@ -67,11 +67,13 @@ if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
     # Copy items from extensions_new except extensions.json
     Get-ChildItem -Path "$BackupVSCodeDataPath\extensions_new" -Exclude "extensions.json" | ForEach-Object {
         Copy-Item -Path $_.FullName -Destination "$RobotVsCodeDataPath\extensions" -Recurse -Force
+        icacls "$RobotVsCodeDataPath\extensions" /grant "$($env:USERNAME):(M)" /T /C
     }
 }
 
 if (Test-Path -Path "$BackupVSCodeDataPath\globalStorage") {
     Copy-Item -Path "$BackupVSCodeDataPath\globalStorage" -Destination "$RobotVsCodeDataPath\user-data\User" -Recurse -Force
+    icacls "$RobotVsCodeDataPath\user-data\User\globalStorage" /grant "$($env:USERNAME):(M)" /T /C
 }
 
 $SettingContent = (Get-Content -Path $SettingsPathFile) -replace '{RobotPythonPath}', $PyPath
