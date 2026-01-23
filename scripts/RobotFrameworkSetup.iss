@@ -235,7 +235,7 @@ Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsC
 Name: {app}\devtools; Permissions: users-full;
 
 [Tasks]
-Name: "vscodium_reinstall"; Description: "Remove existing extensions and user data"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
+Name: "vscodium_reinstall"; Description: "Fresh VSCodium installation#13#10(Attention: Reinstalls / deletes all installed extensions and user data)"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
 
 [INI]
 

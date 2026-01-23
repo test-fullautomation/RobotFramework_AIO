@@ -11,8 +11,6 @@ function Merge-Extensions {
         [string]$OutputFile
     )
 
-    Write-Host "Merging extensions..."
-
     # Read and parse JSON files
     $backupExtensions = Get-Content -Path $BackupFile -Raw | ConvertFrom-Json
     $newExtensions = Get-Content -Path $NewFile -Raw | ConvertFrom-Json
@@ -35,8 +33,6 @@ function Merge-Extensions {
 
     # Write to output file
     $mergedExtensions | ConvertTo-Json -Depth 100 | Set-Content -Path $OutputFile -Encoding UTF8
-
-    Write-Host "Extensions merged successfully to $OutputFile"
 }
 
 $Env:RobotTestPath=[System.Environment]::GetEnvironmentVariable("RobotTestPath","Machine")
