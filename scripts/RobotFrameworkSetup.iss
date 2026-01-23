@@ -619,24 +619,25 @@ begin
   InstructionLabel.Top := ScaleY(0);
   InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
 
-  // Create the memo for the Instruction
-  ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
-  MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
-  InstructionMemo := TMemo.Create(WizardForm);
-  InstructionMemo.Parent := InfoAfterPage.Surface;
-  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
-  InstructionMemo.Width := WizardForm.ReadyMemo.Width;
-  InstructionMemo.Height := WizardForm.ReadyMemo.Height;
-  InstructionMemo.Color := WizardForm.ReadyMemo.Color;
-  InstructionMemo.Font := WizardForm.ReadyMemo.Font;
-  InstructionMemo.ReadOnly := True;
-  InstructionMemo.ScrollBars := ssVertical;
-  InstructionMemo.Cursor := crArrow;
-  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
-  // Select all text in the memo
-  InstructionMemo.SelStart := 0;
-  InstructionMemo.SelLength := Length(InstructionMemo.Text)
-  InfoAfterPage.Surface.Hide;
+  if VSCodiumRemoveDataSelected then
+    // Create the memo for the Instruction
+    ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
+    MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
+    InstructionMemo := TMemo.Create(WizardForm);
+    InstructionMemo.Parent := InfoAfterPage.Surface;
+    InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
+    InstructionMemo.Width := WizardForm.ReadyMemo.Width;
+    InstructionMemo.Height := WizardForm.ReadyMemo.Height;
+    InstructionMemo.Color := WizardForm.ReadyMemo.Color;
+    InstructionMemo.Font := WizardForm.ReadyMemo.Font;
+    InstructionMemo.ReadOnly := True;
+    InstructionMemo.ScrollBars := ssVertical;
+    InstructionMemo.Cursor := crArrow;
+    InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+    // Select all text in the memo
+    InstructionMemo.SelStart := 0;
+    InstructionMemo.SelLength := Length(InstructionMemo.Text)
+    InfoAfterPage.Surface.Hide;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
