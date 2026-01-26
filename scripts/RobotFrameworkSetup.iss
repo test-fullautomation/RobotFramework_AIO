@@ -235,7 +235,7 @@ Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsC
 Name: {app}\devtools; Permissions: users-full;
 
 [Tasks]
-Name: "vscodium_reinstall"; Description: "Fresh VSCodium installation#13#10(Attention: Reinstalls / deletes all installed extensions and user data)"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
+Name: "vscodium_reinstall"; Description: "Fresh VSCodium installation{#13}{#10}(Attention: Reinstalls / deletes all installed extensions and user data)"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
 
 [INI]
 
@@ -539,10 +539,10 @@ var
  ProjectListCounter : Integer;
  i:Integer;
  MsgInstallCopilotArgs: String;
-
+ VSCodiumRemoveDataSelected: Boolean;
 begin
   InitProjectHash();
-
+  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
   //create MsgPage1
   MsgPage2 := CreateOutputMsgPage(wpWelcome,
              'General Information', 'How to execute a RobotFramework test case?',
@@ -606,20 +606,20 @@ begin
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
-  //Notice for user who want to use Github Copilot extensions
-  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
-
-  InstructionLabel := TLabel.Create(WizardForm);
-  InstructionLabel.Parent := InfoAfterPage.Surface;
-  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
-                              'RobotFramework' + #13#13 +
-                              'Execute the following command line in Windows PowerShell to download and ' + #13 +
-                              'install GitHub Copilot extension:';
-  InstructionLabel.AutoSize := True;
-  InstructionLabel.Top := ScaleY(0);
-  InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
-
   if VSCodiumRemoveDataSelected then
+    //Notice for user who want to use Github Copilot extensions
+    InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
+
+    InstructionLabel := TLabel.Create(WizardForm);
+    InstructionLabel.Parent := InfoAfterPage.Surface;
+    InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
+                                'RobotFramework' + #13#13 +
+                                'Execute the following command line in Windows PowerShell to download and ' + #13 +
+                                'install GitHub Copilot extension:';
+    InstructionLabel.AutoSize := True;
+    InstructionLabel.Top := ScaleY(0);
+    InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
+
     // Create the memo for the Instruction
     ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
     MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
