@@ -758,7 +758,7 @@ end;
 
 procedure CurPageChanged(CurPageID: Integer);
 begin
-  if (CurPageID = InfoAfterPage.ID) then
+  if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
   begin
     if IsComponentSelected('VsCodium') then
       InfoAfterPage.Surface.Show
