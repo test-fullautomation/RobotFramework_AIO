@@ -607,37 +607,39 @@ begin
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
   if VSCodiumRemoveDataSelected then
-    //Notice for user who want to use Github Copilot extensions
-    InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
+    begin
+      //Notice for user who want to use Github Copilot extensions
+      InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '') ;
 
-    InstructionLabel := TLabel.Create(WizardForm);
-    InstructionLabel.Parent := InfoAfterPage.Surface;
-    InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
+      InstructionLabel := TLabel.Create(WizardForm);
+      InstructionLabel.Parent := InfoAfterPage.Surface;
+      InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
                                 'RobotFramework' + #13#13 +
                                 'Execute the following command line in Windows PowerShell to download and ' + #13 +
                                 'install GitHub Copilot extension:';
-    InstructionLabel.AutoSize := True;
-    InstructionLabel.Top := ScaleY(0);
-    InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
+      InstructionLabel.AutoSize := True;
+      InstructionLabel.Top := ScaleY(0);
+      InstructionLabel.Width := InfoAfterPage.SurfaceWidth;
 
-    // Create the memo for the Instruction
-    ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
-    MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
-    InstructionMemo := TMemo.Create(WizardForm);
-    InstructionMemo.Parent := InfoAfterPage.Surface;
-    InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
-    InstructionMemo.Width := WizardForm.ReadyMemo.Width;
-    InstructionMemo.Height := WizardForm.ReadyMemo.Height;
-    InstructionMemo.Color := WizardForm.ReadyMemo.Color;
-    InstructionMemo.Font := WizardForm.ReadyMemo.Font;
-    InstructionMemo.ReadOnly := True;
-    InstructionMemo.ScrollBars := ssVertical;
-    InstructionMemo.Cursor := crArrow;
-    InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
-    // Select all text in the memo
-    InstructionMemo.SelStart := 0;
-    InstructionMemo.SelLength := Length(InstructionMemo.Text)
-    InfoAfterPage.Surface.Hide;
+      // Create the memo for the Instruction
+      ScriptPath := WizardDirValue + '\robotvscode\install-github-copilot-exts.ps1';
+      MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
+      InstructionMemo := TMemo.Create(WizardForm);
+      InstructionMemo.Parent := InfoAfterPage.Surface;
+      InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
+      InstructionMemo.Width := WizardForm.ReadyMemo.Width;
+      InstructionMemo.Height := WizardForm.ReadyMemo.Height;
+      InstructionMemo.Color := WizardForm.ReadyMemo.Color;
+      InstructionMemo.Font := WizardForm.ReadyMemo.Font;
+      InstructionMemo.ReadOnly := True;
+      InstructionMemo.ScrollBars := ssVertical;
+      InstructionMemo.Cursor := crArrow;
+      InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+      // Select all text in the memo
+      InstructionMemo.SelStart := 0;
+      InstructionMemo.SelLength := Length(InstructionMemo.Text)
+      InfoAfterPage.Surface.Hide;
+    end;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
