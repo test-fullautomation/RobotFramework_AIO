@@ -652,7 +652,7 @@ jobs:
         omitNameDuringUpdate: true
         prerelease: true
         name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
-        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_*.html,windows-aiotestlogfiles-original/release_info_*.html,RobotFrameworkAIO_Reference_extended/*.pdf,RobotFrameworkAIO_Reference_original/*.pdf"
+        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_*.html,windows-aiotestlogfiles-original/release_info_*.html,RobotFrameworkAIO_Reference_extended/**/*.pdf,RobotFrameworkAIO_Reference_original/**/*.pdf"
         bodyFile: "windows-aiotestlogfiles-extended/release_changelog.html"
 
   tag-to-publish-packges-to-pypi:
