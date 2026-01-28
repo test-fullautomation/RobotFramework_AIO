@@ -444,7 +444,7 @@ function build_windows() {
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 
 	./scripts/precompile.bat $ProjectConfigFile
-	./tools/InnoSetup6.7.0/ISCC ${arguments} ./scripts/RobotFrameworkSetup.iss
+	./tools/InnoSetup5.5.1/ISCC ${arguments} ./scripts/RobotFrameworkSetup.iss
 	logresult "$?" "built RobotFramework AIO installer" "build RobotFramework AIO installer"
 	./scripts/postcompile.bat
 }
