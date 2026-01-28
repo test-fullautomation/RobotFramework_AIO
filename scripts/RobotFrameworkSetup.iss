@@ -754,16 +754,8 @@ end;
 procedure CurPageChanged(CurPageID: Integer);
 var
   VSCodiumRemoveDataSelected: Boolean;
-  ExtensionsDir: String;
-  GlobalStorageDir: String;
 begin
-  ExtensionsDir := ExpandConstant('{app}\robotvscode\data\extensions');
-  GlobalStorageDir := ExpandConstant('{app}\robotvscode\data\user-data\User\globalStorage');
   VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
-  if DirExists(ExtensionsDir) and DirExists(GlobalStorageDir) then
-  begin
-    VSCodiumRemoveDataSelected := False;
-  end;
 
   if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
   begin
