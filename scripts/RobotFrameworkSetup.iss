@@ -235,7 +235,7 @@ Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsC
 Name: {app}\devtools; Permissions: users-full;
 
 [Tasks]
-Name: "vscodium_reinstall"; Description: "Remove existing extensions and user data"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
+Name: "vscodium_reinstall"; Description: "Fresh VSCodium installation (Attention: Reinstalls / deletes all installed extensions and user data)"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
 
 [INI]
 
@@ -754,10 +754,14 @@ begin
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
+var
+  VSCodiumRemoveDataSelected: Boolean;
 begin
-  if (CurPageID = InfoAfterPage.ID) then
+  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
+
+  if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
   begin
-    if IsComponentSelected('VsCodium') then
+    if IsComponentSelected('VsCodium') and VSCodiumRemoveDataSelected then
       InfoAfterPage.Surface.Show
     else
       WizardForm.NextButton.OnClick(nil); // skip page
