@@ -234,9 +234,6 @@ Name: {app}\robotvscode\data\extensions; Permissions: users-full; Components: Vs
 Name: {app}\robotvscode\data\user-data; Permissions: users-full; Components: VsCodium;
 Name: {app}\devtools; Permissions: users-full;
 
-[Tasks]
-Name: "vscodium_reinstall"; Description: "Fresh VSCodium installation (Attention: Reinstalls / deletes all installed extensions and user data)"; GroupDescription: "VSCodium installation options"; Components: "VsCodium"; Flags: unchecked
-
 [INI]
 
 [RUN]
@@ -267,6 +264,8 @@ var
   InstructionLabel: TLabel;
   InstructionMemo: TMemo;
   ScriptPath: string;
+  ReinstallCheckbox: TNewCheckBox;
+  VsCodiumPage: TWizardPage;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -448,8 +447,6 @@ var
 
 begin
   sNewInstallation:='True';
-  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
-
 
   //directly before installation validate if Files are already existing.
   //If yes, call uninstaller to avoid mixed versions.
@@ -464,7 +461,7 @@ begin
 		if (IsUpgrade()) then
 		begin
 			sNewInstallation:='False';
-
+      VSCodiumRemoveDataSelected := ReinstallCheckbox.Checked;
       // Backup VSCode extensions before uninstalling old version
       if not VSCodiumRemoveDataSelected then
         BackupVSCodeData();
@@ -539,7 +536,6 @@ var
  ProjectListCounter : Integer;
  i:Integer;
  MsgInstallCopilotArgs: String;
-
 begin
   InitProjectHash();
 
@@ -637,6 +633,7 @@ begin
   InstructionMemo.SelStart := 0;
   InstructionMemo.SelLength := Length(InstructionMemo.Text)
   InfoAfterPage.Surface.Hide;
+
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -756,12 +753,42 @@ end;
 procedure CurPageChanged(CurPageID: Integer);
 var
   VSCodiumRemoveDataSelected: Boolean;
+  NoteLabel: TNewStaticText;
 begin
-  VSCodiumRemoveDataSelected := IsTaskSelected('vscodium_reinstall');
+  VSCodiumRemoveDataSelected := Assigned(ReinstallCheckbox) and ReinstallCheckbox.Checked;
+
+  if CurPageID = UsrDataDirPage.ID then
+  begin
+    if DirExists(ExpandConstant('{app}\robotvscode\data\extensions')) and not Assigned(ReinstallCheckbox) then
+    begin
+      VsCodiumPage := CreateCustomPage(wpSelectComponents, 'VSCodium Installation Options',
+                                      'Choose how you want VSCodium to be installed');
+
+      ReinstallCheckbox := TNewCheckBox.Create(VsCodiumPage);
+      ReinstallCheckbox.Parent := VsCodiumPage.Surface;
+      ReinstallCheckbox.Left := ScaleX(0);
+      ReinstallCheckbox.Top := ScaleY(10);
+      ReinstallCheckbox.Width := VsCodiumPage.SurfaceWidth;
+      ReinstallCheckbox.Height := ScaleY(40);
+      ReinstallCheckbox.Caption :=
+        'Fresh VSCodium installation';
+      ReinstallCheckbox.Checked := False;
+
+      NoteLabel := TNewStaticText.Create(VsCodiumPage);
+      NoteLabel.Parent := VsCodiumPage.Surface;
+      NoteLabel.Left := ScaleX(0);
+      NoteLabel.Top := ReinstallCheckbox.Top + ReinstallCheckbox.Height + ScaleY(4);
+      NoteLabel.Width := VsCodiumPage.SurfaceWidth;
+      NoteLabel.AutoSize := False;
+      NoteLabel.Height := ScaleY(28);
+      NoteLabel.Caption:=
+        'Attention: Reinstalls and removes all extensions and user data';
+    end;
+  end;
 
   if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
   begin
-    if IsComponentSelected('VsCodium') and VSCodiumRemoveDataSelected then
+    if IsComponentSelected('VsCodium') and (VSCodiumRemoveDataSelected or not Assigned(ReinstallCheckbox)) then
       InfoAfterPage.Surface.Show
     else
       WizardForm.NextButton.OnClick(nil); // skip page
