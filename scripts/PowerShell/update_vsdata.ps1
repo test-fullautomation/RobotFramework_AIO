@@ -11,8 +11,6 @@ function Merge-Extensions {
         [string]$OutputFile
     )
 
-    Write-Host "Merging extensions..."
-
     # Read and parse JSON files
     $backupExtensions = Get-Content -Path $BackupFile -Raw | ConvertFrom-Json
     $newExtensions = Get-Content -Path $NewFile -Raw | ConvertFrom-Json
@@ -35,8 +33,6 @@ function Merge-Extensions {
 
     # Write to output file
     $mergedExtensions | ConvertTo-Json -Depth 100 | Set-Content -Path $OutputFile -Encoding UTF8
-
-    Write-Host "Extensions merged successfully to $OutputFile"
 }
 
 $Env:RobotTestPath=[System.Environment]::GetEnvironmentVariable("RobotTestPath","Machine")
@@ -72,10 +68,12 @@ if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
     Get-ChildItem -Path "$BackupVSCodeDataPath\extensions_new" -Exclude "extensions.json" | ForEach-Object {
         Copy-Item -Path $_.FullName -Destination "$RobotVsCodeDataPath\extensions" -Recurse -Force
     }
+    icacls "$RobotVsCodeDataPath\extensions" /grant "$($env:USERNAME):(M)" /T /C /Q
 }
 
 if (Test-Path -Path "$BackupVSCodeDataPath\globalStorage") {
     Copy-Item -Path "$BackupVSCodeDataPath\globalStorage" -Destination "$RobotVsCodeDataPath\user-data\User" -Recurse -Force
+    icacls "$RobotVsCodeDataPath\user-data\User\globalStorage" /grant "$($env:USERNAME):(M)" /T /C /Q
 }
 
 $SettingContent = (Get-Content -Path $SettingsPathFile) -replace '{RobotPythonPath}', $PyPath
