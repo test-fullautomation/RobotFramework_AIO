@@ -20,7 +20,7 @@
 
 *** Settings ***
 
-Library    RobotFramework_TestsuitesManagement    WITH NAME    tm
+Library    RobotFramework_TestsuitesManagement    AS    tm
 
 Suite Setup    tm.testsuite_setup    ../config/exercise-pg_variants.jsonp
 
