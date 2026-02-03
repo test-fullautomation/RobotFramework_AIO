@@ -266,6 +266,29 @@ var
   ScriptPath: string;
   ReinstallCheckbox: TNewCheckBox;
   VsCodiumPage: TWizardPage;
+  DoVSCodiumUpdate: Boolean;
+
+//
+// Hidden Vscodium update feature
+//////////////////////////////////////////////////////////////
+function InitializeSetup(): Boolean;
+var
+  i: Integer;
+begin
+  DoVSCodiumUpdate := False;
+
+  for i := 1 to ParamCount do
+  begin
+    if CompareText(ParamStr(i), '--do_vscodium_update') = 0 then
+    begin
+      DoVSCodiumUpdate := True;
+      Log('Command line flag detected: VSCodium update ENABLED');
+      Break;
+    end;
+  end;
+
+  Result := True;
+end;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -461,10 +484,13 @@ begin
 		if (IsUpgrade()) then
 		begin
 			sNewInstallation:='False';
-      VSCodiumRemoveDataSelected := ReinstallCheckbox.Checked;
-      // Backup VSCode extensions before uninstalling old version
-      if not VSCodiumRemoveDataSelected then
-        BackupVSCodeData();
+      if DoVSCodiumUpdate then
+      begin
+        VSCodiumRemoveDataSelected := ReinstallCheckbox.Checked;
+        // Backup VSCode extensions before uninstalling old version
+        if not VSCodiumRemoveDataSelected then
+          BackupVSCodeData();
+      end;
 
 			UnInstallOldVersion();
 		end;
@@ -755,43 +781,56 @@ var
   VSCodiumRemoveDataSelected: Boolean;
   NoteLabel: TNewStaticText;
 begin
-  VSCodiumRemoveDataSelected := Assigned(ReinstallCheckbox) and ReinstallCheckbox.Checked;
 
-  if CurPageID = UsrDataDirPage.ID then
+  if DoVSCodiumUpdate then
   begin
-    if DirExists(ExpandConstant('{app}\robotvscode\data\extensions')) and not Assigned(ReinstallCheckbox) then
+    VSCodiumRemoveDataSelected := Assigned(ReinstallCheckbox) and ReinstallCheckbox.Checked;
+    if CurPageID = UsrDataDirPage.ID then
     begin
-      VsCodiumPage := CreateCustomPage(wpSelectComponents, 'VSCodium Installation Options',
-                                      'Choose how you want VSCodium to be installed');
+      if DirExists(ExpandConstant('{app}\robotvscode\data\extensions')) and not Assigned(ReinstallCheckbox) then
+      begin
+        VsCodiumPage := CreateCustomPage(wpSelectComponents, 'VSCodium Installation Options',
+                                        'Choose how you want VSCodium to be installed');
 
-      ReinstallCheckbox := TNewCheckBox.Create(VsCodiumPage);
-      ReinstallCheckbox.Parent := VsCodiumPage.Surface;
-      ReinstallCheckbox.Left := ScaleX(0);
-      ReinstallCheckbox.Top := ScaleY(10);
-      ReinstallCheckbox.Width := VsCodiumPage.SurfaceWidth;
-      ReinstallCheckbox.Height := ScaleY(40);
-      ReinstallCheckbox.Caption :=
-        'Fresh VSCodium installation';
-      ReinstallCheckbox.Checked := False;
+        ReinstallCheckbox := TNewCheckBox.Create(VsCodiumPage);
+        ReinstallCheckbox.Parent := VsCodiumPage.Surface;
+        ReinstallCheckbox.Left := ScaleX(0);
+        ReinstallCheckbox.Top := ScaleY(10);
+        ReinstallCheckbox.Width := VsCodiumPage.SurfaceWidth;
+        ReinstallCheckbox.Height := ScaleY(40);
+        ReinstallCheckbox.Caption :=
+          'Fresh VSCodium installation';
+        ReinstallCheckbox.Checked := False;
 
-      NoteLabel := TNewStaticText.Create(VsCodiumPage);
-      NoteLabel.Parent := VsCodiumPage.Surface;
-      NoteLabel.Left := ScaleX(0);
-      NoteLabel.Top := ReinstallCheckbox.Top + ReinstallCheckbox.Height + ScaleY(4);
-      NoteLabel.Width := VsCodiumPage.SurfaceWidth;
-      NoteLabel.AutoSize := False;
-      NoteLabel.Height := ScaleY(28);
-      NoteLabel.Caption:=
-        'Attention: Reinstalls and removes all extensions and user data';
+        NoteLabel := TNewStaticText.Create(VsCodiumPage);
+        NoteLabel.Parent := VsCodiumPage.Surface;
+        NoteLabel.Left := ScaleX(0);
+        NoteLabel.Top := ReinstallCheckbox.Top + ReinstallCheckbox.Height + ScaleY(4);
+        NoteLabel.Width := VsCodiumPage.SurfaceWidth;
+        NoteLabel.AutoSize := False;
+        NoteLabel.Height := ScaleY(28);
+        NoteLabel.Caption:=
+          'Attention: Reinstalls and removes all extensions and user data';
+      end;
     end;
-  end;
 
-  if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
+    if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
+    begin
+      if IsComponentSelected('VsCodium') and (VSCodiumRemoveDataSelected or not Assigned(ReinstallCheckbox)) then
+        InfoAfterPage.Surface.Show
+      else
+        WizardForm.NextButton.OnClick(nil); // skip page
+    end;
+  end
+  else
   begin
-    if IsComponentSelected('VsCodium') and (VSCodiumRemoveDataSelected or not Assigned(ReinstallCheckbox)) then
-      InfoAfterPage.Surface.Show
-    else
-      WizardForm.NextButton.OnClick(nil); // skip page
+    if (CurPageID = InfoAfterPage.ID) then
+    begin
+      if IsComponentSelected('VsCodium') then
+        InfoAfterPage.Surface.Show
+      else
+        WizardForm.NextButton.OnClick(nil); // skip page
+    end;
   end;
 end;
 
