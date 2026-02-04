@@ -2,6 +2,9 @@
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
 
+DO_UPDATE_VSCODIUM_FLAG=false
+[ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
+
 # This owner change is required when installation with sudo permission
 # File/Folder after copying need to change the owner to actual user instead of root
 function update_owner(){
@@ -137,12 +140,16 @@ function update_vscodium_related(){
       cp -R "$EXT_NEW_DIR" $VSCODE_DATA_DIR
 
       merge_extensions "$EXT_BACKUP_DIR/extensions.json" "$EXT_NEW_DIR/extensions.json" "$VSCODE_DATA_DIR/extensions/extensions.json"
+
+      allow_user_group_permissions "$VSCODE_DATA_DIR/extensions"
    fi
 
    # Restore user's VSCode global storage for reinstalled Vscodium
    if [ -d "$STORAGE_BACKUP_DIR" ]; then
       echo "Restoring user's VSCode global storage..."
       cp -R "$STORAGE_BACKUP_DIR" "$VSCODE_DATA_DIR/user-data/User/"
+
+      allow_user_group_permissions "$VSCODE_DATA_DIR/user-data/User/globalStorage"
    fi
 
    echo "Clean up temporary backup files..."
@@ -306,24 +313,40 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       allow_user_group_permissions /opt/rfwaio/devtools/nodejs/lib
       update_android_related;
    fi
+   if $DO_UPDATE_VSCODIUM_FLAG; then
+      # Dev mode
+      if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]] || \
+      [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (upgrade/overwrite) " ]]; then
 
-   if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]] || \
-   [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (upgrade/overwrite) " ]]; then
+         # Update permission of Vscodium-related data
+         ###########################################################################
+         allow_user_group_permissions /opt/rfwaio/robotvscode/data
+         allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+         chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
 
-      # Update permission of Vscodium-related data
-      ###########################################################################
-      allow_user_group_permissions /opt/rfwaio/robotvscode/data
-      allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
-      chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
+         # Extra step only for fresh install
+         if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then
+            rm -rf "/tmp/vscode_backup"
+         fi
 
-      # Extra step only for fresh install
-      if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then
-         rm -rf "/tmp/vscode_backup"
+         update_vscodium_related;
+      else
+         remove_vscodium_package;
       fi
-
-      update_vscodium_related;
    else
-      remove_vscodium_package;
+      # Dev mode
+      if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then
+         remove_vscodium_package;
+      else
+         #
+         # Update permission of Vscodium-related data
+         #
+         #############################################################################
+         allow_user_group_permissions /opt/rfwaio/robotvscode/data
+         allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
+         chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
+         update_vscodium_related;
+      fi
    fi
 
 
@@ -376,3 +399,6 @@ if [ -d "${DLTCONNECTOR_PATH}" ]; then
    echo "For using QConnectionDLTLibrary, please install DTLConnector by below commands:"
    echo "sudo dpkg -i ${DLTCONNECTOR_PATH}${DLTCONNECTOR_NAME}"
 fi
+
+FLAG_FILE="/var/lib/robotframework-aio-do-update-vscodium"
+rm -f "$FLAG_FILE" || true
