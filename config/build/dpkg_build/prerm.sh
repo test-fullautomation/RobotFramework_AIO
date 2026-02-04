@@ -1,5 +1,15 @@
 #!/bin/bash
 
+###############################################################################
+# Dev-only flag
+# Enable by running:
+#   echo 1 | sudo tee /var/lib/robotframework-aio-do-update-vscodium
+#   sudo apt-get install -y ./*.deb --fix-missing --reinstall --allow-downgrades
+###############################################################################
+
+DO_UPDATE_VSCODIUM_FLAG=false
+[ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
+
 # Backup VSCode extensions/global storage
 backup_vscode_extensions() {
    echo "Backing up VSCode user data..."
@@ -45,7 +55,10 @@ remove_application_files() {
 case "$1" in
    upgrade)
       echo "Upgrading RobotFramework AIO..."
-      backup_vscode_extensions
+      if $DO_UPDATE_VSCODIUM_FLAG; then
+
+         backup_vscode_extensions
+      fi
       remove_application_files
       ;;
 
