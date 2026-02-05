@@ -118,7 +118,7 @@ scp==0.15.0
 # scapy
 scipy==1.16.3
 # Scrapy
-setuptools==79.0.1
+setuptools==80.9.0
 # selenium
 # service-identity
 six==1.17.0
