@@ -11,7 +11,7 @@
 # RobotFramework AIO (All In One) <!-- omit in toc -->
 [![Build RobotFramework AIO packages](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml/badge.svg?event=push)](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml)
 
-This respository holds the build tooling for a new RobotFramework AIO (All In 
+This respository holds the build tooling for a new RobotFramework AIO (All In
 One) installer for both Windows and Linux.
 
 RobotFramework AIO is built out of many separate repositories. Therefore this repository (https://github.com/test-fullautomation/RobotFramework_AIO/) is **the meta-repository** for all related repositories.
@@ -22,15 +22,15 @@ comes instead as separate Windows or Linux installer.
 #
 [![Attention](include/png/attention.png)](https://robotframework-aio.org)
 
-Attention! If you want to use RobotFramework AIO for test case development and/or test case execution, 
+Attention! If you want to use RobotFramework AIO for test case development and/or test case execution,
 then please download a RobotFramework AIO installer from here: https://robotframework-aio.org .
 
 
-If you want to contribute to develop RobotFramework AIO, and therefore build it 
+If you want to contribute to develop RobotFramework AIO, and therefore build it
 manually, then please proceed reading here.
 
 !! Consider also !! \
-In most cases it's not required to build manually. Our 
+In most cases it's not required to build manually. Our
 RobotFramework AIO github ["Actions"](https://github.com/test-fullautomation/RobotFramework_AIO/actions) can do this for you.
 Contribution is also possible by just working on the repository where
 you want to contribute. Most of the repositories have no dependency on
@@ -59,22 +59,22 @@ the overall build and run also stand-alone.
 ## Getting Started
 
 ### Manual build
-Currently, RobotFramework AIO is supported to build with both **Windows** and 
+Currently, RobotFramework AIO is supported to build with both **Windows** and
 **Linux** environments.
-Consider that a manual build is in most cases not required. 
+Consider that a manual build is in most cases not required.
 RobotFramework AIO actions can build for you.
 
 #### Preconditions
-Building a RobotFramework AIO installer includes rendering the documentation. 
-This requires the availability of some additional applications that have to be 
+Building a RobotFramework AIO installer includes rendering the documentation.
+This requires the availability of some additional applications that have to be
 installed at first.
 
 [TeX Live](https://www.tug.org/texlive/) is used for rendering the documentation and need to be installed first.
-The full collection is recommended to avoid issue when generating document but it will take long time for the installation. 
+The full collection is recommended to avoid issue when generating document but it will take long time for the installation.
 In case the full collection installation is not possible, at least 2 collections `texlive-latex-extra` and `texlive-fonts-recommended` should be installed together with the basic package.
 
-Please refer [requirements_linux.sh](./requirements_linux.sh) or 
-[requirements_windows.sh](./requirements_windows.sh) for the dependency packages 
+Please refer [requirements_linux.sh](./requirements_linux.sh) or
+[requirements_windows.sh](./requirements_windows.sh) for the dependency packages
 for **Linux** and **Windows** environments.
 
 #### Execute build scripts
@@ -90,15 +90,15 @@ Then follow below steps for building process:
 	./cloneall
 	```
 
-2. Download and install Python 3.9 (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
+2. Download and install Python 3.13 (include dependencies which are defined in `install/python_requirements.txt`), vscode (include the extensions which defined in `install/vscode_requirement.csv` or stored as *.vsix file under `config/robotvscode/extensions` folder) and pandoc
 	```
 	./install/install.sh
 	```
-	>Note: In case you are working behind the proxy, 
-	[cntlm authentication proxy](https://sourceforge.net/projects/cntlm/) 
+	>Note: In case you are working behind the proxy,
+	[cntlm authentication proxy](https://sourceforge.net/projects/cntlm/)
 	should be installed and started first then
 	execute the `install.sh` with `--use-cntlm` argument as below command:
-	
+
 	```
 	./install/install.sh --use-cntlm
 	```
@@ -108,21 +108,21 @@ Then follow below steps for building process:
 	./build
 	```
 
-	Build the RobotFramework AIO package with all related libraries 
+	Build the RobotFramework AIO package with all related libraries
 	(defined in `config/repositories/repositories.conf` file).
 
 
-	Build script will detect the operating system (**Windows** or **Linux**) 
+	Build script will detect the operating system (**Windows** or **Linux**)
 	automatically to run the appropriate steps for building installer package.
 
-	The new generated RobotFramework AIO setup file can found under `Output/` folder 
+	The new generated RobotFramework AIO setup file can found under `Output/` folder
 	on Windows and `output_lx` on Linux machine.
 
 #### Repositories configuration file
 The repositories configuration file `repositories.conf` allows you to manage various repositories across different Git servers.
 
-[config/repositories/repositories.conf](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/config/repositories/repositories.conf) is used as default for [cloneall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/cloneall), 
-[gitall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/gitall) 
+[config/repositories/repositories.conf](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/config/repositories/repositories.conf) is used as default for [cloneall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/cloneall),
+[gitall](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/gitall)
 and [build](https://github.com/test-fullautomation/RobotFramework_AIO/blob/develop/build) scripts (without specifying in command line argument)
 
 However, you can define your own `repositories.conf` configuration file (remove/add repositories from multiple Git servers) and use it for those scripts.
@@ -188,22 +188,22 @@ Then, execute the scripts with additional argument `--config-file=<path-to-your-
 		```
 	* Use with custom repositories configuration file:
 		```
-		./gitall --config-file=<path-to-your-config-file> commit -m "Commit message" 
+		./gitall --config-file=<path-to-your-config-file> commit -m "Commit message"
 		```
 
 ### Github Actions
 
 #### Workflow
-The workflow to build RobotFramework AIO package is available in 
+The workflow to build RobotFramework AIO package is available in
 "Github Actions" of this repository.
 
-There are build jobs available for both environments **Windows** and **Linux**. 
-These build jobs contain the following main steps: 
+There are build jobs available for both environments **Windows** and **Linux**.
+These build jobs contain the following main steps:
 - `Install dependencies`: install dependency packages for build job
 - `Clone repositories` : clone all related repos to build runner
 - `Install` : install python, vscode and their dependencies
 - `Build` : build the package installer
-- `Upload build package` : save the build package as workflow artifactory 
+- `Upload build package` : save the build package as workflow artifactory
 
 #### Runners
 Currently, there are two runners (GitHub-hosted) available for build pipelines:
@@ -212,7 +212,7 @@ Currently, there are two runners (GitHub-hosted) available for build pipelines:
 
 ## Contribution
 
-We are always interested in support and you are cordially invited helping us to 
+We are always interested in support and you are cordially invited helping us to
 improve the Robot Framework AIO.
 
 ## Feedback
