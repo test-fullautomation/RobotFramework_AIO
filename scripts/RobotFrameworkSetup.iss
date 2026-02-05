@@ -70,7 +70,7 @@ AllowUNCPath=false
 ChangesAssociations=true
 ChangesEnvironment=true
 OutputDir=..\Output\
-
+DisableDirPage=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -646,18 +646,23 @@ begin
   MsgInstallCopilotArgs := ExpandConstant('{cm:InstallCopilotArgs}');
   InstructionMemo := TMemo.Create(WizardForm);
   InstructionMemo.Parent := InfoAfterPage.Surface;
-  InstructionMemo.Top := WizardForm.ReadyMemo.Top + ScaleY(40);
-  InstructionMemo.Width := WizardForm.ReadyMemo.Width;
-  InstructionMemo.Height := WizardForm.ReadyMemo.Height;
-  InstructionMemo.Color := WizardForm.ReadyMemo.Color;
-  InstructionMemo.Font := WizardForm.ReadyMemo.Font;
+
+  InstructionMemo.Left := ScaleX(0);
+  InstructionMemo.Top := InstructionLabel.Top + InstructionLabel.Height + ScaleY(12);
+
+  InstructionMemo.Width := InfoAfterPage.SurfaceWidth;
+  InstructionMemo.Height := InfoAfterPage.SurfaceHeight - InstructionMemo.Top - ScaleY(10);
+
   InstructionMemo.ReadOnly := True;
   InstructionMemo.ScrollBars := ssVertical;
+  InstructionMemo.WordWrap := False;
+  InstructionMemo.WantReturns := False;
+  InstructionMemo.Color := clWindow;
   InstructionMemo.Cursor := crArrow;
-  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  InstructionMemo.Text := '& "' + ScriptPath + '" ' + MsgInstallCopilotArgs;
   // Select all text in the memo
   InstructionMemo.SelStart := 0;
-  InstructionMemo.SelLength := Length(InstructionMemo.Text)
+  InstructionMemo.SelLength := Length(InstructionMemo.Text);
   InfoAfterPage.Surface.Hide;
 
 end;
