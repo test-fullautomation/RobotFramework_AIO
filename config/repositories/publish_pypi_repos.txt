@@ -3,6 +3,7 @@ python-genpackagedoc
 python-jsonpreprocessor
 python-testresultdbaccess
 python-pytestlog2db
+python-process-hub
 python-rabbitmq-messagebus
 robotframework-extensions-collection
 robotframework-qconnect-base

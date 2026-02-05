@@ -86,6 +86,14 @@
                        "LOGFILE"           : "../../../../python-microservice-base/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
+                       "COMPONENTROOTPATH" : "../../../../python-process-hub",
+                       "TESTFOLDER"        : "pytest",
+                       "TESTTYPE"          : "PYTEST",
+                       "TESTEXECUTOR"      : "executepytest.py",
+                       "LOCALCOMMANDLINE"  : ["--junit-prefix=ProcessHub"],
+                       "LOGFILE"           : "../../../../python-process-hub/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                    },
+                    {
                        "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
                        "TESTFOLDER"        : "pytest",
                        "TESTTYPE"          : "PYTEST",
