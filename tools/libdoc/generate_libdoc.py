@@ -33,6 +33,7 @@ import subprocess
 from PythonExtensionsCollection.String.CString import CString
 from bs4 import BeautifulSoup
 from importlib.util import spec_from_file_location, module_from_spec
+from pathlib import Path
 
 sPythonPath = CString.NormalizePath(sys.executable)
 
@@ -102,10 +103,15 @@ def process_config(config):
             # Handle patterns that reference a class path (with '::')
             patterns_to_remove = []
             for pattern in include_patterns:
+
+                if not bool(re.search(r'\.|\.py|\.\*', pattern)) and not is_class_path(pattern) and root.split('/')[-1] == pattern:
+                    generate_libdoc(pattern, root, version, repository_path, output_directory)
+                    break
                 if is_class_path(pattern) and has_valid_class_path(pattern):
                     # Generate libdoc for class path pattern
                     generate_libdoc(pattern, root, version, repository_path, output_directory, is_class_path=True)
                     patterns_to_remove.append(pattern)  # Mark for removal after loop
+                    break
             for pattern in patterns_to_remove:
                 include_patterns.remove(pattern)
             # Handle regular file patterns
@@ -117,6 +123,7 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
     """Generate libdoc for a single file or class path."""
     output_file_path = ""
     base_name = ""
+    source_path = CString.NormalizePath(f"{root}")
     # Extract base name before .py, .*, or ::
     if isinstance(file, str):
         # If class path, extract before '::'
@@ -129,7 +136,8 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
     try:
         if repository_path not in sys.path:
             sys.path.append(CString.NormalizePath(f"{repository_path}"))
-        source_path = CString.NormalizePath(f"{root}/{file}")
+        if root.split('/')[-1] != file:
+            source_path = CString.NormalizePath(f"{root}/{file}")
         output_folder_path = CString.NormalizePath(f"{repository_path}/{output_directory}")
         os.makedirs(output_folder_path, exist_ok=True)
         if is_class_path:
