@@ -91,7 +91,7 @@
                        "TESTTYPE"          : "PYTEST",
                        "TESTEXECUTOR"      : "executepytest.py",
                        "LOCALCOMMANDLINE"  : ["--junit-prefix=ProcessHub"],
-                       "LOGFILE"           : "../../../../python-process-hub/pytest/aiotestlogfiles/aiotestlogfile.xml"
+                       "LOGFILE"           : "../../../../python-process-hub/test/pytest/aiotestlogfiles/aiotestlogfile.xml"
                     },
                     {
                        "COMPONENTROOTPATH" : "../../../../python-microservice-cleware-switch",
