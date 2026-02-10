@@ -68,14 +68,12 @@ if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
     Get-ChildItem -Path "$BackupVSCodeDataPath\extensions_new" -Exclude "extensions.json" | ForEach-Object {
         Copy-Item -Path $_.FullName -Destination "$RobotVsCodeDataPath\extensions" -Recurse -Force
     }
-    icacls "$RobotVsCodeDataPath\extensions" /grant "$($env:USERNAME):(M)" /T /C /Q
 }
 
 if (Test-Path -Path "$BackupVSCodeDataPath\globalStorage") {
     Copy-Item -Path "$BackupVSCodeDataPath\globalStorage" -Destination "$RobotVsCodeDataPath\user-data\User" -Recurse -Force
-    icacls "$RobotVsCodeDataPath\user-data\User\globalStorage" /grant "$($env:USERNAME):(M)" /T /C /Q
 }
-
+icacls "$Env:RobotVsCode" /grant *S-1-5-32-545:(OI)(CI)M /T /C /Q
 $SettingContent = (Get-Content -Path $SettingsPathFile) -replace '{RobotPythonPath}', $PyPath
 $SettingContent = $SettingContent -replace $PyBin,$PyExe #-replace 'defaultInterpreterPath','pythonPath'
 
