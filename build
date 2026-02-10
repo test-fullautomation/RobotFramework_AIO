@@ -215,6 +215,22 @@ function parse_repo () {
 			${PYBIN} ./setup.py clean --all install
 			# Avoid build egg: ${PYBIN}  -m pip install .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
+		elif [ -f "./pyproject.toml" ]; then
+			PACKNAME=$(grep -oP '^name\s*=\s*"\K[^"]+' ./pyproject.toml | head -n 1)
+			if [[ -n "$PACKNAME" ]]; then
+				/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
+				logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
+			fi
+			if [ -f "./cleanup_installation.py" ]; then
+				${PYBIN} ./cleanup_installation.py
+			fi
+			if [ -f "./genpackagedoc.py" ]; then
+				${PYBIN} ./genpackagedoc.py
+			fi
+			${PYBIN} -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+		else
+			goodmsg "no setup.py or pyproject.toml found, skipping installation."
 		fi
 		cd $CURDIR
 	done
