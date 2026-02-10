@@ -74,7 +74,7 @@
          "RobotFramework_TestsuitesManagement"
       ],
       "include_patterns": [
-         "CKeywords.*::RobotFramework_TestsuitesManagement.Keywords.CKeywords.CSetupKeywords"
+         "RobotFramework_TestsuitesManagement"
       ],
       "exclude_patterns": []
    },
