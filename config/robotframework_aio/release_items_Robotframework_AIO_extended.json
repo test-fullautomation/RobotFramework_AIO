@@ -377,11 +377,11 @@
 
 **Environment/Installation**
 
-* Update the ways to get AIO version due to the restructure of TestsuitesManagement package:
+* Update the ways to get AIO version due to the restructuring of TestsuitesManagement package:
 
   * The entry point to get AIO version is now ``RobotFramework_TestsuitesManagement.Utils.version``
 
-  * The console script ``robfwaio_version``, which is created by the RobotFramework_TestsuitesManagement,
+  * The console script ``robfwaio_version``, which is created by the RobotFramework_TestsuitesManagement package,
     is updated accordingly.
 
   * The command line to get AIO version via ``RobotFramework_TestsuitesManagement`` module:
