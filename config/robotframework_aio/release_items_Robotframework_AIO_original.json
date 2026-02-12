@@ -373,6 +373,36 @@
   * **Pyright** extension to version **1.1.402**
 
 * Update compatible **GitHub Copilot** extension version via post-install script ``install-github-copilot-exts``
+
+**Environment/Installation**
+
+* Update the ways to get AIO version due to the restructure of TestsuitesManagement package:
+
+  * The entry point to get AIO version is now ``RobotFramework_TestsuitesManagement.Utils.version``
+
+  * The console script ``robfwaio_version``, which is created by the RobotFramework_TestsuitesManagement,
+    is updated accordingly.
+
+  * The command line to get AIO version via ``RobotFramework_TestsuitesManagement`` module:
+
+    * Windows (Windows PowerShell):
+
+      | \"$env:RobotPythonPath/python\" -m RobotFramework_TestsuitesManagement.Utils.version
+
+    * Linux (Bash):
+
+      | \"$RobotPythonPath/python\" -m RobotFramework_TestsuitesManagement.Utils.version
+
+  * The ``robot`` script for **Linux** which is installed along with AIO package also supports
+    the argument ``--version_aio`` (or ``-aio``) to get the AIO version:
+
+    * Linux (Bash):
+
+      | robot --version_aio
+
+      or
+
+      | robot -aio
 "
                               ]
                  }
