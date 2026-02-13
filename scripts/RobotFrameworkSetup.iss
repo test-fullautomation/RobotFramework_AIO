@@ -238,7 +238,7 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
+  Parameters: "-ExecutionPolicy Bypass -Command ""Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -File """"{tmp}\update_vsdata.ps1"""" -AppPath """"{app}"""" -BackupVSCodeDataPath """"{tmp}\vscode_backup""""' -Verb RunAs"""; \
   WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
