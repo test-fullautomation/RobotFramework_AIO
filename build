@@ -312,7 +312,7 @@ function build_libdoc_document()
    website_dir=../RobotFramework_AIO_website/html/libdoc
 
    mkdir -p $assets_dir
-	mkdir -p $website_dir
+   mkdir -p $website_dir
 
    ${PYBIN} ./tools/libdoc/generate_libdoc.py
    # Copy libdoc documents to vscode welcome extension
@@ -322,7 +322,8 @@ function build_libdoc_document()
               ../robotframework-prometheus/PrometheusInterface \
               ../robotframework-extensions-collection/RobotframeworkExtensions \
               ../robotframework-qconnect-base/QConnectBase \
-			     ../robotframework-qconnect-winapp/QConnectWinapp; do
+			  ../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement \
+			  ../robotframework-qconnect-winapp/QConnectWinapp; do
       if [ -d "$dir" ]; then
          libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
          cp -a "$libdoc" "$assets_dir"
