@@ -73,7 +73,7 @@ if (Test-Path -Path "$BackupVSCodeDataPath\extensions") {
 if (Test-Path -Path "$BackupVSCodeDataPath\globalStorage") {
     Copy-Item -Path "$BackupVSCodeDataPath\globalStorage" -Destination "$RobotVsCodeDataPath\user-data\User" -Recurse -Force
 }
-icacls "$Env:RobotVsCode" /grant "*S-1-5-32-545:(OI)(CI)F" /T /C /Q
+
 $SettingContent = (Get-Content -Path $SettingsPathFile) -replace '{RobotPythonPath}', $PyPath
 $SettingContent = $SettingContent -replace $PyBin,$PyExe #-replace 'defaultInterpreterPath','pythonPath'
 

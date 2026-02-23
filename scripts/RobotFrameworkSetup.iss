@@ -238,7 +238,7 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -Command ""Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -File """"{tmp}\update_vsdata.ps1"""" -AppPath """"{app}"""" -BackupVSCodeDataPath """"{tmp}\vscode_backup""""' -Verb RunAs"""; \
+  Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
   WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
@@ -381,26 +381,28 @@ var
   ResultCode: Integer;
   sCmdBuffer: String;
   sCmdArgBuffer: String;
+  ExecResult: Boolean;
 begin
-  //at first take over ownership
-  sCmdBuffer:='takeown';
-  sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'\*" /R');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-  sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'" /R');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-  //for debugging
-  //MsgBox(sCmdArgBuffer,mbInformation, MB_OK);
+  Log('---------------- Win7GiveWriteAccess START ----------------');
+  Log('Target path: ' + sPath);
 
-  //now grant access rights
-  sCmdBuffer:='icacls';
-  sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F /T /C');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  // 1. Reset ACL
+  sCmdBuffer := 'icacls';
+  sCmdArgBuffer := ExpandConstant('"' + sPath + '" /reset /T /C');
 
-  //now remove critical attributes
-  sCmdBuffer:='attrib';
-  sCmdArgBuffer:=ExpandConstant('-A -R -S "'+sPath+'" /S /D');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  Log('Executing: ' + sCmdBuffer + ' ' + sCmdArgBuffer);
+  ExecResult := Exec(sCmdBuffer, sCmdArgBuffer, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+
+  // 2. Grant Modify to BUILTIN\Users (S-1-5-32-545)
+  sCmdArgBuffer := ExpandConstant(
+    '"' + sPath + '" /grant *S-1-5-32-545:(OI)(CI)M /T /C');
+
+  Log('Executing: ' + sCmdBuffer + ' ' + sCmdArgBuffer);
+  ExecResult := Exec(sCmdBuffer, sCmdArgBuffer, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+
+  Log('---------------- Win7GiveWriteAccess END ----------------');
 end;
+
 
 { ///////////////////////////////////////////////////////////////////// }
 function GetUninstallString(): String;
