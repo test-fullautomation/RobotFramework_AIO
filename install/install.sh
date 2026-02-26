@@ -25,6 +25,7 @@ vscodeData=$mypath/../config/robotvscode/
 vscodeIcons=$mypath/../config/robotvscode/icons
 vscode_jsonp=$mypath/../../vscode-jsonp/jsonp-?.?.?.vsix
 destDir=$(realpath $mypath/../..)
+wheelHouseDir=$mypath/../wheelhouse
 
 use_cntlm="No"
 python_only="No"
@@ -448,11 +449,11 @@ function packaging_python_windows() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python3/python.exe -m pip install -r "$mypath/python_requirements.txt" $proxy_args
-	logresult "$?" "installed required packages for Python" "install required packages for Python"
+	$destDir/python3/python.exe -m pip wheel -w $wheelHouseDir -r "$mypath/python_requirements.txt" $proxy_args
+	logresult "$?" "downloaded required packages for Python" "download required packages for Python"
 	# Workaround for pyfranca
-	$destDir/python3/python.exe -m pip install pyfranca
-	logresult "$?" "installed pyfranca package" "install pyfranca package"
+	$destDir/python3/python.exe -m pip wheel -w $wheelHouseDir pyfranca
+	logresult "$?" "downloaded pyfranca package" "download pyfranca package"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3/Lib/site-packages/
 }
@@ -477,8 +478,8 @@ function packaging_python_linux() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python3lx/bin/python3 -m pip install -r "$mypath/python_requirements_lx.txt"
-	logresult "$?" "installed required packages for Python" "install required packages for Python"
+	$destDir/python3lx/bin/python3 -m pip wheel -w $wheelHouseDir -r "$mypath/python_requirements_lx.txt"
+	logresult "$?" "downloaded required packages for Python" "download required packages for Python"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3lx/lib/python3.13/site-packages
 }
