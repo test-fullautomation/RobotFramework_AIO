@@ -29,6 +29,7 @@ ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
+wheelHouseDir="./wheelhouse"
 
 arguments=""
 
@@ -190,6 +191,21 @@ function check_and_install_texlive () {
 	export GENDOC_LATEXPATH="/usr/local/texlive/$(date +%Y)/bin/x86_64-linux"
 }
 
+function build_python_package () {
+	if [ -f "./setup.py" ]; then
+		${PYBIN} ./setup.py sdist bdist_wheel -d $wheelHouseDir
+		logresult "$?" "built ${reponame}" "build ${reponame}"
+	elif [ -f "./pyproject.toml" ]; then
+		${PYBIN} -m build -o $wheelHouseDir
+		logresult "$?" "built ${reponame}" "build ${reponame}"
+		if [ -f "./genpackagedoc.py" ]; then
+			${PYBIN} ./genpackagedoc.py
+			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
+		fi
+	else
+		goodmsg "no setup.py or pyproject.toml found, skipping installation."
+	fi
+}
 function parse_repo () {
 	repo_type=$2
 	list_repo=($(git config -f $1 --list --name-only | grep "${repo_type}."))
@@ -203,29 +219,7 @@ function parse_repo () {
 	   # then print "git status", else handover command line parameters
 	   # to git call
 		   #using force option setup.py to overwrite old files
-		if [ -f "./setup.py" ]; then
-			PACKNAME=""
-			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
-				if [[ -n "$PACKNAME" ]]; then
-					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
-					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-				fi
-			fi
-			${PYBIN} ./setup.py clean --all install
-			# Avoid build egg: ${PYBIN}  -m pip install .
-			logresult "$?" "installed ${reponame}" "install ${reponame}"
-		elif [ -f "./pyproject.toml" ]; then
-			PACKNAME=$(grep -oP '^name\s*=\s*"\K[^"]+' ./pyproject.toml | head -n 1)
-			${PYBIN} -m pip install . --force-reinstall
-			logresult "$?" "installed ${reponame}" "install ${reponame}"
-			if [ -f "./genpackagedoc.py" ]; then
-				${PYBIN} ./genpackagedoc.py
-				logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
-			fi
-		else
-			goodmsg "no setup.py or pyproject.toml found, skipping installation."
-		fi
+		build_python_package
 		cd $CURDIR
 	done
 }
@@ -265,17 +259,7 @@ function parse_config () {
 				$CURDIR/config/repositories/prebuild/$sec_prebuild
 			fi
 
-			if [ -f "./setup.py" ]; then
-				PACKNAME=""
-				if grep -w setuptools ./setup.py | grep -w import; then
-					PACKNAME=$(${PYBIN} -W ignore ./setup.py --name | tail -n 1)
-					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
-					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-				fi
-				${PYBIN} ./setup.py install
-				${PYBIN} ./setup.py clean --all
-				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
-			fi
+			build_python_package
 		fi
 		cd $CURDIR
 	done
