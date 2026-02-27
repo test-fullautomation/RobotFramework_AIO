@@ -200,13 +200,14 @@ function build_python_package () {
 		${PYBIN} ./setup.py sdist bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
-		${PYBIN} -m pip install build docutils colorama PythonExtensionsCollection genpackagedoc
+		${PYBIN} -m pip install build docutils
 		${PYBIN} -m build -o $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
-		# if [ -f "./genpackagedoc.py" ]; then
-		# 	${PYBIN} ./genpackagedoc.py
-		# 	logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
-		# fi
+		if [ -f "./genpackagedoc.py" ]; then
+			${PYBIN} -m pip install .
+			${PYBIN} ./genpackagedoc.py
+			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
+		fi
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
 	fi
