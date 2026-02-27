@@ -239,8 +239,8 @@ Name: {app}\devtools; Permissions: users-full;
 [INI]
 
 [RUN]
-Filename: "{app}\python3\python.exe"; \
-  Parameters: "-m pip install --no-index --find-links ""{tmp}\wheelhouse"" --force-reinstall *.whl"; \
+Filename: "cmd.exe"; \
+  Parameters: "/c ""for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --find-links . --force-reinstall %x"; \
   WorkingDir: {tmp}\wheelhouse\; \
   StatusMsg: "Installing required Python packages..."; \
   Flags: runhidden waituntilterminated;
