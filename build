@@ -192,10 +192,15 @@ function check_and_install_texlive () {
 }
 
 function build_python_package () {
+	if [ -f "requirements.txt" ]; then
+		${PYBIN} -m pip install -r requirements.txt
+	fi
 	if [ -f "./setup.py" ]; then
+		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
 		${PYBIN} ./setup.py sdist bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
+		${PYBIN} -m pip install build docutils colorama PythonExtensionsCollection genpackagedoc
 		${PYBIN} -m build -o $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 		if [ -f "./genpackagedoc.py" ]; then
