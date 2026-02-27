@@ -29,7 +29,9 @@ ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
-wheelHouseDir="./wheelhouse"
+mypath=$(realpath $(dirname $0))
+wheelHouseDir="$mypath/wheelhouse"
+wheelRobotframeworkDir="$mypath/robotwheel"
 
 arguments=""
 
@@ -127,9 +129,11 @@ CURDIR=$(pwd)
 if [ "$UNAME" == "Linux" ] ; then
 	PYDIR=$(cd ../python3lx; pwd)
 	PYBIN=${PYDIR}/bin/python3
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements_lx.lock"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements.lock"
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -192,18 +196,48 @@ function check_and_install_texlive () {
 }
 
 function build_python_package () {
+	reponame=$1
 	if [ -f "./setup.py" ]; then
-		${PYBIN} ./setup.py sdist bdist_wheel -d $wheelHouseDir
+		PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | grep PACKAGENAME | awk -F':' '{print $2}' | xargs)
+		if [ -z "$PKG_NAME" ]; then
+			PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | tail -n 1)
+		fi
+		if [ -z "$PKG_NAME" ]; then
+			errormsg "Failed to get package name for $reponame, skipping build."
+			return 1
+		fi
+		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
+		if [ -f "requirements.txt" ]; then
+			${PYBIN} -m pip install -r requirements.txt
+			${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+		fi
+		if [ ${reponame} != "robotframework" ]; then
+			rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+		fi
+		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
-		${PYBIN} -m build -o $wheelHouseDir
-		logresult "$?" "built ${reponame}" "build ${reponame}"
+		PKG_NAME=$(${PYBIN} -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['name'])" | tail -n 1)
+		if [ ${reponame} != "robotframework" ]; then
+			rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+		fi
+		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
+			${PYBIN} -m pip install .
 			${PYBIN} ./genpackagedoc.py
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
+		# ${PYBIN} -m build -o $wheelHouseDir
+		${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir . -c $PY_CONSTRAIN_FILE
+		logresult "$?" "built ${reponame}" "build ${reponame}"
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
+	fi
+	if [ ${reponame} == "robotframework" ]; then
+		# copy robotframework wheel to a separate folder for later use in postinst.sh
+		rf_version=$(${PYBIN} -W ignore ./setup.py --version | tail -n 1)
+		mkdir -p $wheelRobotframeworkDir
+		mv $wheelHouseDir/robotframework-${rf_version}-*.whl $wheelRobotframeworkDir/
 	fi
 }
 function parse_repo () {
@@ -219,7 +253,7 @@ function parse_repo () {
 	   # then print "git status", else handover command line parameters
 	   # to git call
 		   #using force option setup.py to overwrite old files
-		build_python_package
+		build_python_package ${reponame}
 		cd $CURDIR
 	done
 }
@@ -259,7 +293,7 @@ function parse_config () {
 				$CURDIR/config/repositories/prebuild/$sec_prebuild
 			fi
 
-			build_python_package
+			build_python_package ${sec_name}
 		fi
 		cd $CURDIR
 	done
@@ -333,6 +367,7 @@ function build_debian()
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
 	parse_config $ConfigFile
+
 	build_libdoc_document
 
 	cd $CURDIR
@@ -392,6 +427,12 @@ function build_debian()
 	# Python package: core framework and libraries
 	cp -R -a ../python3lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python3
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
+
+	# Wheelhouse: all wheel files (dependencies + AIO components) to be installed on user machine by postinst.sh
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	cp -R -a $wheelHouseDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
+	cp -R -a $wheelRobotframeworkDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
 
 	# Devtools: Android package
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
