@@ -440,8 +440,7 @@ function packaging_python_windows() {
 
 	# call pip to initialize pip
 	$destDir/python3/python.exe -m pip install --upgrade pip
-	$destDir/python3/python.exe -m pip install --upgrade setuptools
-	$destDir/python3/python.exe -m pip install wheel
+	$destDir/python3/python.exe -m pip install --upgrade -r "$mypath/gendoc_requirements.txt" $proxy_args
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
@@ -470,6 +469,7 @@ function packaging_python_linux() {
 
 	# Upgrade pip
 	$destDir/python3lx/bin/python3 -m pip install --upgrade pip
+	$destDir/python3lx/bin/python3 -m pip install --upgrade -r "$mypath/gendoc_requirements.txt"
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
