@@ -5,7 +5,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;
 #ifndef SETUPVersion
-   #define SETUPVersion "0.1.5.0"
+   #define SETUPVersion "1.0.0.0"
 #endif
 #pragma message "SETUPVersion is : " + SETUPVersion
 ;Change History
@@ -70,6 +70,7 @@ AllowUNCPath=false
 ChangesAssociations=true
 ChangesEnvironment=true
 OutputDir=..\Output\
+SetupLogging=yes
 
 
 [Languages]
@@ -115,6 +116,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\wheelhouse\*"; Excludes: ".git"; DestDir: {tmp}\wheelhouse; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -179,7 +181,7 @@ Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: 
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Topic; ValueType: string; ValueData: System; Flags: UninsDeleteKey;
 
@@ -237,9 +239,16 @@ Name: {app}\devtools; Permissions: users-full;
 [INI]
 
 [RUN]
+Filename: "{app}\python3\python.exe"; \
+  Parameters: "-m pip install --no-index --find-links ""{tmp}\wheelhouse"" --force-reinstall *.whl"; \
+  WorkingDir: {tmp}\wheelhouse\; \
+  StatusMsg: "Installing required Python packages..."; \
+  Flags: runhidden waituntilterminated;
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
-  WorkingDir: {app}; Components: VsCodium;
+  WorkingDir: {app}; \
+  StatusMsg: "Updating VSCodium user data..."; \
+  Components: VsCodium;
 
 [UninstallRun]
 
