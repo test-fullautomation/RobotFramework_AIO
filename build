@@ -333,6 +333,7 @@ function build_debian()
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
 	parse_config $ConfigFile
+
 	build_libdoc_document
 
 	cd $CURDIR
@@ -392,6 +393,10 @@ function build_debian()
 	# Python package: core framework and libraries
 	cp -R -a ../python3lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python3
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
+
+	# Wheelhouse: all wheel files (dependencies + AIO components) to be installed on user machine by postinst.sh
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	cp -R -a $wheelHouseDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
 
 	# Devtools: Android package
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools

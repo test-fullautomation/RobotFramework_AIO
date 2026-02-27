@@ -48,6 +48,25 @@ function remove_android_package(){
    sed -i '/RobotAndroidPlatformTools/d' /opt/rfwaio/linux/set_robotenv.sh
 }
 
+function install_python_packages() {
+   WHEELHOUSE_DIR="/opt/rfwaio/wheelhouse"
+   PYTHON_BIN="/opt/rfwaio/python3/bin/python3"
+
+   if [ -d "$WHEELHOUSE_DIR" ] && ls $WHEELHOUSE_DIR/*.whl 1>/dev/null 2>&1; then
+      echo -e "${MSG_INFO} Installing Python packages from wheelhouse..."
+      $PYTHON_BIN -m pip install --no-index --find-links $WHEELHOUSE_DIR --force-reinstall $WHEELHOUSE_DIR/*.whl
+      if [ $? -eq 0 ]; then
+         echo -e "${MSG_DONE} Python packages installed successfully."
+      else
+         echo -e "${MSG_ERR} Failed to install Python packages from wheelhouse."
+         exit 1
+      fi
+   else
+      echo -e "${MSG_ERR} Wheelhouse directory not found or empty: $WHEELHOUSE_DIR"
+      exit 1
+   fi
+}
+
 merge_extensions() {
    local backup_file="$1"
    local new_file="$2"
@@ -300,8 +319,15 @@ else
 fi
 
 # Check whether this script is executed in installation or not
+# The selected components are stored in temporary file by preinst script,
+# and postinst script will read and perform update/remove accordingly
+# If the file is not existing, it means this script is executed as initRobotFrameworkAIO.sh
 SELECTED_CMPTS_FILE=/tmp/robfw_aio_selected_cmpts.tmp
 if [ -f "${SELECTED_CMPTS_FILE}" ];then
+   # Install Python packages (AIO components + dependencies) from bundled wheelhouse
+   install_python_packages
+
+   # Update/remove components based on user selection during installation
    readarray -t SELECTED_CMPTS < /tmp/robfw_aio_selected_cmpts.tmp
    if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Android " ]]; then
       remove_android_package;
@@ -348,8 +374,6 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
          update_vscodium_related;
       fi
    fi
-
-
 
    rm ${SELECTED_CMPTS_FILE}
 else
