@@ -201,13 +201,13 @@ function build_python_package () {
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
 		${PYBIN} -m pip install build docutils
-		${PYBIN} -m build -o $wheelHouseDir
-		logresult "$?" "built ${reponame}" "build ${reponame}"
 		if [ -f "./genpackagedoc.py" ]; then
 			${PYBIN} -m pip install .
 			${PYBIN} ./genpackagedoc.py
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
+		${PYBIN} -m build -o $wheelHouseDir
+		logresult "$?" "built ${reponame}" "build ${reponame}"
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
 	fi
