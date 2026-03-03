@@ -197,15 +197,19 @@ function check_and_install_texlive () {
 
 function build_python_package () {
 	reponame=$1
-	if [ -f "requirements.txt" ]; then
-		${PYBIN} -m pip install -r requirements.txt
-		${PYBIN} -m pip wheel -w $wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
-	fi
 	if [ -f "./setup.py" ]; then
+		PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | grep PACKAGENAME | awk -F':' '{print $2}' | xargs)
+		rm -f $wheelHouseDir/${PKG_NAME}-*.whl
 		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
+		if [ -f "requirements.txt" ]; then
+			${PYBIN} -m pip install -r requirements.txt
+			${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+		fi
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
+		PKG_NAME=$(${PYBIN} -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['name'])" | tail -n 1)
+		rm -f $wheelHouseDir/${PKG_NAME}-*.whl
 		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
 			${PYBIN} -m pip install .
@@ -213,7 +217,7 @@ function build_python_package () {
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
 		# ${PYBIN} -m build -o $wheelHouseDir
-		${PYBIN} -m pip wheel -w $wheelHouseDir . -c $PY_CONSTRAIN_FILE
+		${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir . -c $PY_CONSTRAIN_FILE
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
