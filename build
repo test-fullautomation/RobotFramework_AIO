@@ -129,9 +129,11 @@ CURDIR=$(pwd)
 if [ "$UNAME" == "Linux" ] ; then
 	PYDIR=$(cd ../python3lx; pwd)
 	PYBIN=${PYDIR}/bin/python3
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements_lx.lock"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements.lock"
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
@@ -197,10 +199,10 @@ function build_python_package () {
 	reponame=$1
 	if [ -f "requirements.txt" ]; then
 		${PYBIN} -m pip install -r requirements.txt
+		${PYBIN} -m pip wheel -w $wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
 	fi
 	if [ -f "./setup.py" ]; then
 		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
-		${PYBIN} -m pip wheel -w $wheelHouseDir -r requirements.txt
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
@@ -211,7 +213,7 @@ function build_python_package () {
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
 		# ${PYBIN} -m build -o $wheelHouseDir
-		${PYBIN} -m pip wheel -w $wheelHouseDir .
+		${PYBIN} -m pip wheel -w $wheelHouseDir . -c $PY_CONSTRAIN_FILE
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
