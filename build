@@ -199,6 +199,13 @@ function build_python_package () {
 	reponame=$1
 	if [ -f "./setup.py" ]; then
 		PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | grep PACKAGENAME | awk -F':' '{print $2}' | xargs)
+		if [ -z "$PKG_NAME" ]; then
+			PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | tail -n 1)
+		fi
+		if [ -z "$PKG_NAME" ]; then
+			errormsg "Failed to get package name for $reponame, skipping build."
+			return 1
+		fi
 		rm -f $wheelHouseDir/${PKG_NAME}-*.whl
 		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
 		if [ -f "requirements.txt" ]; then
@@ -224,8 +231,9 @@ function build_python_package () {
 	fi
 	if [ ${reponame} == "robotframework" ]; then
 		# copy robotframework wheel to a separate folder for later use in postinst.sh
+		rf_version=$(${PYBIN} -W ignore ./setup.py --version | tail -n 1)
 		mkdir -p $wheelRobotframeworkDir
-		cp $wheelHouseDir/robotframework-*.whl $wheelRobotframeworkDir/
+		mv $wheelHouseDir/robotframework-${rf_version}-*.whl $wheelRobotframeworkDir/
 	fi
 }
 function parse_repo () {
