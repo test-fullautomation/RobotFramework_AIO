@@ -29,7 +29,8 @@ ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
-wheelHouseDir="./wheelhouse"
+mypath=$(realpath $(dirname $0))
+wheelHouseDir="$mypath/wheelhouse"
 
 arguments=""
 
