@@ -117,6 +117,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 Source: "..\wheelhouse\*"; Excludes: ".git"; DestDir: {tmp}\wheelhouse; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\robotwheel\*"; Excludes: ".git"; DestDir: {tmp}\robotwheel; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; check: isExtendedVersion();
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -240,10 +241,16 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "cmd.exe"; \
-  Parameters: "/c ""for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --find-links . --force-reinstall %x"; \
+  Parameters: "/c ""for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x"; \
   WorkingDir: {tmp}\wheelhouse\; \
   StatusMsg: "Installing required Python packages..."; \
   Flags: runhidden waituntilterminated;
+Filename: "cmd.exe"; \
+  Parameters: "/c ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links robotframework --force-reinstall"; \
+  WorkingDir: {tmp}\robotwheel\; \
+  StatusMsg: "Installing extended Robotframework package..."; \
+  Flags: runhidden waituntilterminated; \
+  check: isExtendedVersion();
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
   WorkingDir: {app}; \
@@ -457,6 +464,15 @@ begin
       Result := 2;
   end else
     Result := 1;
+end;
+
+function isExtendedVersion(): Boolean;
+begin
+  #ifdef SubVersion
+    Result := '{#SubVersion}' = 'extended';
+  #else
+    Result := False;
+  #endif
 end;
 //
 // Called after each SetupStep

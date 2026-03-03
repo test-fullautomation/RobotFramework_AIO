@@ -31,6 +31,7 @@ ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
 mypath=$(realpath $(dirname $0))
 wheelHouseDir="$mypath/wheelhouse"
+wheelRobotframeworkDir="$mypath/robotwheel"
 
 arguments=""
 
@@ -193,6 +194,7 @@ function check_and_install_texlive () {
 }
 
 function build_python_package () {
+	reponame=$1
 	if [ -f "requirements.txt" ]; then
 		${PYBIN} -m pip install -r requirements.txt
 	fi
@@ -214,6 +216,11 @@ function build_python_package () {
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
 	fi
+	if [ ${reponame} == "robotframework" ]; then
+		# copy robotframework wheel to a separate folder for later use in postinst.sh
+		mkdir -p $wheelRobotframeworkDir
+		cp $wheelHouseDir/robotframework-*.whl $wheelRobotframeworkDir/
+	fi
 }
 function parse_repo () {
 	repo_type=$2
@@ -228,7 +235,7 @@ function parse_repo () {
 	   # then print "git status", else handover command line parameters
 	   # to git call
 		   #using force option setup.py to overwrite old files
-		build_python_package
+		build_python_package ${reponame}
 		cd $CURDIR
 	done
 }
@@ -268,7 +275,7 @@ function parse_config () {
 				$CURDIR/config/repositories/prebuild/$sec_prebuild
 			fi
 
-			build_python_package
+			build_python_package ${sec_name}
 		fi
 		cd $CURDIR
 	done
@@ -406,6 +413,8 @@ function build_debian()
 	# Wheelhouse: all wheel files (dependencies + AIO components) to be installed on user machine by postinst.sh
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
 	cp -R -a $wheelHouseDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
+	cp -R -a $wheelRobotframeworkDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
 
 	# Devtools: Android package
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools

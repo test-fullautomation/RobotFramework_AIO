@@ -50,6 +50,7 @@ function remove_android_package(){
 
 function install_python_packages() {
    WHEELHOUSE_DIR="/opt/rfwaio/wheelhouse"
+   WHEELROBOTFRAMEWORK_DIR="/opt/rfwaio/robotframework"
    PYTHON_BIN="/opt/rfwaio/python3/bin/python3"
 
    if [ -d "$WHEELHOUSE_DIR" ] && ls $WHEELHOUSE_DIR/*.whl 1>/dev/null 2>&1; then
@@ -64,6 +65,17 @@ function install_python_packages() {
    else
       echo -e "${MSG_ERR} Wheelhouse directory not found or empty: $WHEELHOUSE_DIR"
       exit 1
+   fi
+
+   if [ -d "$WHEELROBOTFRAMEWORK_DIR" ] && ls $WHEELROBOTFRAMEWORK_DIR/robotframework-*.whl 1>/dev/null 2>&1; then
+      echo -e "${MSG_INFO} Installing RobotFramework package from robotwheel..."
+      $PYTHON_BIN -m pip install --no-index --no-cache-dir --find-links $WHEELROBOTFRAMEWORK_DIR --force-reinstall $WHEELROBOTFRAMEWORK_DIR/robotframework-*.whl
+      if [ $? -eq 0 ]; then
+         echo -e "${MSG_DONE} RobotFramework package installed successfully."
+      else
+         echo -e "${MSG_ERR} Failed to install RobotFramework package from robotwheel."
+         exit 1
+      fi
    fi
 }
 
