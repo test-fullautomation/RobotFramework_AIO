@@ -115,6 +115,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\scripts\robfwaio_version.bat"; DestDir: {app}\python3\Scripts; Flags: ignoreversion; Permissions: everyone-full;
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -237,6 +238,9 @@ Name: {app}\devtools; Permissions: users-full;
 [INI]
 
 [RUN]
+Filename: "powershell.exe"; \
+  Parameters: "Remove-Item -Path ""{app}\python3\Scripts\robfwaio_version.exe"" -ErrorAction SilentlyContinue -Force"; \
+  WorkingDir: {app};
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
   WorkingDir: {app}; Components: VsCodium;

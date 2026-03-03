@@ -383,15 +383,15 @@
   * The console script ``robfwaio_version``, which is created by the RobotFramework_TestsuitesManagement package,
     is updated accordingly.
 
-  * The command line to get AIO version via ``RobotFramework_TestsuitesManagement`` module:
+  * The command line to get AIO version:
 
     * Windows (Windows PowerShell):
 
-      | \"$env:RobotPythonPath/python\" -m RobotFramework_TestsuitesManagement.Utils.version
+      | & \"$env:RobotScriptPath\\robfwaio_version\"
 
     * Linux (Bash):
 
-      | \"$RobotPythonPath/python\" -m RobotFramework_TestsuitesManagement.Utils.version
+      | \"$RobotPythonPath/python\" $RobotScriptPath/robfwaio_version
 
   * The ``robot`` script for **Linux** which is installed along with AIO package also supports
     the argument ``--version_aio`` (or ``-aio``) to get the AIO version:
