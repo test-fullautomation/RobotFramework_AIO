@@ -54,7 +54,7 @@ function install_python_packages() {
 
    if [ -d "$WHEELHOUSE_DIR" ] && ls $WHEELHOUSE_DIR/*.whl 1>/dev/null 2>&1; then
       echo -e "${MSG_INFO} Installing Python packages from wheelhouse..."
-      $PYTHON_BIN -m pip install --no-index --find-links $WHEELHOUSE_DIR --force-reinstall $WHEELHOUSE_DIR/*.whl
+      $PYTHON_BIN -m pip install --no-index --no-cache-dir --find-links $WHEELHOUSE_DIR --force-reinstall $WHEELHOUSE_DIR/*.whl
       if [ $? -eq 0 ]; then
          echo -e "${MSG_DONE} Python packages installed successfully."
       else
