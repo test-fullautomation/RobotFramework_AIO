@@ -117,7 +117,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
 Source: "..\wheelhouse\*"; Excludes: ".git"; DestDir: {tmp}\wheelhouse; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
-Source: "..\robotwheel\*"; Excludes: ".git"; DestDir: {tmp}\robotwheel; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; check: isExtendedVersion();
+Source: "..\robotwheel\*"; Excludes: ".git"; DestDir: {tmp}\robotwheel; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; Permissions: everyone-full; check: isExtendedVersion();
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
