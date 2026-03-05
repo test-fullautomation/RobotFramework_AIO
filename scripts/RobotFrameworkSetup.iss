@@ -241,12 +241,12 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "cmd.exe"; \
-  Parameters: "/c ""for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x"; \
+  Parameters: "/c 'for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x'"; \
   WorkingDir: {tmp}\wheelhouse\; \
   StatusMsg: "Installing required Python packages..."; \
   Flags: runhidden waituntilterminated;
 Filename: "cmd.exe"; \
-  Parameters: "/c ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links robotframework --force-reinstall"; \
+  Parameters: "/c ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall robotframework"; \
   WorkingDir: {tmp}\robotwheel\; \
   StatusMsg: "Installing extended Robotframework package..."; \
   Flags: runhidden waituntilterminated; \
