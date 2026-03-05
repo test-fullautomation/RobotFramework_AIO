@@ -578,10 +578,8 @@ begin
   //create MsgPage1
   MsgPage3 := CreateOutputMsgPage(MsgPage2.ID,
              'Update Information', 'How to update an already installed version?',
-             'You can easily update RobotFramework AIO (All In One) with the following steps:'#13#13+
-             '  1. Back up your custom test cases or configuration files.'#13#13+
-             '  2. Run the latest installer.'#13#13+
-             '  3. The setup automatically updates the existing installation.');
+             'Before continuing, make sure to back up any custom test cases or configuration files.'#13#13+
+             'The setup will update the existing installation automatically.');
 
   //create page for selecting project
   ProjectPage := CreateCustomPage(MsgPage3.ID,
@@ -601,6 +599,10 @@ begin
   ProjectListBox.Width := ProjectPage.SurfaceWidth;
   ProjectListBox.Height := ScaleY(150);
   ProjectListBox.Parent := ProjectPage.Surface;
+
+  //customize select components
+  WizardForm.SelectComponentsLabel.Caption :=
+    'Select the components to install. Unselected components and their previous versions will be removed.';
 
   //build up the list based on the ProjectHash and contained
   //ProjectListbox positions
