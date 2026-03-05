@@ -377,33 +377,33 @@
 
 **Environment/Installation**
 
-* Update the ways to get AIO version due to the restructuring of TestsuitesManagement package:
+* The AIO version retrieval is adapted to the restructured **RobotFramework_TestsuitesManagement**:
 
-  * The entry point to get AIO version is now ``RobotFramework_TestsuitesManagement.Utils.version``
+  * The entry point to get **RobotFramework AIO** version is now ``RobotFramework_TestsuitesManagement.Utils.version``
 
-  * The console script ``robfwaio_version``, which is created by the RobotFramework_TestsuitesManagement package,
+  * The console script ``robfwaio_version``, which is created by the **RobotFramework_TestsuitesManagement**,
     is updated accordingly.
 
-  * The command line to get AIO version:
+  * The command line to get **RobotFramework AIO** version:
 
     * Windows (Windows PowerShell):
 
-      | & \"$env:RobotScriptPath\\robfwaio_version\"
+      ``& \"$env:RobotScriptPath\\robfwaio_version\"``
 
     * Linux (Bash):
 
-      | \"$RobotPythonPath/python\" $RobotScriptPath/robfwaio_version
+      ``\"$RobotPythonPath/python\" \"$RobotScriptPath/robfwaio_version\"``
 
-  * The ``robot`` script for **Linux** which is installed along with AIO package also supports
-    the argument ``--version_aio`` (or ``-aio``) to get the AIO version:
+  * The ``robot`` script for **Linux** which is installed along with **RobotFramework AIO**, also supports
+    the argument ``--version_aio`` (or ``-aio``) to get the version:
 
     * Linux (Bash):
 
-      | robot --version_aio
+      ``robot --version_aio``
 
       or
 
-      | robot -aio
+      ``robot -aio``
 "
                               ]
                  }
