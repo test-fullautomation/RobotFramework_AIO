@@ -240,17 +240,6 @@ Name: {app}\devtools; Permissions: users-full;
 [INI]
 
 [RUN]
-Filename: "cmd.exe"; \
-  Parameters: "/c 'for %x in (*.whl) do ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x'"; \
-  WorkingDir: {tmp}\wheelhouse\; \
-  StatusMsg: "Installing required Python packages..."; \
-  Flags: runhidden waituntilterminated;
-Filename: "cmd.exe"; \
-  Parameters: "/c ""{app}\python3\python.exe"" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall robotframework"; \
-  WorkingDir: {tmp}\robotwheel\; \
-  StatusMsg: "Installing extended Robotframework package..."; \
-  Flags: runhidden waituntilterminated; \
-  check: isExtendedVersion();
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
   WorkingDir: {app}; \
@@ -283,6 +272,89 @@ var
   ReinstallCheckbox: TNewCheckBox;
   VsCodiumPage: TWizardPage;
   DoVSCodiumUpdate: Boolean;
+
+function isExtendedVersion(): Boolean;
+begin
+  #ifdef SubVersion
+    Result := '{#SubVersion}' = 'extended';
+  #else
+    Result := False;
+  #endif
+end;
+
+//
+// Install Python packages from bundled wheels and enforce success
+/////////////////////////////////////////////////////////////////////
+function InstallPythonPackages(): Boolean;
+var
+  ResultCode: Integer;
+  Cmd: String;
+  Params: String;
+  WorkDir: String;
+begin
+  Result := True;
+
+  // Install all wheels from the wheelhouse directory
+  WorkDir := ExpandConstant('{tmp}\wheelhouse');
+  if DirExists(WorkDir) then
+  begin
+    Cmd := ExpandConstant('{cmd}');
+    Params := '/c for %x in (*.whl) do "' + ExpandConstant('{app}\python3\python.exe') + '" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x';
+
+    Log('Installing Python packages from wheelhouse. Command: ' + Cmd + ' ' + Params + ' (WorkDir=' + WorkDir + ')');
+    if not Exec(Cmd, Params, WorkDir, SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    begin
+      Log('ERROR: Failed to execute wheel installation command. Exec result code: ' + IntToStr(ResultCode));
+      Result := False;
+      exit;
+    end;
+
+    if ResultCode <> 0 then
+    begin
+      Log('ERROR: Wheel installation command exited with code ' + IntToStr(ResultCode));
+      Result := False;
+      exit;
+    end;
+
+    Log('Successfully installed Python packages from wheelhouse.');
+  end
+  else
+  begin
+    Log('WARNING: Wheelhouse directory not found: ' + WorkDir);
+  end;
+
+  // Install extended RobotFramework wheel if this is an extended version
+  if isExtendedVersion() then
+  begin
+    WorkDir := ExpandConstant('{tmp}\robotwheel');
+    if DirExists(WorkDir) then
+    begin
+      Cmd := ExpandConstant('{cmd}');
+      Params := '/c "' + ExpandConstant('{app}\python3\python.exe') + '" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall robotframework';
+
+      Log('Installing extended RobotFramework wheel. Command: ' + Cmd + ' ' + Params + ' (WorkDir=' + WorkDir + ')');
+      if not Exec(Cmd, Params, WorkDir, SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+      begin
+        Log('ERROR: Failed to execute extended RobotFramework installation command. Exec result code: ' + IntToStr(ResultCode));
+        Result := False;
+        exit;
+      end;
+
+      if ResultCode <> 0 then
+      begin
+        Log('ERROR: Extended RobotFramework installation command exited with code ' + IntToStr(ResultCode));
+        Result := False;
+        exit;
+      end;
+
+      Log('Successfully installed extended RobotFramework wheel.');
+    end
+    else
+    begin
+      Log('WARNING: Extended RobotFramework wheel directory not found: ' + WorkDir);
+    end;
+  end;
+end;
 
 //
 // Hidden Vscodium update feature
@@ -466,13 +538,21 @@ begin
     Result := 1;
 end;
 
-function isExtendedVersion(): Boolean;
+//
+// Called after each SetupStep is finished
+// Ensures that Python wheels are installed and aborts on failure
+//////////////////////////////////////////////////////////////////////////////////
+procedure CurStepFinished(CurStep: TSetupStep);
 begin
-  #ifdef SubVersion
-    Result := '{#SubVersion}' = 'extended';
-  #else
-    Result := False;
-  #endif
+  if CurStep = ssInstall then
+  begin
+    if not InstallPythonPackages() then
+    begin
+      MsgBox('Failed to install required Python packages. Please check the setup log for details.',
+             mbCriticalError, MB_OK);
+      Abort;
+    end;
+  end;
 end;
 //
 // Called after each SetupStep
