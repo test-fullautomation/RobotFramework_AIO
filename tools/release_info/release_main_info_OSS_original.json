@@ -559,7 +559,7 @@
 
           - `robotframework-testsuitesmanagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement>`_ provides now a python interface which supports to check which RobotFramework AIO version is installed.
 
-          - `robotframework-robotlog2rqm <https://github.com/test-fullautomation/robotframework-robotlog2rqm>`_ supports encoded password and password file'.
+          - `robotframework-robotlog2rqm <https://github.com/test-fullautomation/robotframework-robotlog2rqm>`_ supports encoded password and password file.
           
           - VSCodium for RobotFramework AIO welcomes you now with a "Welcome Screen" with useful links.
 
