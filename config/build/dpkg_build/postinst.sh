@@ -50,7 +50,7 @@ function remove_android_package(){
 
 function install_python_packages() {
    WHEELHOUSE_DIR="/opt/rfwaio/wheelhouse"
-   WHEELROBOTFRAMEWORK_DIR="/opt/rfwaio/robotframework"
+   WHEELROBOTFRAMEWORK_DIR="/opt/rfwaio/robotwheel"
    PYTHON_BIN="/opt/rfwaio/python3/bin/python3"
 
    if [ -d "$WHEELHOUSE_DIR" ] && ls $WHEELHOUSE_DIR/*.whl 1>/dev/null 2>&1; then

@@ -245,7 +245,9 @@ Filename: "powershell.exe"; \
   WorkingDir: {app}; \
   StatusMsg: "Updating VSCodium user data..."; \
   Components: VsCodium;
-
+; Python package installation is handled in the Pascal [Code] section
+; (CurStepChanged -> ssPostInstall -> InstallPythonPackagesFromDir)
+; to enable proper logging into the Inno Setup log file.
 [UninstallRun]
 
 
@@ -278,82 +280,170 @@ begin
   #ifdef SubVersion
     Result := '{#SubVersion}' = 'extended';
   #else
-    Result := False;
+    Result := True;
   #endif
 end;
 
 //
-// Install Python packages from bundled wheels and enforce success
+// Install all wheel files from a directory in a single pip call.
+// Stdout and stderr are captured via a temp log file and forwarded
+// to the Inno Setup log so that the exit code and full pip output
+// are always visible in the setup log.
+// Parameters:
+//   WheelDir   - directory that contains the *.whl files
+//   StatusText - text shown in the installer status label
+//   Required   - when True the installer aborts on failure
 /////////////////////////////////////////////////////////////////////
-function InstallPythonPackages(): Boolean;
+function InstallPythonPackagesFromDir(
+  WheelDir:   String;
+  StatusText: String;
+  Required:   Boolean): Boolean;
 var
+  FindRec:    TFindRec;
+  PythonExe:  String;
+  PipArgs:    String;
+  ReqFile:    String;
+  TmpLog:     String;
+  ReqLines:   TArrayOfString;
+  WheelCount: Integer;
   ResultCode: Integer;
-  Cmd: String;
-  Params: String;
-  WorkDir: String;
+  LogLines:   TArrayOfString;
+  i:          Integer;
 begin
   Result := True;
 
-  // Install all wheels from the wheelhouse directory
-  WorkDir := ExpandConstant('{tmp}\wheelhouse');
-  if DirExists(WorkDir) then
+  PythonExe := ExpandConstant('{app}\python3\python.exe');
+  ReqFile   := ExpandConstant('{tmp}\pip_requirements.txt');
+  TmpLog    := ExpandConstant('{tmp}\pip_install.log');
+
+  Log('=== pip install started ===');
+  Log('  Python  : ' + PythonExe);
+  Log('  WheelDir: ' + WheelDir);
+
+  // Sanity check: directory must exist
+  if not DirExists(WheelDir) then
   begin
-    Cmd := ExpandConstant('{cmd}');
-    Params := '/c for %x in (*.whl) do "' + ExpandConstant('{app}\python3\python.exe') + '" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall %x';
-
-    Log('Installing Python packages from wheelhouse. Command: ' + Cmd + ' ' + Params + ' (WorkDir=' + WorkDir + ')');
-    if not Exec(Cmd, Params, WorkDir, SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+    Log('WARNING: wheel directory does not exist: ' + WheelDir);
+    if Required then
     begin
-      Log('ERROR: Failed to execute wheel installation command. Exec result code: ' + IntToStr(ResultCode));
-      Result := False;
-      exit;
+      MsgBox(
+        'Failed to install Python packages: wheel directory not found.' + #13#10 +
+        WheelDir,
+        mbCriticalError, MB_OK);
+      Abort;
     end;
-
-    if ResultCode <> 0 then
-    begin
-      Log('ERROR: Wheel installation command exited with code ' + IntToStr(ResultCode));
-      Result := False;
-      exit;
-    end;
-
-    Log('Successfully installed Python packages from wheelhouse.');
-  end
-  else
-  begin
-    Log('WARNING: Wheelhouse directory not found: ' + WorkDir);
+    Result := False;
+    exit;
   end;
 
-  // Install extended RobotFramework wheel if this is an extended version
-  if isExtendedVersion() then
+  // Enumerate every *.whl file and write its full path as one line
+  // into a requirements file.
+  //
+  // Using a requirements file instead of listing all paths on the
+  // command line avoids the Windows CreateProcess 32 767-character
+  // limit (exit code 87 = ERROR_INVALID_PARAMETER) that occurs when
+  // a large wheelhouse produces a command line that is too long.
+  WheelCount := 0;
+  SetArrayLength(ReqLines, 0);
+
+  if FindFirst(WheelDir + '\*.whl', FindRec) then
   begin
-    WorkDir := ExpandConstant('{tmp}\robotwheel');
-    if DirExists(WorkDir) then
-    begin
-      Cmd := ExpandConstant('{cmd}');
-      Params := '/c "' + ExpandConstant('{app}\python3\python.exe') + '" -m pip install --no-index --no-cache-dir --find-links . --force-reinstall robotframework';
-
-      Log('Installing extended RobotFramework wheel. Command: ' + Cmd + ' ' + Params + ' (WorkDir=' + WorkDir + ')');
-      if not Exec(Cmd, Params, WorkDir, SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-      begin
-        Log('ERROR: Failed to execute extended RobotFramework installation command. Exec result code: ' + IntToStr(ResultCode));
-        Result := False;
-        exit;
-      end;
-
-      if ResultCode <> 0 then
-      begin
-        Log('ERROR: Extended RobotFramework installation command exited with code ' + IntToStr(ResultCode));
-        Result := False;
-        exit;
-      end;
-
-      Log('Successfully installed extended RobotFramework wheel.');
-    end
-    else
-    begin
-      Log('WARNING: Extended RobotFramework wheel directory not found: ' + WorkDir);
+    try
+      repeat
+        Log('  Found wheel: ' + FindRec.Name);
+        SetArrayLength(ReqLines, WheelCount + 1);
+        // Each line is the absolute path to the wheel file.
+        // pip accepts local file paths in requirements files.
+        ReqLines[WheelCount] := WheelDir + '\' + FindRec.Name;
+        WheelCount := WheelCount + 1;
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
     end;
   end;
+
+  if WheelCount = 0 then
+  begin
+    Log('WARNING: no *.whl files found in ' + WheelDir);
+    exit;
+  end;
+
+  // Persist the requirements file so pip can read it
+  if not SaveStringsToFile(ReqFile, ReqLines, False) then
+  begin
+    Log('ERROR: could not write requirements file: ' + ReqFile);
+    if Required then
+    begin
+      MsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK);
+      Abort;
+    end;
+    Result := False;
+    exit;
+  end;
+
+  Log('  Requirements file: ' + ReqFile + ' (' + IntToStr(WheelCount) + ' wheels)');
+
+  // Update the visible status label
+  WizardForm.StatusLabel.Caption := StatusText;
+  WizardForm.Update;
+
+  // Single pip call using -r <requirements file>.
+  // The command line stays short regardless of the number of wheels.
+  // stdout + stderr are redirected to a temp log file so every line
+  // can be forwarded to the Inno Setup log after the process exits.
+  //
+  // cmd /C syntax:  cmd /C ""exe" args > log 2>&1"
+  //   - the outer pair of double-quotes wraps the entire compound cmd
+  //   - the inner quote around the exe handles spaces in {app}
+  PipArgs :=
+    '/C ""' + PythonExe + '"' +
+    ' -m pip install' +
+    ' --no-index' +
+    ' --no-cache-dir' +
+    ' --find-links "' + WheelDir + '"' +
+    ' --force-reinstall' +
+    ' -r "' + ReqFile + '"' +
+    ' > "' + TmpLog + '" 2>&1"';
+
+  Log('  Command : cmd.exe ' + PipArgs);
+
+  if not Exec('cmd.exe', PipArgs, WheelDir,
+              SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    Log('ERROR: could not launch pip process (Exec failed).');
+    Result := False;
+  end;
+
+  // Forward full pip output to the Inno Setup log
+  if LoadStringsFromFile(TmpLog, LogLines) then
+  begin
+    Log('--- pip output begin ---');
+    for i := 0 to GetArrayLength(LogLines) - 1 do
+      Log('  ' + LogLines[i]);
+    Log('--- pip output end ---');
+  end;
+
+  Log('  pip exit code: ' + IntToStr(ResultCode));
+
+  if (not Result) or (ResultCode <> 0) then
+  begin
+    Log('ERROR: pip installation failed (exit code ' + IntToStr(ResultCode) + ')');
+    WizardForm.StatusLabel.Caption := 'ERROR: Python package installation failed!';
+    WizardForm.Update;
+    Result := False;
+    if Required then
+    begin
+      MsgBox(
+        'Failed to install Python packages.' + #13#10 +
+        'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
+        'Please check the setup log for details.',
+        mbCriticalError, MB_OK);
+      Abort;
+    end;
+    exit;
+  end;
+
+  Log('=== pip install finished successfully ===');
 end;
 
 //
@@ -542,18 +632,7 @@ end;
 // Called after each SetupStep is finished
 // Ensures that Python wheels are installed and aborts on failure
 //////////////////////////////////////////////////////////////////////////////////
-procedure CurStepFinished(CurStep: TSetupStep);
-begin
-  if CurStep = ssInstall then
-  begin
-    if not InstallPythonPackages() then
-    begin
-      MsgBox('Failed to install required Python packages. Please check the setup log for details.',
-             mbCriticalError, MB_OK);
-      Abort;
-    end;
-  end;
-end;
+
 //
 // Called after each SetupStep
 //////////////////////////////////////////////////////////////////////////////////
@@ -634,6 +713,22 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      // Install all bundled Python packages in a single pip call.
+      // Output (stdout + stderr) and the exit code are forwarded to
+      // the Inno Setup log.  Required=True aborts the installer on
+      // failure so that the user is never left with a broken install.
+      InstallPythonPackagesFromDir(
+        ExpandConstant('{tmp}\wheelhouse'),
+        'Installing Python Packages...',
+        True);
+
+      // Install the extended RobotFramework wheel when applicable.
+      if isExtendedVersion() then
+        InstallPythonPackagesFromDir(
+          ExpandConstant('{tmp}\robotwheel'),
+          'Installing Extended RobotFramework...',
+          True);
+
       GetWindowsVersionEx(Version);
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin

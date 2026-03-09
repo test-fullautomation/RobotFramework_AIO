@@ -441,7 +441,7 @@ function packaging_python_windows() {
 	# call pip to initialize pip
 	$destDir/python3/python.exe -m pip install --upgrade pip
 	$destDir/python3/python.exe -m pip install --upgrade setuptools
-	$destDir/python3/python.exe -m pip install wheel
+	$destDir/python3/python.exe -m pip install wheel --upgrade
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
