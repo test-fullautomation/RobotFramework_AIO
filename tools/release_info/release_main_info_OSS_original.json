@@ -555,7 +555,7 @@
 
           - `Roo Code <https://roocode.com/>`_ is integrated now! Roo provides agentic software architect and -coding support for your projects.
           
-          - Extensive `Roo Code chapter <https://robotframework-aio.org/download/RobotFrameworkAIO_Reference_extended.pdf>`_. (Chapter 4) How to install , configure, use and solve common issues.
+          - Extensive `Roo Code chapter <https://robotframework-aio.org/download/RobotFrameworkAIO_Reference_extended.pdf>`_. (Chapter 4) How to install, configure, use and solve common issues.
 
           - `robotframework-testsuitesmanagement <https://github.com/test-fullautomation/robotframework-testsuitesmanagement>`_ provides now a python interface which supports to check which RobotFramework AIO version is installed.
 
