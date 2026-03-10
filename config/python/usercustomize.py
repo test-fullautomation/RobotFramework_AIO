@@ -1,5 +1,9 @@
 import sys
 import traceback
+import readline
+
+if not hasattr(readline, "backend"):
+    readline.backend = "pyreadline3"
 
 def customize_color_traceback(exc_type, exc_value, exc_traceback):
     """
