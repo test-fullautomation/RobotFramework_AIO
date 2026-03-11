@@ -5,3 +5,4 @@ Name=Appium Inspector
 Exec=/opt/rfwaio/devtools/Appium-Inspector.AppImage --no-sandbox
 Type=Application
 Icon=/opt/rfwaio/linux/icon/appium-inspector.png
+StartupWMClass=appium-inspector
