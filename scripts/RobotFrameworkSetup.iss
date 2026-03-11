@@ -239,7 +239,7 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -Command Remove-Item -Path ""{app}\python3\Scripts\robfwaio_version.exe"" -ErrorAction SilentlyContinue -Force"; \
+  Parameters: "-ExecutionPolicy Bypass -Command ""Remove-Item -Path '{app}\python3\Scripts\robfwaio_version.exe' -ErrorAction SilentlyContinue -Force"""; \
   WorkingDir: {app};
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
