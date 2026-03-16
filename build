@@ -212,14 +212,16 @@ function build_python_package () {
 			${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
 		fi
 		if [ ${reponame} != "robotframework" ]; then
-			rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -0 rm -f
 		fi
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	elif [ -f "./pyproject.toml" ]; then
 		PKG_NAME=$(${PYBIN} -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['name'])" | tail -n 1)
 		if [ ${reponame} != "robotframework" ]; then
-			rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -0 rm -f
 		fi
 		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
