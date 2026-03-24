@@ -136,6 +136,7 @@ def generate_libtoc():
         if name_without_ext in processed_lib_lookup:
             libdoc_full_path = CString.NormalizePath(file)
             add_readme_link_to_libdoc(libdoc_full_path, processed_lib_lookup[name_without_ext])
+            fix_min_width_for_keyword_container(libdoc_full_path)
 
 def generate_libdoc(file, root, version, repository_path, output_directory, is_class_path=False):
     """Generate libdoc for a single file or class path."""
@@ -207,7 +208,7 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
             # Always restore the original working directory
             os.chdir(original_cwd)
         print(f"Documentation generated successfully for: {source_path}")
-
+        fix_min_width_for_keyword_container(output_html_file_path)
         add_readme_link_to_libdoc(output_html_file_path, repository_path)
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while generating documentation for {file}: {e}")
@@ -297,6 +298,21 @@ def add_readme_link_to_libdoc(output_path, repository_path):
         print(f"Error: File not found at path '{output_path}'.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+
+def fix_min_width_for_keyword_container(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    pattern = r"(\.shortcuts\s*\{)([^}]*?)\}"
+    html_modified = re.sub(
+        pattern,
+        lambda m: m.group(1) + ('min-width: 320px;' + m.group(2) if 'min-width' not in m.group(2) else m.group(2)) + '}',
+        html,
+        flags=re.DOTALL
+    )
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(html_modified)
 
 generate_libdoc_for_files()
 generate_libtoc()
