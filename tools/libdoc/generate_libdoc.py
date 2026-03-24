@@ -125,6 +125,8 @@ def generate_libtoc():
             "libtoc",
             "--config_file",
             ".libtoc",
+            "--output_dir",
+            "keywords_library",
             "./"
     ]
     subprocess.run([*cmd_base], check=True, cwd=f"{libtoc_working_dir}")
