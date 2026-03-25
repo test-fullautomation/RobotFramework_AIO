@@ -122,6 +122,8 @@ def generate_libtoc():
     libdoc_dir = f"{libtoc_working_dir}/docs/src"
     processed_lib_lookup = dict(processed_libs)
     cmd_base = [
+            sPythonPath,
+            "-m",
             "libtoc",
             "--config_file",
             ".libtoc",
