@@ -25,7 +25,7 @@
 # 23.09.2025
 #
 # ------------------------------------------------------------------------------
-import os, shutil, sys, json, re, subprocess
+import os, shutil, sys, json, re, subprocess, platform
 from PythonExtensionsCollection.String.CString import CString
 from bs4 import BeautifulSoup
 from importlib.util import spec_from_file_location, module_from_spec
@@ -118,19 +118,24 @@ def process_config(config):
                     generate_libdoc(file, root, version, repository_path, output_directory)
 
 def generate_libtoc():
-    libtoc_working_dir = f"{original_cwd}/tools/libdoc/output"
-    libdoc_dir = f"{libtoc_working_dir}/docs/src"
+    sLibtocPath = ""
+    if platform.system() == "Windows":
+        sLibtocPath = CString.NormalizePath(f"{sPythonPath}/../Scripts/libtoc")
+    else:
+        sLibtocPath = CString.NormalizePath(f"{sPythonPath}/../libtoc")
+
+    libtoc_working_dir = CString.NormalizePath(f"{original_cwd}/tools/libdoc/output")
+    libdoc_dir = CString.NormalizePath(f"{libtoc_working_dir}/keywords_library/src")
     processed_lib_lookup = dict(processed_libs)
     cmd_base = [
-            sPythonPath,
-            "-m",
-            "libtoc",
+            sLibtocPath,
             "--config_file",
             ".libtoc",
             "--output_dir",
             "keywords_library",
             "./"
     ]
+
     subprocess.run([*cmd_base], check=True, cwd=f"{libtoc_working_dir}")
 
     for file in Path(libdoc_dir).iterdir():
