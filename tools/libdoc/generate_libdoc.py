@@ -119,6 +119,7 @@ def process_config(config):
 
 def generate_libtoc():
     sLibtocPath = ""
+    keywords_lib_dir = CString.NormalizePath(f"{original_cwd}/keywords_library")
     if platform.system() == "Windows":
         sLibtocPath = CString.NormalizePath(f"{sPythonPath}/../Scripts/libtoc")
     else:
@@ -146,6 +147,9 @@ def generate_libtoc():
             libdoc_full_path = CString.NormalizePath(file)
             add_readme_link_to_libdoc(libdoc_full_path, processed_lib_lookup[name_without_ext])
             fix_min_width_for_keyword_container(libdoc_full_path)
+
+    os.makedirs(keywords_lib_dir, exist_ok=True)
+    shutil.copytree(CString.NormalizePath(f"{libtoc_working_dir}/keywords_library"), f"{keywords_lib_dir}", dirs_exist_ok=True)
 
 def generate_libdoc(file, root, version, repository_path, output_directory, is_class_path=False):
     """Generate libdoc for a single file or class path."""

@@ -205,7 +205,7 @@ jobs:
             ${{ runner.workspace }}/robotframework-qconnect-winapp/QConnectWinapp/*.html
             ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
             ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
-            ${{ runner.workspace }}/RobotFramework_AIO/tools/libdoc/output/keywords_library/*
+            ${{ runner.workspace }}/RobotFramework_AIO/keywords_library/*
 
   build-windows:
     strategy:
