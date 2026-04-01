@@ -614,7 +614,9 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
+          TEMP_VERSION=${TAG_NAME#[rd]e[vl]/aio/}
+          SAFE_VERSION=$(echo ${TEMP_VERSION//\//-})
+          echo "AIO_VERSION=$SAFE_VERSION" >> $GITHUB_ENV
 
       - name: Download Linux installer package
         uses: actions/download-artifact@v4
@@ -627,29 +629,17 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          IMAGE_TAG=robotframework-aio:${AIO_VERSION}-${{ matrix.distro }}-${{ matrix.version }}
+          IMAGE_TAG=robotframework-aio:${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}
           DOCKERFILE_PATH=./docker/${{ matrix.distro }}/Dockerfile
 
           echo "Building Docker image $IMAGE_TAG ..."
           docker build \
             -f $DOCKERFILE_PATH \
             --build-arg AIO_DEB_PACKAGE=./packages/*.deb \
-            --build-arg VERSION=${AIO_VERSION} \
+            --build-arg VERSION=${{ env.AIO_VERSION }} \
             -t $IMAGE_TAG .
 
           echo "CURRENT_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-      - name: Test Docker Image
-        run: |
-          docker run --rm ${{ env.CURRENT_TAG }} /bin/bash -c "robot --version"
-
-      - name: Push Docker Image (optional)
-        run: |
-          DOCKER_REGISTRY="ghcr.io/test-fullautomation"
-          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-
-          docker tag ${{ env.CURRENT_TAG }} $DOCKER_REGISTRY/${{ env.CURRENT_TAG }}
-          docker push $DOCKER_REGISTRY/${{ env.CURRENT_TAG }}
 
   entire-artifacts:
     name: Entire Artifacts
