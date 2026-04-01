@@ -648,7 +648,7 @@ jobs:
       - name: Upload Docker Image Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: docker-image-${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}
+          name: docker-image-${{ matrix.distro }}-${{ matrix.version }}
           path: ${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}.tar
 
   entire-artifacts:
