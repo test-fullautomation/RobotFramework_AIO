@@ -59,6 +59,7 @@ RUN /bin/bash -e -c " \
     sed -i 's|\${PYDIR}/bin/python3|/usr/local/bin/python3|g' build && \
     sed -i 's/^[[:space:]]*build_debian[[:space:]]*$/: # build_debian/g' build && \
     sed -i 's/^[[:space:]]*build_windows[[:space:]]*$/: # build_windows/g' build && \
+    sed -i 's|/opt/rfwaio/python3|/usr/local|g' ./config/build/dpkg_build/robot && \
     git config -f \"\$REPO_CONFIG\" --remove-section \"github.robotframework-documentation\" 2>/dev/null || true && \
     export PYBIN=\$(which python3) && \
     export PYTHONBIN=\$(which python3) && \
@@ -103,15 +104,22 @@ RUN /bin/bash -e -c " \
     # SUID for Appium Inspector AppImage (if exists)
     [ -f /opt/rfwaio/devtools/Appium-Inspector.AppImage ] && chmod 4755 /opt/rfwaio/devtools/Appium-Inspector.AppImage && \
     \
-    # --- 6. DEEP CLEANUP ---
-    echo '>>>> Starting Deep Cleanup...' && \
+    # --- 6. DEEP CLEANUP (Aggressive Root & Source Cleanup) ---
+    echo '>>>> Starting Aggressive Deep Cleanup...' && \
+    \
     conf_paths=\$(git config -f \"\$REPO_CONFIG\" --get-regexp '.path' | awk '{print \$2}') && \
     for path in \$conf_paths; do rm -rf \"\$path\"; done && \
+    \
+    rm -rf /robotframework-* /python-* /vscode-* && \
+    \
+    rm -rf /devtools /RobotFramework_AIO_website /testresultwebapp && \
+    \
     rm -rf ./download ./output_lx && \
     find . -maxdepth 3 -name '.git' -exec rm -rf {} + && \
+    \
     cd / && rm -rf /app/* && \
     rm -rf /root/.cache /tmp/* && \
-    echo '>>>> Build and Cleanup finished successfully!'"
+    echo '>>>> Build and Cleanup finished successfully! Root directory is now clean.'"
 
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="/opt/rfwaio/linux:/usr/local/bin:${RobotNodeJS}/bin:${RobotAndroidPlatformTools}:${PATH}"
