@@ -1,5 +1,5 @@
-# Use the official Python 3.13 image based on Debian Bookworm (Full version)
-FROM python:3.13-bookworm
+# Use the official Python 3.13 image based on Debian Bookworm Slim
+FROM python:3.13-slim-bookworm
 
 # --- Build Arguments ---
 ARG VERSION_TYPE="extended"
@@ -110,7 +110,8 @@ RUN /bin/bash -e -c " \
     conf_paths=\$(git config -f \"\$REPO_CONFIG\" --get-regexp '.path' | awk '{print \$2}') && \
     for path in \$conf_paths; do rm -rf \"\$path\"; done && \
     \
-    rm -rf /robotframework-* /python-* /vscode-* && \
+    apt-get autoremove -y && apt-get clean && \
+    rm -rf /robotframework* /python-* /vscode-* && \
     \
     rm -rf /devtools /RobotFramework_AIO_website /testresultwebapp && \
     \
