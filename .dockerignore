@@ -1,0 +1,27 @@
+# --- Docker & Build Artifacts ---
+*.tar
+*.tar.gz
+*.zip
+*.tgz
+
+# --- Git & CI/CD ---
+.git
+.github
+.gitignore
+.dockerignore
+*.md
+
+# --- Python Junk ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+.env
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db

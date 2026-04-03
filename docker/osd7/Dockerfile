@@ -111,7 +111,9 @@ RUN /bin/bash -e -c " \
     for path in \$conf_paths; do rm -rf \"\$path\"; done && \
     \
     apt-get autoremove -y && apt-get clean && \
+    rm -rf /usr/share/doc/* /usr/share/man/* /usr/local/share/doc/* && \
     rm -rf /robotframework* /python-* /vscode-* && \
+    find /opt/rfwaio -name '*.tar*' -delete && \
     \
     rm -rf /devtools /RobotFramework_AIO_website /testresultwebapp && \
     \
