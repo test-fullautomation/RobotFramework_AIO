@@ -610,6 +610,10 @@ jobs:
       matrix:
         version: [original, extended]
         distro: [osd7]
+    env:
+      BUNDLE_NAME: "--bundle_name 'RobotFramework AIO'"
+      AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -646,10 +650,15 @@ jobs:
           build-args: |
             VERSION_TYPE=${{ matrix.version }}
             TAG_NAME=${{ github.ref_name }}
+            AIO_NAME=${{ env.AIO_NAME }}
+            VARIANT=${{ env.VARIANT }}
+            BUNDLE_NAME=${{ env.BUNDLE_NAME }}
+            GENDOC_PLANTUML_PATH=${{ env.GENDOC_PLANTUML_PATH }}
             GITHUB_COPILOT_REF_URL=${{ env.GITHUB_COPILOT_REF_URL }}
             GITHUB_COPILOT_EXT_ARG=${{ env.GITHUB_COPILOT_EXT_ARG }}
             REPOSITORY=${{ github.repository }}
             PULL_REQUEST_BRANCH=${{ github.head_ref }}
+            INSTALLER_LOCATION=${{ env.INSTALLER_LOCATION }}
 
       - name: Export Docker Image to tar
         run: |

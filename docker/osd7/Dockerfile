@@ -4,15 +4,23 @@ FROM python:3.13-slim-bookworm
 # --- Build Arguments ---
 ARG VERSION_TYPE="extended"
 ARG TAG_NAME="dev/aio/0.0.0"
-ARG REPOSITORY=""
-ARG PULL_REQUEST_BRANCH=""
+ARG VARIANT="OSS"
+ARG BUNDLE_NAME="--bundle_name 'RobotFramework AIO'"
+ARG AIO_NAME="RobotFramework AIO"
+ARG GENDOC_PLANTUML_PATH="../robotvscode/data/extensions/jebbs.plantuml-2.18.1"
 ARG GITHUB_COPILOT_REF_URL=""
 ARG GITHUB_COPILOT_EXT_ARG=""
+ARG REPOSITORY=""
+ARG PULL_REQUEST_BRANCH=""
+ARG INSTALLER_LOCATION=""
 
 # --- Environment Variables (Migrated from postinst.sh and set_robotenv.sh) ---
 ENV DEBIAN_FRONTEND=noninteractive
-ENV VARIANT="OSS"
+ENV VARIANT=${VARIANT}
+ENV BUNDLE_NAME=${BUNDLE_NAME}
+ENV GENDOC_PLANTUML_PATH=${GENDOC_PLANTUML_PATH}
 ENV SubVersion="${VERSION_TYPE}"
+ENV AIO_NAME="${AIO_NAME}"
 
 # Define tools paths as in postinst logic
 ENV RobotPythonPath="/usr/local"
@@ -21,8 +29,6 @@ ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/android-sdk/platform-tools"
 
 ENV REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
 ENV MAINDOC_CONFIGFILE="--configfile ./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
-ENV GENDOC_PLANTUML_PATH="../robotvscode/data/extensions/jebbs.plantuml-2.18.1"
-ENV BUNDLE_NAME="--bundle_name 'RobotFramework AIO'"
 
 WORKDIR /app
 
@@ -53,6 +59,8 @@ RUN /bin/bash -e -c " \
     export RobotFrameworkVersion=\${TAG_NAME#[rd]e[vl]/aio/} && \
     export BUNDLE_VERSION_DATE=\"--bundle_version_date \$(date +%m.%Y)\" && \
     export BUNDLE_VERSION=\"--bundle_version \${TAG_NAME#[rd]e[vl]/aio/}\" && \
+    export INSTALLER_LOCATION='${INSTALLER_LOCATION}' && \
+    export AIO_NAME='${AIO_NAME}' && \
     \
     # --- 2. PREPARE SCRIPTS & CONFIG ---
     sed -i 's|../python3lx|/usr/local|g' build && \
