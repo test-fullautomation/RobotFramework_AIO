@@ -109,28 +109,23 @@ RUN /bin/bash -e -c " \
     # 5.4 Apply Permissions (From postinst.sh allow_user_group_permissions)
     chown -R root:robot-aio /opt/rfwaio && \
     chmod -R 0775 /opt/rfwaio && \
-    # SUID for Appium Inspector AppImage (if exists)
+    # SUID for Appium Inspector AppImage
     [ -f /opt/rfwaio/devtools/Appium-Inspector.AppImage ] && chmod 4755 /opt/rfwaio/devtools/Appium-Inspector.AppImage && \
     \
-    # --- 6. DEEP CLEANUP (Aggressive Root & Source Cleanup) ---
+    # --- 6. DEEP CLEANUP ---
     echo '>>>> Starting Aggressive Deep Cleanup...' && \
-    \
     conf_paths=\$(git config -f \"\$REPO_CONFIG\" --get-regexp '.path' | awk '{print \$2}') && \
     for path in \$conf_paths; do rm -rf \"\$path\"; done && \
-    \
     apt-get autoremove -y && apt-get clean && \
     rm -rf /usr/share/doc/* /usr/share/man/* /usr/local/share/doc/* && \
-    rm -rf /robotframework* /python-* /vscode-* && \
+    rm -rf /robotframework* /python* /vscode* && \
     find /opt/rfwaio -name '*.tar*' -delete && \
-    \
     rm -rf /devtools /RobotFramework_AIO_website /testresultwebapp && \
-    \
     rm -rf ./download ./output_lx && \
     find . -maxdepth 3 -name '.git' -exec rm -rf {} + && \
-    \
     cd / && rm -rf /app/* && \
     rm -rf /root/.cache /tmp/* && \
-    echo '>>>> Build and Cleanup finished successfully! Root directory is now clean.'"
+    echo '>>>> Build OSD7 Finished successfully!'"
 
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="/opt/rfwaio/linux:/usr/local/bin:${RobotNodeJS}/bin:${RobotAndroidPlatformTools}:${PATH}"
