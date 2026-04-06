@@ -86,7 +86,9 @@ RUN /bin/bash -e -c " \
     \
     # --- 5. SYSTEM INSTALLATION & PERMISSIONS (Postinst logic) ---
     echo '>>>> Deploying components and applying permissions...' && \
-    mkdir -p /opt/rfwaio/tools /opt/rfwaio/linux/icon /opt/rfwaio/tutorial /opt/rfwaio/documentation /opt/rfwaio/devtools && \
+    mkdir -p /opt/rfwaio/python3/bin /opt/rfwaio/tools /opt/rfwaio/linux/icon /opt/rfwaio/tutorial /opt/rfwaio/documentation /opt/rfwaio/devtools && \
+    # Python Path Compatibility
+    ln -s /usr/local/bin/python3 /opt/rfwaio/python3/bin/python3 && \
     \
     # 5.1 Executables & Scripts
     cp ./config/build/dpkg_build/robot /usr/local/bin/robot && \
