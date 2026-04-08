@@ -682,13 +682,6 @@ jobs:
     needs: [ build-docker, trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
 
-    # container:
-    #   image: ghcr.io/${{ github.repository_owner }}/robotframework-aio:${{ needs.build-docker.outputs.aio_version }}-${{ matrix.distro }}-${{ matrix.version }}
-    #   options: --user root
-    #   credentials:
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GITHUB_TOKEN }}
-
     env:
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
