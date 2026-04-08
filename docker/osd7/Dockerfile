@@ -30,7 +30,7 @@ ENV RobotTutorialPath="~/RobotTest/tutorial"
 ENV RobotDevtools="/opt/rfwaio/devtools"
 ENV RobotNodeJS="/opt/rfwaio/devtools/nodejs"
 ENV RobotAppium="/opt/rfwaio/devtools/nodejs/bin"
-ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/android-sdk/platform-tools"
+ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/Android/platform-tools"
 
 WORKDIR /app
 
@@ -103,6 +103,8 @@ RUN /bin/bash -e -c " \
     # 5.2 Assets & Config
     cp ./config/build/dpkg_build/robot.ico /opt/rfwaio/linux/icon/ && \
     cp ./config/build/dpkg_build/set_robotenv.sh /opt/rfwaio/linux/ && \
+    cp ./config/tools/appium.sh /opt/rfwaio/devtools/appium && \
+    chmod +x /opt/rfwaio/devtools/appium && \
     chmod +x /opt/rfwaio/linux/set_robotenv.sh && \
     \
     # 5.3 Training, Docs & Tools
