@@ -16,19 +16,21 @@ ARG INSTALLER_LOCATION=""
 
 # --- Environment Variables (Migrated from postinst.sh and set_robotenv.sh) ---
 ENV DEBIAN_FRONTEND=noninteractive
-ENV VARIANT=${VARIANT}
-ENV BUNDLE_NAME=${BUNDLE_NAME}
-ENV GENDOC_PLANTUML_PATH=${GENDOC_PLANTUML_PATH}
 ENV SubVersion="${VERSION_TYPE}"
 ENV AIO_NAME="${AIO_NAME}"
 
 # Define tools paths as in postinst logic
-ENV RobotPythonPath="/usr/local"
+ENV RobotPythonPath="/usr/local/bin"
+ENV RobotPythonSitePackagesPath="/usr/local/lib/python3.13/site-packages"
+ENV RobotScriptPath="/usr/local/bin"
+ENV RobotToolsPath="/opt/rfwaio/tools"
+ENV RobotTestPath="~/RobotTest/testcases"
+ENV RobotLogPath="~/RobotTest/logfiles"
+ENV RobotTutorialPath="~/RobotTest/tutorial"
+ENV RobotDevtools="/opt/rfwaio/devtools"
 ENV RobotNodeJS="/opt/rfwaio/devtools/nodejs"
+ENV RobotAppium="/opt/rfwaio/devtools/nodejs/bin"
 ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/android-sdk/platform-tools"
-
-ENV REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
-ENV MAINDOC_CONFIGFILE="--configfile ./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
 
 WORKDIR /app
 
@@ -61,6 +63,8 @@ RUN /bin/bash -e -c " \
     export BUNDLE_VERSION=\"--bundle_version \${TAG_NAME#[rd]e[vl]/aio/}\" && \
     export INSTALLER_LOCATION='${INSTALLER_LOCATION}' && \
     export AIO_NAME='${AIO_NAME}' && \
+    export REPO_CONFIG='./config/repositories/repositories_${VERSION_TYPE}.conf' && \
+    export MAINDOC_CONFIGFILE='--configfile ./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json' && \
     \
     # --- 2. PREPARE SCRIPTS & CONFIG ---
     sed -i 's|../python3lx|/usr/local|g' build && \
@@ -113,6 +117,16 @@ RUN /bin/bash -e -c " \
     chmod -R 0775 /opt/rfwaio && \
     # SUID for Appium Inspector AppImage
     [ -f /opt/rfwaio/devtools/Appium-Inspector.AppImage ] && chmod 4755 /opt/rfwaio/devtools/Appium-Inspector.AppImage && \
+    \
+    # Create/Updates RobotTest workspace folder
+    mkdir -p ~/RobotTest/logfiles && \
+    mkdir -p ~/RobotTest/localconfig && \
+    mkdir -p ~/RobotTest/testcases && \
+    mkdir -p ~/RobotTest/tutorial && \
+    cp -R -a /opt/rfwaio/tutorial/. ~/RobotTest/tutorial && \
+    cp -R -a /opt/rfwaio/documentation/. ~/RobotTest/documentation && \
+    chown -R root:robot-aio ~/RobotTest/ && \
+    chmod -R 0775 ~/RobotTest/ && \
     \
     # --- 6. DEEP CLEANUP ---
     echo '>>>> Starting Aggressive Deep Cleanup...' && \
