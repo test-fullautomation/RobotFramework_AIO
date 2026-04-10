@@ -655,8 +655,6 @@ jobs:
             GENDOC_PLANTUML_PATH=${{ env.GENDOC_PLANTUML_PATH }}
             GITHUB_COPILOT_REF_URL=${{ env.GITHUB_COPILOT_REF_URL }}
             GITHUB_COPILOT_EXT_ARG=${{ env.GITHUB_COPILOT_EXT_ARG }}
-            REPOSITORY=${{ github.repository }}
-            PULL_REQUEST_BRANCH=${{ github.head_ref }}
             INSTALLER_LOCATION=${{ env.INSTALLER_LOCATION }}
 
       - name: Export Docker Image to tar

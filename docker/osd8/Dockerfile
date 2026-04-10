@@ -10,8 +10,6 @@ ARG AIO_NAME="RobotFramework AIO"
 ARG GENDOC_PLANTUML_PATH="../robotvscode/data/extensions/jebbs.plantuml-2.18.1"
 ARG GITHUB_COPILOT_REF_URL=""
 ARG GITHUB_COPILOT_EXT_ARG=""
-ARG REPOSITORY=""
-ARG PULL_REQUEST_BRANCH=""
 ARG INSTALLER_LOCATION=""
 
 # --- Environment Variables (Migrated from postinst.sh and set_robotenv.sh) ---
