@@ -1,0 +1,87 @@
+{
+    "name": "jpynb2",
+    "title": "jpynb2: Workbook-Specific Answers",
+    "summary": "A second lesson that uses the same framework but a different workbook identity.",
+    "introduction": [
+        "This lesson uses the same question pattern as `jpynb1`, but the expected answers are workbook-specific.",
+        "That means the generic `q1` and `q2` objects now validate against `jpynb2` answers after workbook auto-selection."
+    ],
+    "questions": [
+        {
+            "id": "q1",
+            "title": "Exercise 1: Print the jpynb2 q1 answer",
+            "prompt": [
+                "Write code that prints the exact text `jpynb2 q1`.",
+                "This demonstrates that workbook auto-selection changes what `q1.check()` expects."
+            ],
+            "starter_code": [
+                "# TODO: Change the message (expected \"jpynb2 q1\")",
+                "print(\"Your message here!\")",
+                "",
+                "# Uncomment to get a hint",
+                "# q1.hint()",
+                "",
+                "# Uncomment to view solution",
+                "# q1.solution()",
+                "",
+                "# DO NOT REMOVE: Mark this question as completed",
+                "q1.check()"
+            ],
+            "hint": [
+                "Replace the placeholder text with the expected output for notebook 2 question 1.",
+                "",
+                "```python",
+                "print(\"jpynb2 q1\")",
+                "```"
+            ],
+            "solution": [
+                "A valid solution is:",
+                "",
+                "```python",
+                "print(\"jpynb2 q1\")",
+                "```"
+            ],
+            "success_message": "Correct. You are now using the `jpynb2` workbook context.",
+            "failure_message": "The printed answer did not match the expected output for `jpynb2` exercise 1.",
+            "tags": ["printing", "workbooks", "exercise"]
+        },
+        {
+            "id": "q2",
+            "title": "Exercise 2: Print the jpynb2 q2 answer",
+            "prompt": [
+                "Write code that prints the exact text `jpynb2 q2`.",
+                "Use the same pattern as exercise 1, but with the second question identifier."
+            ],
+            "starter_code": [
+                "# TODO: Change the message (expected \"jpynb2 q2\")",
+                "print(\"Your message here!\")",
+                "",
+                "# Uncomment to get a hint",
+                "# q2.hint()",
+                "",
+                "# Uncomment to view solution",
+                "# q2.solution()",
+                "",
+                "# DO NOT REMOVE: Mark this question as completed",
+                "q2.check()"
+            ],
+            "hint": [
+                "Use the workbook name and the second question number.",
+                "",
+                "```python",
+                "print(\"jpynb2 q2\")",
+                "```"
+            ],
+            "solution": [
+                "A valid solution is:",
+                "",
+                "```python",
+                "print(\"jpynb2 q2\")",
+                "```"
+            ],
+            "success_message": "Good. Exercise 2 passed for workbook `jpynb2`.",
+            "failure_message": "The checker is still waiting for the exact `jpynb2 q2` output.",
+            "tags": ["printing", "workbooks", "exercise"]
+        }
+    ]
+}

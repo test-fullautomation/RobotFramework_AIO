@@ -1,0 +1,88 @@
+{
+    "name": "jpynb1",
+    "title": "jpynb1: Printing Basics",
+    "summary": "A tiny practice lesson that mirrors the structure of a Kaggle Learn exercise notebook.",
+    "introduction": [
+        "In this lesson you will complete two short exercises.",
+        "Each exercise asks you to print the exact expected message, then verify the result with the matching `q*.check()` helper.",
+        "Use `q1.hint()` or `q1.solution()` if you get stuck."
+    ],
+    "questions": [
+        {
+            "id": "q1",
+            "title": "Exercise 1: Print the first message",
+            "prompt": [
+                "Write code that prints the exact text `jpynb1 q1`.",
+                "The checker looks at the last non-empty printed line in the cell before `q1.check()` runs."
+            ],
+            "starter_code": [
+                "# TODO: Change the message (expected \"jpynb1 q1\")",
+                "print(\"Your message here!\")",
+                "",
+                "# Uncomment to get a hint",
+                "# q1.hint()",
+                "",
+                "# Uncomment to view solution",
+                "# q1.solution()",
+                "",
+                "# DO NOT REMOVE: Mark this question as completed",
+                "q1.check()"
+            ],
+            "hint": [
+                "Replace the placeholder text with the expected output for notebook 1 question 1.",
+                "",
+                "```python",
+                "print(\"jpynb1 q1\")",
+                "```"
+            ],
+            "solution": [
+                "A valid solution is:",
+                "",
+                "```python",
+                "print(\"jpynb1 q1\")",
+                "```"
+            ],
+            "success_message": "Great work. You printed the exact string for exercise 1.",
+            "failure_message": "The checker did not see the expected message for exercise 1.",
+            "tags": ["printing", "strings", "exercise"]
+        },
+        {
+            "id": "q2",
+            "title": "Exercise 2: Print the second message",
+            "prompt": [
+                "Write code that prints the exact text `jpynb1 q2`.",
+                "Keep the `q2.check()` call in the same cell after your print statement."
+            ],
+            "starter_code": [
+                "# TODO: Change the message (expected \"jpynb1 q2\")",
+                "print(\"Your message here!\")",
+                "",
+                "# Uncomment to get a hint",
+                "# q2.hint()",
+                "",
+                "# Uncomment to view solution",
+                "# q2.solution()",
+                "",
+                "# DO NOT REMOVE: Mark this question as completed",
+                "q2.check()"
+            ],
+            "hint": [
+                "Use the workbook name and the second question number.",
+                "",
+                "```python",
+                "print(\"jpynb1 q2\")",
+                "```"
+            ],
+            "solution": [
+                "A valid solution is:",
+                "",
+                "```python",
+                "print(\"jpynb1 q2\")",
+                "```"
+            ],
+            "success_message": "Nice. Exercise 2 is complete.",
+            "failure_message": "The last printed line did not match the expected answer for exercise 2.",
+            "tags": ["printing", "strings", "exercise"]
+        }
+    ]
+}
