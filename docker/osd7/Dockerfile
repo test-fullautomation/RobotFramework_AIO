@@ -1,5 +1,5 @@
 # Use the official Python 3.13 image based on Debian Bookworm Slim
-FROM python:3.13-slim-bookworm
+FROM bcr2.inside.bosch.cloud/osd/osd7
 
 # --- Build Arguments ---
 ARG VERSION_TYPE="extended"

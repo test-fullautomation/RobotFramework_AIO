@@ -1,5 +1,5 @@
 # Use the official Python 3.13 image based on Debian Trixie (OSD 8 Slim)
-FROM python:3.13-slim-trixie
+FROM bcr2.inside.bosch.cloud/osd/osd7
 
 # --- Build Arguments ---
 ARG VERSION_TYPE="extended"
