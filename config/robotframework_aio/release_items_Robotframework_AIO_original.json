@@ -354,6 +354,56 @@
 
 * Fixed a VSCodium startup failure on Linux caused by incorrect SUID sandbox (``chrome-sandbox``) permissions.
 "
+                              ],
+                              "0.14.4.;0.15.0." : [
+"
+**VSCodium Package**
+
+* Upgrade VsCodium to version **1.106.37943**.
+
+* Add **Roo Code** extension to enable AI-assisted code generation in VSCodium
+
+* Upgrade VsCodium extensions to younger versions as below:
+
+  * **Python** extension to version **2025.16.0**
+  * **RobotCode** extension to version **2.1.0**
+  * **XML** extension to  version **0.29.0**
+  * **Python Debugger** extension to version **2025.14.1**
+  * **Pylint** extension to version **2025.2.0**
+  * **Pyright** extension to version **1.1.402**
+
+* Update compatible **GitHub Copilot** extension version via post-install script ``install-github-copilot-exts``
+
+**Environment/Installation**
+
+* The AIO version retrieval is adapted to the restructured **RobotFramework_TestsuitesManagement**:
+
+  * The entry point to get **RobotFramework AIO** version is now ``RobotFramework_TestsuitesManagement.Utils.version``
+
+  * The console script ``robfwaio_version``, which is created by the **RobotFramework_TestsuitesManagement**,
+    is updated accordingly.
+
+  * The command line to get **RobotFramework AIO** version:
+
+    * Windows (Windows PowerShell):
+
+      ``& \"$env:RobotScriptPath\\robfwaio_version\"``
+
+    * Linux (Bash):
+
+      ``\"$RobotPythonPath/python\" \"$RobotScriptPath/robfwaio_version\"``
+
+  * The ``robot`` script for **Linux** which is installed along with **RobotFramework AIO**, also supports
+    the argument ``--version_aio`` (or ``-aio``) to get the version:
+
+    * Linux (Bash):
+
+      ``robot --version_aio``
+
+      or
+
+      ``robot -aio``
+"
                               ]
                  }
 }

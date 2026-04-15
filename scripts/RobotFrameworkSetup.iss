@@ -115,6 +115,7 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\scripts\robfwaio_version.bat"; DestDir: {app}\python3\Scripts; Flags: ignoreversion; Permissions: everyone-full;
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -122,6 +123,7 @@ Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}
 ;Visual Studio Code installation
 Source: "R:\robotvscode\*"; Excludes: ".git,logs"; DestDir: {app}\robotvscode; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full; Components: VsCodium;
 Source: ..\install\install-github-copilot-exts.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
+Source: ..\install\update_product_json.ps1; DestDir: {app}\robotvscode; Flags: ignoreversion; Permissions: everyone-full; Components: VsCodium;
 
 ;tools installation
 Source: "..\config\tools\*"; Excludes: ".git,*.pyc"; DestDir: {app}\tools; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -237,8 +239,11 @@ Name: {app}\devtools; Permissions: users-full;
 
 [RUN]
 Filename: "powershell.exe"; \
-  Parameters: "-ExecutionPolicy Bypass -File ""{tmp}\update_vsdata.ps1"""; \
-  WorkingDir: {app}; Flags: runhidden runasoriginaluser; Components: VsCodium;
+  Parameters: "-ExecutionPolicy Bypass -Command ""Remove-Item -Path '{app}\python3\Scripts\robfwaio_version.exe' -ErrorAction SilentlyContinue -Force"""; \
+  WorkingDir: {app};
+Filename: "powershell.exe"; \
+  Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
+  WorkingDir: {app}; Components: VsCodium;
 
 [UninstallRun]
 
@@ -263,6 +268,31 @@ var
   InstructionLabel: TLabel;
   InstructionMemo: TMemo;
   ScriptPath: string;
+  ReinstallCheckbox: TNewCheckBox;
+  VsCodiumPage: TWizardPage;
+  DoVSCodiumUpdate: Boolean;
+
+//
+// Hidden Vscodium update feature
+//////////////////////////////////////////////////////////////
+function InitializeSetup(): Boolean;
+var
+  i: Integer;
+begin
+  DoVSCodiumUpdate := False;
+
+  for i := 1 to ParamCount do
+  begin
+    if CompareText(ParamStr(i), '--do_vscodium_update') = 0 then
+    begin
+      DoVSCodiumUpdate := True;
+      Log('Command line flag detected: VSCodium update ENABLED');
+      Break;
+    end;
+  end;
+
+  Result := True;
+end;
 
 //
 // Maps a given ListPosition to a fix project index
@@ -307,6 +337,47 @@ begin
 end;
 
 //
+// Backup VSCode user data folders to temp directory
+/////////////////////////////////////////////////////////////////////
+procedure BackupVSCodeData();
+var
+  ResultCode: Integer;
+  SourceExtensions: String;
+  SourceGlobalStorage: String;
+  DestBackup: String;
+begin
+  SourceExtensions := ExpandConstant('{app}\robotvscode\data\extensions');
+  SourceGlobalStorage := ExpandConstant('{app}\robotvscode\data\user-data\User\globalStorage');
+  DestBackup := ExpandConstant('{tmp}\vscode_backup');
+
+  // Create backup directory
+  if not DirExists(DestBackup) then
+    CreateDir(DestBackup);
+
+  // Backup extensions using xcopy
+  if DirExists(SourceExtensions) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceExtensions + '" "' + DestBackup + '\extensions\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up extensions folder')
+    else
+      Log('Failed to backup extensions, error code: ' + IntToStr(ResultCode));
+  end;
+
+  // Backup global storage using xcopy
+  if DirExists(SourceGlobalStorage) then
+  begin
+    Exec('cmd.exe', '/c xcopy "' + SourceGlobalStorage + '" "' + DestBackup + '\globalStorage\" /E /I /H /Y /Q',
+         '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    if ResultCode = 0 then
+      Log('Successfully backed up global storage folder')
+    else
+      Log('Failed to backup global storage, error code: ' + IntToStr(ResultCode));
+  end;
+end;
+
+//
 // Gives write access to a protected Win7 folder
 /////////////////////////////////////////////////////////////////////
 procedure Win7GiveWriteAccess(sPath:String);
@@ -314,26 +385,28 @@ var
   ResultCode: Integer;
   sCmdBuffer: String;
   sCmdArgBuffer: String;
+  ExecResult: Boolean;
 begin
-  //at first take over ownership
-  sCmdBuffer:='takeown';
-  sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'\*" /R');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-  sCmdArgBuffer:=ExpandConstant('/S {computername} /U users /F "'+sPath+'" /R');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
-  //for debugging
-  //MsgBox(sCmdArgBuffer,mbInformation, MB_OK);
+  Log('---------------- Win7GiveWriteAccess START ----------------');
+  Log('Target path: ' + sPath);
 
-  //now grant access rights
-  sCmdBuffer:='icacls';
-  sCmdArgBuffer:=ExpandConstant('"'+sPath+'" /grant users:F /T /C');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  // 1. Reset ACL
+  sCmdBuffer := 'icacls';
+  sCmdArgBuffer := ExpandConstant('"' + sPath + '" /reset /T /C');
 
-  //now remove critical attributes
-  sCmdBuffer:='attrib';
-  sCmdArgBuffer:=ExpandConstant('-A -R -S "'+sPath+'" /S /D');
-  Exec(sCmdBuffer,sCmdArgBuffer,'',SW_HIDE,ewWaitUntilTerminated,ResultCode);
+  Log('Executing: ' + sCmdBuffer + ' ' + sCmdArgBuffer);
+  ExecResult := Exec(sCmdBuffer, sCmdArgBuffer, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+
+  // 2. Grant Modify to BUILTIN\Users (S-1-5-32-545)
+  sCmdArgBuffer := ExpandConstant(
+    '"' + sPath + '" /grant *S-1-5-32-545:(OI)(CI)M /T /C');
+
+  Log('Executing: ' + sCmdBuffer + ' ' + sCmdArgBuffer);
+  ExecResult := Exec(sCmdBuffer, sCmdArgBuffer, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+
+  Log('---------------- Win7GiveWriteAccess END ----------------');
 end;
+
 
 { ///////////////////////////////////////////////////////////////////// }
 function GetUninstallString(): String;
@@ -395,6 +468,7 @@ var
 
   sNewInstallation: String;
   sRobotFrameworkPath: String;
+  VSCodiumRemoveDataSelected: Boolean;
 
 #ifdef DoInstallTracking
   WinHttpReq: Variant;
@@ -402,7 +476,6 @@ var
 
 begin
   sNewInstallation:='True';
-
 
   //directly before installation validate if Files are already existing.
   //If yes, call uninstaller to avoid mixed versions.
@@ -417,6 +490,14 @@ begin
 		if (IsUpgrade()) then
 		begin
 			sNewInstallation:='False';
+      if DoVSCodiumUpdate then
+      begin
+        VSCodiumRemoveDataSelected := ReinstallCheckbox.Checked;
+        // Backup VSCode extensions before uninstalling old version
+        if not VSCodiumRemoveDataSelected then
+          BackupVSCodeData();
+      end;
+
 			UnInstallOldVersion();
 		end;
 	  except
@@ -456,6 +537,8 @@ begin
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin
           Win7GiveWriteAccess('{app}\robotvscode\data');
+          Win7GiveWriteAccess('{app}\robotvscode\data\extensions');
+          Win7GiveWriteAccess('{app}\robotvscode\data\user-data');
           Win7GiveWriteAccess('{app}\devtools');
         end;
 
@@ -485,7 +568,6 @@ var
  ProjectListCounter : Integer;
  i:Integer;
  MsgInstallCopilotArgs: String;
-
 begin
   InitProjectHash();
 
@@ -583,6 +665,7 @@ begin
   InstructionMemo.SelStart := 0;
   InstructionMemo.SelLength := Length(InstructionMemo.Text)
   InfoAfterPage.Surface.Hide;
+
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -700,13 +783,60 @@ begin
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
+var
+  VSCodiumRemoveDataSelected: Boolean;
+  NoteLabel: TNewStaticText;
 begin
-  if (CurPageID = InfoAfterPage.ID) then
+
+  if DoVSCodiumUpdate then
   begin
-    if IsComponentSelected('VsCodium') then
-      InfoAfterPage.Surface.Show
-    else
-      WizardForm.NextButton.OnClick(nil); // skip page
+    VSCodiumRemoveDataSelected := Assigned(ReinstallCheckbox) and ReinstallCheckbox.Checked;
+    if CurPageID = UsrDataDirPage.ID then
+    begin
+      if DirExists(ExpandConstant('{app}\robotvscode\data\extensions')) and not Assigned(ReinstallCheckbox) then
+      begin
+        VsCodiumPage := CreateCustomPage(wpSelectComponents, 'VSCodium Installation Options',
+                                        'Choose how you want VSCodium to be installed');
+
+        ReinstallCheckbox := TNewCheckBox.Create(VsCodiumPage);
+        ReinstallCheckbox.Parent := VsCodiumPage.Surface;
+        ReinstallCheckbox.Left := ScaleX(0);
+        ReinstallCheckbox.Top := ScaleY(10);
+        ReinstallCheckbox.Width := VsCodiumPage.SurfaceWidth;
+        ReinstallCheckbox.Height := ScaleY(40);
+        ReinstallCheckbox.Caption :=
+          'Fresh VSCodium installation';
+        ReinstallCheckbox.Checked := False;
+
+        NoteLabel := TNewStaticText.Create(VsCodiumPage);
+        NoteLabel.Parent := VsCodiumPage.Surface;
+        NoteLabel.Left := ScaleX(0);
+        NoteLabel.Top := ReinstallCheckbox.Top + ReinstallCheckbox.Height + ScaleY(4);
+        NoteLabel.Width := VsCodiumPage.SurfaceWidth;
+        NoteLabel.AutoSize := False;
+        NoteLabel.Height := ScaleY(28);
+        NoteLabel.Caption:=
+          'Attention: Reinstalls and removes all extensions and user data';
+      end;
+    end;
+
+    if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
+    begin
+      if IsComponentSelected('VsCodium') and (VSCodiumRemoveDataSelected or not Assigned(ReinstallCheckbox)) then
+        InfoAfterPage.Surface.Show
+      else
+        WizardForm.NextButton.OnClick(nil); // skip page
+    end;
+  end
+  else
+  begin
+    if (CurPageID = InfoAfterPage.ID) then
+    begin
+      if IsComponentSelected('VsCodium') then
+        InfoAfterPage.Surface.Show
+      else
+        WizardForm.NextButton.OnClick(nil); // skip page
+    end;
   end;
 end;
 

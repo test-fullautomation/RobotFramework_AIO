@@ -206,7 +206,7 @@ function packaging_vscode() {
 	echo "Copy vscode-welcome extension"
 
 	# Find the .vsix file and copy it
-	vsix_file=$(find "$mypath/../../vscode-welcome" -name "*.vsix" -type f | head -n 1)
+	vsix_file=$(find "$mypath/../../vscode-welcome/VSCodeWelcome" -name "*.vsix" -type f | head -n 1)
 	cp -rf "$vsix_file" "$vscodeData/extensions/"
 
 	# Extract the name of the .vsix file
@@ -248,10 +248,10 @@ function packaging_vscode() {
 
    if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
        echo "robotframeworkWelcome.hasSeenWelcome exists, updating to true"
-       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": true/' "$vscodium_setting_file"
+       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
    else
-       echo "Append robotframeworkWelcome.hasSeenWelcome with true before closing brace"
-       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": true,\n}/' "$vscodium_setting_file"
+       echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
+       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
    fi
 
 	# Ensure "workbench.startupEditor" is set to "none"
@@ -441,6 +441,7 @@ function packaging_python_windows() {
 	$destDir/python3/python.exe -m pip install --upgrade pip
 	$destDir/python3/python.exe -m pip install --upgrade setuptools
 	$destDir/python3/python.exe -m pip install wheel
+	$destDir/python3/python.exe -m pip install build
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.
@@ -469,6 +470,7 @@ function packaging_python_linux() {
 
 	# Upgrade pip
 	$destDir/python3lx/bin/python3 -m pip install --upgrade pip
+	$destDir/python3lx/bin/python3 -m pip install build
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.

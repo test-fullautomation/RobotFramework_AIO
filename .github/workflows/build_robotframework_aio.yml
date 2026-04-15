@@ -85,6 +85,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
+          df -h
+
       - name: Install dependencies and set environment variables
         run: |
           sudo apt-get update
@@ -194,8 +202,7 @@ jobs:
             ${{ runner.workspace }}/robotframework-doip/RobotFramework_DoIP/*.html
             ${{ runner.workspace }}/robotframework-extensions-collection/RobotframeworkExtensions/*.html
             ${{ runner.workspace }}/robotframework-qconnect-base/QConnectBase/*.html
-            ${{ runner.workspace }}/robotframework-robotlog2db/RobotLog2DB/*.html
-            ${{ runner.workspace }}/robotframework-robotlog2rqm/RobotLog2RQM/*.html
+            ${{ runner.workspace }}/robotframework-qconnect-winapp/QConnectWinapp/*.html
             ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
             ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
 
@@ -316,6 +323,7 @@ jobs:
         chmod +x ./install/check_external_version.sh
         ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
+
     - name: Install RabbitMQ
       shell: pwsh
       run: |
@@ -344,11 +352,38 @@ jobs:
         rabbitmq-plugins.bat enable rabbitmq_rtopic_exchange
         rabbitmq-plugins.bat list -m | findstr rabbitmq_rtopic_exchange
 
-        Start-Process -FilePath "$rabbitPath\sbin\rabbitmq-server.bat" -ArgumentList "-detached" -WindowStyle Hidden
-        Start-Sleep -Seconds 10
-        rabbitmq-diagnostics.bat ping
+        # Retry starting RabbitMQ server
+        $maxStartAttempts = 5
+        $startAttempt = 0
+        $started = $false
+        while (-not $started -and $startAttempt -lt $maxStartAttempts) {
+          $startAttempt++
+          Write-Host "Starting RabbitMQ server (attempt $startAttempt of $maxStartAttempts)..."
+          Start-Process -FilePath "$rabbitPath\sbin\rabbitmq-server.bat" -ArgumentList "-detached" -WindowStyle Hidden
+          Start-Sleep -Seconds 10
+          try {
+            rabbitmq-diagnostics.bat ping
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "RabbitMQ started successfully."
+              $started = $true
+            } else {
+              Write-Host "RabbitMQ ping failed, will retry."
+            }
+          } catch {
+            Write-Host "RabbitMQ ping threw an exception, will retry."
+          }
+          if (-not $started) {
+            Write-Host "Killing any existing RabbitMQ processes before retrying."
+            Get-Process -Name "erl*" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 5
+          }
+        }
+        if (-not $started) {
+          Write-Host "RabbitMQ failed to start after $maxStartAttempts attempts. Exiting."
+          exit 1
+        }
 
-        # Wait for RabbitMQ port 5672 to be open
+        # Double check for RabbitMQ port 5672 to be open
         $maxAttempts = 30
         $waitSeconds = 2
         for ($i=0; $i -lt $maxAttempts; $i++) {
@@ -617,7 +652,7 @@ jobs:
         omitNameDuringUpdate: true
         prerelease: true
         name: RobotFramework AIO version ${{ env.RELEASE_VERSION }}
-        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_*.html,windows-aiotestlogfiles-original/release_info_*.html,RobotFrameworkAIO_Reference_extended/*.pdf,RobotFrameworkAIO_Reference_original/*.pdf"
+        artifacts: "windows-package-original/*.exe,windows-package-extended/*.exe,linux-package-original/*.deb,linux-package-extended/*.deb,windows-aiotestlogfiles-extended/release_info_*.html,windows-aiotestlogfiles-original/release_info_*.html,RobotFrameworkAIO_Reference_extended/**/*.pdf,RobotFrameworkAIO_Reference_original/**/*.pdf"
         bodyFile: "windows-aiotestlogfiles-extended/release_changelog.html"
 
   tag-to-publish-packges-to-pypi:
