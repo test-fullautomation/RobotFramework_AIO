@@ -1,5 +1,5 @@
 # Use the official Python 3.13 image based on Debian Bookworm Slim
-FROM bcr2.inside.bosch.cloud/osd/osd7
+FROM python:3.13-slim-bookworm
 
 # --- Build Arguments ---
 ARG VERSION_TYPE="extended"
@@ -26,13 +26,13 @@ ENV RobotTestPath="~/RobotTest/testcases"
 ENV RobotLogPath="~/RobotTest/logfiles"
 ENV RobotTutorialPath="~/RobotTest/tutorial"
 ENV RobotDevtools="/opt/rfwaio/devtools"
-ENV RobotNodeJS="/opt/rfwaio/devtools/nodejs"
+
 ENV RobotAppium="/opt/rfwaio/devtools/nodejs/bin"
 ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/Android/platform-tools"
 
 WORKDIR /app
 
-# Step 1: Install system-level dependencies and Setup Groups
+# Step 1: Install system-level dependencies and Setup Groups (OS7 uses OpenJDK 17)
 RUN apt-get update && apt-get install -y --fix-missing \
     sudo curl git procps libxtst6 liburi-perl sed \
     unzip xz-utils zstd \
@@ -143,8 +143,11 @@ RUN /bin/bash -e -c " \
     rm -rf /root/.cache /tmp/* && \
     echo '>>>> Build OSD7 Finished successfully!'"
 
+COPY ./docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Final Path setup - Updated to reflect /opt/rfwaio structure
-ENV PATH="/opt/rfwaio/linux:/usr/local/bin:${RobotNodeJS}/bin:${RobotAndroidPlatformTools}:${PATH}"
+ENV PATH="/opt/rfwaio/linux:${RobotAndroidPlatformTools}:${PATH}"
 
 # Default entry point
-CMD ["robot"]
+CMD ["/usr/local/bin/docker-entrypoint.sh"]

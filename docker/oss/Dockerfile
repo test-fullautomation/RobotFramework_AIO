@@ -26,7 +26,7 @@ ENV RobotTestPath="~/RobotTest/testcases"
 ENV RobotLogPath="~/RobotTest/logfiles"
 ENV RobotTutorialPath="~/RobotTest/tutorial"
 ENV RobotDevtools="/opt/rfwaio/devtools"
-ENV RobotNodeJS="/opt/rfwaio/devtools/nodejs"
+
 ENV RobotAppium="/opt/rfwaio/devtools/nodejs/bin"
 ENV RobotAndroidPlatformTools="/opt/rfwaio/devtools/Android/platform-tools"
 
@@ -143,8 +143,11 @@ RUN /bin/bash -e -c " \
     rm -rf /root/.cache /tmp/* && \
     echo '>>>> Build OSS Finished successfully!'"
 
+COPY ./docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Final Path setup - Updated to reflect /opt/rfwaio structure
-ENV PATH="/opt/rfwaio/linux:/usr/local/bin:${RobotNodeJS}/bin:${RobotAndroidPlatformTools}:${PATH}"
+ENV PATH="/opt/rfwaio/linux:${RobotAndroidPlatformTools}:${PATH}"
 
 # Default entry point
-CMD ["robot"]
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
