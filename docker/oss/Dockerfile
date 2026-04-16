@@ -43,7 +43,8 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 # Step 2: Copy source code
 COPY . .
-RUN chmod +x ./requirements_linux.sh ./cloneall ./install/install.sh ./build
+RUN cp ./docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x ./requirements_linux.sh ./cloneall ./install/install.sh ./build /usr/local/bin/docker-entrypoint.sh
 
 # Step 3: Global Python Requirements
 RUN ./requirements_linux.sh && \
@@ -142,9 +143,6 @@ RUN /bin/bash -e -c " \
     cd / && rm -rf /app/* && \
     rm -rf /root/.cache /tmp/* && \
     echo '>>>> Build OSS Finished successfully!'"
-
-COPY ./docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="/opt/rfwaio/linux:${RobotAndroidPlatformTools}:${PATH}"

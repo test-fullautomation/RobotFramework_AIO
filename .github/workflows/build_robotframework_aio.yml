@@ -609,7 +609,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [original, extended]
-        distro: [osd7, osd8, oss]
+        distro: [oss]
     env:
       BUNDLE_NAME: "--bundle_name 'RobotFramework AIO'"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
@@ -674,7 +674,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [original, extended]
-        distro: [osd7, osd8, oss]
+        distro: [oss]
     name: Test AIO Docker Container (${{ matrix.distro }}-${{ matrix.version }})
     runs-on: ubuntu-latest
     needs: [ build-docker, trigger-aio ]
