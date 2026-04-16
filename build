@@ -450,7 +450,17 @@ function build_windows() {
 	./scripts/postcompile.bat
 }
 
-if [ "$UNAME" == "Linux" ] ; then
+function build_docker() {
+	generate_version_info
+	check_and_install_texlive
+	create_testsuitmanagement_package_context_file
+	update_debian_control_file
+	parse_config $ConfigFile
+}
+
+if [[ -f /.dockerenv || "$BUILD_ENV" == "docker" ]]; then
+	build_docker
+elif [ "$UNAME" == "Linux" ] ; then
 	build_debian
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	build_windows
