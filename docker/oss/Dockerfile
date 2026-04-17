@@ -26,7 +26,7 @@ WORKDIR /app
 # Step 1: Install system-level dependencies and Setup Groups (OSS uses OpenJDK 17)
 RUN apt-get update && apt-get install -y --fix-missing \
     sudo curl git procps libxtst6 liburi-perl sed \
-    unzip xz-utils zstd \
+    unzip xz-utils zstd dos2unix \
     openjdk-17-jdk-headless
 
 # Create 'robot-aio' group from postinst.sh logic
@@ -34,8 +34,12 @@ RUN groupadd -r robot-aio && usermod -a -G robot-aio root
 
 # Step 2: Copy source code
 COPY . .
-RUN cp ./docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x ./requirements_linux.sh ./cloneall ./install/install.sh ./build /usr/local/bin/docker-entrypoint.sh ./docker/docker-build.sh
+RUN dos2unix ./docker/docker-build.sh \
+             ./build \
+             ./cloneall \
+             ./requirements_linux.sh \
+             ./install/install.sh && \
+    chmod +x ./requirements_linux.sh ./cloneall ./install/install.sh ./build ./docker/docker-build.sh
 
 # Step 3: Global Python Requirements
 RUN ./requirements_linux.sh && \
@@ -75,7 +79,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update && apt-get install -y --fix-missing \
     sudo curl git procps libxtst6 liburi-perl sed \
-    unzip xz-utils zstd \
+    unzip xz-utils zstd dos2unix \
     openjdk-17-jdk-headless && \
     groupadd -r robot-aio && usermod -a -G robot-aio root && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -84,7 +88,11 @@ COPY --from=builder /usr/local /usr/local
 COPY --from=builder /opt/rfwaio /opt/rfwaio
 COPY --from=builder /root/RobotTest /root/RobotTest
 
+RUN ln -sf /usr/local/bin/python3 /usr/local/bin/python && \
+    mkdir -p /opt/rfwaio/python3/bin && \
+    ln -sf /usr/local/bin/python3 /opt/rfwaio/python3/bin/python3
+
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="${RobotPythonPath}:${RobotAppium}:${RobotAndroidPlatformTools}:/opt/rfwaio/linux:${PATH}"
-ENTRYPOINT ["docker-entrypoint.sh"]
+
 CMD ["robot", "--version"]
