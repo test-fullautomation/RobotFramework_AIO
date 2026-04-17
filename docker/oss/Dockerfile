@@ -26,28 +26,18 @@ WORKDIR /app
 # Step 1: Install system-level dependencies and Setup Groups (OSS uses OpenJDK 17)
 RUN apt-get update && apt-get install -y --fix-missing \
     sudo curl git procps libxtst6 liburi-perl sed \
-    unzip xz-utils zstd dos2unix \
-    openjdk-17-jdk-headless
+    unzip xz-utils zstd dos2unix
 
 # Create 'robot-aio' group from postinst.sh logic
 RUN groupadd -r robot-aio && usermod -a -G robot-aio root
 
 # Step 2: Copy source code
 COPY . .
-RUN dos2unix ./docker/docker-build.sh \
-             ./build \
-             ./cloneall \
-             ./requirements_linux.sh \
-             ./install/install.sh && \
-    chmod +x ./requirements_linux.sh ./cloneall ./install/install.sh ./build ./docker/docker-build.sh
 
-# Step 3: Global Python Requirements
-RUN ./requirements_linux.sh && \
-    python3 -m pip install --no-cache-dir build && \
-    python3 -m pip install --no-cache-dir -r ./install/python_requirements_lx.txt
-
-# Step 4: Full Build, Mimic Installation & Permission Logic
-RUN ./docker/docker-build.sh
+# Step 3: Full Build, Mimic Installation & Permission Logic
+RUN dos2unix ./docker/docker-build.sh && \
+    chmod +x ./docker/docker-build.sh && \
+    ./docker/docker-build.sh
 
 # Stage 2: Final
 FROM python:3.13-slim-bookworm
@@ -77,12 +67,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
     RobotLogPath="${AIO_TEST}/logfiles" \
     RobotTutorialPath="${AIO_TEST}/tutorial"
 
-RUN apt-get update && apt-get install -y --fix-missing \
-    sudo curl git procps libxtst6 liburi-perl sed \
-    unzip xz-utils zstd dos2unix \
-    openjdk-17-jdk-headless && \
-    groupadd -r robot-aio && usermod -a -G robot-aio root && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sudo curl git procps libxtst6 openjdk-17-jdk-headless \
+    libmariadb-dev-compat libmariadb-dev libmariadb3 \
+    && groupadd -r robot-aio && usermod -a -G robot-aio root \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /opt/rfwaio /opt/rfwaio
@@ -95,4 +84,4 @@ RUN ln -sf /usr/local/bin/python3 /usr/local/bin/python && \
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="${RobotPythonPath}:${RobotAppium}:${RobotAndroidPlatformTools}:/opt/rfwaio/linux:${PATH}"
 
-CMD ["robot", "--version"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
