@@ -1,0 +1,71 @@
+{
+  "name": "RobotFrameworkAIO.Exercise_01",
+  "title": "Exercise 01: Building Testsuites",
+  "summary": "Write a Robot Framework test suite using RobotFramework_TestsuitesManagement and run it with p1.check().",
+  "introduction": [
+    "In this exercise you will create a Robot Framework test suite that uses the TestsuitesManagement library.",
+    "Assign your robot script to the `robot_code` variable and call `p1.check()` to execute and validate it."
+  ],
+  "questions": [
+    {
+      "id": "p1",
+      "title": "Exercise 1: Simple test suite with TestsuitesManagement",
+      "prompt": [
+        "Create a Robot Framework test suite script and assign it to the `robot_code` variable.",
+        "The suite must import `RobotFramework_TestsuitesManagement` with alias `tm` and call `tm.testsuite_setup` as `Suite Setup`.",
+        "Add a test case that logs the `${CONFIG}[Maximum_version]` and `${CONFIG}[Project]` configuration values.",
+        "Call `p1.check()` to execute the robot script and verify that all tests pass."
+      ],
+      "starter_code": [
+        "robot_code = \"\"\"",
+        "*** Settings ***",
+        "",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "",
+        "Suite Setup    tm.testsuite_setup",
+        "",
+        "*** Test Cases ***",
+        "Test Case exercise-01",
+        "    [documentation]    exercise-01",
+        "    Log    <your log statement here>    console=yes",
+        "\"\"\"",
+        "p1.check()"
+      ],
+      "hint": [
+        "Use the `*** Settings ***` section to import the library and configure `Suite Setup`:",
+        "",
+        "```",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "Suite Setup    tm.testsuite_setup",
+        "```",
+        "",
+        "Then in `*** Test Cases ***`, use the `Log` keyword with `console=yes` to print the `${CONFIG}` values.",
+        "",
+        "Access config values with `${CONFIG}[key_name]` syntax."
+      ],
+      "solution": [
+        "Here is a complete solution:",
+        "",
+        "```python",
+        "robot_code = \"\"\"",
+        "*** Settings ***",
+        "",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "",
+        "Suite Setup    tm.testsuite_setup",
+        "",
+        "*** Test Cases ***",
+        "Test Case exercise-01",
+        "    [documentation]    exercise-01",
+        "    Log    Maximum_version : ${CONFIG}[Maximum_version]    console=yes",
+        "    Log    Project : ${CONFIG}[Project]    console=yes",
+        "\"\"\"",
+        "p1.check()",
+        "```"
+      ],
+      "success_message": "Correct. The robot test suite ran successfully.",
+      "failure_message": "The robot suite did not pass. Check the robot output above for details.",
+      "tags": ["robot", "testsuite", "TestsuitesManagement"]
+    }
+  ]
+}

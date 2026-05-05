@@ -40,7 +40,7 @@ def _load_jsonp_file(path: Path) -> dict:
 
 
 def _load_jsonp_workbook(package_dir: Path, workbook_name: str) -> dict:
-    path = workbooks_dir(package_dir) / f"{workbook_name}.jsonp"
+    path = workbooks_dir(package_dir) / f"{workbook_name.replace('.', '/')}.jsonp"
     return _load_jsonp_file(path)
 
 
@@ -70,7 +70,12 @@ def load_workbook_definition(package_dir: Path, workbook_name: str) -> WorkbookD
             solution_text=_normalize_multiline(question_data.get("solution", "")),
             starter_code=_normalize_multiline(question_data.get("starter_code", "")),
             expected_output=str(logic.get("expected_output", "")),
+            expected_value=logic.get("expected_value"),
+            expected_return_code=int(logic.get("expected_return_code", 0)),
             validator=str(logic.get("validator", "last_non_empty_line_equals")),
+            source_variable=str(logic.get("source_variable", "")),
+            content_variable=str(logic.get("content_variable", "")),
+            parser_kwargs=dict(logic.get("parser_kwargs", {})),
             success_message=str(question_data.get("success_message", "Correct. Keep going.")),
             failure_message=str(question_data.get("failure_message", "Not quite right yet.")),
             tags=[str(item) for item in question_data.get("tags", [])],

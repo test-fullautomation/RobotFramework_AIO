@@ -16,11 +16,11 @@ from .core import (
 
 
 def _install_active_bindings() -> None:
-    # Mirror Kaggle-style notebooks by exposing lesson, q1, q2, ... directly at
+    # Mirror Kaggle-style notebooks by exposing lesson, p1, p2, ... directly at
     # package import time based on the currently active workbook.
     lesson = current_lesson()
     globals()["lesson"] = lesson
-    stale_question_ids = [name for name in list(globals()) if re.match(r"^q\d+$", name)]
+    stale_question_ids = [name for name in list(globals()) if re.match(r"^p\d+$", name)]
     for question_id in stale_question_ids:
         globals().pop(question_id, None)
     if lesson is None:
