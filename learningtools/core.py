@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shutil
 from typing import Dict, Optional
 
 from .capture import get_output_capture
@@ -25,6 +26,26 @@ set_available_workbooks(list_workbooks())
 
 def activate(workbook_name: str) -> Lesson:
     global _ACTIVE_LESSON
+    # Load the jupyter notebook from the template
+    template_path = _PACKAGE_DIR / "templates"
+    example_path = _PACKAGE_DIR / "examples"
+    template: list = workbook_name.split(".")
+    i=0
+    for part in template:
+        i+=1
+        if i==len(template):
+            part_template = part + "_template.ipynb"
+            template_path = template_path / part_template
+            part_example = part + ".ipynb"
+            example_path = example_path / part_example
+
+        else:
+            example_path = example_path / part
+            template_path = template_path / part
+    if not template_path.exists():
+        raise FileNotFoundError(f"Template notebook not found for workbook '{workbook_name}' at expected path: {template_path}")
+    shutil.copy2(str(template_path), str(example_path))
+
     definition = load_workbook_definition(_PACKAGE_DIR, workbook_name)
     capture = get_output_capture()
     # Start each activation with a clean capture buffer so stale notebook output
