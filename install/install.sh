@@ -442,6 +442,7 @@ function packaging_python_windows() {
 	$destDir/python3/python.exe -m pip install --upgrade pip
 	$destDir/python3/python.exe -m pip install --upgrade setuptools
 	$destDir/python3/python.exe -m pip install wheel --upgrade
+	$destDir/python3/python.exe -m pip install uv
 
 	# !! ATTENTION !!
 	# Here we need to avoid that libraries are installed to C:\Users\<userid>\AppData\Roaming\Python\Python39.

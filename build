@@ -297,10 +297,12 @@ function parse_config () {
 		cd $CURDIR
 	done
 
-	# Temporary: remove PythonExtensionsCollection wheel to avoid conflict
-	echo "Removing PythonExtensionsCollection wheel to avoid conflict with robotframework-extensions-collection"
-	ls -alh $wheelHouseDir/PythonExtensionsCollection-*.whl
-	rm -f $wheelHouseDir/PythonExtensionsCollection-*.whl
+	# Temporary: remove PythonExtensionsCollection wheel to avoid conflict on Linux
+	if [ "$UNAME" == "Linux" ] ; then
+		echo "Removing PythonExtensionsCollection wheel to avoid conflict with robotframework-extensions-collection"
+		ls -alh $wheelHouseDir/PythonExtensionsCollection-*.whl
+		rm -f $wheelHouseDir/PythonExtensionsCollection-*.whl
+	fi
 }
 
 add_line_to_file() {

@@ -400,7 +400,7 @@ begin
   //   - the inner quote around the exe handles spaces in {app}
   PipArgs :=
     '/C ""' + PythonExe + '"' +
-    ' -m pip install' +
+    ' -m uv pip install' +
     ' --no-index' +
     ' --no-cache-dir' +
     ' --find-links "' + WheelDir + '"' +
