@@ -28,6 +28,7 @@ if [ "$VARIANT" = "BIOS" ]; then
     DEVTOOLS_DIR="./devtools/."
     PY_DIR="/usr/lib/python3.12"
     sed -i 's|destDir=$(realpath $mypath/../..)|destDir=$(realpath $mypath/..)|g' ./install/install.sh
+    sed -i 's|cd ../python3lx|cd ./python3lx|g' ./build
     export http_proxy="$PROXY_SERVER"
     export https_proxy="$PROXY_SERVER"
     export no_proxy="localhost,127.0.0.1,.bosch.com"
