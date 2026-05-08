@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Iterable, Optional
-
+import regex
 from .capture import framework_print
 from .models import QuestionDefinition, WorkbookDefinition
 
@@ -33,6 +33,12 @@ def render_markdown(text: str) -> None:
 
 
 def render_panel(title: str, body: str) -> None:
+    if regex.match(r'^Hint:.+', title, flags=regex.IGNORECASE):
+        body = f"<div style=\"background-color: lightpink; color: black; padding: 10px;\">\n\n{body}\n\n</div>"
+    elif regex.match(r'^Solution:.+', title, flags=regex.IGNORECASE):
+        body = f"<div style=\"background-color: lightblue; color: black; padding: 10px;\">\n\n{body}\n\n</div>"
+    else:
+        body = f"<div style=\"background-color: lightgreen; color: black; padding: 10px;\">\n\n{body}\n\n</div>"
     render_markdown(f"### {title}\n\n{body}")
 
 
@@ -75,7 +81,15 @@ def render_progress(workbook: WorkbookDefinition, completed_ids: Iterable[str]) 
 
 
 def render_check_result(ok: bool, heading: str, message: str, details: Optional[str] = None) -> None:
-    parts = [f"### {heading}", message]
+    if ok:
+        heading = f"<span style=\"color: green; font-weight: bold;\">\n\n### {heading}\n\n</span>"
+        message = f"<span style=\"color: green; font-weight: bold;\">\n\n{message}\n\n</span>"
+        details = f"<span style=\"color: green;\">\n\n{details}\n\n</span>" if details else None
+    else:
+        heading = f"<span style=\"color: red; font-weight: bold;\">\n\n### {heading}\n\n</span>"
+        message = f"<span style=\"color: red; font-weight: bold;\">\n\n{message}\n\n</span>"
+        details = f"<span style=\"color: red;\">\n\n{details}\n\n</span>" if details else None
+    parts = [heading, message]
     if details:
         parts.append(details)
     render_markdown("\n\n".join(parts))
