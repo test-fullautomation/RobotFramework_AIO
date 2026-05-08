@@ -599,7 +599,7 @@ jobs:
           ${{ runner.workspace }}/**/*/static_code_report/*
 
   build-docker:
-    name: Build RobotFramework AIO Docker Containers
+    name: Build Docker package
     runs-on: ubuntu-latest
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
@@ -679,12 +679,12 @@ jobs:
           path: ${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}.tar
 
   install-test-docker:
+    name: Test Docker package
     strategy:
       fail-fast: false
       matrix:
         version: [original, extended]
         distro: [oss]
-    name: Test AIO Docker Container (${{ matrix.distro }}-${{ matrix.version }})
     runs-on: ubuntu-latest
     needs: [ build-docker, trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
