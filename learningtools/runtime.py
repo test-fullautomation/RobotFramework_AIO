@@ -165,6 +165,7 @@ class Question:
 					[_sys.executable, "-m", "robot", "--outputdir", tmpdir, str(suite_path)],
 					capture_output=True,
 					text=True,
+					cwd=str(_Path.cwd()),
 				)
 
 			actual_rc = proc.returncode
