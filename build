@@ -210,7 +210,7 @@ function build_python_package () {
 		fi
 		if [ ${reponame} != "robotframework" ]; then
 			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
-			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -0 rm -f
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -r -0 rm -f
 		fi
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
@@ -218,7 +218,7 @@ function build_python_package () {
 		PKG_NAME=$(${PYBIN} -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['name'])" | tail -n 1)
 		if [ ${reponame} != "robotframework" ]; then
 			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
-			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -0 rm -f
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -r -0 rm -f
 		fi
 		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
@@ -299,9 +299,10 @@ function parse_config () {
 
 	# Temporary: remove PythonExtensionsCollection wheel to avoid conflict on Linux
 	if [ "$UNAME" == "Linux" ] ; then
-		echo "Removing PythonExtensionsCollection wheel to avoid conflict with robotframework-extensions-collection"
-		ls -alh $wheelHouseDir/PythonExtensionsCollection-*.whl
-		rm -f $wheelHouseDir/PythonExtensionsCollection-*.whl
+		if compgen -G "$wheelHouseDir"/PythonExtensionsCollection-*.whl > /dev/null; then
+			echo "Removing PythonExtensionsCollection wheel to avoid conflict with robotframework-extensions-collection"
+			rm -f "$wheelHouseDir"/PythonExtensionsCollection-*.whl
+		fi
 	fi
 }
 

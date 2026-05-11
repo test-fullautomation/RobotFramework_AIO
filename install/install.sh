@@ -449,10 +449,10 @@ function packaging_python_windows() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python3/python.exe -m pip wheel -w $wheelHouseDir -r "$mypath/python_requirements.txt" $proxy_args
+	$destDir/python3/python.exe -m pip wheel -w "$wheelHouseDir" -r "$mypath/python_requirements.txt" $proxy_args
 	logresult "$?" "downloaded required packages for Python" "download required packages for Python"
 	# Workaround for pyfranca
-	$destDir/python3/python.exe -m pip wheel -w $wheelHouseDir pyfranca
+	$destDir/python3/python.exe -m pip wheel -w "$wheelHouseDir" pyfranca
 	logresult "$?" "downloaded pyfranca package" "download pyfranca package"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3/Lib/site-packages/
@@ -478,7 +478,7 @@ function packaging_python_linux() {
 	# This would create a conflict with an already existing python version. RobotFramework's python should be
 	# fully transparent for the existing system.
 	#
-	$destDir/python3lx/bin/python3 -m pip wheel -w $wheelHouseDir -r "$mypath/python_requirements_lx.txt"
+	$destDir/python3lx/bin/python3 -m pip wheel -w "$wheelHouseDir" -r "$mypath/python_requirements_lx.txt"
 	logresult "$?" "downloaded required packages for Python" "download required packages for Python"
 	# Copy file to handle traceback color python
 	cp $mypath/../config/python/* $destDir/python3lx/lib/python3.13/site-packages

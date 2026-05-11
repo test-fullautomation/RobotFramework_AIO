@@ -283,7 +283,7 @@ begin
   #ifdef SubVersion
     Result := '{#SubVersion}' = 'extended';
   #else
-    Result := True;
+    Result := False;
   #endif
 end;
 
@@ -367,8 +367,13 @@ begin
 
   if WheelCount = 0 then
   begin
-    Log('WARNING: no *.whl files found in ' + WheelDir);
-    exit;
+    Log('ERROR: no *.whl files found in ' + WheelDir);
+    if Required then
+    begin
+      MsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK);
+      Abort;
+    end;
+    Result := False;
   end;
 
   // Persist the requirements file so pip can read it

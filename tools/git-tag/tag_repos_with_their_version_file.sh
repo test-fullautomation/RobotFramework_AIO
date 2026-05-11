@@ -78,8 +78,8 @@ function tag_single_repo(){
 
    # version_info=$(grep -E 'VERSION\s+=' ${version_file} | sed "s/'/\"/g" | awk -F'"' '{print $2}')
    # old conversion for version: VERSION = "x.y.z"
-   # new conversion for version: __version__ = "x.y.z"
-   version_info=$(grep -ioP '^\_{0,2}version\_{0,2}\s*=\s*"\K[^"]+' ${version_file} | head -n 1)
+   # new conversion for version: __version__ = "x.y.z" or __version__ = 'x.y.z'
+   version_info=$(grep -ioP "^\_{0,2}version\_{0,2}\s*=\s*['\"]\K[^'\"]+" ${version_file} | head -n 1)
    # Check if the version is empty
    if [ -z "$version_info" ]; then
       errormsg "Version information not found or empty"

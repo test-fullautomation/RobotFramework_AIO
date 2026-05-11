@@ -11,7 +11,7 @@
 # RobotFramework AIO (All In One) <!-- omit in toc -->
 [![Build RobotFramework AIO packages](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml/badge.svg?event=push)](https://github.com/test-fullautomation/RobotFramework_AIO/actions/workflows/build_robotframework_aio.yml)
 
-This respository holds the build tooling for a new RobotFramework AIO (All In
+This repository holds the build tooling for a new RobotFramework AIO (All In
 One) installer for both Windows and Linux.
 
 RobotFramework AIO is built out of many separate repositories. Therefore this repository (https://github.com/test-fullautomation/RobotFramework_AIO/) is **the meta-repository** for all related repositories.
