@@ -1,3 +1,4 @@
+import getpass
 import re
 import requests
 
@@ -12,7 +13,7 @@ VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
 
 
 def main():
-    token = input("Enter your GitHub Personal Access Token: ").strip()
+    token = getpass.getpass("Enter your GitHub Personal Access Token: ").strip()
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github+json",
