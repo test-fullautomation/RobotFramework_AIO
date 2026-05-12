@@ -1,0 +1,59 @@
+{
+    "color_aliases": {
+        "col_default" : "a2eeef",
+        "col_storypoints": "0000FF",
+        "col_version_inactive": "516383",
+        "col_version_active": "FF0000",
+        "col_backlog": "3500FC",
+        "col_fix_in_review": "0E8A16",
+        "col_in_work": "0E8A16",
+        "col_ready_for_verifying": "00FF00",
+        "col_successfully_tested": "00FF00",
+        "col_retest_failed": "010000",
+        "col_pi": "007bff",
+        "col_prio1": "010000",
+        "col_prio2": "FFFF00",
+        "col_prio3": "00FF00",
+        "col_selftest": "9C29B8",
+        "col_bug": "d73a4a"
+    },
+    "labels": [
+        {"name": "0 pts", "color": "col_storypoints"},
+        {"name": "1 pts", "color": "col_storypoints"},
+        {"name": "2 pts", "color": "col_storypoints"},
+        {"name": "3 pts", "color": "col_storypoints"},
+        {"name": "5 pts", "color": "col_storypoints"},
+        {"name": "8 pts", "color": "col_storypoints"},
+        {"name": "13 pts", "color": "col_storypoints"},
+        {"name": "20 pts", "color": "col_storypoints"},
+        {"name": "40 pts", "color": "col_storypoints"},
+        {"name": "100 pts", "color": "col_storypoints"},
+
+        {"name": "backlog", "color": "col_storypoints"},
+
+        {"name": "bug", "color": "col_bug"},
+
+        {"name": "code improvement", "color": "col_default"},
+        {"name": "documentation", "color": "col_default"},
+        {"name": "duplicate", "color": "col_default"},
+        {"name": "enhancement", "color": "col_default"},
+        {"name": "invalid", "color": "col_default"},
+        {"name": "new feature", "color": "col_default"},
+
+
+        {"name": "fix in review", "color": "col_fix_in_review"},
+        {"name": "in work", "color": "col_in_work"},
+        {"name": "ready for verifying", "color": "col_ready_for_verifying"},
+        {"name": "successfully tested", "color": "col_successfully_tested"},
+        {"name": "retest failed", "color": "col_retest_failed"},
+
+        {"name": "prio 1", "color": "col_prio1"},
+        {"name": "prio 2", "color": "col_prio2"},
+        {"name": "prio 3", "color": "col_prio3"},
+
+        {"name": "selftest", "color": "col_selftest"},
+
+        {"name": "TAG-Timeline", "color": "col_pi"}
+
+    ]
+}
