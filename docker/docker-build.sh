@@ -27,6 +27,7 @@ if [ "$VARIANT" = "BIOS" ]; then
     BIN_DIR="/usr/bin"
     DEVTOOLS_DIR="./devtools/."
     PY_DIR="/usr/lib/python3.12"
+    PLANTUML_PATH="/usr/lib/plantuml/plantuml.jar"
     sed -i 's|destDir=$(realpath $mypath/../..)|destDir=$(realpath $mypath/..)|g' ./install/install.sh
     sed -i 's|cd ../python3lx|cd ./python3lx|g' ./build
     export http_proxy="$PROXY_SERVER"
@@ -40,6 +41,7 @@ else
     BIN_DIR="/usr/local/bin"
     DEVTOOLS_DIR="../devtools/."
     PY_DIR="/usr/local/lib/python3.13"
+    PLANTUML_PATH="/usr/local/lib/plantuml/plantuml.jar"
     export PYBIN=$(which python3)
     PY_PREFIX=$(dirname $(dirname $PYBIN))
 
@@ -53,7 +55,6 @@ else
 fi
 
 echo ">>>> [4/6] BUILD"
-PLANTUML_PATH="/usr/local/lib/plantuml/plantuml.jar"
 mkdir -p "$(dirname "$PLANTUML_PATH")"
 curl -sL $CURL_OPTS "https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar" -o "$PLANTUML_PATH"
 

@@ -79,7 +79,9 @@ COPY --from=builder /root/RobotTest /root/RobotTest
 
 RUN ln -sf /usr/local/bin/python3 /usr/local/bin/python && \
     mkdir -p /opt/rfwaio/python3/bin && \
-    ln -sf /usr/local/bin/python3 /opt/rfwaio/python3/bin/python3
+    ln -sf /usr/local/bin/python3 /opt/rfwaio/python3/bin/python3 && \
+    mkdir -p /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1 && \
+    ln -sf /usr/local/lib/plantuml/plantuml.jar /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1/plantuml.jar
 
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="${RobotPythonPath}:${RobotAppium}:${RobotAndroidPlatformTools}:/opt/rfwaio/linux:${PATH}"
