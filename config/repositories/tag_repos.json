@@ -9,6 +9,7 @@
          "python-pytestlog2db": "",
          "python-microservice-base": "",
          "python-microservice-cleware-switch": "",
+         "python-process-hub": "",
          "python-rabbitmq-messagebus": "",
          "robotframework": "",
          "robotframework-documentation": "",
