@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Commandline argument
-#build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file
+#build --robotframework-version=version --itrack-service=URL --config-file=repo_config_file
 
 #
 # import common bash scripts
@@ -29,12 +29,15 @@ ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
+mypath=$(realpath $(dirname $0))
+wheelHouseDir="$mypath/wheelhouse"
+wheelRobotframeworkDir="$mypath/robotwheel"
 
 arguments=""
 
 if [ "$#" -eq 0 ]; then
    echo you can run the build with optional arguments
-   echo ./build --robotframework-version=version --itrack-service==URL --config-file=repo_config_file --sub-version=extended
+   echo ./build --robotframework-version=version --itrack-service=URL --config-file=repo_config_file --sub-version=extended
    echo version will be part of resulting installer executable and
    echo will be displayed when setup is started at initial screeen.
    echo repo_config_file contains the repository for building.
@@ -44,11 +47,11 @@ else
    do
       case $i in
           --robotframework-version=*)
-          RobotFrameworkVersion=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
+          RobotFrameworkVersion=$(echo "$i" | sed 's/[-a-zA-Z0-9/]*=//')
           ;;
           --itrack-service=*)
-          ITrackService=`echo $i | sed 's/[-a-zA-Z0-9/]*=//'`
-          ITrackService=`echo $ITrackService | sed -e  's/\\\\/\//g'`
+          ITrackService=$(echo "$i" | sed 's/[-a-zA-Z0-9/]*=//')
+          ITrackService=$(echo "$ITrackService" | sed -e 's/\\/\//g')
           curl -s --head "$ITrackService" | head -n 1 | grep "HTTP/1.[01] [23].." > /dev/null
           if [ "$?" -ne 0 ]; then
               echo -e $COL_RED"ITrackService not available:"$COL_RESET $ITrackService
@@ -74,10 +77,10 @@ else
    done
 fi
 
-if [ -f $ConfigFile ]; then
-	echo -e $COL_GREEN"ConfigFile            = $ITrackService"$COL_RESET
+if [ -f "$ConfigFile" ]; then
+	echo -e $COL_GREEN"ConfigFile            = $ConfigFile"$COL_RESET
 else
-	errormsg "Repo configuration '$config_file' is not existing"
+	errormsg "Repo configuration '$ConfigFile' is not existing"
 fi
 
 if [ "$ITrackService" != "NONE" ]; then
@@ -88,17 +91,17 @@ fi
 if [ "$RobotFrameworkVersion" == "" ]; then
 	if [[ "$TRIGGER_BY" =~ $TAG_REGEX || "$TRIGGER_BY" == "tag" ]] && [[ "$TAG_NAME" =~ $TAG_REGEX ]]; then
 		# Triggered by a TAG
-		RobotFrameworkVersion=`echo $TAG_NAME | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g"`
+		RobotFrameworkVersion=$(echo "$TAG_NAME" | sed -E -e "s/(rel|dev)\///g" | sed -E -e "s/aio\///g")
 	elif [ -n "$REF_NAME" ]; then
 		if [ "$REF_NAME" == "$DEFAULT_REF" ]; then
 			# Triggered by a merged pull request branch
-			RobotFrameworkVersion=`echo merged_$REF_NAME | sed -e "s/\//-/g"`
+			RobotFrameworkVersion=$(echo "merged_$REF_NAME" | sed -e "s/\//-/g")
 		elif [ -n "$REPOSITORY"  ] && [ -n "$PULL_REQUEST_BRANCH" ]; then
 			# Triggered by other repository
-			RobotFrameworkVersion=`echo triggered_by_$REPOSITORY | sed -e "s/\//-/g"`
+			RobotFrameworkVersion=$(echo "triggered_by_$REPOSITORY" | sed -e "s/\//-/g")
 		else
 			# Triggered by any branch manually
-			RobotFrameworkVersion=`echo dev_$REF_NAME | sed -e "s/\//-/g"`
+			RobotFrameworkVersion=$(echo "dev_$REF_NAME" | sed -e "s/\//-/g")
 		fi
 	else
 		# Triggered on local
@@ -124,21 +127,20 @@ echo -e "${COL_GREEN}###########################################################
 
 CURDIR=$(pwd)
 if [ "$UNAME" == "Linux" ] ; then
+	[ -d "../python3lx" ] || errormsg "Python directory '../python3lx' not found."
 	PYDIR=$(cd ../python3lx; pwd)
 	PYBIN=${PYDIR}/bin/python3
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements_lx.lock"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+	[ -d "../python3" ] || errormsg "Python directory '../python3' not found."
 	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
+	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements.lock"
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
-cd $CURDIR
+cd "$CURDIR"
 
-
-#
-# import common bash scripts
-#
-. ./include/bash/common.sh
 
 function get_server_url()
 {
@@ -157,9 +159,9 @@ function install_texlive () {
 	fi
 
 	zcat install-tl-unx.tar.gz | tar xf -
-	cd install-tl-20*
+	cd "$(ls -d install-tl-20* | tail -n 1)"
 	sudo perl ./install-tl --no-interaction
-	cd $CDIR
+	cd "$CDIR"
 }
 
 function check_and_install_texlive () {
@@ -172,7 +174,7 @@ function check_and_install_texlive () {
 
 
 	# If pdflatex exist
-	ver=`pdflatex -v | head -n 1 | awk 'NF>1{print $NF}'`
+	ver=$(pdflatex -v | head -n 1 | awk 'NF>1{print $NF}')
 	if [ ! -z "$ver" ]; then
 		release_year=${ver:0:4}
 		if [ $release_year -lt 2019 ]; then
@@ -181,8 +183,8 @@ function check_and_install_texlive () {
 				return 0
 			fi
 		else
-			export PDFLATEXPATH=`which pdflatex`
-			export GENDOC_LATEXPATH=`dirname $PDFLATEXPATH`
+			export PDFLATEXPATH=$(which pdflatex)
+			export GENDOC_LATEXPATH=$(dirname "$PDFLATEXPATH")
 			return 0
 		fi
 	fi
@@ -190,6 +192,53 @@ function check_and_install_texlive () {
 	export GENDOC_LATEXPATH="/usr/local/texlive/$(date +%Y)/bin/x86_64-linux"
 }
 
+function build_python_package () {
+	reponame=$1
+	if [ -f "./setup.py" ]; then
+		PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | grep PACKAGENAME | awk -F':' '{print $2}' | xargs)
+		if [ -z "$PKG_NAME" ]; then
+			PKG_NAME=$(${PYBIN} -W ignore ./setup.py --name | tail -n 1)
+		fi
+		if [ -z "$PKG_NAME" ]; then
+			errormsg "Failed to get package name for $reponame, skipping build."
+			return 1
+		fi
+		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
+		if [ -f "requirements.txt" ]; then
+			${PYBIN} -m pip install --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+			${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+		fi
+		if [ ${reponame} != "robotframework" ]; then
+			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -r -0 rm -f
+		fi
+		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
+		logresult "$?" "built ${reponame}" "build ${reponame}"
+	elif [ -f "./pyproject.toml" ]; then
+		PKG_NAME=$(${PYBIN} -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['name'])" | tail -n 1)
+		if [ ${reponame} != "robotframework" ]; then
+			# rm -f $wheelHouseDir/${PKG_NAME}-*.whl
+			find $wheelHouseDir -maxdepth 1 -iname "${PKG_NAME}-*.whl" -print0 | xargs -r -0 rm -f
+		fi
+		${PYBIN} -m pip install build docutils
+		if [ -f "./genpackagedoc.py" ]; then
+			${PYBIN} -m pip install .
+			${PYBIN} ./genpackagedoc.py
+			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
+		fi
+		# ${PYBIN} -m build -o $wheelHouseDir
+		${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir . -c $PY_CONSTRAIN_FILE
+		logresult "$?" "built ${reponame}" "build ${reponame}"
+	else
+		goodmsg "no setup.py or pyproject.toml found, skipping installation."
+	fi
+	if [ ${reponame} == "robotframework" ]; then
+		# copy robotframework wheel to a separate folder for later use in postinst.sh
+		rf_version=$(${PYBIN} -W ignore ./setup.py --version | tail -n 1)
+		mkdir -p $wheelRobotframeworkDir
+		mv $wheelHouseDir/robotframework-${rf_version}-*.whl $wheelRobotframeworkDir/
+	fi
+}
 function parse_repo () {
 	repo_type=$2
 	list_repo=($(git config -f $1 --list --name-only | grep "${repo_type}."))
@@ -203,19 +252,7 @@ function parse_repo () {
 	   # then print "git status", else handover command line parameters
 	   # to git call
 		   #using force option setup.py to overwrite old files
-		if [ -f "./setup.py" ]; then
-			PACKNAME=""
-			if grep -w setuptools ./setup.py | grep -w import; then
-				PACKNAME=$(${PYBIN} ./setup.py --name | tail -n 1)
-				if [[ -n "$PACKNAME" ]]; then
-					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
-					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-				fi
-			fi
-			${PYBIN} ./setup.py clean --all install
-			# Avoid build egg: ${PYBIN}  -m pip install .
-			logresult "$?" "installed ${reponame}" "install ${reponame}"
-		fi
+		build_python_package ${reponame}
 		cd $CURDIR
 	done
 }
@@ -255,20 +292,18 @@ function parse_config () {
 				$CURDIR/config/repositories/prebuild/$sec_prebuild
 			fi
 
-			if [ -f "./setup.py" ]; then
-				PACKNAME=""
-				if grep -w setuptools ./setup.py | grep -w import; then
-					PACKNAME=$(${PYBIN} -W ignore ./setup.py --name | tail -n 1)
-					/usr/bin/yes | ${PYBIN} -m pip uninstall ${PACKNAME}
-					logresult "$?" "uninstalled ${PACKNAME}" "uninstall ${PACKNAME}"
-				fi
-				${PYBIN} ./setup.py install
-				${PYBIN} ./setup.py clean --all
-				logresult "$?" "installed ${sec_name}" "install ${sec_name}"
-			fi
+			build_python_package ${sec_name}
 		fi
 		cd $CURDIR
 	done
+
+	# Temporary: remove PythonExtensionsCollection wheel to avoid conflict on Linux
+	if [ "$UNAME" == "Linux" ] ; then
+		if compgen -G "$wheelHouseDir"/PythonExtensionsCollection-*.whl > /dev/null; then
+			echo "Removing PythonExtensionsCollection wheel to avoid conflict with robotframework-extensions-collection"
+			rm -f "$wheelHouseDir"/PythonExtensionsCollection-*.whl
+		fi
+	fi
 }
 
 add_line_to_file() {
@@ -277,6 +312,7 @@ add_line_to_file() {
 
 function generate_version_info() {
 
+	> version.txt
 	add_line_to_file "Installer version:"
 	add_line_to_file "******************"
 	add_line_to_file "RobotFramework AIO (${VARIANT}) ${RobotFrameworkVersion} (${SubVersion} core)"
@@ -308,11 +344,12 @@ function build_libdoc_document()
    MY_PUBLISHER="test-fullautomation"
 
    # Resolve the assets directory dynamically using wildcard
-   assets_dir=$(ls -d ../robotvscode/data/extensions/$MY_PUBLISHER.vscode-welcome-*/assets/html | head -n 1)
+   assets_dir=$(ls -d ../robotvscode/data/extensions/$MY_PUBLISHER.vscode-welcome-*/assets/html 2>/dev/null | head -n 1)
    website_dir=../RobotFramework_AIO_website/html/libdoc
 
-   mkdir -p $assets_dir
-   mkdir -p $website_dir
+   [ -n "$assets_dir" ] || errormsg "Could not resolve vscode-welcome assets directory"
+   mkdir -p "$assets_dir"
+   mkdir -p "$website_dir"
 
    ${PYBIN} ./tools/libdoc/generate_libdoc.py
    # Copy libdoc documents to vscode welcome extension
@@ -326,8 +363,10 @@ function build_libdoc_document()
 			  ../robotframework-qconnect-winapp/QConnectWinapp; do
       if [ -d "$dir" ]; then
          libdoc=$(find "$dir" -name "*.html" -type f | head -n 1)
-         cp -a "$libdoc" "$assets_dir"
-		   cp -a "$libdoc" "$website_dir"
+         if [ -n "$libdoc" ]; then
+            cp -a "$libdoc" "$assets_dir"
+            cp -a "$libdoc" "$website_dir"
+         fi
       fi
    done
 }
@@ -338,10 +377,11 @@ function build_debian()
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
-	parse_config $ConfigFile
+	parse_config "$ConfigFile"
+
 	build_libdoc_document
 
-	cd $CURDIR
+	cd "$CURDIR"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 	echo -e "${COL_GREEN}#          Executing dpkg to create installer...                                   #${COL_RESET}"
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
@@ -399,6 +439,12 @@ function build_debian()
 	cp -R -a ../python3lx/. ./output_lx/${PACK_NAME}/opt/rfwaio/python3
 	cp -R -a ./test/aio-analyzer ./output_lx/${PACK_NAME}/opt/rfwaio/tools/aio-analyzer
 
+	# Wheelhouse: all wheel files (dependencies + AIO components) to be installed on user machine by postinst.sh
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	cp -R -a $wheelHouseDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/wheelhouse
+	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
+	cp -R -a $wheelRobotframeworkDir/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotwheel
+
 	# Devtools: Android package
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
 	cp -R -a ../devtools/. ./output_lx/${PACK_NAME}/opt/rfwaio/devtools
@@ -435,10 +481,10 @@ function build_windows() {
 
 	generate_version_info
 	create_testsuitmanagement_package_context_file
-	parse_config $ConfigFile
+	parse_config "$ConfigFile"
 	build_libdoc_document
 
-	cd $CURDIR
+	cd "$CURDIR"
 
 	echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 	echo -e "${COL_GREEN}#          Executing InnoSetup to create installer...                              #${COL_RESET}"
