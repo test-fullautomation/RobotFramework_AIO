@@ -455,6 +455,17 @@ function build_docker() {
 	check_and_install_texlive
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
+
+	# Fix xcolor option clash for TeX Live 2022 (Debian Bookworm):
+	# In TL2022, xcolor gets loaded early (with [table] via colortbl) before
+	# preamble.tex line 63 tries \usepackage[dvipsnames]{xcolor} → option clash.
+	# PassOptionsToPackage ensures all options are set before xcolor first loads.
+	local preamble="../python-genpackagedoc/GenPackageDoc/styles/preamble.tex"
+	if [ -f "$preamble" ]; then
+		sed -i '1i\\\PassOptionsToPackage{dvipsnames,table}{xcolor}' "$preamble"
+		sed -i 's/\\usepackage\[dvipsnames\]{xcolor}/\\usepackage{xcolor}/' "$preamble"
+	fi
+
 	parse_config $ConfigFile
 }
 
