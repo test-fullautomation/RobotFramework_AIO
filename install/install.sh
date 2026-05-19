@@ -31,6 +31,7 @@ python_only="No"
 vscode_only="No"
 pandoc_only="No"
 android_only="No"
+docker="No"
 use_cache="No"
 
 UNAME=$(uname)

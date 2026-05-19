@@ -56,11 +56,15 @@ fi
 
 echo ">>>> [4/6] BUILD"
 mkdir -p "$(dirname "$PLANTUML_PATH")"
-curl -sL $CURL_OPTS "https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar" -o "$PLANTUML_PATH"
+curl -sfL $CURL_OPTS "https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar" -o "$PLANTUML_PATH"
+if [ ! -s "$PLANTUML_PATH" ]; then
+    echo "ERROR: Failed to download plantuml.jar or file is empty"
+    exit 1
+fi
 
 PLANTUML_EXT_DIR="$RF_OPT_DIR/robotvscode/data/extensions/jebbs.plantuml-2.18.1"
 mkdir -p "$PLANTUML_EXT_DIR"
-ln -sf "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
+cp "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
 
 ./cloneall --config-file="$REPO_CONFIG"
 ./install/install.sh $CURRENT_INSTALL_FLAGS
@@ -78,6 +82,8 @@ cp ./config/build/dpkg_build/postinst.sh $BIN_DIR/initRobotFrameworkAIO.sh
 chmod +x $BIN_DIR/initRobotFrameworkAIO.sh
 cp ./config/build/dpkg_build/robot.ico /opt/rfwaio/linux/icon/
 cp ./config/build/dpkg_build/set_robotenv.sh /opt/rfwaio/linux/
+sed -i "s|/opt/rfwaio/python3/bin|${BIN_DIR}|g" /opt/rfwaio/linux/set_robotenv.sh
+sed -i "s|/opt/rfwaio/python3/lib/python3\.[0-9]*|${PY_DIR}|g" /opt/rfwaio/linux/set_robotenv.sh
 cp ./config/tools/appium.sh /opt/rfwaio/devtools/appium
 chmod +x /opt/rfwaio/devtools/appium
 chmod +x /opt/rfwaio/linux/set_robotenv.sh

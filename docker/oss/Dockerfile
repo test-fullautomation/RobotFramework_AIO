@@ -26,7 +26,9 @@ WORKDIR /app
 # Step 1: Install system-level dependencies and Setup Groups (OSS uses OpenJDK 17)
 RUN apt-get update && apt-get install -y --fix-missing \
     sudo curl git procps libxtst6 liburi-perl sed \
-    unzip xz-utils zstd dos2unix
+    unzip xz-utils zstd dos2unix \
+    pkg-config build-essential python3-dev \
+    libcairo2-dev libxt-dev libgirepository1.0-dev
 
 # Create 'robot-aio' group from postinst.sh logic
 RUN groupadd -r robot-aio && usermod -a -G robot-aio root
@@ -81,7 +83,8 @@ RUN ln -sf /usr/local/bin/python3 /usr/local/bin/python && \
     mkdir -p /opt/rfwaio/python3/bin && \
     ln -sf /usr/local/bin/python3 /opt/rfwaio/python3/bin/python3 && \
     mkdir -p /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1 && \
-    ln -sf /usr/local/lib/plantuml/plantuml.jar /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1/plantuml.jar
+    cp /usr/local/lib/plantuml/plantuml.jar /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1/plantuml.jar && \
+    test -s /opt/rfwaio/robotvscode/data/extensions/jebbs.plantuml-2.18.1/plantuml.jar
 
 # Final Path setup - Updated to reflect /opt/rfwaio structure
 ENV PATH="${RobotPythonPath}:${RobotAppium}:${RobotAndroidPlatformTools}:/opt/rfwaio/linux:${PATH}"
