@@ -70,6 +70,14 @@ cp "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
 ./install/install.sh $CURRENT_INSTALL_FLAGS
 ./build --config-file=$REPO_CONFIG --sub-version=$SubVersion
 
+# Install all built wheels from wheelhouse into the Python environment
+# This is the Docker equivalent of what postinst.sh does for .deb installations
+WHEELHOUSE_DIR="$(pwd)/wheelhouse"
+if [ -d "$WHEELHOUSE_DIR" ] && ls "$WHEELHOUSE_DIR"/*.whl 1>/dev/null 2>&1; then
+    echo "Installing Python packages from wheelhouse..."
+    python3 -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --find-links="$WHEELHOUSE_DIR" "$WHEELHOUSE_DIR"/*.whl
+fi
+
 echo ">>>> [5/6] SYSTEM INSTALLATION & PERMISSIONS"
 mkdir -p $RF_OPT_DIR/{python3/bin,tools,linux/icon,tutorial,documentation,devtools}
 
