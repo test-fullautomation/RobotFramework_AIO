@@ -13,6 +13,7 @@ export BUNDLE_VERSION_DATE="--bundle_version_date $(date +%m.%Y)"
 export BUNDLE_VERSION="--bundle_version ${TAG_NAME#[rd]e[vl]/aio/}"
 export REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
 export MAINDOC_CONFIGFILE="--configfile ./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
+export SUBVERSION=${VERSION_TYPE}
 
 echo ">>>> [2/6] CLEANING SCRIPTS & PERMISSIONS"
 SCRIPTS="./build ./cloneall ./install/install.sh ./install/versions.conf ./docker/docker-entrypoint.sh ./requirements_linux.sh"
@@ -68,7 +69,7 @@ cp "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
 
 ./cloneall --config-file="$REPO_CONFIG"
 ./install/install.sh $CURRENT_INSTALL_FLAGS
-./build --config-file=$REPO_CONFIG --sub-version=$SubVersion
+./build --config-file=$REPO_CONFIG --sub-version=$SUBVERSION
 
 # Install all built wheels from wheelhouse into the Python environment
 # This is the Docker equivalent of what postinst.sh does for .deb installations
