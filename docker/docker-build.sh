@@ -30,6 +30,7 @@ if [ "$VARIANT" = "BIOS" ]; then
     PY_DIR="/usr/lib/python3.12"
     PLANTUML_PATH="/usr/lib/plantuml/plantuml.jar"
     sed -i 's|destDir=$(realpath $mypath/../..)|destDir=$(realpath $mypath/..)|g' ./install/install.sh
+    sed -i 's|\[ -d "\.\./python3lx" \]|[ -d "./python3lx" ]|g' ./build
     sed -i 's|cd ../python3lx|cd ./python3lx|g' ./build
     export http_proxy="$PROXY_SERVER"
     export https_proxy="$PROXY_SERVER"
@@ -77,6 +78,23 @@ WHEELHOUSE_DIR="$(pwd)/wheelhouse"
 if [ -d "$WHEELHOUSE_DIR" ] && ls "$WHEELHOUSE_DIR"/*.whl 1>/dev/null 2>&1; then
     echo "Installing Python packages from wheelhouse..."
     python3 -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --find-links="$WHEELHOUSE_DIR" "$WHEELHOUSE_DIR"/*.whl
+fi
+
+# Reinstall the extended RF core from robotwheel/ to ensure it is not overridden by stock RF from wheelhouse
+ROBOTWHEEL_DIR="$(pwd)/robotwheel"
+if [ -d "$ROBOTWHEEL_DIR" ] && ls "$ROBOTWHEEL_DIR"/*.whl 1>/dev/null 2>&1; then
+    echo "Reinstalling extended RobotFramework core from robotwheel..."
+    python3 -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --force-reinstall "$ROBOTWHEEL_DIR"/*.whl
+fi
+
+# Copy package_context.json into site-packages (not included in wheel, but required by TSM at runtime)
+TSM_SRC_CONFIG="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"
+if [ -f "$TSM_SRC_CONFIG" ]; then
+    TSM_DEST=$(python3 -c "import importlib.util; spec=importlib.util.find_spec('RobotFramework_TestsuitesManagement'); print(spec.submodule_search_locations[0])" 2>/dev/null)
+    if [ -n "$TSM_DEST" ] && [ -d "$TSM_DEST/Config" ]; then
+        cp "$TSM_SRC_CONFIG" "$TSM_DEST/Config/package_context.json"
+        echo "Copied package_context.json to $TSM_DEST/Config/"
+    fi
 fi
 
 echo ">>>> [5/6] SYSTEM INSTALLATION & PERMISSIONS"

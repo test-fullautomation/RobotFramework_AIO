@@ -611,6 +611,8 @@ jobs:
         version: [original, extended]
         distro: [oss]
     env:
+      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       BUNDLE_NAME: "--bundle_name 'RobotFramework AIO'"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
 
@@ -660,7 +662,6 @@ jobs:
             TAG_NAME=${{ github.ref_name }}
             AIO_NAME=${{ env.AIO_NAME }}
             VARIANT=${{ env.VARIANT }}
-            BUNDLE_NAME=${{ env.BUNDLE_NAME }}
             GENDOC_PLANTUML_PATH=${{ env.GENDOC_PLANTUML_PATH }}
             GITHUB_COPILOT_REF_URL=${{ env.GITHUB_COPILOT_REF_URL }}
             GITHUB_COPILOT_EXT_ARG=${{ env.GITHUB_COPILOT_EXT_ARG }}
