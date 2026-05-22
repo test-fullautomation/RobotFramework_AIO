@@ -5,7 +5,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ;
 #ifndef SETUPVersion
-   #define SETUPVersion "0.1.5.0"
+   #define SETUPVersion "1.0.0.0"
 #endif
 #pragma message "SETUPVersion is : " + SETUPVersion
 ;Change History
@@ -70,6 +70,7 @@ AllowUNCPath=false
 ChangesAssociations=true
 ChangesEnvironment=true
 OutputDir=..\Output\
+SetupLogging=yes
 
 
 [Languages]
@@ -115,7 +116,8 @@ Source: "R:\robotframework-documentation\book\RobotFrameworkAIO_Reference{#Robot
 
 ;python 3.9 with RobotFramework and all installed packages delivered with Robot Framework AIO
 Source: "R:\python3\*"; Excludes: ".git,*.pyc"; DestDir: {app}\python3; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
-Source: "..\scripts\robfwaio_version.bat"; DestDir: {app}\python3\Scripts; Flags: ignoreversion; Permissions: everyone-full;
+Source: "..\wheelhouse\*"; Excludes: ".git"; DestDir: {tmp}\wheelhouse; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
+Source: "..\robotwheel\*"; Excludes: ".git"; DestDir: {tmp}\robotwheel; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; Permissions: everyone-full; check: isExtendedVersion();
 
 ;selftest installation
 Source: "R:\robotframework-selftest\*"; Excludes: ".git,.github"; DestDir: {app}\selftest; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: everyone-full;
@@ -180,7 +182,7 @@ Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueData: 
 Root: HKCR; SubKey: RobotFramework.testcase.file; ValueType: string; ValueName: AlwaysShowExt; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\DefaultIcon; ValueType: string; ValueData:  "{app}\icons\robotframework_icon_132027.ico"; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell; ValueType: string; ValueData: &Open; Flags: UninsDeleteKey;
-Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\Python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
+Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\command; ValueType: string; ValueData: "cmd.exe /c """"{app}\python3\python.exe"" -m robot.run %* ""%1"" & pause"""; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Application; ValueType: string; ValueData: RobotFramework; Flags: UninsDeleteKey;
 Root: HKCR; SubKey: RobotFramework.testcase.file\shell\&Open\ddeexec\Topic; ValueType: string; ValueData: System; Flags: UninsDeleteKey;
 
@@ -243,8 +245,12 @@ Filename: "powershell.exe"; \
   WorkingDir: {app};
 Filename: "powershell.exe"; \
   Parameters: "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""{tmp}\update_vsdata.ps1"" -AppPath ""{app}"" -BackupVSCodeDataPath ""{tmp}\vscode_backup"""; \
-  WorkingDir: {app}; Components: VsCodium;
-
+  WorkingDir: {app}; \
+  StatusMsg: "Updating VSCodium user data..."; \
+  Components: VsCodium;
+; Python package installation is handled in the Pascal [Code] section
+; (CurStepChanged -> ssPostInstall -> InstallPythonPackagesFromDir)
+; to enable proper logging into the Inno Setup log file.
 [UninstallRun]
 
 
@@ -271,6 +277,182 @@ var
   ReinstallCheckbox: TNewCheckBox;
   VsCodiumPage: TWizardPage;
   DoVSCodiumUpdate: Boolean;
+
+function isExtendedVersion(): Boolean;
+begin
+  #ifdef SubVersion
+    Result := '{#SubVersion}' = 'extended';
+  #else
+    Result := False;
+  #endif
+end;
+
+//
+// Install all wheel files from a directory in a single pip call.
+// Stdout and stderr are captured via a temp log file and forwarded
+// to the Inno Setup log so that the exit code and full pip output
+// are always visible in the setup log.
+// Parameters:
+//   WheelDir   - directory that contains the *.whl files
+//   StatusText - text shown in the installer status label
+//   Required   - when True the installer aborts on failure
+/////////////////////////////////////////////////////////////////////
+function InstallPythonPackagesFromDir(
+  WheelDir:   String;
+  StatusText: String;
+  Required:   Boolean): Boolean;
+var
+  FindRec:    TFindRec;
+  PythonExe:  String;
+  PipArgs:    String;
+  ReqFile:    String;
+  TmpLog:     String;
+  ReqLines:   TArrayOfString;
+  WheelCount: Integer;
+  ResultCode: Integer;
+  LogLines:   TArrayOfString;
+  i:          Integer;
+begin
+  Result := True;
+
+  PythonExe := ExpandConstant('{app}\python3\python.exe');
+  ReqFile   := ExpandConstant('{tmp}\pip_requirements.txt');
+  TmpLog    := ExpandConstant('{tmp}\pip_install.log');
+
+  Log('=== pip install started ===');
+  Log('  Python  : ' + PythonExe);
+  Log('  WheelDir: ' + WheelDir);
+
+  // Sanity check: directory must exist
+  if not DirExists(WheelDir) then
+  begin
+    Log('WARNING: wheel directory does not exist: ' + WheelDir);
+    if Required then
+    begin
+      MsgBox(
+        'Failed to install Python packages: wheel directory not found.' + #13#10 +
+        WheelDir,
+        mbCriticalError, MB_OK);
+      Abort;
+    end;
+    Result := False;
+    exit;
+  end;
+
+  // Enumerate every *.whl file and write its full path as one line
+  // into a requirements file.
+  //
+  // Using a requirements file instead of listing all paths on the
+  // command line avoids the Windows CreateProcess 32 767-character
+  // limit (exit code 87 = ERROR_INVALID_PARAMETER) that occurs when
+  // a large wheelhouse produces a command line that is too long.
+  WheelCount := 0;
+  SetArrayLength(ReqLines, 0);
+
+  if FindFirst(WheelDir + '\*.whl', FindRec) then
+  begin
+    try
+      repeat
+        Log('  Found wheel: ' + FindRec.Name);
+        SetArrayLength(ReqLines, WheelCount + 1);
+        // Each line is the absolute path to the wheel file.
+        // pip accepts local file paths in requirements files.
+        ReqLines[WheelCount] := WheelDir + '\' + FindRec.Name;
+        WheelCount := WheelCount + 1;
+      until not FindNext(FindRec);
+    finally
+      FindClose(FindRec);
+    end;
+  end;
+
+  if WheelCount = 0 then
+  begin
+    Log('ERROR: no *.whl files found in ' + WheelDir);
+    if Required then
+    begin
+      MsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK);
+      Abort;
+    end;
+    Result := False;
+  end;
+
+  // Persist the requirements file so pip can read it
+  if not SaveStringsToFile(ReqFile, ReqLines, False) then
+  begin
+    Log('ERROR: could not write requirements file: ' + ReqFile);
+    if Required then
+    begin
+      MsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK);
+      Abort;
+    end;
+    Result := False;
+    exit;
+  end;
+
+  Log('  Requirements file: ' + ReqFile + ' (' + IntToStr(WheelCount) + ' wheels)');
+
+  // Update the visible status label
+  WizardForm.StatusLabel.Caption := StatusText;
+  WizardForm.Update;
+
+  // Single pip call using -r <requirements file>.
+  // The command line stays short regardless of the number of wheels.
+  // stdout + stderr are redirected to a temp log file so every line
+  // can be forwarded to the Inno Setup log after the process exits.
+  //
+  // cmd /C syntax:  cmd /C ""exe" args > log 2>&1"
+  //   - the outer pair of double-quotes wraps the entire compound cmd
+  //   - the inner quote around the exe handles spaces in {app}
+  PipArgs :=
+    '/C ""' + PythonExe + '"' +
+    ' -m uv pip install' +
+    ' --no-index' +
+    ' --no-cache-dir' +
+    ' --find-links "' + WheelDir + '"' +
+    ' --force-reinstall' +
+    ' -r "' + ReqFile + '"' +
+    ' > "' + TmpLog + '" 2>&1"';
+
+  Log('  Command : cmd.exe ' + PipArgs);
+
+  if not Exec('cmd.exe', PipArgs, WheelDir,
+              SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    Log('ERROR: could not launch pip process (Exec failed).');
+    Result := False;
+  end;
+
+  // Forward full pip output to the Inno Setup log
+  if LoadStringsFromFile(TmpLog, LogLines) then
+  begin
+    Log('--- pip output begin ---');
+    for i := 0 to GetArrayLength(LogLines) - 1 do
+      Log('  ' + LogLines[i]);
+    Log('--- pip output end ---');
+  end;
+
+  Log('  pip exit code: ' + IntToStr(ResultCode));
+
+  if (not Result) or (ResultCode <> 0) then
+  begin
+    Log('ERROR: pip installation failed (exit code ' + IntToStr(ResultCode) + ')');
+    WizardForm.StatusLabel.Caption := 'ERROR: Python package installation failed!';
+    WizardForm.Update;
+    Result := False;
+    if Required then
+    begin
+      MsgBox(
+        'Failed to install Python packages.' + #13#10 +
+        'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
+        'Please check the setup log for details.',
+        mbCriticalError, MB_OK);
+      Abort;
+    end;
+    exit;
+  end;
+
+  Log('=== pip install finished successfully ===');
+end;
 
 //
 // Hidden Vscodium update feature
@@ -453,6 +635,12 @@ begin
   end else
     Result := 1;
 end;
+
+//
+// Called after each SetupStep is finished
+// Ensures that Python wheels are installed and aborts on failure
+//////////////////////////////////////////////////////////////////////////////////
+
 //
 // Called after each SetupStep
 //////////////////////////////////////////////////////////////////////////////////
@@ -533,6 +721,22 @@ begin
   //directly after installation this will be executed
   if CurStep=ssPostInstall then
     begin
+      // Install all bundled Python packages in a single pip call.
+      // Output (stdout + stderr) and the exit code are forwarded to
+      // the Inno Setup log.  Required=True aborts the installer on
+      // failure so that the user is never left with a broken install.
+      InstallPythonPackagesFromDir(
+        ExpandConstant('{tmp}\wheelhouse'),
+        'Installing Python Packages...',
+        True);
+
+      // Install the extended RobotFramework wheel when applicable.
+      if isExtendedVersion() then
+        InstallPythonPackagesFromDir(
+          ExpandConstant('{tmp}\robotwheel'),
+          'Installing Extended RobotFramework...',
+          True);
+
       GetWindowsVersionEx(Version);
       if (Version.NTPlatform) and (Version.Major>=6) then
         begin

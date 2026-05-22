@@ -1,0 +1,34 @@
+{
+    "token": "",
+    "repos_all": [
+        "test-fullautomation/robotframework_aio_website",
+        "test-fullautomation/python-extensions-collection",
+        "test-fullautomation/python-genpackagedoc",
+        "test-fullautomation/python-issue-sync-tool",
+        "test-fullautomation/python-jsonpreprocessor",
+        "test-fullautomation/python-microservice-base",
+        "test-fullautomation/python-microservice-cleware-switch",
+        "test-fullautomation/python-process-hub",
+        "test-fullautomation/python-pytestlog2db",
+        "test-fullautomation/python-rabbitmq-messagebus",
+        "test-fullautomation/python-testresultdbaccess",
+        "test-fullautomation/robotframework",
+        "test-fullautomation/robotframework-dbus",
+        "test-fullautomation/robotframework-documentation",
+        "test-fullautomation/robotframework-doip",
+        "test-fullautomation/robotframework-extensions-collection",
+        "test-fullautomation/robotframework-prometheus",
+        "test-fullautomation/robotframework-qconnect-base",
+        "test-fullautomation/robotframework-qconnect-winapp",
+        "test-fullautomation/robotframework-robotlog2db",
+        "test-fullautomation/robotframework-robotlog2rqm",
+        "test-fullautomation/robotframework-selftest",
+        "test-fullautomation/robotframework-testsuitesmanagement",
+        "test-fullautomation/robotframework-tutorial",
+        "test-fullautomation/robotframework-uds",
+        "test-fullautomation/RobotFramework_AIO"
+    ],
+    "repos": [
+        "test-fullautomation/robotframework_aio_website"
+    ]
+}
