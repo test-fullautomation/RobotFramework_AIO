@@ -72,25 +72,36 @@ cp "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
 ./install/install.sh $CURRENT_INSTALL_FLAGS
 ./build --config-file=$REPO_CONFIG --sub-version=$SUBVERSION
 
+# For BIOS, Python with pip is the one built by install.sh into ./python3lx
+if [ "$VARIANT" = "BIOS" ]; then
+    PYBIN="$(pwd)/python3lx/bin/python3"
+fi
+
 # Install all built wheels from wheelhouse into the Python environment
 # This is the Docker equivalent of what postinst.sh does for .deb installations
 WHEELHOUSE_DIR="$(pwd)/wheelhouse"
 if [ -d "$WHEELHOUSE_DIR" ] && ls "$WHEELHOUSE_DIR"/*.whl 1>/dev/null 2>&1; then
     echo "Installing Python packages from wheelhouse..."
-    python3 -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --find-links="$WHEELHOUSE_DIR" "$WHEELHOUSE_DIR"/*.whl
+    "$PYBIN" -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --find-links="$WHEELHOUSE_DIR" "$WHEELHOUSE_DIR"/*.whl || {
+        echo "ERROR: pip install from wheelhouse failed. Listing wheelhouse contents:"
+        ls -la "$WHEELHOUSE_DIR"/*.whl
+        echo "Retrying with verbose output:"
+        "$PYBIN" -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --find-links="$WHEELHOUSE_DIR" "$WHEELHOUSE_DIR"/*.whl -v 2>&1 | tail -50
+        exit 1
+    }
 fi
 
 # Reinstall the extended RF core from robotwheel/ to ensure it is not overridden by stock RF from wheelhouse
 ROBOTWHEEL_DIR="$(pwd)/robotwheel"
 if [ -d "$ROBOTWHEEL_DIR" ] && ls "$ROBOTWHEEL_DIR"/*.whl 1>/dev/null 2>&1; then
     echo "Reinstalling extended RobotFramework core from robotwheel..."
-    python3 -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --force-reinstall "$ROBOTWHEEL_DIR"/*.whl
+    "$PYBIN" -m pip install $EXTRA_PIP_FLAGS --no-cache-dir --force-reinstall "$ROBOTWHEEL_DIR"/*.whl
 fi
 
 # Copy package_context.json into site-packages (not included in wheel, but required by TSM at runtime)
 TSM_SRC_CONFIG="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"
 if [ -f "$TSM_SRC_CONFIG" ]; then
-    TSM_DEST=$(python3 -c "import importlib.util; spec=importlib.util.find_spec('RobotFramework_TestsuitesManagement'); print(spec.submodule_search_locations[0])" 2>/dev/null)
+    TSM_DEST=$("$PYBIN" -c "import importlib.util; spec=importlib.util.find_spec('RobotFramework_TestsuitesManagement'); print(spec.submodule_search_locations[0])" 2>/dev/null)
     if [ -n "$TSM_DEST" ] && [ -d "$TSM_DEST/Config" ]; then
         cp "$TSM_SRC_CONFIG" "$TSM_DEST/Config/package_context.json"
         echo "Copied package_context.json to $TSM_DEST/Config/"
