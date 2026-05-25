@@ -76,6 +76,10 @@ def _candidate_paths_from_stack() -> List[str]:
 
 
 def _candidate_notebook_path_from_kernel() -> Optional[str]:
+    # Skip Jupyter detection if disabled (e.g., in API mode)
+    if os.getenv('LEARNINGTOOLS_DISABLE_JUPYTER_DETECTION', '').lower() in ('1', 'true', 'yes'):
+        return None
+    
     try:
         from ipykernel.connect import get_connection_file
         from jupyter_core.paths import jupyter_runtime_dir

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import shutil
 from typing import Dict, Optional
 
@@ -14,7 +15,26 @@ from .storage import ProgressStore
 
 _PACKAGE_DIR = Path(__file__).resolve().parent
 _PROGRESS_STORE = ProgressStore()
+_PROGRESS_STORE_DIR = None  # Track the directory used for the current ProgressStore
 _ACTIVE_LESSON: Optional[Lesson] = None
+
+
+def _get_progress_store() -> ProgressStore:
+    """Get or recreate ProgressStore if the environment variable has changed."""
+    global _PROGRESS_STORE, _PROGRESS_STORE_DIR
+    
+    # Check if LEARNINGTOOLS_PROGRESS_DIR environment variable has changed
+    current_dir = os.getenv("LEARNINGTOOLS_PROGRESS_DIR")
+    
+    if current_dir != _PROGRESS_STORE_DIR:
+        # Progress directory changed, create new ProgressStore
+        _PROGRESS_STORE_DIR = current_dir
+        if current_dir:
+            _PROGRESS_STORE = ProgressStore(base_dir=Path(current_dir))
+        else:
+            _PROGRESS_STORE = ProgressStore()
+    
+    return _PROGRESS_STORE
 
 
 def list_workbooks() -> list[str]:
@@ -26,6 +46,9 @@ set_available_workbooks(list_workbooks())
 
 def activate(workbook_name: str) -> Lesson:
     global _ACTIVE_LESSON
+    # Get the appropriate ProgressStore for this session
+    progress_store = _get_progress_store()
+    
     # Load the jupyter notebook from the template
     template_path = _PACKAGE_DIR / "templates"
     example_path = _PACKAGE_DIR / "examples"
@@ -52,10 +75,10 @@ def activate(workbook_name: str) -> Lesson:
     # does not affect the next question check.
     capture.clear()
     questions = {
-        question_id: Question(definition.name, question_definition, capture, _PROGRESS_STORE)
+        question_id: Question(definition.name, question_definition, capture, progress_store)
         for question_id, question_definition in definition.questions.items()
     }
-    _ACTIVE_LESSON = Lesson(definition=definition, questions=questions, progress_store=_PROGRESS_STORE)
+    _ACTIVE_LESSON = Lesson(definition=definition, questions=questions, progress_store=progress_store)
     return _ACTIVE_LESSON
 
 
@@ -88,7 +111,8 @@ def question(question_id: str) -> Question:
 
 def get_progress(workbook_name: Optional[str] = None) -> dict:
     target = workbook_name or current_workbook_name()
-    return _PROGRESS_STORE.get_progress(target)
+    progress_store = _get_progress_store()
+    return progress_store.get_progress(target)
 
 
 def _auto_activate() -> None:

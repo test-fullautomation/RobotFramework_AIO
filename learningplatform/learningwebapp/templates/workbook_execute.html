@@ -1,0 +1,688 @@
+{% extends "base.html" %}
+
+{% block title %}{{ workbook.title }}{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>{{ workbook.title }}</h2>
+            <p class="text-muted">{{ workbook.summary }}</p>
+        </div>
+        {% if '.' in workbook.name %}
+            {% set category_name = workbook.name.split('.')[0] %}
+            <a href="{{ url_for('category', category_name=category_name) }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to {{ category_name }}
+            </a>
+        {% else %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4" style="height: 30px;">
+        <div class="progress-bar" role="progressbar" 
+             style="width: {{ (completed|length / workbook.questions|length * 100)|int }}%"
+             aria-valuenow="{{ (completed|length / workbook.questions|length * 100)|int }}" 
+             aria-valuemin="0" aria-valuemax="100">
+            {{ completed|length }} / {{ workbook.questions|length }} completed
+        </div>
+    </div>
+
+    <!-- Notebook Cells -->
+    <div id="notebook-container">
+        {% for cell in cells %}
+            {% if cell.cell_type == 'markdown' %}
+                <!-- Markdown Cell -->
+                <div class="card mb-3 markdown-cell">
+                    <div class="card-body markdown-content">
+                        {{ cell.html_content | safe }}
+                    </div>
+                </div>
+            {% elif cell.cell_type == 'code' %}
+                {% if first_code_cell_index is not none and loop.index0 == first_code_cell_index and first_cell_output %}
+                    <!-- First Code Cell - Auto-executed (Show Output Only) -->
+                    <div class="card mb-3 init-cell">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="bi bi-lightning-fill"></i> Initialization (Auto-executed)
+                            </span>
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#init-code-{{ loop.index0 }}" aria-expanded="false">
+                                <i class="bi bi-code-slash"></i> Show Code
+                            </button>
+                        </div>
+                        <div class="collapse" id="init-code-{{ loop.index0 }}">
+                            <div class="card-body bg-light border-bottom">
+                                <pre class="mb-0" style="font-size: 12px; color: #666;"><code>{{ cell.source }}</code></pre>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if first_cell_output.success %}
+                                <div class="init-output">
+                                    {% if first_cell_output.output_html %}
+                                        {{ first_cell_output.output_html | safe }}
+                                    {% else %}
+                                        {{ first_cell_output.output | safe }}
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-danger mb-0">
+                                    <strong>Error during initialization:</strong><br>
+                                    {{ first_cell_output.error }}
+                                    {% if first_cell_output.traceback %}
+                                        <hr>
+                                        <pre class="mb-0">{{ first_cell_output.traceback }}</pre>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Code Cell -->
+                    <div class="card mb-3 code-cell" data-cell-index="{{ loop.index0 }}" 
+                         {% if cell.execution_template %}data-execution-template="{{ cell.execution_template | replace('"', '&quot;') }}"{% endif %}>
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-code-square"></i> Code Cell #{{ loop.index }}</span>
+                            <div>
+                                <button class="btn btn-sm btn-success run-cell-btn" data-cell-index="{{ loop.index0 }}">
+                                    <i class="bi bi-play-fill"></i> Run
+                                </button>
+                                <button class="btn btn-sm btn-secondary reset-cell-btn" data-cell-index="{{ loop.index0 }}">
+                                    <i class="bi bi-arrow-clockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <!-- Code Editor -->
+                            <div class="code-editor-wrapper">
+                                <textarea class="form-control code-editor" 
+                                          id="code-{{ loop.index0 }}"
+                                          data-original-code="{% if cell.display_source %}{{ cell.display_source }}{% else %}{{ cell.source }}{% endif %}"
+                                          rows="{{ (cell.display_source if cell.display_source else cell.source).count('\n') + 1 }}"
+                                          spellcheck="false">{% if cell.display_source %}{{ cell.display_source }}{% else %}{{ cell.source }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                        <div class="output-container" id="output-{{ loop.index0 }}" style="display:none;">
+                            <div class="output-header">
+                                <small class="text-muted">Output:</small>
+                            </div>
+                            <div class="output-content"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .markdown-cell {
+        border-left: 4px solid #007bff;
+    }
+
+    .markdown-content {
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    .markdown-content h1 { 
+        font-size: 1.8rem; 
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    .markdown-content h2 { 
+        font-size: 1.5rem; 
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.2rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .markdown-content h3 { 
+        font-size: 1.3rem; 
+        margin-top: 1.2rem;
+        margin-bottom: 0.6rem;
+    }
+    .markdown-content h4,
+    .markdown-content h5,
+    .markdown-content h6 {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .markdown-content p {
+        margin-bottom: 1rem;
+    }
+    
+    .markdown-content ul,
+    .markdown-content ol {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+    
+    .markdown-content li {
+        margin-bottom: 0.4rem;
+    }
+    
+    .markdown-content blockquote {
+        border-left: 4px solid #007bff;
+        padding-left: 1rem;
+        margin: 1rem 0;
+        color: #666;
+        font-style: italic;
+    }
+    
+    .markdown-content code {
+        background-color: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #d63384;
+    }
+    
+    .markdown-content pre {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin: 1rem 0;
+        border: 1px solid #dee2e6;
+    }
+    
+    .markdown-content pre code {
+        background-color: transparent;
+        padding: 0;
+        color: inherit;
+        font-size: 0.9em;
+    }
+    
+    .markdown-content table {
+        width: 100%;
+        margin: 1rem 0;
+        border-collapse: collapse;
+    }
+    
+    .markdown-content table th,
+    .markdown-content table td {
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .markdown-content table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    
+    .markdown-content a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .markdown-content a:hover {
+        text-decoration: underline;
+    }
+    
+    .markdown-content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+    }
+    
+    .markdown-content hr {
+        margin: 1.5rem 0;
+        border: 0;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .code-cell {
+        border-left: 4px solid #28a745;
+    }
+
+    .init-cell {
+        border-left: 4px solid #17a2b8;
+        background-color: #f8fcff;
+    }
+
+    .init-output {
+        font-size: 14px;
+        line-height: 1.6;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    /* Markdown styling in init output */
+    .init-output h1,
+    .init-output h2,
+    .init-output h3,
+    .init-output h4 {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 0.2rem;
+    }
+    
+    .init-output h1 { font-size: 1.5rem; }
+    .init-output h2 { font-size: 1.3rem; }
+    .init-output h3 { font-size: 1.2rem; }
+    .init-output h4 { font-size: 1.1rem; }
+    
+    .init-output p {
+        margin-bottom: 0.8rem;
+    }
+    
+    .init-output ul,
+    .init-output ol {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+    }
+    
+    .init-output li {
+        margin-bottom: 0.3rem;
+    }
+    
+    .init-output code {
+        background-color: #f8f9fa;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #d63384;
+    }
+    
+    .init-output pre {
+        background-color: #2b2b2b;
+        color: #f8f8f8;
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 0.8rem 0;
+    }
+    
+    .init-output pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    
+    .init-output blockquote {
+        border-left: 3px solid #17a2b8;
+        padding-left: 1rem;
+        margin: 0.8rem 0;
+        color: #666;
+    }
+    
+    .init-output strong {
+        font-weight: 600;
+    }
+    
+    .init-output a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .init-output a:hover {
+        text-decoration: underline;
+    }
+    
+    .init-output hr {
+        margin: 1rem 0;
+        border: 0;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .init-output table {
+        width: 100%;
+        margin: 0.8rem 0;
+        border-collapse: collapse;
+    }
+    
+    .init-output table th,
+    .init-output table td {
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .init-output table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .code-editor-wrapper {
+        background-color: #f8f9fa;
+    }
+
+    .code-editor {
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 14px;
+        border: none;
+        border-radius: 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .code-editor:focus {
+        background-color: #ffffff;
+        box-shadow: none;
+        border: 1px solid #007bff;
+    }
+
+    .output-container {
+        border-top: 1px solid #dee2e6;
+        background-color: #fff;
+    }
+
+    .output-header {
+        padding: 8px 15px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .output-content {
+        padding: 15px;
+        font-size: 14px;
+        max-height: 600px;
+        overflow-y: auto;
+        line-height: 1.6;
+    }
+    
+    /* Markdown styling in output */
+    .output-content h1,
+    .output-content h2,
+    .output-content h3,
+    .output-content h4 {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 0.2rem;
+    }
+    
+    .output-content h1 { font-size: 1.5rem; }
+    .output-content h2 { font-size: 1.3rem; }
+    .output-content h3 { font-size: 1.2rem; }
+    .output-content h4 { font-size: 1.1rem; }
+    
+    .output-content p {
+        margin-bottom: 0.8rem;
+    }
+    
+    .output-content ul,
+    .output-content ol {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+    }
+    
+    .output-content li {
+        margin-bottom: 0.3rem;
+    }
+    
+    .output-content code {
+        background-color: #f8f9fa;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #d63384;
+    }
+    
+    .output-content pre {
+        background-color: #2b2b2b;
+        color: #f8f8f8;
+        padding: 12px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 0.8rem 0;
+    }
+    
+    .output-content pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+    }
+    
+    .output-content blockquote {
+        border-left: 3px solid #007bff;
+        padding-left: 1rem;
+        margin: 0.8rem 0;
+        color: #666;
+    }
+    
+    .output-content strong {
+        font-weight: 600;
+    }
+    
+    .output-content a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .output-content a:hover {
+        text-decoration: underline;
+    }
+    
+    .output-content hr {
+        margin: 1rem 0;
+        border: 0;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .output-content table {
+        width: 100%;
+        margin: 0.8rem 0;
+        border-collapse: collapse;
+    }
+    
+    .output-content table th,
+    .output-content table td {
+        padding: 0.5rem;
+        border: 1px solid #dee2e6;
+        text-align: left;
+    }
+    
+    .output-content table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .output-success {
+        color: #155724;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .output-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .executing {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.15em;
+    }
+</style>
+
+<script>
+// Workbook and session configuration
+const WORKBOOK_NAME = "{{ workbook.name }}";
+const SESSION_ID = "{{ session_id }}";
+const API_BASE = "";  // Use relative paths since we're proxying through Flask
+
+// Store original code for reset
+const originalCode = {};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Store original code
+    document.querySelectorAll('.code-editor').forEach(function(editor) {
+        const index = editor.id.replace('code-', '');
+        originalCode[index] = editor.value;
+    });
+
+    // Attach run button handlers
+    document.querySelectorAll('.run-cell-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const cellIndex = this.getAttribute('data-cell-index');
+            executeCell(cellIndex);
+        });
+    });
+
+    // Attach reset button handlers
+    document.querySelectorAll('.reset-cell-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const cellIndex = this.getAttribute('data-cell-index');
+            resetCell(cellIndex);
+        });
+    });
+
+    // Keyboard shortcut: Shift+Enter to run cell
+    document.querySelectorAll('.code-editor').forEach(function(editor) {
+        editor.addEventListener('keydown', function(e) {
+            if (e.shiftKey && e.key === 'Enter') {
+                e.preventDefault();
+                const cellIndex = this.id.replace('code-', '');
+                executeCell(cellIndex);
+            }
+        });
+    });
+});
+
+// Execute a code cell
+async function executeCell(cellIndex) {
+    const codeEditor = document.getElementById(`code-${cellIndex}`);
+    const outputContainer = document.getElementById(`output-${cellIndex}`);
+    const outputContent = outputContainer.querySelector('.output-content');
+    const runBtn = document.querySelector(`.run-cell-btn[data-cell-index="${cellIndex}"]`);
+    const cellCard = document.querySelector(`.code-cell[data-cell-index="${cellIndex}"]`);
+    
+    const userCode = codeEditor.value;
+    
+    // Check if this cell has an execution template
+    let executionTemplate = cellCard.getAttribute('data-execution-template');
+    let codeToExecute = userCode;
+    
+    if (executionTemplate) {
+        // Decode HTML entities (e.g., &quot; -> ")
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = executionTemplate;
+        executionTemplate = textarea.value;
+        
+        // Replace {USER_CODE} placeholder with user's code
+        codeToExecute = executionTemplate.replace('{USER_CODE}', userCode);
+    }
+    
+    // Show loading state
+    cellCard.classList.add('executing');
+    runBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Running...';
+    outputContainer.style.display = 'block';
+    outputContent.innerHTML = '<div class="text-muted">Executing...</div>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/api/execute`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                code: codeToExecute,
+                workbook_name: WORKBOOK_NAME,
+                session_id: SESSION_ID
+            })
+        });
+        
+        const result = await response.json();
+        
+        // Display output
+        if (result.success) {
+            const output = result.output || 'Code executed successfully (no output)';
+            // Render output as markdown
+            const renderedOutput = renderMarkdown(output);
+            outputContent.innerHTML = `<div class="output-success">${renderedOutput}</div>`;
+        } else {
+            const error = result.error || 'Unknown error';
+            const traceback = result.traceback || '';
+            outputContent.innerHTML = `
+                <div class="output-error">
+                    <strong>Error:</strong> ${escapeHtml(error)}
+                    ${traceback ? `<hr><pre>${escapeHtml(traceback)}</pre>` : ''}
+                </div>
+            `;
+        }
+    } catch (error) {
+        outputContent.innerHTML = `
+            <div class="output-error">
+                <strong>Request Failed:</strong> ${escapeHtml(error.message)}
+                <br><small>Make sure the API server is running on port 5001</small>
+            </div>
+        `;
+    } finally {
+        // Remove loading state
+        cellCard.classList.remove('executing');
+        runBtn.innerHTML = '<i class="bi bi-play-fill"></i> Run';
+    }
+}
+
+// Reset a code cell to original code
+function resetCell(cellIndex) {
+    const codeEditor = document.getElementById(`code-${cellIndex}`);
+    const outputContainer = document.getElementById(`output-${cellIndex}`);
+    
+    if (originalCode[cellIndex]) {
+        codeEditor.value = originalCode[cellIndex];
+    }
+    outputContainer.style.display = 'none';
+}
+
+// Render markdown (using marked.js if available, fallback to basic rendering)
+function renderMarkdown(text) {
+    if (typeof marked !== 'undefined') {
+        // Configure marked for better security and formatting
+        marked.setOptions({
+            breaks: true,        // Convert \n to <br>
+            gfm: true,          // GitHub Flavored Markdown
+            headerIds: false,   // Don't add IDs to headers
+            mangle: false       // Don't mangle email addresses
+        });
+        
+        try {
+            return marked.parse(text);
+        } catch (e) {
+            console.error('Markdown parsing error:', e);
+            return escapeHtml(text).replace(/\n/g, '<br>');
+        }
+    } else {
+        // Fallback: basic formatting
+        return escapeHtml(text).replace(/\n/g, '<br>');
+    }
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
+
+{% endblock %}
