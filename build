@@ -235,6 +235,11 @@ function build_python_package () {
 			${PYBIN} ./genpackagedoc.py
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
+		if [ -f "./genmaindoc.py" ]; then
+			${PYBIN} -m pip install .
+			${PYBIN} ./genmaindoc.py
+			logresult "$?" "generated main pdf documentation for Robotframework AIO" "generate main pdf documentation for Robotframework AIO"
+		fi
 
 		# Build package as wheel file
 		# ${PYBIN} -m build -o $wheelHouseDir
