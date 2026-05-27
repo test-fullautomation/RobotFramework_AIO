@@ -76,10 +76,10 @@ jobs:
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
-      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      MAINDOC_CONFIGFILE: "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
-      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+      BUNDLE_NAME: "RobotFramework AIO"
 
     steps:
       - name: Checkout source
@@ -101,8 +101,8 @@ jobs:
           ./requirements_linux.sh
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION_DATE=\"$(date +%m.%Y)\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION=\"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           # Environment variable for trigger process
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
@@ -216,10 +216,10 @@ jobs:
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
-      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      MAINDOC_CONFIGFILE: "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
-      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+      BUNDLE_NAME: "RobotFramework AIO"
 
     steps:
       - name: Support long path in git
@@ -235,8 +235,8 @@ jobs:
           echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION_DATE=\"$(date +%m.%Y)\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION=\"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
 
