@@ -51,8 +51,7 @@
          "QConnectBase"
       ],
       "include_patterns": [
-         "connection_manager.*::QConnectBase.connection_manager.ConnectionManager",
-         "qlogger.*::QConnectBase.qlogger.QLogger"
+         "connection_manager.*::QConnectBase.connection_manager.ConnectionManager"
       ],
       "exclude_patterns": []
    },
