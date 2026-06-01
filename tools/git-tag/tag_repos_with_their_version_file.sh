@@ -36,10 +36,10 @@ function tag_single_repo(){
    commit_sha=""
    # ${version_file}, e.g version.py file should be placed under package_name folder as below structure
    # repo_name
-   #     |__ package_name 
+   #     |__ package_name
    #              |__ version.py
    #              |__ ...
-   # Update below glob pattern incase the repo structure is not as above 
+   # Update below glob pattern incase the repo structure is not as above
    version_file_pattern=${repo_location}/*/$version_file
 
    # Prepare configuration file for tagging single repo
@@ -76,7 +76,10 @@ function tag_single_repo(){
       fi
    fi
 
-   version_info=$(grep -E 'VERSION\s+=' ${version_file} | sed "s/'/\"/g" | awk -F'"' '{print $2}')
+   # version_info=$(grep -E 'VERSION\s+=' ${version_file} | sed "s/'/\"/g" | awk -F'"' '{print $2}')
+   # old conversion for version: VERSION = "x.y.z"
+   # new conversion for version: __version__ = "x.y.z" or __version__ = 'x.y.z'
+   version_info=$(grep -ioP "^\_{0,2}version\_{0,2}\s*=\s*['\"]\K[^'\"]+" ${version_file} | head -n 1)
    # Check if the version is empty
    if [ -z "$version_info" ]; then
       errormsg "Version information not found or empty"
@@ -105,7 +108,7 @@ fi
 while IFS= read -r line || [[ -n "$line" ]]; do
    trimmed_line=$(echo "$line" | awk '{$1=$1;print}')
 
-   # Check if the line contains filename (separate by "=" char) 
+   # Check if the line contains filename (separate by "=" char)
    # to get version information.
    # Default version file is version.py
    version_filename="version.py"
