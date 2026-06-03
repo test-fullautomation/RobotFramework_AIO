@@ -141,7 +141,7 @@ Get the Jupyter notebook cells for browser display.
 ### 5. Execute Code
 **POST** `/api/execute`
 
-Execute Python code and return the output.
+Execute Python code and return the output with progress tracking.
 
 **Request Body:**
 ```json
@@ -158,7 +158,19 @@ Execute Python code and return the output.
   "success": true,
   "output": "Hello, World!\n",
   "error": null,
-  "result": null
+  "result": null,
+  "completed_questions": ["p1", "p2"]
+}
+```
+
+**Response (Exercise Completion):**
+```json
+{
+  "success": true,
+  "output": "✓ Correct! You've completed practice 1.\n",
+  "error": null,
+  "result": null,
+  "completed_questions": ["p1"]
 }
 ```
 
@@ -168,35 +180,83 @@ Execute Python code and return the output.
   "success": false,
   "output": "",
   "error": "NameError: name 'undefined_var' is not defined",
-  "traceback": "Traceback (most recent call last):\n  File ..."
+  "traceback": "Traceback (most recent call last):\n  File ...",
+  "completed_questions": []
 }
 ```
+
+**Notes:**
+- `completed_questions` array contains IDs of questions completed in this execution
+- Used by webapp to sync progress to database
+- Empty array if no questions completed or error occurred
 
 ---
 
 ### 6. Create Session
 **POST** `/api/session/create`
 
-Create a new execution session for a user.
+Create a new execution session for a user with isolated workspace.
 
 **Request Body:**
 ```json
 {
   "workbook_name": "JsonPreprocessor.Comments",
-  "session_id": "user_123"
+  "session_id": "user_123",
+  "user_id": "123",
+  "user_workspace_path": "/absolute/path/to/user_workspaces/user_123/JsonPreprocessor_Comments"
 }
 ```
 
 **Response:**
 ```json
 {
-  "session_id": "user_123"
+  "session_id": "user_123",
+  "user_workspace_path": "/absolute/path/to/user_workspaces/user_123/JsonPreprocessor_Comments"
 }
 ```
 
+**Notes:**
+- `user_id`: Database user ID for progress isolation
+- `user_workspace_path`: Absolute path to user's workspace directory
+- Sets `LEARNINGTOOLS_PROGRESS_DIR` to `{user_workspace_path}/.progress`
+- Each user gets isolated progress tracking and file storage
+
 ---
 
-### 7. Reset Session
+### 7. Get Progress
+**GET** `/api/progress/<workbook_name>`
+
+Get progress data from user's ProgressStore.
+
+**Parameters:**
+- `workbook_name` (path) - Workbook identifier (e.g., `JsonPreprocessor.Comments`)
+
+**Response:**
+```json
+{
+  "workbook_name": "JsonPreprocessor.Comments",
+  "completed": ["p1", "p2"],
+  "progress": {
+    "p1": {
+      "timestamp": "2025-01-15T10:30:00",
+      "output": "✓ Correct!"
+    },
+    "p2": {
+      "timestamp": "2025-01-15T10:35:00",
+      "output": "✓ Correct!"
+    }
+  }
+}
+```
+
+**Notes:**
+- Reads from user-specific ProgressStore (set via LEARNINGTOOLS_PROGRESS_DIR)
+- Returns empty `completed` array if no progress for this workbook
+- Timestamps in ISO format
+
+---
+
+### 8. Reset Session
 **POST** `/api/session/<session_id>/reset`
 
 Reset a session's namespace (clear all variables).

@@ -1,4 +1,4 @@
-# Learning Tools Web Application - Complete Guide
+# Learning Tools Web Application - Architecture
 
 ## System Architecture
 
@@ -6,39 +6,36 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                    Users (Web Browser)                       │
 └─────────────────────┬───────────────────────────────────────┘
-                      │
+                      │ HTTP
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              Flask Web Application (Port 5000)               │
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │  • User Authentication (Flask-Login)                 │   │
 │  │  • Dashboard (Progress Tracking)                     │   │
-│  │  • JupyterLab Launcher                              │   │
-│  │  • Progress Sync API                                │   │
+│  │  • Browser-Based Code Editor                        │   │
+│  │  • Progress Management (SQLite WAL)                 │   │
 │  └─────────────────────────────────────────────────────┘   │
 └────────────┬────────────────────────────┬───────────────────┘
              │                            │
              ▼                            ▼
     ┌────────────────┐          ┌────────────────────┐
-    │  SQLite DB     │          │  JupyterLab Server │
-    │  (Users &      │          │  (Port 8888)       │
-    │   Progress)    │          │                    │
+    │  SQLite DB     │          │  Learning Tools    │
+    │  (Users &      │◄─────────┤  API (Port 5001)   │
+    │   Progress)    │  Sync    │                    │
+    │  • WAL Mode    │          │  • Code Execution  │
+    │  • Auto-commit │          │  • Session Mgmt    │
     └────────────────┘          └─────┬──────────────┘
                                       │
                                       ▼
                             ┌──────────────────────┐
                             │  User Workspaces     │
                             │  • user_1/           │
+                            │    - workbook_1/     │
+                            │    - .progress/      │
                             │  • user_2/           │
-                            │  • user_N/           │
-                            └──────────────────────┘
-                                      │
-                                      ▼
-                            ┌──────────────────────┐
-                            │  learningtools       │
-                            │  • templates/        │
-                            │  • workbooks/        │
-                            │  • Runtime Engine    │
+                            │    - workbook_1/     │
+                            │    - .progress/      │
                             └──────────────────────┘
 ```
 
@@ -53,101 +50,62 @@ User Registration → Account Created → Auto-Login → Dashboard
 ```
 Dashboard
   ↓
-Select Workbook (e.g., "JsonPreprocessor.Comments")
+Select Category (e.g., "RobotFrameworkAIO")
   ↓
-Click "Start in Jupyter →"
+Click on Exercise (e.g., "Exercise_01")
   ↓
 System Actions:
-  • Creates user workspace if not exists
-  • Copies template notebook to user workspace
-  • Launches JupyterLab (if not running)
-  • Opens launch page
+  • Creates user workspace directory
+  • Creates user-specific progress directory
+  • Creates execution session with user context
+  • Loads notebook cells from template
+  • Auto-executes initialization cell
   ↓
-Click "🚀 Open JupyterLab"
-  ↓
-JupyterLab opens in new tab with user's notebook
+Browser displays:
+  • Markdown cells (instructions)
+  • Code cells (editable)
+  • Output panels (results)
 ```
 
-### 3. Working in JupyterLab
+### 3. Working with Code Cells
 ```
-JupyterLab Interface
+Code Editor in Browser
   ↓
-Run setup cell (imports learningtools, activates workbook)
-```python
-from learningtools import *
-activate("JsonPreprocessor.Comments")
-lesson  # Shows workbook overview
-```
+Write/Edit Code
   ↓
-Complete Exercise 1
-```python
-# Your solution here
-content = '''
-{
-  // Your JSONP with comments
-  "key": "value"
-}
-'''
-json_object = CJsonPreprocessor(syntax="python").json_loads(content)
-p1.check()  # ✓ Progress saved automatically!
-```
+Click "Run" or press Shift+Enter
   ↓
-Get help if needed
-```python
-p1.hint()      # Show hint
-p1.solution()  # Show solution
-```
+Code sent to API: POST /api/execute
   ↓
-Continue with more exercises (p2, p3, ...)
+API executes in user's isolated session
   ↓
-Save notebook (Ctrl+S or auto-save)
+Results returned to browser:
+  • Success/Error status
+  • Output text
+  • Completed questions list
+  ↓
+Progress automatically synced:
+  • ProgressStore (user's .progress/progress.json)
+  • SQLite Database (webapp.db)
+  ↓
+Output displayed in browser with markdown rendering
 ```
 
-### 4. Returning to Dashboard
+### 4. Progress Tracking Flow
 ```
-JupyterLab
+User completes exercise (p1.check())
   ↓
-Click "Return to Dashboard" (or navigate back to webapp)
+learningtools validates answer
   ↓
-System syncs progress:
-  • Reads learningtools progress storage
-  • Updates webapp database
-  • Shows updated progress on dashboard
+If correct: Saved to user's ProgressStore
+  Location: user_workspaces/user_N/.progress/progress.json
   ↓
-Dashboard shows:
-  • Completed questions marked with ✓
-  • Progress bars updated
-  • "Continue in Jupyter →" button for resuming
-```
-
-## Data Flow
-
-### Progress Tracking
-
-```
-Notebook Cell Execution
+API returns completed_questions list
   ↓
-p1.check() runs
+WebApp syncs to SQLite database
+  Table: user_progress (user_id, workbook_name, question_id)
   ↓
-learningtools runtime validates answer
-  ↓
-If correct: ProgressStore.mark_completed()
-  ↓
-Saved to learningtools storage (~/.learningtools/)
-  ↓
-User clicks "Return to Dashboard"
-  ↓
-sync_progress_from_jupyter() reads ProgressStore
-  ↓
-Updates webapp SQLite database
-  ↓
-Dashboard shows updated progress
-```
-
-### User Workspace Structure
-
-```
-learningwebapp/
+Dashboard reflects updated progress
 └── user_workspaces/
     ├── user_1/
     │   ├── JsonPreprocessor_Comments/
@@ -184,112 +142,333 @@ learningwebapp/
 
 ### Environment Variables
 
+```
+
+## User Workspace Structure
+
+```
+learningplatform/
+├── learningtools/                  # API service
+│   ├── api.py                      # Flask API server
+│   ├── core.py                     # Learning engine
+│   ├── runtime.py                  # Question validation
+│   ├── storage.py                  # ProgressStore
+│   ├── templates/                  # Template notebooks
+│   │   ├── JsonPreprocessor/
+│   │   └── RobotFrameworkAIO/
+│   └── workbooks/                  # Workbook definitions
+│       ├── JsonPreprocessor/
+│       └── RobotFrameworkAIO/
+│
+└── learningwebapp/                 # Web application
+    ├── app.py                      # Flask webapp server
+    ├── webapp.db                   # SQLite database (WAL mode)
+    ├── templates/                  # HTML templates
+    ├── static/                     # CSS, JS files
+    └── user_workspaces/            # User data (isolated)
+        ├── user_1/
+        │   ├── .progress/          # User-specific progress
+        │   │   └── progress.json   # ProgressStore file
+        │   ├── RobotFrameworkAIO_Exercise_01/
+        │   │   ├── Exercise_01.ipynb
+        │   │   └── practice2_config.jsonp  # User's JSONP files
+        │   └── JsonPreprocessor_Comments/
+        │       └── Comments.ipynb
+        └── user_2/
+            ├── .progress/
+            │   └── progress.json
+            └── RobotFrameworkAIO_Exercise_01/
+                └── practice2_config.jsonp
+```
+
+## Database Schema
+
+### SQLite Configuration (Optimized for Concurrency)
+```python
+db = sqlite3.connect(
+    DATABASE_PATH,
+    timeout=30.0,              # Wait 30s if locked
+    isolation_level=None,      # Autocommit mode
+    check_same_thread=False    # Allow thread sharing
+)
+db.execute('PRAGMA journal_mode=WAL')      # Write-Ahead Logging
+db.execute('PRAGMA busy_timeout=30000')    # 30s timeout
+```
+
+### Tables
+
+**users**
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    email TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+```
+
+**user_progress**
+```sql
+CREATE TABLE user_progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    workbook_name TEXT NOT NULL,
+    question_id TEXT NOT NULL,
+    completed BOOLEAN DEFAULT 0,
+    completed_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    UNIQUE(user_id, workbook_name, question_id)
+)
+```
+
+## Environment Variables
+
+### API Service
 ```bash
-# Optional customization
+# Proxy bypass (important for servers with proxy)
+export NO_PROXY="localhost,127.0.0.1,::1"
+export no_proxy="localhost,127.0.0.1,::1"
+
+# Disable Jupyter detection (API mode)
+export LEARNINGTOOLS_DISABLE_JUPYTER_DETECTION=1
+
+# Flask debug mode (False for production)
+export FLASK_DEBUG=false
+
+# User-specific progress directory (set automatically)
+export LEARNINGTOOLS_PROGRESS_DIR="/path/to/user/.progress"
+```
+
+### Web Application
+```bash
+# Application settings
 export SECRET_KEY="your-secret-key-here"
-export JUPYTER_PORT=8888
-export DATABASE_PATH="./custom_webapp.db"
+export DATABASE_PATH="./webapp.db"
+export API_BASE_URL="http://localhost:5001"
 ```
 
 ### Application Config (app.py)
 
 ```python
-app.config['SECRET_KEY'] = 'dev-secret-key-change-in-production'
-app.config['DATABASE'] = 'webapp.db'
-app.config['JUPYTER_PORT'] = 8888
-app.config['JUPYTER_BASE_URL'] = '/jupyter'
-app.config['USER_WORKSPACES'] = Path('./user_workspaces')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['DATABASE'] = os.path.join(os.path.dirname(__file__), 'webapp.db')
+app.config['API_BASE_URL'] = os.environ.get('API_BASE_URL', 'http://localhost:5001')
+
+# Disable proxies for localhost
+REQUESTS_NO_PROXY = {
+    'http': None,
+    'https': None,
+    'no_proxy': 'localhost,127.0.0.1,::1'
+}
 ```
 
 ## API Endpoints
 
-### Authentication
+### WebApp Routes (Port 5000)
+
+**Authentication**
 - `GET/POST /register` - User registration
 - `GET/POST /login` - User login
 - `GET /logout` - Logout
 
-### Main Application
+**Main Application**
 - `GET /` - Home (redirects to dashboard if logged in)
-- `GET /dashboard` - User dashboard with workbooks
-- `GET /launch-notebook/<workbook_name>` - Setup and launch Jupyter
-- `GET /return-from-jupyter?workbook=<name>` - Return and sync
+- `GET /dashboard` - User dashboard with workbook categories
+- `GET /category/<category_name>` - List workbooks in category
+- `GET /workbook/<workbook_name>` - Code execution interface
 
-### API (JSON)
-- `POST /sync-progress` - Manual progress sync
-- `GET /api/progress?workbook=<name>` - Get progress data
+**Progress Management**
+- `POST /api/execute` - Execute code and sync progress
+- `POST /api/progress/<workbook>/<question>` - Mark question complete
+- `POST /api/progress/sync/<workbook>` - Manual progress sync
 
-### Legacy (Browser-based exercises)
-- `GET /workbook/<workbook_name>` - Built-in exercise view (optional)
-- `POST /api/check` - Check answer (for browser exercises)
+### Learning Tools API (Port 5001)
+
+**Health & Discovery**
+- `GET /api/health` - Health check
+- `GET /api/workbooks` - List all workbooks
+- `GET /api/notebook/<workbook_name>` - Get notebook cells
+
+**Code Execution**
+- `POST /api/execute` - Execute code, returns completed_questions
+- `GET /api/progress/<workbook_name>` - Get progress from ProgressStore
+
+**Session Management**
+- `POST /api/session/create` - Create session with user context
+- `POST /api/session/<id>/reset` - Reset session
 
 ## Security
 
-### Current Configuration (Development/Local)
-- ✅ Password hashing (bcrypt)
-- ✅ Session-based auth
-- ✅ User isolation (separate workspaces)
-- ⚠️ JupyterLab no token (localhost only)
+### Current Configuration
+- ✅ Password hashing (werkzeug.security)
+- ✅ Session-based auth (Flask-Login)
+- ✅ User isolation (separate workspaces + progress files)
+- ✅ SQLite WAL mode (concurrent access)
+- ✅ Retry logic (database lock handling)
+- ✅ CORS enabled (API ↔ WebApp communication)
 - ⚠️ No HTTPS (local development)
+- ⚠️ Basic CSRF protection
 
 ### Production Recommendations
 1. **Enable HTTPS** (nginx/Apache reverse proxy)
-2. **Add JupyterLab token** authentication
-3. **Firewall JupyterLab port** (only localhost access)
-4. **Set strong SECRET_KEY**
-5. **Use PostgreSQL** instead of SQLite
-6. **Add rate limiting**
-7. **Enable CSRF protection** (Flask-WTF)
-8. **Implement proper session management**
+2. **Set strong SECRET_KEY**
+3. **Use PostgreSQL** instead of SQLite for better scalability
+4. **Add rate limiting** (Flask-Limiter)
+5. **Enable CSRF protection** (Flask-WTF)
+6. **Firewall API port** (only WebApp should access it)
+7. **Implement proper session timeout**
+8. **Add input validation** and sanitization
 
 ## Troubleshooting Guide
 
 ### Common Issues
 
-#### 1. JupyterLab Won't Start
-```bash
-# Check if port is available
-netstat -an | findstr "8888"
+#### 1. Database is Locked Error
+**Fixed in current version**
+- WAL mode enabled for concurrent access
+- Retry logic with exponential backoff
+- Autocommit mode to reduce lock duration
+- 30-second timeout
 
-# Try different port
-set JUPYTER_PORT=9999
-python app.py
+**If still occurs:**
+```bash
+# Check for stale locks
+rm webapp.db-shm webapp.db-wal
+
+# Restart services
+./start_with_api.sh
 ```
 
 #### 2. Progress Not Syncing
-- Ensure you ran `p1.check()` in notebook
-- Click "🔄 Sync Progress" manually
-- Check notebook is saved  
-- Use "Return to Dashboard" button
+- Progress syncs automatically during code execution
+- Check API logs: `tail -f logs/api.log`
+- Check WebApp logs: `tail -f logs/webapp.log`
+- Verify user workspace created: `user_workspaces/user_N/`
 
-#### 3. Template Not Found
-- Verify template exists: `learningtools/templates/<Workbook>/<Name>_template.ipynb`
-- Check workbook name matches structure
-- Ensure proper file naming
+#### 3. API Timeout (30 seconds)
+**Causes:**
+- Infinite loop in initialization cell (FIXED)
+- Proxy blocking localhost (FIXED with NO_PROXY)
+- Heavy computation
 
-#### 4. Permission Errors
+**Solutions:**
+```python
+# Check initialization cell has safety limits
+max_levels = 10
+for _ in range(max_levels):  # Not: while True:
+    # ... navigation logic
+```
+
+#### 4. Template Not Found
+- Verify template exists: `learningtools/templates/<Category>/<Name>_template.ipynb`
+- Check workbook name matches folder structure
+- Ensure proper file naming conventions
+
+#### 5. Permission Errors
 ```bash
-# Fix workspace permissions (Unix/Mac)
+# Linux: Fix workspace permissions
 chmod -R 755 user_workspaces/
 
-# Windows - ensure write access to learningwebapp folder
+# Windows: Ensure write access to learningplatform folder
+icacls learningplatform /grant Users:F /T
 ```
+
+## Platform Support
+
+### Windows
+- ✅ Fully supported
+- Start script: `start_with_api.bat`
+- Python command: `python` or `py`
+- Uses `%RobotPythonPath%` if set
+
+### Linux/Ubuntu
+- ✅ Fully supported
+- Start script: `start_with_api.sh` (chmod +x first)
+- Python command: `python3`
+- Browser auto-open: `xdg-open`, `gnome-open`, or `kde-open`
+
+### macOS
+- ✅ Compatible (untested)
+- Use Linux script: `./start_with_api.sh`
+- Python command: `python3`
+- Browser auto-open: `open`
 
 ## Deployment Options
 
 ### Option 1: Local Development (Current)
-```bash
-cd learningwebapp
-pip install -r requirements.txt
-python app.py
+**Windows:**
+```cmd
+cd learningplatform
+start_with_api.bat
 ```
 
-### Option 2: Docker Container
+**Linux/Ubuntu:**
+```bash
+cd learningplatform
+chmod +x start_with_api.sh
+./start_with_api.sh
+```
+
+### Option 2: Manual Start (Development)
+```bash
+# Terminal 1: Start API
+cd learningplatform/learningtools
+python3 api.py
+
+# Terminal 2: Start WebApp  
+cd learningplatform/learningwebapp
+python3 app.py
+
+# Access: http://localhost:5000
+```
+
+### Option 3: Production Deployment
+
+**Using Gunicorn (Linux):**
+```bash
+# Install Gunicorn
+pip install gunicorn
+
+# Start API
+cd learningtools
+gunicorn -w 4 -b 0.0.0.0:5001 api:app
+
+# Start WebApp
+cd learningwebapp
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+```
+
+**Using systemd (Linux):**
+Create `/etc/systemd/system/learningtools-api.service`:
+```ini
+[Unit]
+Description=Learning Tools API
+After=network.target
+
+[Service]
+User=learningtools
+WorkingDirectory=/opt/learningplatform/learningtools
+Environment="PATH=/opt/learningplatform/venv/bin"
+ExecStart=/opt/learningplatform/venv/bin/gunicorn -w 4 -b 127.0.0.1:5001 api:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Option 4: Docker Container
 ```dockerfile
-# TODO: Create Dockerfile
-FROM python:3.11
-COPY . /app
+# Dockerfile example
+FROM python:3.11-slim
+
 WORKDIR /app
-RUN pip install -r requirements.txt
+COPY learningplatform /app/
+
+RUN pip install --no-cache-dir -r learningwebapp/requirements.txt
+
+# Start both services
+CMD ["sh", "-c", "cd learningtools && python api.py & cd learningwebapp && python app.py"]
 EXPOSE 5000 8888
 CMD ["python", "app.py"]
 ```

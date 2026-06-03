@@ -1,10 +1,40 @@
 # JupyterLab Integration Guide
 
-## Overview
+> **⚠️ DEPRECATED - HISTORICAL REFERENCE ONLY**
+> 
+> **This document describes the OLD JupyterLab-based architecture** that was replaced in the API-based redesign.
+>
+> **Current Architecture (Since Session 11):**
+> - ✅ **Browser-based code execution** via Learning Tools API (no JupyterLab required)
+> - ✅ **Simplified deployment** (two Flask apps instead of JupyterHub/JupyterLab)
+> - ✅ **Streamlined user interface** with code editors in the browser
+> - ✅ **User workspace isolation** with per-user progress tracking
+> - ✅ **Cross-platform support** (Windows + Linux) with startup scripts
+>
+> **For current documentation**, see:
+> - [README.md](README.md) - Main user guide
+> - [ARCHITECTURE.md](ARCHITECTURE.md) - Current system architecture
+> - [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - API reference
+>
+> **This file is kept for:**
+> - Historical reference
+> - Understanding the evolution of the platform
+> - Comparison of old vs new architecture
+>
+> ---
 
-The Learning Tools Web Application now integrates with JupyterLab, allowing users to practice exercises in a full Jupyter notebook environment with automatic progress tracking.
+## Overview (Legacy System)
 
-## How It Works
+The Learning Tools Web Application **previously** integrated with JupyterLab, allowing users to practice exercises in a full Jupyter notebook environment with automatic progress tracking.
+
+**Note**: This approach was replaced because:
+- Complex deployment (required JupyterHub, JupyterLab, and additional services)
+- Slow startup time (~10-15 seconds)
+- Limited mobile support
+- High memory usage (~200MB per user)
+- Difficult to customize user interface
+
+## How It Worked (Legacy)
 
 ### 1. Launch Workflow
 
@@ -21,15 +51,30 @@ Dashboard → Click "Start in Jupyter" → JupyterLab opens → Complete exercis
 
 - **Progress Tracking**: 
   - As you complete exercises using `p1.check()`, `p2.check()`, etc.
-  - Progress is saved by the learningtools framework
-  - When you return to the dashboard, progress syncs automatically
+  - Progress is saved by the learningtools framework to `~/.learningtools/progress.json`
+  - When you return to the dashboard, progress syncs from this shared file
+  - **Issue**: All users shared the same progress file (fixed in current version with user-specific progress)
 
 - **Isolation**:
   - Each user gets their own workspace
   - Notebooks are copied per-user to prevent conflicts
   - Changes you make don't affect other users
 
-## Using JupyterLab
+## Comparison: Old vs New Architecture
+
+| Feature | JupyterLab (Old) | API-Based (Current) |
+|---------|------------------|---------------------|
+| **Code Execution** | JupyterLab Server | Browser + API |
+| **Startup Time** | 10-15 seconds | 1-2 seconds |
+| **User Interface** | Full Jupyter UI | Streamlined web UI |
+| **Mobile Support** | Limited | Full support |
+| **Memory per User** | ~200MB | ~5-10MB |
+| **Deployment Complexity** | High (JupyterHub required) | Low (2 Flask apps) |
+| **Customization** | Limited | Full control |
+| **Progress Storage** | Shared file | User-specific files |
+| **Database Concurrency** | N/A | WAL mode, retry logic |
+
+## Using JupyterLab (Legacy)
 
 ### Starting an Exercise
 

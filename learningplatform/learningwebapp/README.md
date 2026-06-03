@@ -265,13 +265,84 @@ kill -9 <PID>
 1. Ensure learningtools is in parent directory
 2. Check Python path: `sys.path.insert(0, str(BASE_DIR))`
 
-### Database errors
+### Database locked errors
 
-**Error**: "sqlite3.OperationalError"
+**Error**: "sqlite3.OperationalError: database is locked"
 
-**Solution**:
-1. Delete `webapp.db`
-2. Restart application (database will be recreated)
+**Solution** (Already implemented in current version):
+- WAL mode enabled for concurrent access
+- Retry logic with exponential backoff
+- 30-second timeout configured
+
+**If still occurs:**
+```bash
+# Remove stale lock files
+rm webapp.db-shm webapp.db-wal
+
+# Restart services
+./start_with_api.sh  # or start_with_api.bat on Windows
+```
+
+### API timeout (30 seconds)
+
+**Error**: Request to API times out after 30 seconds
+
+**Causes** (Already fixed in current version):
+- ~~Proxy blocking localhost~~ → Fixed with NO_PROXY environment variable
+- ~~Infinite loop in initialization~~ → Fixed with safety limits in notebook cells
+
+**If still occurs:**
+- Check for heavy computation in your code
+- Verify environment variables are set (check startup logs)
+
+### Proxy issues in corporate networks
+
+**Error**: "Failed to establish connection" or timeouts
+
+**Solution** (Already configured in startup scripts):
+```bash
+# Windows (start_with_api.bat)
+set NO_PROXY=localhost,127.0.0.1,::1
+
+# Linux (start_with_api.sh)
+export NO_PROXY="localhost,127.0.0.1,::1"
+```
+
+If manual start:
+```bash
+export NO_PROXY="localhost,127.0.0.1,::1"
+export LEARNINGTOOLS_DISABLE_JUPYTER_DETECTION=1
+python3 api.py
+```
+
+### Progress not showing
+
+**Problem**: Completed exercises but dashboard shows 0 progress
+
+**Solution** (Already implemented):
+- Progress automatically syncs during code execution
+- Check user workspace exists: `user_workspaces/user_<id>/`
+- Verify progress file created: `user_workspaces/user_<id>/.progress/progress.json`
+
+**Manual sync** (if needed):
+```python
+# In workbook, after p1.check()
+lesson.progress()  # Should show completed
+```
+
+### User-specific data
+
+**Location of user data:**
+```
+learningwebapp/user_workspaces/
+└── user_<id>/
+    ├── .progress/
+    │   └── progress.json          # User's progress
+    └── <workbook_name>/
+        └── practice_files.jsonp   # User's exercise files
+```
+
+**Note**: Each user has completely isolated workspace and progress tracking
 
 ## 🔐 Security
 
