@@ -17,7 +17,7 @@ sudo apt-get install -y python3-dev
 sudo apt-get install -y build-essential
 sudo apt-get install -y pandoc
 sudo apt-get install -y texlive-latex-*
-sudo apt-get install -y libcairo2-dev libxt-dev libgirepository1.0-dev
+sudo apt-get install -y libcairo2-dev libxt-dev libgirepository1.0-dev libgirepository-2.0-dev
 sudo apt-get install -y dos2unix
 sudo apt-get install -y libkrb5-dev
 sudo apt-get install -y jq

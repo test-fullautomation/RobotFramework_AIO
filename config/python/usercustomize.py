@@ -1,6 +1,13 @@
 import sys
 import traceback
 
+try:
+    import readline
+    if not hasattr(readline, "backend"):
+        readline.backend = "pyreadline3"
+except ImportError:
+    pass
+
 def customize_color_traceback(exc_type, exc_value, exc_traceback):
     """
     Customizes the default Python traceback with dark lilac and bright red colors.
