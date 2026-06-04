@@ -52,7 +52,7 @@
                 {% if question.starter_code %}
                 <div class="mb-3">
                     <strong>Starter Code:</strong>
-                    <pre class="bg-light p-3 rounded"><code>{{ question.starter_code }}</code></pre>
+                    <pre class="bg-light p-3 rounded"><code class="language-python">{{ question.starter_code }}</code></pre>
                 </div>
                 {% endif %}
                 
@@ -81,7 +81,7 @@
                 
                 <div id="solution-{{ question_id }}" class="mt-3 alert alert-warning" style="display: none;">
                     <strong>Solution:</strong>
-                    <pre class="mb-0"><code>{{ question.solution_text }}</code></pre>
+                    <pre class="mb-0"><code class="language-python">{{ question.solution_text }}</code></pre>
                 </div>
                 
                 <div id="result-{{ question_id }}" class="mt-3" style="display: none;"></div>

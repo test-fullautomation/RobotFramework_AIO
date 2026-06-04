@@ -61,7 +61,7 @@
                         </div>
                         <div class="collapse" id="init-code-{{ loop.index0 }}">
                             <div class="card-body bg-light border-bottom">
-                                <pre class="mb-0" style="font-size: 12px; color: #666;"><code>{{ cell.source }}</code></pre>
+                                <pre class="mb-0" style="font-size: 12px;"><code class="language-{% if cell.language and cell.language.lower() == 'jsonp' %}json{% else %}{{ cell.language | default('python') }}{% endif %}">{{ cell.source }}</code></pre>
                             </div>
                         </div>
                         <div class="card-body">
@@ -92,22 +92,30 @@
                         <div class="card-header bg-light d-flex justify-content-between align-items-center">
                             <span><i class="bi bi-code-square"></i> Code Cell #{{ loop.index }}</span>
                             <div>
-                                <button class="btn btn-sm btn-success run-cell-btn" data-cell-index="{{ loop.index0 }}">
+                                {% if cell.language and cell.language.lower() in ['json', 'jsonp'] %}
+                                <button class="btn btn-sm btn-primary run-cell-btn" data-cell-index="{{ loop.index0 }}" data-cell-language="{{ cell.language | default('python') }}">
+                                    <i class="bi bi-arrow-repeat"></i> Update
+                                </button>
+                                {% else %}
+                                <button class="btn btn-sm btn-success run-cell-btn" data-cell-index="{{ loop.index0 }}" data-cell-language="{{ cell.language | default('python') }}">
                                     <i class="bi bi-play-fill"></i> Run
                                 </button>
+                                {% endif %}
                                 <button class="btn btn-sm btn-secondary reset-cell-btn" data-cell-index="{{ loop.index0 }}">
                                     <i class="bi bi-arrow-clockwise"></i> Reset
                                 </button>
                             </div>
                         </div>
                         <div class="card-body p-0">
-                            <!-- Code Editor -->
+                            <!-- Code Editor with Syntax Highlighting -->
                             <div class="code-editor-wrapper">
                                 <textarea class="form-control code-editor" 
                                           id="code-{{ loop.index0 }}"
+                                          data-language="{{ cell.language | default('python') }}"
                                           data-original-code="{% if cell.display_source %}{{ cell.display_source }}{% else %}{{ cell.source }}{% endif %}"
                                           rows="{{ (cell.display_source if cell.display_source else cell.source).count('\n') + 1 }}"
                                           spellcheck="false">{% if cell.display_source %}{{ cell.display_source }}{% else %}{{ cell.source }}{% endif %}</textarea>
+                                <pre class="code-highlight" id="highlight-{{ loop.index0 }}"><code class="language-{% if cell.language and cell.language.lower() == 'jsonp' %}json{% else %}{{ cell.language | default('python') }}{% endif %}"></code></pre>
                             </div>
                         </div>
                         <div class="output-container" id="output-{{ loop.index0 }}" style="display:none;">
@@ -358,24 +366,92 @@
     }
 
     .code-editor-wrapper {
+        position: relative;
         background-color: #f8f9fa;
+    }
+    
+    /* Syntax highlighting overlay - only visible when not editing */
+    .code-highlight {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 15px;
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        background: transparent;
+        pointer-events: none;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow: auto;
+        border: none;
+        z-index: 1;
+        box-sizing: border-box;
+        display: block;
+        visibility: visible;
+    }
+    
+    .code-highlight code {
+        font-family: 'Courier New', Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 
     .code-editor {
+        position: relative;
         font-family: 'Courier New', Consolas, monospace;
         font-size: 14px;
+        line-height: 1.5;
         border: none;
         border-radius: 0;
         padding: 15px;
-        background-color: #f8f9fa;
+        margin: 0;
+        background: transparent;
+        color: #24292e;
+        caret-color: #24292e;
         resize: vertical;
         min-height: 100px;
+        width: 100%;
+        z-index: 0;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    
+    /* Hide textarea text when not focused (show highlighted version) */
+    .code-editor:not(:focus) {
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Show highlight overlay by default */
+    .code-editor:not(:focus) + .code-highlight {
+        display: block;
+        visibility: visible;
+    }
+    
+    /* Hide highlight overlay when textarea is focused (show plain text) */
+    .code-editor:focus + .code-highlight {
+        display: none;
+        visibility: hidden;
+    }
+    
+    .code-editor::selection {
+        background-color: rgba(0, 123, 255, 0.3);
+    }
+    
+    .code-editor::-moz-selection {
+        background-color: rgba(0, 123, 255, 0.3);
     }
 
     .code-editor:focus {
-        background-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.8);
+        outline: 1px solid #007bff;
         box-shadow: none;
-        border: 1px solid #007bff;
     }
 
     .output-container {
@@ -639,7 +715,13 @@ async function executeCell(cellIndex) {
     } finally {
         // Remove loading state
         cellCard.classList.remove('executing');
-        runBtn.innerHTML = '<i class="bi bi-play-fill"></i> Run';
+        // Restore original button text based on language
+        const language = runBtn.getAttribute('data-cell-language') || 'python';
+        if (language.toLowerCase() === 'json' || language.toLowerCase() === 'jsonp') {
+            runBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Update';
+        } else {
+            runBtn.innerHTML = '<i class="bi bi-play-fill"></i> Run';
+        }
     }
 }
 
@@ -683,6 +765,116 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// Syntax highlighting for code cells
+function updateHighlight(cellIndex) {
+    const textarea = document.getElementById(`code-${cellIndex}`);
+    const highlightPre = document.getElementById(`highlight-${cellIndex}`);
+    const codeBlock = highlightPre.querySelector('code');
+    
+    if (textarea && codeBlock) {
+        // Update the code content
+        codeBlock.textContent = textarea.value;
+        // Remove previous highlighting classes to force re-highlight
+        codeBlock.removeAttribute('data-highlighted');
+        codeBlock.className = codeBlock.className.replace(/\bhljs\b/, '').trim();
+        let language = textarea.getAttribute('data-language') || 'python';
+        // Map JSONP to JSON for highlight.js (JSONP is JSON with comments)
+        if (language.toLowerCase() === 'jsonp') {
+            language = 'json';
+        }
+        codeBlock.className = `language-${language}`;
+        // Apply syntax highlighting
+        hljs.highlightElement(codeBlock);
+    }
+}
+
+// Initialize syntax highlighting on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Register JSONP as an alias for JSON (JSONP is JSON with comments)
+    // Highlight.js will use JSON highlighter for JSONP files
+    if (hljs.getLanguage('json') && !hljs.getLanguage('jsonp')) {
+        hljs.registerAliases('jsonp', { languageName: 'json' });
+    }
+    
+    // Register Robot Framework language definition for Highlight.js
+    hljs.registerLanguage('robotframework', function(hljs) {
+        return {
+            case_insensitive: true,
+            contains: [
+                // Section headers
+                {
+                    className: 'section',
+                    begin: /^\*\*\*.*\*\*\*/,
+                    relevance: 10
+                },
+                // Comments
+                hljs.HASH_COMMENT_MODE,
+                // Keywords
+                {
+                    className: 'keyword',
+                    begin: /\b(FOR|END|IF|ELSE IF|ELSE|WHILE|RETURN|CONTINUE|BREAK|TRY|EXCEPT|FINALLY|AS)\b/
+                },
+                // Built-in keywords
+                {
+                    className: 'built_in',
+                    begin: /\b(Log|Should Be Equal|Should Contain|Should Be True|Set Variable|Sleep|Wait Until|Click Element|Input Text|Get Text|Run Keyword)\b/
+                },
+                // Settings
+                {
+                    className: 'attribute',
+                    begin: /^\s*(Library|Resource|Variables|Documentation|Suite Setup|Suite Teardown|Test Setup|Test Teardown|Force Tags|Default Tags|Test Template|Test Timeout|Metadata)\b/
+                },
+                // Variables
+                {
+                    className: 'variable',
+                    begin: /[\$&@%]\{[^\}]+\}/
+                },
+                // Strings
+                hljs.QUOTE_STRING_MODE,
+                hljs.APOS_STRING_MODE,
+                // Numbers
+                {
+                    className: 'number',
+                    begin: /\b\d+\.?\d*\b/
+                }
+            ]
+        };
+    });
+    
+    // Apply syntax highlighting to read-only code blocks
+    document.querySelectorAll('pre code:not(.code-highlight code)').forEach((block) => {
+        hljs.highlightElement(block);
+    });
+    
+    // Initialize highlighting for all code editors
+    document.querySelectorAll('.code-editor').forEach((textarea) => {
+        const cellIndex = textarea.id.replace('code-', '');
+        
+        // Initial highlight
+        updateHighlight(cellIndex);
+        
+        // Update on blur (when user finishes editing)
+        textarea.addEventListener('blur', function() {
+            // Small delay to ensure CSS transition completes
+            setTimeout(() => {
+                updateHighlight(cellIndex);
+            }, 10);
+        });
+        
+        // Update on input for live preview
+        textarea.addEventListener('input', function() {
+            updateHighlight(cellIndex);
+        });
+        
+        // Also update when focus is gained (to ensure it's current)
+        textarea.addEventListener('focus', function() {
+            updateHighlight(cellIndex);
+        });
+    });
+    
+    console.log('Syntax highlighting initialized for code cells');
+});
 </script>
 
 {% endblock %}

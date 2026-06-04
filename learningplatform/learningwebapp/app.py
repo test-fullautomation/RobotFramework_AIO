@@ -23,6 +23,7 @@ sys.path.insert(0, str(BASE_DIR))
 from learningtools.loader import load_workbook_definition
 from learningtools.storage import ProgressStore
 from typing import List
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -39,6 +40,36 @@ REQUESTS_NO_PROXY = {
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+
+# Helper function for language detection
+def detect_code_language(code_content):
+    """Detect programming language from code content."""
+    if not code_content:
+        return 'python'
+    
+    content = code_content.strip()
+    
+    # Robot Framework detection
+    if any(keyword in content for keyword in ['*** Test Cases ***', '*** Keywords ***', 
+                                               '*** Settings ***', '*** Variables ***',
+                                               '*** Tasks ***']):
+        return 'robotframework'
+    
+    # JSON/JSONP detection
+    if content.startswith(('{', '[')):
+        try:
+            json.loads(content)
+            return 'json'
+        except:
+            pass
+    
+    # Check for common JSON patterns even if not valid JSON yet
+    if re.search(r'^\s*[{\[]', content) and re.search(r'[:\[\]{}"]', content):
+        return 'json'
+    
+    # Python detection (default for code cells)
+    return 'python'
 
 
 # Database Helper Functions
@@ -400,7 +431,7 @@ def workbook(workbook_name):
         
         notebook_data = response.json()
         
-        # Convert markdown cells to HTML
+        # Convert markdown cells to HTML and detect language for code cells
         for cell in notebook_data['cells']:
             if cell.get('cell_type') == 'markdown':
                 markdown_text = cell.get('source', '')
@@ -411,6 +442,9 @@ def workbook(workbook_name):
                 )
                 cell['html_content'] = html_content
             elif cell.get('cell_type') == 'code':
+                # Detect language for syntax highlighting
+                source_to_analyze = cell.get('display_source') or cell.get('source', '')
+                cell['language'] = detect_code_language(source_to_analyze)
                 # For RobotFrameworkAIO exercises, extract robot scripts and check() calls
                 if workbook_name.startswith("RobotFrameworkAIO"):
                     source = cell.get('source', '')
@@ -440,7 +474,7 @@ def workbook(workbook_name):
                                     cell['execution_template'] = "robot_code = '''{USER_CODE}'''\n" + source[end_idx + 3:].strip()
                     
                     # Pattern 2: json_config = """...""" with file writing
-                    elif 'json_config = """' in source and 'config_file_path' in source:
+                    elif 'json_config = """' in source or 'json_config = """""' in source:
                         # Extract just the JSON content
                         start_marker = 'json_config = """'
                         start_idx = source.find(start_marker)
@@ -452,6 +486,13 @@ def workbook(workbook_name):
                                 
                                 # Store display version (just JSON)
                                 cell['display_source'] = json_content
+                                
+                                # Detect if it's JSONP (has comments) or plain JSON
+                                # JSONP files can have // comments, which standard JSON doesn't support
+                                if '.jsonp' in source or '//' in json_content:
+                                    cell['language'] = 'jsonp'
+                                else:
+                                    cell['language'] = 'json'
                                 
                                 # Create execution template with the rest of the code
                                 cell['execution_template'] = "json_config = '''{USER_CODE}'''\n" + source[end_idx + 3:].strip()
