@@ -329,10 +329,10 @@ begin
     Log('WARNING: wheel directory does not exist: ' + WheelDir);
     if Required then
     begin
-      MsgBox(
+      SuppressibleMsgBox(
         'Failed to install Python packages: wheel directory not found.' + #13#10 +
         WheelDir,
-        mbCriticalError, MB_OK);
+        mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -370,7 +370,7 @@ begin
     Log('ERROR: no *.whl files found in ' + WheelDir);
     if Required then
     begin
-      MsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK);
+      SuppressibleMsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -382,7 +382,7 @@ begin
     Log('ERROR: could not write requirements file: ' + ReqFile);
     if Required then
     begin
-      MsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK);
+      SuppressibleMsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -441,11 +441,11 @@ begin
     Result := False;
     if Required then
     begin
-      MsgBox(
+      SuppressibleMsgBox(
         'Failed to install Python packages.' + #13#10 +
         'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
         'Please check the setup log for details.',
-        mbCriticalError, MB_OK);
+        mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     exit;
@@ -879,7 +879,7 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
   if ((CurPageID = UsrDataDirPage.ID) and not (CompareText(ExpandConstant(''), PreviousUserDataDir) = 0)and not  	 (CompareText(UsrDataDirPage.Values[0], PreviousUserDataDir) = 0)) then
-    Result := Msgbox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO) = IDYES;
+    Result := SuppressibleMsgBox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO, IDYES) = IDYES;
 end;
 
 //
