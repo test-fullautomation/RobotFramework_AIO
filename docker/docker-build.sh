@@ -11,9 +11,9 @@ export AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}
 export RobotFrameworkVersion=${TAG_NAME#[rd]e[vl]/aio/}
 export BUNDLE_VERSION_DATE="--bundle_version_date $(date +%m.%Y)"
 export BUNDLE_VERSION="--bundle_version ${TAG_NAME#[rd]e[vl]/aio/}"
-export REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
-export MAINDOC_CONFIGFILE="--configfile ./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
+export MAINDOC_CONFIGFILE="./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
 export SUBVERSION=${VERSION_TYPE}
+export REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
 
 echo ">>>> [2/6] CLEANING SCRIPTS & PERMISSIONS"
 SCRIPTS="./build ./cloneall ./install/install.sh ./install/versions.conf ./docker/docker-entrypoint.sh ./requirements_linux.sh"
@@ -27,8 +27,9 @@ if [ "$VARIANT" = "BIOS" ]; then
     CURRENT_INSTALL_FLAGS="--use-cntlm --docker"
     BIN_DIR="/usr/bin"
     DEVTOOLS_DIR="./devtools/."
-    PY_DIR="/usr/lib/python3.12"
+    export PY_DIR=$(which python3)
     PLANTUML_PATH="/usr/lib/plantuml/plantuml.jar"
+    export PYBIN=$(which python3)
     sed -i 's|destDir=$(realpath $mypath/../..)|destDir=$(realpath $mypath/..)|g' ./install/install.sh
     sed -i 's|\[ -d "\.\./python3lx" \]|[ -d "./python3lx" ]|g' ./build
     sed -i 's|cd ../python3lx|cd ./python3lx|g' ./build
@@ -68,7 +69,12 @@ PLANTUML_EXT_DIR="$RF_OPT_DIR/robotvscode/data/extensions/jebbs.plantuml-2.18.1"
 mkdir -p "$PLANTUML_EXT_DIR"
 cp "$PLANTUML_PATH" "$PLANTUML_EXT_DIR/plantuml.jar"
 
-./cloneall --config-file="$REPO_CONFIG"
+if [ "$VARIANT" != "BIOS" ]; then
+    ./cloneall --config-file="$REPO_CONFIG"
+else
+    echo "Skipping cloneall inside Docker for BIOS; using host-cloned workspace"
+fi
+
 ./install/install.sh $CURRENT_INSTALL_FLAGS
 ./build --config-file=$REPO_CONFIG --sub-version=$SUBVERSION
 

@@ -611,7 +611,7 @@ jobs:
         version: [original, extended]
         distro: [oss]
     env:
-      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      MAINDOC_CONFIGFILE: /maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       BUNDLE_NAME: "--bundle_name 'RobotFramework AIO'"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
@@ -668,6 +668,8 @@ jobs:
             INSTALLER_LOCATION=${{ env.INSTALLER_LOCATION }}
             REPOSITORY=${{needs.trigger-aio.outputs.repository}}
             PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}
+            MAINDOC_CONFIGFILE=${{ env.MAINDOC_CONFIGFILE }}
+            REPO_CONFIG="${{ env.REPO_CONFIG }}"
 
       - name: Export Docker Image to tar
         run: |

@@ -12,6 +12,8 @@ ARG GENDOC_PLANTUML_PATH="../robotvscode/data/extensions/jebbs.plantuml-2.18.1"
 ARG GITHUB_COPILOT_REF_URL=""
 ARG GITHUB_COPILOT_EXT_ARG=""
 ARG INSTALLER_LOCATION=""
+ARG REPO_CONFIG="./config/repositories/repositories_extended.conf"
+ARG MAINDOC_CONFIGFILE="./maindoc/maindoc_configs/maindoc_config_OSS_extended.json"
 
 # --- Environment Variables (Migrated from postinst.sh and set_robotenv.sh) ---
 ENV BUILD_ENV="docker" \
