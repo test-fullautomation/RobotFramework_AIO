@@ -404,6 +404,13 @@
 
       ``robot -aio``
 "
+                              ],
+                              "1.0." : [
+"
+**Python Packages**
+
+* Integrated **robotframework-retryfailed** library
+"
                               ]
                  }
 }
