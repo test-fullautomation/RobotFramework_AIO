@@ -25,17 +25,15 @@
 # 23.09.2025
 #
 # ------------------------------------------------------------------------------
-import os
-import sys
-import json
-import re
-import subprocess
+import os, shutil, sys, json, re, subprocess, platform
 from PythonExtensionsCollection.String.CString import CString
 from bs4 import BeautifulSoup
 from importlib.util import spec_from_file_location, module_from_spec
-from pathlib import Path
+from path import Path
 
 sPythonPath = CString.NormalizePath(sys.executable)
+original_cwd = os.getcwd()
+processed_libs = []
 
 def generate_libdoc_for_files():
     """Load configuration, process each object, and generate output files."""
@@ -119,10 +117,53 @@ def process_config(config):
                 if file.endswith('.py') and should_process_file(file, include_regex, exclude_regex):
                     generate_libdoc(file, root, version, repository_path, output_directory)
 
+def generate_libtoc():
+    sLibtocPath = ""
+    keywords_lib_dir = CString.NormalizePath(f"{original_cwd}/keywords_library")
+    if platform.system() == "Windows":
+        sLibtocPath = CString.NormalizePath(f"{sPythonPath}/../Scripts/libtoc")
+    else:
+        sLibtocPath = CString.NormalizePath(f"{sPythonPath}/../libtoc")
+
+    libtoc_working_dir = CString.NormalizePath(f"{original_cwd}/tools/libdoc/output")
+    libdoc_dir = CString.NormalizePath(f"{libtoc_working_dir}/keywords_library/src")
+    processed_lib_lookup = dict(processed_libs)
+    cmd_base = [
+            sLibtocPath,
+            "--config_file",
+            ".libtoc",
+            "--output_dir",
+            "keywords_library",
+            "./"
+    ]
+
+    subprocess.run([*cmd_base], check=True, cwd=f"{libtoc_working_dir}")
+
+    for file in Path(libdoc_dir).iterdir():
+        if not file.is_file():
+            continue
+        name_without_ext = file.stem
+        if name_without_ext in processed_lib_lookup:
+            libdoc_full_path = CString.NormalizePath(file)
+            add_readme_link_to_libdoc(libdoc_full_path, processed_lib_lookup[name_without_ext])
+            fix_min_width_for_keyword_container(libdoc_full_path)
+
+    os.makedirs(keywords_lib_dir, exist_ok=True)
+    shutil.copytree(CString.NormalizePath(f"{libtoc_working_dir}/keywords_library"), f"{keywords_lib_dir}", dirs_exist_ok=True)
+
 def generate_libdoc(file, root, version, repository_path, output_directory, is_class_path=False):
     """Generate libdoc for a single file or class path."""
-    output_file_path = ""
+    output_html_file_path = ""
+    output_xml_file_path = ""
     base_name = ""
+
+    # Ensure the output directory exists
+    output_dir = f"{original_cwd}/tools/libdoc/output"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Copy .libtoc file to output directory
+    shutil.copy2(f"{original_cwd}/tools/libdoc/config/.libtoc", f"{original_cwd}/tools/libdoc/output/")
+
     source_path = CString.NormalizePath(f"{root}")
     # Extract base name before .py, .*, or ::
     if isinstance(file, str):
@@ -142,25 +183,46 @@ def generate_libdoc(file, root, version, repository_path, output_directory, is_c
         os.makedirs(output_folder_path, exist_ok=True)
         if is_class_path:
             pattern_prefix = file.split('::')[0].split('.')[0]
-            output_file_path = CString.NormalizePath(f"{output_folder_path}/{pattern_prefix}.html")
+            output_html_file_path = CString.NormalizePath(f"{output_folder_path}/{pattern_prefix}.html")
+            output_xml_file_path = CString.NormalizePath(f"{original_cwd}/tools/libdoc/output/{output_directory}.xml")
             source_path = file.split('::')[1]
         else:
-            output_file_path = CString.NormalizePath(f"{output_folder_path}/{os.path.splitext(file)[0]}.html")
+            output_html_file_path = CString.NormalizePath(f"{output_folder_path}/{os.path.splitext(file)[0]}.html")
+            output_xml_file_path = CString.NormalizePath(f"{original_cwd}/tools/libdoc/output/{output_directory}.xml")
+
+        if(version == 'unknown'):
+            try:
+                with open(source_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+
+                match = re.search(r'LIBRARY_VERSION\s*=\s*["\']([^"\']+)["\']', content)
+                if match:
+                    version = match.group(1)
+                else:
+                    print(f"Cannot find {source_path}'s version.")
+            except Exception as e:
+                print(f"Failed to retrieve version from {source_path}: {e}.")
+
+        cmd_base = [
+            sPythonPath,
+            "-m",
+            "robot.libdoc",
+            "--version", version
+        ]
 
         # Change to the directory containing the Python file before generating libdoc
-        original_cwd = os.getcwd()
         os.chdir(root)
         try:
-            subprocess.run(
-                [sPythonPath, '-m', 'robot.libdoc', '--version', version, '--name', base_name, source_path, output_file_path],
-                check=True
-            )
+            for name, output_path in ((base_name, output_html_file_path), (output_directory, output_xml_file_path)):
+                subprocess.run([*cmd_base, "--name", name, source_path, output_path], check=True)
+
+            processed_libs.append((output_directory, repository_path))
         finally:
             # Always restore the original working directory
             os.chdir(original_cwd)
         print(f"Documentation generated successfully for: {source_path}")
-
-        add_readme_link_to_libdoc(output_file_path, repository_path)
+        fix_min_width_for_keyword_container(output_html_file_path)
+        add_readme_link_to_libdoc(output_html_file_path, repository_path)
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while generating documentation for {file}: {e}")
     except Exception as e:
@@ -176,7 +238,7 @@ def get_version_from_source_path(source_path):
                 version_module = module_from_spec(spec)
                 spec.loader.exec_module(version_module)
                 return getattr(version_module, 'VERSION', 'unknown')
-        print(f"version.py not found in {source_path} or its subdirectories.")
+
         return 'unknown'
     except Exception as e:
         print(f"Failed to retrieve version from {source_path}: {e}")
@@ -244,10 +306,26 @@ def add_readme_link_to_libdoc(output_path, repository_path):
         with open(output_path, "w", encoding="utf-8") as file:
             file.write(str(soup))
 
-        print("README link successfully added to the libdoc.")
+        print(f"README link successfully added to {repository_name} libdoc.")
     except FileNotFoundError:
         print(f"Error: File not found at path '{output_path}'.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
+def fix_min_width_for_keyword_container(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    pattern = r"(\.shortcuts\s*\{)([^}]*?)\}"
+    html_modified = re.sub(
+        pattern,
+        lambda m: m.group(1) + ('min-width: 320px;' + m.group(2) if 'min-width' not in m.group(2) else m.group(2)) + '}',
+        html,
+        flags=re.DOTALL
+    )
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(html_modified)
+
 generate_libdoc_for_files()
+generate_libtoc()

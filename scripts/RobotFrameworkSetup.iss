@@ -329,10 +329,10 @@ begin
     Log('WARNING: wheel directory does not exist: ' + WheelDir);
     if Required then
     begin
-      MsgBox(
+      SuppressibleMsgBox(
         'Failed to install Python packages: wheel directory not found.' + #13#10 +
         WheelDir,
-        mbCriticalError, MB_OK);
+        mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -370,7 +370,7 @@ begin
     Log('ERROR: no *.whl files found in ' + WheelDir);
     if Required then
     begin
-      MsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK);
+      SuppressibleMsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -382,7 +382,7 @@ begin
     Log('ERROR: could not write requirements file: ' + ReqFile);
     if Required then
     begin
-      MsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK);
+      SuppressibleMsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     Result := False;
@@ -441,11 +441,11 @@ begin
     Result := False;
     if Required then
     begin
-      MsgBox(
+      SuppressibleMsgBox(
         'Failed to install Python packages.' + #13#10 +
         'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
         'Please check the setup log for details.',
-        mbCriticalError, MB_OK);
+        mbCriticalError, MB_OK, MB_OK);
       Abort;
     end;
     exit;
@@ -778,19 +778,16 @@ begin
   //create MsgPage1
   MsgPage2 := CreateOutputMsgPage(wpWelcome,
              'General Information', 'How to execute a RobotFramework test case?',
-             'After installation any *.robot file is a directly executable file at your computer. As a result you can run a RobotFramework test case the following ways: '#13#13+
-             '  1. Double click with the mouse.'#13#13+
-             '  2. Directly from the command line.'#13#13+
-             '  4. Directly from batch files.');
+             'After installation, any *.robot file is directly executable on your computer. You can run a RobotFramework test case in the following ways:'#13#13+
+             '  1. By double-clicking the file.'#13#13+
+             '  2. From the command line.'#13#13+
+             '  3. From a batch file.');
 
   //create MsgPage1
   MsgPage3 := CreateOutputMsgPage(MsgPage2.ID,
              'Update Information', 'How to update an already installed version?',
-             'You can easily update RobotFramework AIO (All In One) with the following steps:'#13#13+
-             '  1. General hint: make a backup of your data.'#13#13+
-             '  2. Simply install the new version.'#13#13+
-             '  3. Setup will recognize an already installed version and update.'#13#13+#13#13+
-             'The uninstall-/install setup will take care of your test case files.');
+             'Before continuing, make sure to back up any custom test cases or configuration files.'#13#13+
+             'The setup will update the existing installation automatically.');
 
   //create page for selecting project
   ProjectPage := CreateCustomPage(MsgPage3.ID,
@@ -799,7 +796,9 @@ begin
 
   StaticText := TNewStaticText.Create(ProjectPage);
   StaticText.Top :=  ScaleY(0);
-  StaticText.Caption := 'In order to configure the RobotFramework AIO (All In One) properly it is required to select '#13+'your project.'#13#13+'If your project is not listed, then please select "Generic":';
+  StaticText.Caption := 'In order to configure the RobotFramework AIO (All In One) properly it is required to select your project.'#13#13 +'If your project is not listed, then please select "Generic":';
+  StaticText.Width := ProjectPage.SurfaceWidth;
+  StaticText.WordWrap := True;
   StaticText.AutoSize := True;
   StaticText.Parent := ProjectPage.Surface;
 
@@ -808,6 +807,10 @@ begin
   ProjectListBox.Width := ProjectPage.SurfaceWidth;
   ProjectListBox.Height := ScaleY(150);
   ProjectListBox.Parent := ProjectPage.Surface;
+
+  //customize select components
+  WizardForm.SelectComponentsLabel.Caption :=
+    'Select the components to install. Unselected components and their previous versions will be removed.';
 
   //build up the list based on the ProjectHash and contained
   //ProjectListbox positions
@@ -830,7 +833,7 @@ begin
   //create user data directory page
   UsrDataDirPage := CreateInputDirPage(wpSelectDir,
     'Select Test Case Data Directory', 'Where will the RobotFramework test case files be developed?',
-    'Select the folder which Setup configures for the RobotFramework test case development, then click Next.',
+    'Select the folder which Setup configures for the RobotFramework test case development.',
     True, 'RobotTest');
   UsrDataDirPage.Add('');
 
@@ -876,7 +879,7 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
   if ((CurPageID = UsrDataDirPage.ID) and not (CompareText(ExpandConstant(''), PreviousUserDataDir) = 0)and not  	 (CompareText(UsrDataDirPage.Values[0], PreviousUserDataDir) = 0)) then
-    Result := Msgbox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO) = IDYES;
+    Result := SuppressibleMsgBox('You selected a new folder for your workspace. Therefore your current files need to be added manually to your new VSCodium workspace.', mbInformation, MB_YESNO, IDYES) = IDYES;
 end;
 
 //

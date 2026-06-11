@@ -76,10 +76,10 @@ jobs:
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
-      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      MAINDOC_CONFIGFILE: "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
-      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+      BUNDLE_NAME: "RobotFramework AIO"
 
     steps:
       - name: Checkout source
@@ -101,8 +101,8 @@ jobs:
           ./requirements_linux.sh
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION_DATE=\"$(date +%m.%Y)\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION=\"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           # Environment variable for trigger process
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
@@ -205,6 +205,8 @@ jobs:
             ${{ runner.workspace }}/robotframework-qconnect-winapp/QConnectWinapp/*.html
             ${{ runner.workspace }}/robotframework-uds/RobotFramework_UDS/*.html
             ${{ runner.workspace }}/robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/*.html
+            ${{ runner.workspace }}/RobotFramework_AIO/keywords_library/*
+            ${{ runner.workspace }}/robotframework-prometheus/PrometheusInterface/*.html
 
   build-windows:
     strategy:
@@ -216,10 +218,10 @@ jobs:
     needs: [ tag-repos , trigger-aio ]
     if: ${{ ! failure() && ! cancelled() }}
     env:
-      MAINDOC_CONFIGFILE: --configfile "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
+      MAINDOC_CONFIGFILE: "./maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json"
       REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
       AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
-      BUNDLE_NAME: --bundle_name "RobotFramework AIO"
+      BUNDLE_NAME: "RobotFramework AIO"
 
     steps:
       - name: Support long path in git
@@ -235,8 +237,8 @@ jobs:
           echo "GENDOC_LATEXPATH=$GENDOC_LATEXPATH" >> $GITHUB_ENV
           echo "AIO_VERSION_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
           echo "AIO_VERSION=${TAG_NAME#[rd]e[vl]/aio/}" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION_DATE=--bundle_version_date \"$(date +%m.%Y)\"" >> $GITHUB_ENV
-          echo "BUNDLE_VERSION=--bundle_version \"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION_DATE=\"$(date +%m.%Y)\"" >> $GITHUB_ENV
+          echo "BUNDLE_VERSION=\"${TAG_NAME#[rd]e[vl]/aio/}\"" >> $GITHUB_ENV
           echo "REPOSITORY=${{needs.trigger-aio.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}" >> $GITHUB_ENV
 
@@ -321,7 +323,7 @@ jobs:
       shell: bash
       run: |
         chmod +x ./install/check_external_version.sh
-        ./install/check_external_version.sh -i ./install/python_requirements.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
+        ./install/check_external_version.sh -i ./install/python_requirements.lock -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
 
     - name: Install RabbitMQ
@@ -502,7 +504,7 @@ jobs:
     - name: Check external dependencies version
       run: |
         chmod +x ./install/check_external_version.sh
-        ./install/check_external_version.sh -i ./install/python_requirements_lx.txt -v ./install/vscode_requirement.csv -o ../package_version_report.csv
+        ./install/check_external_version.sh -i ./install/python_requirements_lx.lock -v ./install/vscode_requirement.csv -o ../package_version_report.csv
 
     - name: Start RabbitMQ container
       run: |
