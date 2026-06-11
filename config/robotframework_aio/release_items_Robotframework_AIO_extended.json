@@ -411,6 +411,12 @@
 **Python Packages**
 
 * Integrated **robotframework-retryfailed** library
+
+** Docker Image **
+
+* Introduced a pre-configured Docker image built on the latest Debian release.
+  It provides a clean, isolated environment to run your tests seamlessly on any machine without the hassle of local dependency management.
+
 "
                               ]
                  }

@@ -600,10 +600,209 @@ jobs:
           ${{ runner.workspace }}/release_info_RobotFramework_AIO_*.html
           ${{ runner.workspace }}/**/*/static_code_report/*
 
+  build-docker:
+    name: Build Docker package
+    runs-on: ubuntu-latest
+    needs: [ tag-repos , trigger-aio ]
+    if: ${{ ! failure() && ! cancelled() }}
+    outputs:
+      aio_version: ${{ steps.set_vars.outputs.aio_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [original, extended]
+        distro: [oss]
+    env:
+      MAINDOC_CONFIGFILE: /maindoc/maindoc_configs/maindoc_config_OSS_${{ matrix.version }}.json
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      BUNDLE_NAME: "--bundle_name 'RobotFramework AIO'"
+      AIO_NAME: "RobotFramework AIO (${{ matrix.version }})"
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - id: set_vars
+        name: Set Environment Variables
+        run: |
+          # Sanitize tag name: remove prefix and replace '/' with '-'
+          # Assuming TAG_NAME is available in env or use github.ref_name
+          RAW_TAG="${{ github.ref_name }}"
+          TEMP_VERSION=${RAW_TAG#[rd]e[vl]/aio/}
+          SAFE_VERSION=$(echo ${TEMP_VERSION//\//-})
+
+          echo "AIO_VERSION=$SAFE_VERSION" >> $GITHUB_ENV
+          echo "aio_version=$SAFE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Login to GitHub Container Registry
+        if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/${{ matrix.distro }}/Dockerfile
+          push: ${{ github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
+          load: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/robotframework-aio:${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/robotframework-aio:${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}
+          build-args: |
+            VERSION_TYPE=${{ matrix.version }}
+            TAG_NAME=${{ github.ref_name }}
+            AIO_NAME=${{ env.AIO_NAME }}
+            VARIANT=${{ env.VARIANT }}
+            GENDOC_PLANTUML_PATH=${{ env.GENDOC_PLANTUML_PATH }}
+            GITHUB_COPILOT_REF_URL=${{ env.GITHUB_COPILOT_REF_URL }}
+            GITHUB_COPILOT_EXT_ARG=${{ env.GITHUB_COPILOT_EXT_ARG }}
+            INSTALLER_LOCATION=${{ env.INSTALLER_LOCATION }}
+            REPOSITORY=${{needs.trigger-aio.outputs.repository}}
+            PULL_REQUEST_BRANCH=${{needs.trigger-aio.outputs.branch}}
+            MAINDOC_CONFIGFILE=${{ env.MAINDOC_CONFIGFILE }}
+            REPO_CONFIG="${{ env.REPO_CONFIG }}"
+
+      - name: Export Docker Image to tar
+        run: |
+          IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/robotframework-aio:${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}
+          echo "Exporting image $IMAGE_TAG to tar file..."
+          docker save -o ${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}.tar $IMAGE_TAG
+
+      - name: Upload Docker Image Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-${{ matrix.distro }}-${{ matrix.version }}
+          path: ${{ env.AIO_VERSION }}-${{ matrix.distro }}-${{ matrix.version }}.tar
+
+  install-test-docker:
+    name: Test Docker package
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [original, extended]
+        distro: [oss]
+    runs-on: ubuntu-latest
+    needs: [ build-docker, trigger-aio ]
+    if: ${{ ! failure() && ! cancelled() }}
+
+    env:
+      REPO_CONFIG: "./config/repositories/repositories_${{ matrix.version }}.conf"
+      TEST_CONFIG: "./config/testtrigger_config_${{ matrix.version }}.json"
+      RobotDevtools: "/opt/rfwaio/devtools"
+      AIO_IMAGE: "ghcr.io/${{ github.repository_owner }}/robotframework-aio:${{ needs.build-docker.outputs.aio_version }}-${{ matrix.distro }}-${{ matrix.version }}"
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Download Docker Image Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-${{ matrix.distro }}-${{ matrix.version }}
+
+      - name: Load Docker Image
+        run: |
+          tar_file="${{ needs.build-docker.outputs.aio_version }}-${{ matrix.distro }}-${{ matrix.version }}.tar"
+          echo "Loading image from $tar_file..."
+          docker load -i "$tar_file"
+          rm -f "$tar_file"
+          docker images
+
+      - name: Clone repositories
+        run: |
+          export REPOSITORY="${{needs.trigger-aio.outputs.repository}}"
+          export PULL_REQUEST_BRANCH="${{needs.trigger-aio.outputs.branch}}"
+          chmod +x ./cloneall
+          ./cloneall --config-file=${REPO_CONFIG}
+
+      - name: Start RabbitMQ container
+        run: |
+          cur_dir=$(pwd)
+          cd ../python-rabbitmq-messagebus/test/docker
+          docker compose up -d
+          cd "$cur_dir"
+
+          for i in {1..30}; do
+            nc -z localhost 5672 && echo "RabbitMQ is up" && break
+            echo "Waiting for RabbitMQ to start..."
+            sleep 2
+          done
+
+      - name: Run tests inside AIO Container
+        run: |
+          WORKSPACE_PARENT=$(dirname ${{ github.workspace }})
+          CURRENT_REPO=$(basename ${{ github.workspace }})
+
+          docker run --rm \
+            --network host \
+            -v $WORKSPACE_PARENT:/workspace \
+            -w /workspace/$CURRENT_REPO \
+            ${AIO_IMAGE} \
+            bash -c "
+              # Create a symbolic link to map the host tutorial folder to the expected hardcoded container path
+              mkdir -p /root/RobotTest/tutorial
+              cp -r /opt/rfwaio/tutorial/* /root/RobotTest/tutorial/
+
+              # Run static code analysis
+              . /opt/rfwaio/linux/set_robotenv.sh
+              python3 test/aio-static-code-trigger/aio_static_code_trigger.py 2>&1 | tee static_code_log.txt
+
+              # Run tests coverage
+              python3 test/aio-test-trigger/aio-test-coverage.py --configfile ${TEST_CONFIG} 2>&1 | tee coverage_console_log.txt
+
+              # Run tests
+              python3 test/aio-test-trigger/aio-test-trigger.py --configfile ${TEST_CONFIG} 2>&1 | tee test_log.txt
+              # Get system error code from python program (Catching the test exit code)
+              exit_code=\${PIPESTATUS[0]}
+              if [ \$exit_code -ne 0 ]; then
+                  exit 1
+              fi
+            "
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run Android selftest
+        uses: ReactiveCircus/android-emulator-runner@v2.34.0
+        with:
+          api-level: 34
+          avd-name: my_avd
+          target: google_apis
+          arch: x86_64
+          profile: pixel_xl
+          script: |
+            docker run --rm --network host -v "$(dirname "${{ github.workspace }}")":/workspace -v /dev/bus/usb:/dev/bus/usb -e ANDROID_HOME="/opt/rfwaio/devtools/Android" -w "/workspace/$(basename "${{ github.workspace }}")" ${{ env.AIO_IMAGE }} bash -c ". /opt/rfwaio/linux/set_robotenv.sh && \$RobotAppium/appium driver install uiautomator2 && \$RobotAppium/appium driver list --installed && \$RobotAndroidPlatformTools/adb connect localhost:5554 && python3 '../robotframework-selftest/testcases/executerobottest.py' --logfile='/home/runner/work/RobotFramework_AIO/robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml' --robotcommandline='--variable run_on:Github_Action --exclude QConnectSelfTest --exclude SerialSelfTest --exclude DLTSelfTestApp'"
+
+      - name: Upload test result
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-test-logs-${{ matrix.distro }}-${{ matrix.version }}
+          path: |
+            ${{ runner.workspace }}/**/*/aiotestlogfiles/*
+            ${{ runner.workspace }}/**/*/testlogfiles/*
+            ${{ github.workspace }}/static_code_log.txt
+            ${{ github.workspace }}/coverage_console_log.txt
+            ${{ github.workspace }}/test_log.txt
+
   entire-artifacts:
     name: Entire Artifacts
     runs-on: ubuntu-latest
-    needs: [install-test-windows, install-test-linux]
+    needs: [install-test-windows, install-test-linux, install-test-docker]
     if: ${{ ! failure() && ! cancelled() }}
 
     steps:
@@ -629,7 +828,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: [install-test-windows, install-test-linux]
+    needs: [install-test-windows, install-test-linux, install-test-docker]
     if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
 
     steps:
@@ -660,7 +859,7 @@ jobs:
   tag-to-publish-packges-to-pypi:
     name: Tag Python packages to trigger workflow for publishing to PyPI
     runs-on: ubuntu-latest
-    needs: [install-test-windows, install-test-linux]
+    needs: [install-test-windows, install-test-linux, install-test-docker]
     if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/rel/aio/') }}
 
     steps:
@@ -678,7 +877,7 @@ jobs:
   update-version-aio:
     name: Update version AIO
     runs-on: ubuntu-latest
-    needs: [install-test-windows, install-test-linux]
+    needs: [install-test-windows, install-test-linux, install-test-docker]
     if: ${{ ! failure() && ! cancelled() && github.ref_type == 'tag' }}
 
     steps:

@@ -219,6 +219,8 @@ function build_python_package () {
 		# Build package as wheel file
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
+		# Install package into environment so later packages can import it
+		${PYBIN} -m pip install --find-links=$wheelHouseDir ${PKG_NAME}
 
 	elif [ -f "./pyproject.toml" ]; then
 		# Remove previous package version from wheelHouse folder
@@ -443,8 +445,8 @@ function build_debian()
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
 	cp ./install/install-github-copilot-exts.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
 	cp ./install/update_product_json.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
-   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
+    chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+    chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
 
 	# Tutorial and Documentation packages
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial
@@ -513,7 +515,28 @@ function build_windows() {
 	./scripts/postcompile.bat
 }
 
-if [ "$UNAME" == "Linux" ] ; then
+function build_docker() {
+	generate_version_info
+	check_and_install_texlive
+	create_testsuitmanagement_package_context_file
+	update_debian_control_file
+
+	# Fix xcolor option clash for TeX Live 2022 (Debian Bookworm):
+	# In TL2022, xcolor gets loaded early (with [table] via colortbl) before
+	# preamble.tex line 63 tries \usepackage[dvipsnames]{xcolor} → option clash.
+	# PassOptionsToPackage ensures all options are set before xcolor first loads.
+	local preamble="../python-genpackagedoc/GenPackageDoc/styles/preamble.tex"
+	if [ -f "$preamble" ]; then
+		sed -i '1i\\\PassOptionsToPackage{dvipsnames,table}{xcolor}' "$preamble"
+		sed -i 's/\\usepackage\[dvipsnames\]{xcolor}/\\usepackage{xcolor}/' "$preamble"
+	fi
+
+	parse_config $ConfigFile
+}
+
+if [[ -f /.dockerenv || "$BUILD_ENV" == "docker" ]]; then
+	build_docker
+elif [ "$UNAME" == "Linux" ] ; then
 	build_debian
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	build_windows

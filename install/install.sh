@@ -32,6 +32,7 @@ python_only="No"
 vscode_only="No"
 pandoc_only="No"
 android_only="No"
+docker="No"
 use_cache="No"
 
 UNAME=$(uname)
@@ -56,6 +57,7 @@ function parse_arg() {
 		--vscode) echo "Create vscode repo only";vscode_only="Yes"; shift;;
 		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
 		--android) echo "Create android repo only";android_only="Yes"; shift;;
+		--docker) echo "Create for docker image";docker="Yes"; shift;;
 		--cache-folder=*)
 			cache_folder="${1#*=}"
 			cache_folder="${cache_folder//\\//}"
@@ -541,6 +543,12 @@ function make_all() {
 	goodmsg "make_all done"
 }
 
+function make_all_for_docker() {
+	make_python
+	make_android
+	goodmsg "make_all_for_docker done"
+}
+
 echo -e "${COL_GREEN}####################################################################################${COL_RESET}"
 echo -e "${COL_GREEN}#                                                                                  #${COL_RESET}"
 echo -e "${COL_GREEN}#          Creating VSCode and Python Repository from OSS ...                      #${COL_RESET}"
@@ -556,6 +564,8 @@ elif [[ "$pandoc_only" == "Yes" ]]; then
 	make_pandoc
 elif [[ "$android_only" == "Yes" ]]; then
 	make_android
+elif [[ "$docker" == "Yes" ]]; then
+	make_all_for_docker
 else
 	make_all
 fi
