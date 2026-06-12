@@ -13,7 +13,6 @@ export BUNDLE_VERSION_DATE="--bundle_version_date $(date +%m.%Y)"
 export BUNDLE_VERSION="--bundle_version ${TAG_NAME#[rd]e[vl]/aio/}"
 export MAINDOC_CONFIGFILE="./maindoc/maindoc_configs/maindoc_config_OSS_${VERSION_TYPE}.json"
 export SUBVERSION=${VERSION_TYPE}
-export REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
 
 echo ">>>> [2/6] CLEANING SCRIPTS & PERMISSIONS"
 SCRIPTS="./build ./cloneall ./install/install.sh ./install/versions.conf ./docker/docker-entrypoint.sh ./requirements_linux.sh"
@@ -36,7 +35,7 @@ if [ "$VARIANT" = "BIOS" ]; then
     export http_proxy="$PROXY_SERVER"
     export https_proxy="$PROXY_SERVER"
     export no_proxy="localhost,127.0.0.1,.bosch.com"
-
+    export REPO_CONFIG="/workspace/build/config/repositories/repositories_${VERSION_TYPE}.conf"
     CURL_OPTS="$CURL_OPTS -x $PROXY_SERVER"
 else
     EXTRA_PIP_FLAGS=""
@@ -47,6 +46,7 @@ else
     PLANTUML_PATH="/usr/local/lib/plantuml/plantuml.jar"
     export PYBIN=$(which python3)
     PY_PREFIX=$(dirname $(dirname $PYBIN))
+    export REPO_CONFIG="./config/repositories/repositories_${VERSION_TYPE}.conf"
 
     sed -i "s|../python3lx|$PY_PREFIX|g" build
     sed -i "s|\${PYDIR}/bin/python3|$PYBIN|g" build
