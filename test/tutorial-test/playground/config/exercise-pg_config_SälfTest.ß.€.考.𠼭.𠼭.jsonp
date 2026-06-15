@@ -1,4 +1,4 @@
-//  Copyright 2020-2023 Robert Bosch GmbH
+//  Copyright 2020-2026 Robert Bosch GmbH
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 {
   "WelcomeString"   : "Hello... Robot Framework is running now!",
 
-  "Maximum_version" : "1.0.0",
+  "Maximum_version" : "1.99.0",
   "Minimum_version" : "0.6.0",
 
   "Project"         : "RobotFramework Testsuites",
