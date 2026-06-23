@@ -2,7 +2,9 @@
 
 # Define variables
 # download_url="https://mirror.ctan.org/systems/texlive/tlnet"
-download_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
+# backup_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
+download_url="https://ctan.math.illinois.edu/systems/texlive/tlnet"
+backup_url="https://ctan.mirror.garr.it/mirrors/CTAN/systems/texlive/tlnet"
 archive_file="install-tl.zip"
 TEXDIR="C:/texlive/aio"
 collections=("pictures" "latex")
@@ -38,11 +40,40 @@ extraPackages=(
 # Download and extract TexLive installer package
 mkdir -p download
 echo "Downloading Textlive installer package"
-if curl -L "$download_url/$archive_file" -o "download/$archive_file"; then
+
+# Function to download with retries
+download_with_retries() {
+  local url="$1"
+  local output="$2"
+  local max_retries=3
+  local retry_count=0
+
+  while [ $retry_count -lt $max_retries ]; do
+    echo "Downloading from: $url (attempt $((retry_count + 1))/$max_retries)"
+    if curl -L "$url/$archive_file" -o "$output"; then
+      echo "Download successful from: $url"
+      return 0
+    fi
+    retry_count=$((retry_count + 1))
+    if [ $retry_count -lt $max_retries ]; then
+      echo "Download failed, retrying..."
+      sleep 2
+    fi
+  done
+
+  return 1
+}
+
+# Try primary download URL
+if download_with_retries "$download_url" "download/$archive_file"; then
+  unzip "download/$archive_file" -d download/
+  mv download/install-tl-* download/install-tl
+# If primary URL fails, try backup URL
+elif download_with_retries "$backup_url" "download/$archive_file"; then
   unzip "download/$archive_file" -d download/
   mv download/install-tl-* download/install-tl
 else
-  echo "Error downloading TexLive installer package."
+  echo "Error downloading TexLive installer package from both primary and backup URLs."
   exit 1
 fi
 
@@ -58,7 +89,8 @@ echo -e "$profileContent" > "download/texlive.profile"
 
 # Perform texlive installation
 # use -repository ${download_url}/tlnet-final argument for historic texlive
-if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url}/tlnet-final -no-gui -profile=../texlive.profile && cd ../../; then
+# if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url}/tlnet-final -no-gui -profile=../texlive.profile && cd ../../; then
+if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url} -no-gui -profile=../texlive.profile && cd ../../; then
     echo "TexLive installation completed successfully."
 else
     echo "Error running TexLive installer."

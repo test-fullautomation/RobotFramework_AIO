@@ -5,6 +5,8 @@ on:
     tags:
       - "rel/aio/*.*.*.*"
       - "dev/aio/*.*.*.*"
+      - "rel/aio/*.*.*"
+      - "dev/aio/*.*.*"
   pull_request:
     types:
       - closed
