@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Define variables
-download_url="https://mirror.ctan.org/systems/texlive/tlnet"
-backup_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
+# download_url="https://mirror.ctan.org/systems/texlive/tlnet"
+# backup_url="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023"
+download_url="https://ctan.math.illinois.edu/systems/texlive/tlnet"
+backup_url="https://ctan.mirror.garr.it/mirrors/CTAN/systems/texlive/tlnet"
 archive_file="install-tl.zip"
 TEXDIR="C:/texlive/aio"
 collections=("pictures" "latex")
@@ -87,7 +89,8 @@ echo -e "$profileContent" > "download/texlive.profile"
 
 # Perform texlive installation
 # use -repository ${download_url}/tlnet-final argument for historic texlive
-if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url}/tlnet-final -no-gui -profile=../texlive.profile && cd ../../; then
+# if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url}/tlnet-final -no-gui -profile=../texlive.profile && cd ../../; then
+if cd download/install-tl/ && ./install-tl-windows.bat -no-verify-downloads -repository ${download_url} -no-gui -profile=../texlive.profile && cd ../../; then
     echo "TexLive installation completed successfully."
 else
     echo "Error running TexLive installer."
