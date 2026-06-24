@@ -69,17 +69,26 @@ function create_testsuitmanagement_package_context_file(){
       AIO_VERSION=$VERSION
    fi
 
-   package_context=$(jq -n \
-      --arg loc "$INSTALLER_LOCATION" \
-      --arg name "$AIO_NAME" \
-      --arg ver "$AIO_VERSION" \
-      --arg date "$AIO_VERSION_DATE" \
-      '{
-         "installer_location" : $loc,
-         "bundle_name"        : $name,
-         "bundle_version"     : $ver,
-         "bundle_version_date": $date
-      }')
+   if command -v jq >/dev/null 2>&1; then
+      package_context=$(jq -n \
+         --arg loc "$INSTALLER_LOCATION" \
+         --arg name "$AIO_NAME" \
+         --arg ver "$AIO_VERSION" \
+         --arg date "$AIO_VERSION_DATE" \
+         '{
+            "installer_location" : $loc,
+            "bundle_name"        : $name,
+            "bundle_version"     : $ver,
+            "bundle_version_date": $date
+         }')
+   else
+      package_context="{
+         \"installer_location\" : \"$INSTALLER_LOCATION\",
+         \"bundle_name\"        : \"$AIO_NAME\",
+         \"bundle_version\"     : \"$AIO_VERSION\",
+         \"bundle_version_date\": \"$AIO_VERSION_DATE\"
+      }"
+   fi
 
    # relative path from build script
    package_context_pathfile="../robotframework-testsuitesmanagement/RobotFramework_TestsuitesManagement/Config/package_context.json"
