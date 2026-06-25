@@ -6,13 +6,13 @@
 #   echo 1 | sudo tee /var/lib/robotframework-aio-do-update-vscodium
 #   sudo apt-get install -y ./*.deb --fix-missing --reinstall --allow-downgrades
 ###############################################################################
-
+IDE_NAME="VSCodium"
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
 
 # Backup VSCode extensions/global storage
 backup_vscode_extensions() {
-   echo "Backing up VSCode user data..."
+   echo "Backing up $IDE_NAME user data..."
 
    local VSCODE_DATA_DIR="/opt/rfwaio/robotvscode/data"
    local BACKUP_DIR="/tmp/vscode_backup"

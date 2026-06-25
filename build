@@ -18,7 +18,13 @@ echo -e "${COL_GREEN}###########################################################
 # Load version information from versions.conf
 source ./install/versions.conf
 
-echo "VS Codium version $VERSION_VSCODIUM"
+if [ "$VARIANT" == "BIOS" ]; then
+	echo "VS Code version $VERSION_VSCODE"
+	ideIcon="code.png"
+else
+	echo "VS Codium version $VERSION_VSCODIUM"
+	ideIcon="codium.png"
+fi
 echo "Node.js version $VERSION_NODEJS"
 echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
@@ -29,6 +35,7 @@ ITrackService="NONE"
 UNAME=$(uname)
 ConfigFile='./config/repositories/repositories.conf'
 SubVersion=""
+VARIANT="OSS"
 mypath=$(realpath $(dirname $0))
 wheelHouseDir="$mypath/wheelhouse"
 wheelRobotframeworkDir="$mypath/robotwheel"
@@ -67,8 +74,11 @@ else
           ;;
 			--sub-version=*)
 			 SubVersion="${i#*=}"
-			 ;;
-          *)
+			 ;;		--variant=*)
+			 VARIANT="${i#*=}"
+			 VARIANT=$(echo "$VARIANT" | tr '[:lower:]' '[:upper:]')
+			 echo "Variant: $VARIANT"
+			 ;;          *)
               echo -e $COL_RED"Argument not allowed:"$COL_RESET $i
               echo -e $COL_RED"build terminated."$COL_RESET
               exit 1
@@ -111,6 +121,7 @@ fi
 
 echo -e $COL_GREEN"RobotFrameworkVersion = $RobotFrameworkVersion"$COL_RESET
 arguments+="//DRobotFrameworkVersion=$RobotFrameworkVersion "
+arguments+="//DVARIANT=$VARIANT "
 echo
 
 PackageFilenameLinux=RobotFramework_AIO_${RobotFrameworkVersion}-0_amd64.deb
@@ -350,7 +361,11 @@ function generate_version_info() {
 	add_line_to_file ""
 	add_line_to_file "Other tools:"
 	add_line_to_file "************"
-	add_line_to_file "    + VS Codium version: $VERSION_VSCODIUM"
+	if [ "$VARIANT" == "BIOS" ]; then
+		add_line_to_file "    + VS Code version: $VERSION_VSCODE"
+	else
+		add_line_to_file "    + VS Codium version: $VERSION_VSCODIUM"
+	fi
 	add_line_to_file "    + Node.js version: $VERSION_NODEJS"
 	add_line_to_file "    + Android SDK Build Tool version: $VERSION_BUILD_TOOL"
 	add_line_to_file "    + Android SDK Platform Tool version: $VERSION_PLATFORM_TOOL"
@@ -428,7 +443,7 @@ function build_debian()
 
 	# executable scripts and applications
 	cp ./config/build/dpkg_build/robot.ico ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
-	cp ./config/build/dpkg_build/codium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
+	cp ./config/build/dpkg_build/${ideIcon} ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/appium.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/appium-inspector.png ./output_lx/${PACK_NAME}/opt/rfwaio/linux/icon
 	cp ./config/build/dpkg_build/robot.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
@@ -436,17 +451,25 @@ function build_debian()
 	cp ./config/build/dpkg_build/appiumInspector.desktop ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/set_robotenv.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/linux/set_robotenv.sh
+
+	# If BIOS variant, change desktop file to point to VSCode instead of VSCodium
+	if [ "$VARIANT" == "BIOS" ]; then
+      sed -i 's/codium/code/g' ./output_lx/${PACK_NAME}/opt/rfwaio/linux/robot.desktop
+      sed -i 's/VSCodium/VSCode/g' ./output_lx/${PACK_NAME}/opt/rfwaio/linux/robot.desktop
+		sed -i 's/IDE_NAME="VSCodium"/IDE_NAME="VSCode"/g' ./output_lx/${PACK_NAME}/DEBIAN/preinst
+		sed -i 's/IDE_NAME="VSCodium"/IDE_NAME="VSCode"/g' ./output_lx/${PACK_NAME}/DEBIAN/prerm
+		sed -i 's/IDE_NAME="VSCodium"/IDE_NAME="VSCode"/g' ./output_lx/${PACK_NAME}/DEBIAN/postinst
+   fi
 	#cp ./config/build/dpkg_build/install_dlt.sh ./output_lx/${PACK_NAME}/opt/rfwaio/linux/
 	cp ./config/build/dpkg_build/robot ./output_lx/${PACK_NAME}/usr/local/bin
 	chmod +x ./output_lx/${PACK_NAME}/usr/local/bin/robot
-
-	# Vscodium package and RobotTest workspace
+	# VSCode/Vscodium package and RobotTest workspace
 	cp -R -a ../robotvscode/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode
 	cp -R -a ./config/RobotTest/. ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/RobotTest
 	cp ./install/install-github-copilot-exts.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
 	cp ./install/update_product_json.sh ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
-    chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-    chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
+   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+   chmod +x ./output_lx/${PACK_NAME}/opt/rfwaio/robotvscode/update_product_json.sh
 
 	# Tutorial and Documentation packages
 	mkdir -p ./output_lx/${PACK_NAME}/opt/rfwaio/tutorial

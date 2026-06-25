@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
+IDE_NAME="VSCodium"
 
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
@@ -23,7 +24,7 @@ function allow_user_group_permissions(){
 }
 
 function remove_vscodium_package(){
-   echo remove Vscodium related stuffs
+   echo "remove $IDE_NAME related stuffs"
 
    rm -rf /opt/rfwaio/robotvscode
    rm -rf /opt/rfwaio/linux/robot.desktop
@@ -34,7 +35,7 @@ function remove_vscodium_package(){
 }
 
 function remove_android_package(){
-   echo remove Android related stuffs
+   echo "remove Android related stuffs"
 
    rm -rf /opt/rfwaio/devtools
    rm -rf /opt/rfwaio/linux/appium.desktop
@@ -112,13 +113,13 @@ function update_android_related(){
 }
 
 function update_vscodium_related(){
-   echo "Performing updates for Vscodium-related components..."
+   echo "Performing updates for $IDE_NAME-related components..."
 
    #
-   # Configure Unitiy Launchers - "VSCodium for RobotFramework AIO"
+   # Configure Unitiy Launchers - "$IDE_NAME for RobotFramework AIO"
    #
    ###############################################################################
-   echo -e "${MSG_DONE} Creating/Updating 'VSCodium for RobotFramework AIO' App"
+   echo -e "${MSG_DONE} Creating/Updating '$IDE_NAME for RobotFramework AIO' App"
    cp /opt/rfwaio/linux/robot.desktop ${APPS_PATH}/robot.desktop
    update_owner ${APPS_PATH}/robot.desktop
    chmod +x ${APPS_PATH}/robot.desktop
@@ -149,14 +150,14 @@ function update_vscodium_related(){
       sed -i "s|\"type\"\s*:\s*\"robotframework-lsp\"|\"type\": \"robotcode\"|g" "$TestPath/.vscode/launch.json"
    fi
 
-   # Remind user to install Github Copilot extensions for VsCodium
+   # Remind user to install Github Copilot extensions for IDE
    INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
    if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
-      echo "For using Github Copilot extensions with VsCodium, please install them by executing below script:"
+      echo "For using Github Copilot extensions with $IDE_NAME, please install them by executing below script:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
    fi
 
-   # Restore user's VSCode extensions for reinstalled Vscodium
+   # Restore user's VSCode extensions for reinstalled IDE
    local BACKUP_DIR="/tmp/vscode_backup"
    local EXT_BACKUP_DIR="$BACKUP_DIR/extensions"
    local STORAGE_BACKUP_DIR="$BACKUP_DIR/globalStorage"
@@ -164,7 +165,7 @@ function update_vscodium_related(){
    local EXT_NEW_DIR="/tmp/extensions"
 
    if [ -d "$EXT_BACKUP_DIR" ]; then
-      echo "Restoring user's VSCode extensions..."
+      echo "Restoring user's $IDE_NAME extensions..."
       mv "$VSCODE_DATA_DIR/extensions" "$EXT_NEW_DIR"
 
       cp -R "$EXT_BACKUP_DIR" $VSCODE_DATA_DIR
@@ -175,9 +176,9 @@ function update_vscodium_related(){
       allow_user_group_permissions "$VSCODE_DATA_DIR/extensions"
    fi
 
-   # Restore user's VSCode global storage for reinstalled Vscodium
+   # Restore user's VSCode global storage for reinstalled IDE
    if [ -d "$STORAGE_BACKUP_DIR" ]; then
-      echo "Restoring user's VSCode global storage..."
+      echo "Restoring user's $IDE_NAME global storage..."
       cp -R "$STORAGE_BACKUP_DIR" "$VSCODE_DATA_DIR/user-data/User/"
 
       allow_user_group_permissions "$VSCODE_DATA_DIR/user-data/User/globalStorage"
@@ -353,17 +354,17 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
    fi
    if $DO_UPDATE_VSCODIUM_FLAG; then
       # Dev mode
-      if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]] || \
-      [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (upgrade/overwrite) " ]]; then
+      if [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (fresh install) " ]] || \
+      [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (upgrade/overwrite) " ]]; then
 
-         # Update permission of Vscodium-related data
+         # Update permission of IDE-related data
          ###########################################################################
          allow_user_group_permissions /opt/rfwaio/robotvscode/data
          allow_user_group_permissions /opt/rfwaio/robotvscode/RobotTest
          chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
 
          # Extra step only for fresh install
-         if [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium (fresh install) " ]]; then
+         if [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (fresh install) " ]]; then
             rm -rf "/tmp/vscode_backup"
          fi
 
@@ -372,12 +373,12 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
          remove_vscodium_package;
       fi
    else
-      # Dev mode
-      if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Vscodium " ]]; then
+      # End-user mode
+      if ! [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME " ]]; then
          remove_vscodium_package;
       else
          #
-         # Update permission of Vscodium-related data
+         # Update permission of IDE-related data
          #
          #############################################################################
          allow_user_group_permissions /opt/rfwaio/robotvscode/data

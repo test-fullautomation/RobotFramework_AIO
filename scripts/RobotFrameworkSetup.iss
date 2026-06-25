@@ -12,6 +12,18 @@
 
 #define MyAppName "RobotFramework AIO (All In One)"
 
+#ifndef VARIANT
+   #define VARIANT "OSS"
+#endif
+
+#if VARIANT == "BIOS"
+   #define IdeName "VSCode"
+   #define IdeExe "Code.exe"
+#else
+   #define IdeName "VSCodium"
+   #define IdeExe "VSCodium.exe"
+#endif
+
 ;Commandline argument
 ;iscc /DRobotFrameworkVersion=version /ITrackService=URL
 ;allows to set a RobotFramework- and Setup version
@@ -144,14 +156,14 @@ Source: "..\config\tools\Appium.bat"; Excludes: ".git"; DestDir: {app}\devtools;
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}\testcases; Components: VsCodium;
+Name: "{commondesktop}\{#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}\testcases; Components: VsCodium;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ VSCodium for RobotFramework"; Filename: {app}\robotvscode\VSCodium.exe; WorkingDir: {code:GetUsrDataDir}; Components: VsCodium;
+Name: "{group}\ {#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}; Components: VsCodium;
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases;
 
@@ -166,7 +178,7 @@ Name: Full; Description: "Full installation of all components.";
 
 [Components]
 Name: "RobotFramework_AIO_All_In_One"; Description: "All in One required to develop and execute RobotFramework test cases"; Flags: fixed; Types: Standard Full;
-Name: "VsCodium"; Description: "VSCodium Editor"; Types: Standard Full;
+Name: "VsCodium"; Description: "{#IdeName} Editor"; Types: Standard Full;
 Name: "Android"; Description: "Android package for developing test case"; Types: Standard Full;
 Name: "Android\sdk_tools"; Description: "Android SDK Tools: command line tools, platform tools, build tools."; Types: Standard Full;
 Name: "Android\nodejs"; Description: "Node.js environment which is also contains appium server."; Types: Full;
@@ -846,7 +858,7 @@ begin
 
   InstructionLabel := TLabel.Create(WizardForm);
   InstructionLabel.Parent := InfoAfterPage.Surface;
-  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with VsCodium for ' + #13 +
+  InstructionLabel.Caption := 'The GitHub Copilot extension does not come pre-installed with ' + ExpandConstant('{#IdeName} for ') + #13 +
                               'RobotFramework' + #13#13 +
                               'Execute the following command line in Windows PowerShell to download and ' + #13 +
                               'install GitHub Copilot extension:';
@@ -1002,8 +1014,8 @@ begin
     begin
       if DirExists(ExpandConstant('{app}\robotvscode\data\extensions')) and not Assigned(ReinstallCheckbox) then
       begin
-        VsCodiumPage := CreateCustomPage(wpSelectComponents, 'VSCodium Installation Options',
-                                        'Choose how you want VSCodium to be installed');
+        VsCodiumPage := CreateCustomPage(wpSelectComponents, ExpandConstant('{#IdeName} Installation Options'),
+                                        ExpandConstant('Choose how you want {#IdeName} to be installed'));
 
         ReinstallCheckbox := TNewCheckBox.Create(VsCodiumPage);
         ReinstallCheckbox.Parent := VsCodiumPage.Surface;
@@ -1011,8 +1023,7 @@ begin
         ReinstallCheckbox.Top := ScaleY(10);
         ReinstallCheckbox.Width := VsCodiumPage.SurfaceWidth;
         ReinstallCheckbox.Height := ScaleY(40);
-        ReinstallCheckbox.Caption :=
-          'Fresh VSCodium installation';
+        ReinstallCheckbox.Caption := ExpandConstant('Fresh {#IdeName} installation');
         ReinstallCheckbox.Checked := False;
 
         NoteLabel := TNewStaticText.Create(VsCodiumPage);
