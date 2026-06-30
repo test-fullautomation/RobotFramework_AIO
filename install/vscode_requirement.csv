@@ -8,3 +8,4 @@ ms-python,pylint,2026.6.0
 ms-pyright,pyright,1.1.410
 rooveterinaryinc,roo-cline,3.54.0
 d-biehl,robotcode,2.6.2
+ms-vscode-remote,remote-ssh,0.124.0

@@ -368,6 +368,9 @@ function packaging_vscode() {
 			url=https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
 		else
 			url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+			if [ "$name" = "remote-ssh" ]; then
+				url="https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+			fi
 		fi
 
 		if [ "$name" == "debugpy" ]; then
