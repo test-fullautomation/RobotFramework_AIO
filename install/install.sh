@@ -397,6 +397,7 @@ function packaging_vscode() {
 		cp -R -a "$vscodeIcons/." "$sourceDir/$IDE/icons"
 	fi
 
+	rm -rf "$destDir/robotvscode" && mkdir -p "$destDir/robotvscode"
 	cp -R -a "$sourceDir/$IDE/." "$destDir/robotvscode/"
 	cp -R -a "$vscodeData/data/user-data/User/workspaceStorage" "$destDir/robotvscode/data/user-data/User"
 	logresult "$?" "created Robot $ideNameDisplay repository" "create Robot $ideNameDisplay repository"
