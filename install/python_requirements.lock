@@ -182,3 +182,6 @@ robotframework-libtoc==1.5.0
 build==1.4.0
 pyreadline3==3.5.4
 robotframework-retryfailed==0.2.0
+click==8.1.7
+pyproject_hooks==1.2.0
+pip-tools==7.5.3
