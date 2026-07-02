@@ -420,16 +420,32 @@ function deduplicate_wheels_and_generate_requirements() {
 	echo "    Duplicates removed: $duplicates_found"
 	echo "    Wheels remaining:   $remaining_wheels"
 
-	# Generate requirements.txt with wheel filenames only (not absolute paths)
-	# This ensures the file works on end-user machines where the build path doesn't exist
+	# Generate requirements.txt with package==version format
+	# This allows pip/uv to resolve packages from --find-links wheelhouse
 	echo ""
 	echo "  Generating $req_file..."
 	> "$req_file"  # Clear file
 
 	for whl in "$wheel_dir"/*.whl; do
 		[ -e "$whl" ] || continue
-		# Write only the wheel filename (not full path)
-		echo "$(basename "$whl")" >> "$req_file"
+		
+		local filename=$(basename "$whl")
+		local basename_no_ext="${filename%.whl}"
+		
+		# Parse wheel filename to extract package name and version
+		# Wheel format: {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+		if [[ "$basename_no_ext" =~ ^([^0-9]*[^-])-([0-9][^-]*)-(.*)$ ]]; then
+			local pkg_name="${BASH_REMATCH[1]}"
+			local pkg_version="${BASH_REMATCH[2]}"
+		else
+			# Fallback: try to extract from first two dash-separated parts
+			local pkg_name="${basename_no_ext%%-*}"
+			local rest="${basename_no_ext#*-}"
+			local pkg_version="${rest%%-*}"
+		fi
+		
+		# Write package==version format
+		echo "${pkg_name}==${pkg_version}" >> "$req_file"
 	done
 
 	local req_count=$(wc -l < "$req_file")

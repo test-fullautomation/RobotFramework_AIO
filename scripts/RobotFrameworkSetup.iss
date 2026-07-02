@@ -372,7 +372,8 @@ begin
   begin
     Log('  Found pre-built pip_requirements.txt, using it directly.');
 
-    // Load requirements file (contains wheel filenames only, not full paths)
+    // Load requirements file (contains package==version format)
+    // pip/uv will resolve packages from --find-links wheelhouse
     if not LoadStringsFromFile(SrcReqFile, ReqLines) then
     begin
       Log('ERROR: could not read pip_requirements.txt');
@@ -381,17 +382,9 @@ begin
     else
     begin
       WheelCount := GetArrayLength(ReqLines);
-      Log('  Loaded ' + IntToStr(WheelCount) + ' wheel entries from pip_requirements.txt');
+      Log('  Loaded ' + IntToStr(WheelCount) + ' package entries from pip_requirements.txt');
 
-      // Prefix each wheel filename with WheelDir to create full paths
-      for i := 0 to WheelCount - 1 do
-      begin
-        // Skip empty lines
-        if Length(ReqLines[i]) > 0 then
-          ReqLines[i] := WheelDir + '\' + ReqLines[i];
-      end;
-
-      // Save to temp location with full paths
+      // Copy to temp location (no modification needed - already in package==version format)
       if not SaveStringsToFile(ReqFile, ReqLines, False) then
       begin
         Log('ERROR: could not copy requirements file to temp');
