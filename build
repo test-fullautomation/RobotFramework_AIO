@@ -420,15 +420,16 @@ function deduplicate_wheels_and_generate_requirements() {
 	echo "    Duplicates removed: $duplicates_found"
 	echo "    Wheels remaining:   $remaining_wheels"
 
-	# Generate requirements.txt with all remaining wheel files
+	# Generate requirements.txt with wheel filenames only (not absolute paths)
+	# This ensures the file works on end-user machines where the build path doesn't exist
 	echo ""
 	echo "  Generating $req_file..."
 	> "$req_file"  # Clear file
 
 	for whl in "$wheel_dir"/*.whl; do
 		[ -e "$whl" ] || continue
-		# Write absolute path to requirements file
-		echo "$whl" >> "$req_file"
+		# Write only the wheel filename (not full path)
+		echo "$(basename "$whl")" >> "$req_file"
 	done
 
 	local req_count=$(wc -l < "$req_file")

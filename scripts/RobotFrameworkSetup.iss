@@ -355,7 +355,7 @@ begin
   begin
     Log('  Found pre-built pip_requirements.txt, using it directly.');
 
-    // Load and copy to temp directory
+    // Load requirements file (contains wheel filenames only, not full paths)
     if not LoadStringsFromFile(SrcReqFile, ReqLines) then
     begin
       Log('ERROR: could not read pip_requirements.txt');
@@ -366,7 +366,15 @@ begin
       WheelCount := GetArrayLength(ReqLines);
       Log('  Loaded ' + IntToStr(WheelCount) + ' wheel entries from pip_requirements.txt');
 
-      // Save to temp location
+      // Prefix each wheel filename with WheelDir to create full paths
+      for i := 0 to WheelCount - 1 do
+      begin
+        // Skip empty lines
+        if Length(ReqLines[i]) > 0 then
+          ReqLines[i] := WheelDir + '\' + ReqLines[i];
+      end;
+
+      // Save to temp location with full paths
       if not SaveStringsToFile(ReqFile, ReqLines, False) then
       begin
         Log('ERROR: could not copy requirements file to temp');
