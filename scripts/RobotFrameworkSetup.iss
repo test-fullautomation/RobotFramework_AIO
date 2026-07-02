@@ -278,6 +278,30 @@ var
   VsCodiumPage: TWizardPage;
   DoVSCodiumUpdate: Boolean;
 
+// Windows API to terminate process with custom exit code
+// This is needed because Inno Setup 5.x does not have SetupExitCode
+procedure ExitProcess(uExitCode: Cardinal);
+external 'ExitProcess@kernel32.dll stdcall';
+
+// Helper to exit installer with custom exit code in silent mode
+// In non-silent mode, shows error message then aborts normally
+procedure FailInstallation(ExitCode: Integer; const ErrorMsg: String);
+begin
+  Log('FATAL: ' + ErrorMsg);
+  if WizardSilent then
+  begin
+    // In silent mode, force exit with custom code
+    Log('Silent mode detected, exiting with code ' + IntToStr(ExitCode));
+    ExitProcess(ExitCode);
+  end
+  else
+  begin
+    // In interactive mode, show message and abort
+    SuppressibleMsgBox(ErrorMsg, mbCriticalError, MB_OK, MB_OK);
+    Abort;
+  end;
+end;
+
 function isExtendedVersion(): Boolean;
 begin
   #ifdef SubVersion
@@ -335,14 +359,7 @@ begin
   begin
     Log('WARNING: wheel directory does not exist: ' + WheelDir);
     if Required then
-    begin
-      SetupExitCode := 1;
-      SuppressibleMsgBox(
-        'Failed to install Python packages: wheel directory not found.' + #13#10 +
-        WheelDir,
-        mbCriticalError, MB_OK, MB_OK);
-      Abort;
-    end;
+      FailInstallation(1, 'Failed to install Python packages: wheel directory not found.' + #13#10 + WheelDir);
     Result := False;
     exit;
   end;
@@ -409,11 +426,7 @@ begin
     begin
       Log('ERROR: no *.whl files found in ' + WheelDir);
       if Required then
-      begin
-        SetupExitCode := 1;
-        SuppressibleMsgBox('No Python wheel packages were found in ' + WheelDir + '.', mbCriticalError, MB_OK, MB_OK);
-        Abort;
-      end;
+        FailInstallation(1, 'No Python wheel packages were found in ' + WheelDir + '.');
       Result := False;
       exit;
     end;
@@ -423,11 +436,7 @@ begin
     begin
       Log('ERROR: could not write requirements file: ' + ReqFile);
       if Required then
-      begin
-        SetupExitCode := 1;
-        SuppressibleMsgBox('Failed to create pip requirements file.', mbCriticalError, MB_OK, MB_OK);
-        Abort;
-      end;
+        FailInstallation(1, 'Failed to create pip requirements file.');
       Result := False;
       exit;
     end;
@@ -479,15 +488,12 @@ begin
     if Required then
     begin
       if ResultCode <> 0 then
-        SetupExitCode := ResultCode
+        FailInstallation(ResultCode, 'Failed to install Python packages.' + #13#10 +
+          'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
+          'Please check the setup log for details.')
       else
-        SetupExitCode := 1;
-      SuppressibleMsgBox(
-        'Failed to install Python packages.' + #13#10 +
-        'pip exit code: ' + IntToStr(ResultCode) + #13#10 +
-        'Please check the setup log for details.',
-        mbCriticalError, MB_OK, MB_OK);
-      Abort;
+        FailInstallation(1, 'Failed to install Python packages.' + #13#10 +
+          'Please check the setup log for details.');
     end;
     exit;
   end;
