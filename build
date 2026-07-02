@@ -325,6 +325,136 @@ function parse_config () {
 	fi
 }
 
+#
+# Deduplicate wheel files and generate pip_requirements.txt
+# If multiple versions of the same package exist, keep only the latest version.
+# This prevents pip install conflicts and speeds up installation.
+#
+# Wheel filename format: {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+# Example: robotframework-7.1.1-py3-none-any.whl
+#
+function deduplicate_wheels_and_generate_requirements() {
+	local wheel_dir="$1"
+	local req_file="${wheel_dir}/pip_requirements.txt"
+
+	echo -e "${COL_BLUE}=== Deduplicating wheels and generating requirements ===${COL_RESET}"
+	echo "  Wheel directory: $wheel_dir"
+
+	if [ ! -d "$wheel_dir" ]; then
+		echo -e "${COL_RED}ERROR: Wheel directory does not exist: $wheel_dir${COL_RESET}"
+		return 1
+	fi
+
+	# Create associative arrays to track packages
+	declare -A pkg_versions    # package_name -> "version|filename"
+	declare -A pkg_to_keep     # package_name -> filename to keep
+	local duplicates_found=0
+	local total_wheels=0
+
+	# First pass: collect all wheels and detect duplicates
+	for whl in "$wheel_dir"/*.whl; do
+		[ -e "$whl" ] || continue  # Skip if no .whl files
+
+		local filename=$(basename "$whl")
+		total_wheels=$((total_wheels + 1))
+
+		# Parse wheel filename to extract package name and version
+		# Remove .whl extension and split by '-'
+		local basename_no_ext="${filename%.whl}"
+
+		# Package name is everything before the first '-' followed by a digit
+		# Use regex to extract: name-version-python-abi-platform
+		if [[ "$basename_no_ext" =~ ^([^0-9]*[^-])-([0-9][^-]*)-(.*)$ ]]; then
+			local pkg_name="${BASH_REMATCH[1]}"
+			local pkg_version="${BASH_REMATCH[2]}"
+		else
+			# Fallback: take first part as name
+			local pkg_name="${basename_no_ext%%-*}"
+			local pkg_version="0.0.0"
+		fi
+
+		# Normalize package name (lowercase, replace - with _)
+		pkg_name=$(echo "$pkg_name" | tr '[:upper:]' '[:lower:]' | tr '-' '_')
+
+		echo "  Found: $filename (package: $pkg_name, version: $pkg_version)"
+
+		if [ -n "${pkg_versions[$pkg_name]}" ]; then
+			# Duplicate found - compare versions
+			local existing="${pkg_versions[$pkg_name]}"
+			local existing_version="${existing%%|*}"
+			local existing_file="${existing#*|}"
+
+			echo -e "  ${COL_YELLOW}DUPLICATE detected: $pkg_name${COL_RESET}"
+			echo "    Existing: $existing_file (v$existing_version)"
+			echo "    New:      $filename (v$pkg_version)"
+
+			# Compare versions using sort -V
+			local newer_version=$(printf '%s\n%s' "$existing_version" "$pkg_version" | sort -V | tail -n1)
+
+			if [ "$newer_version" == "$pkg_version" ]; then
+				# New version is newer, remove existing
+				echo -e "    ${COL_GREEN}Keeping: $filename (v$pkg_version)${COL_RESET}"
+				echo -e "    ${COL_RED}Removing: $existing_file (v$existing_version)${COL_RESET}"
+				rm -f "$wheel_dir/$existing_file"
+				pkg_versions[$pkg_name]="$pkg_version|$filename"
+				pkg_to_keep[$pkg_name]="$filename"
+			else
+				# Existing version is newer, remove new
+				echo -e "    ${COL_GREEN}Keeping: $existing_file (v$existing_version)${COL_RESET}"
+				echo -e "    ${COL_RED}Removing: $filename (v$pkg_version)${COL_RESET}"
+				rm -f "$whl"
+			fi
+			duplicates_found=$((duplicates_found + 1))
+		else
+			pkg_versions[$pkg_name]="$pkg_version|$filename"
+			pkg_to_keep[$pkg_name]="$filename"
+		fi
+	done
+
+	# Count remaining wheels
+	local remaining_wheels=$(ls -1 "$wheel_dir"/*.whl 2>/dev/null | wc -l)
+
+	echo ""
+	echo "  Summary:"
+	echo "    Total wheels found: $total_wheels"
+	echo "    Duplicates removed: $duplicates_found"
+	echo "    Wheels remaining:   $remaining_wheels"
+
+	# Generate requirements.txt with package==version format
+	# This allows pip/uv to resolve packages from --find-links wheelhouse
+	echo ""
+	echo "  Generating $req_file..."
+	> "$req_file"  # Clear file
+
+	for whl in "$wheel_dir"/*.whl; do
+		[ -e "$whl" ] || continue
+		
+		local filename=$(basename "$whl")
+		local basename_no_ext="${filename%.whl}"
+		
+		# Parse wheel filename to extract package name and version
+		# Wheel format: {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
+		if [[ "$basename_no_ext" =~ ^([^0-9]*[^-])-([0-9][^-]*)-(.*)$ ]]; then
+			local pkg_name="${BASH_REMATCH[1]}"
+			local pkg_version="${BASH_REMATCH[2]}"
+		else
+			# Fallback: try to extract from first two dash-separated parts
+			local pkg_name="${basename_no_ext%%-*}"
+			local rest="${basename_no_ext#*-}"
+			local pkg_version="${rest%%-*}"
+		fi
+		
+		# Write package==version format
+		echo "${pkg_name}==${pkg_version}" >> "$req_file"
+	done
+
+	local req_count=$(wc -l < "$req_file")
+	echo "  Written $req_count entries to pip_requirements.txt"
+	echo -e "${COL_GREEN}=== Deduplication complete ===${COL_RESET}"
+
+	return 0
+}
+
 add_line_to_file() {
     echo "$1" >> version.txt
 }
@@ -397,6 +527,7 @@ function build_debian()
 	create_testsuitmanagement_package_context_file
 	update_debian_control_file
 	parse_config "$ConfigFile"
+	deduplicate_wheels_and_generate_requirements "$wheelHouseDir"
 
 	build_libdoc_document
 
@@ -501,6 +632,7 @@ function build_windows() {
 	generate_version_info
 	create_testsuitmanagement_package_context_file
 	parse_config "$ConfigFile"
+	deduplicate_wheels_and_generate_requirements "$wheelHouseDir"
 	build_libdoc_document
 
 	cd "$CURDIR"
@@ -532,6 +664,7 @@ function build_docker() {
 	fi
 
 	parse_config $ConfigFile
+	deduplicate_wheels_and_generate_requirements "$wheelHouseDir"
 }
 
 if [[ -f /.dockerenv || "$BUILD_ENV" == "docker" ]]; then
