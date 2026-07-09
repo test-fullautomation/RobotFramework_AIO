@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Launch Jupyter - {{ workbook_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <h4 class="alert-heading">🚀 Launching JupyterLab</h4>
+            <p>Your notebook environment is ready. You can now practice exercises in JupyterLab.</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ workbook_name }}</h4>
+            </div>
+            <div class="card-body">
+                <h5>Getting Started:</h5>
+                <ol>
+                    <li>Click "Open JupyterLab" button below to launch the notebook</li>
+                    <li>Complete the exercises in JupyterLab</li>
+                    <li>Run your code and check results with `p1.check()`, `p2.check()`, etc.</li>
+                    <li>Your progress is automatically saved</li>
+                    <li>Click "Return to Dashboard" to sync your progress back</li>
+                </ol>
+                
+                <div class="d-flex gap-2 mt-4">
+                    <a href="{{ jupyter_url }}" target="_blank" class="btn btn-success btn-lg">
+                        <strong>🚀 Open JupyterLab</strong>
+                    </a>
+                    <button onclick="syncProgress()" class="btn btn-outline-primary">
+                        🔄 Sync Progress
+                    </button>
+                    <a href="{{ url_for('return_from_jupyter', workbook=workbook_name) }}" class="btn btn-outline-secondary">
+                        ← Return to Dashboard
+                    </a>
+                </div>
+                
+                <div id="sync-result" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">💡 Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Execute cells:</strong> Press <kbd>Shift</kbd>+<kbd>Enter</kbd> to run a cell</li>
+                    <li><strong>Get help:</strong> Use <code>p1.hint()</code> or <code>p1.solution()</code> in notebooks</li>
+                    <li><strong>Save work:</strong> Progress is saved automatically when you run <code>check()</code></li>
+                    <li><strong>Multiple tabs:</strong> You can open JupyterLab in a new tab and keep this page open</li>
+                    <li><strong>Stuck?:</strong> Check the README files in the notebook directory for more information</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">⚠️ Important Notes</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>JupyterLab runs on port <strong>{{ jupyter_url.split(':')[-1].split('/')[0] }}</strong></li>
+                    <li>Keep this web application running while using JupyterLab</li>
+                    <li>Don't forget to sync your progress before closing</li>
+                    <li>All notebooks are saved in your personal workspace</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function syncProgress() {
+    const resultDiv = document.getElementById('sync-result');
+    resultDiv.innerHTML = '<div class="alert alert-info">Syncing progress...</div>';
+    
+    fetch('/sync-progress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            workbook_name: '{{ workbook_name }}'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            resultDiv.innerHTML = '<div class="alert alert-success">✓ Progress synced successfully!</div>';
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+            }, 3000);
+        } else {
+            resultDiv.innerHTML = '<div class="alert alert-danger">✗ Failed to sync progress: ' + (data.error || 'Unknown error') + '</div>';
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = '<div class="alert alert-danger">✗ Error: ' + error.message + '</div>';
+    });
+}
+
+// Auto-sync on page load (in case user is returning)
+document.addEventListener('DOMContentLoaded', function() {
+    // Optional: Auto-sync after a delay
+    // setTimeout(syncProgress, 2000);
+});
+</script>
+{% endblock %}

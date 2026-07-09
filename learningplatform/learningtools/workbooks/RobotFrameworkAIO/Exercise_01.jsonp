@@ -1,0 +1,134 @@
+{
+  "name": "RobotFrameworkAIO.Exercise_01",
+  "title": "Exercise 01: Building Testsuites",
+  "summary": "Write a Robot Framework test suite using RobotFramework_TestsuitesManagement and run it with p1.check().",
+  "introduction": [
+    "In this exercise you will create a Robot Framework test suite that uses the TestsuitesManagement library.",
+    "Assign your robot script to the `robot_code` variable and call `p1.check()` to execute and validate it."
+  ],
+  "questions": [
+    {
+      "id": "p1",
+      "title": "Practice 1: Simple test suite with TestsuitesManagement",
+      "prompt": [
+        "Create a Robot Framework test suite script and assign it to the `robot_code` variable.",
+        "The suite must import `RobotFramework_TestsuitesManagement` with alias `tm` and call `tm.testsuite_setup` as `Suite Setup`.",
+        "Add a test case that logs the `${CONFIG}[Maximum_version]` and `${CONFIG}[Project]` configuration values.",
+        "Call `p1.check()` to execute the robot script and verify that all tests pass."
+      ],
+      "starter_code": [
+        "robot_code = \"\"\"",
+        "*** Settings ***",
+        "",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "",
+        "Suite Setup    tm.testsuite_setup",
+        "",
+        "*** Test Cases ***",
+        "Test Case practice-01",
+        "    [documentation]    practice-01",
+        "    Log    <your log statement here>    console=yes",
+        "\"\"\"",
+        "p1.check()"
+      ],
+      "hint": [
+        "Use the `*** Settings ***` section to import the library and configure `Suite Setup`:",
+        "",
+        "```",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "Suite Setup    tm.testsuite_setup",
+        "```",
+        "",
+        "Then in `*** Test Cases ***`, use the `Log` keyword with `console=yes` to print the `${CONFIG}` values.",
+        "",
+        "Access config values with `${CONFIG}[key_name]` syntax."
+      ],
+      "solution": [
+        "Here is a complete solution:",
+        "",
+        "```python",
+        "*** Settings ***",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "Suite Setup    tm.testsuite_setup",
+        "",
+        "*** Test Cases ***",
+        "Test Case practice-01",
+        "    [documentation]    practice-01",
+        "    Log    Maximum_version : ${CONFIG}[Maximum_version]    console=yes",
+        "    Log    Project : ${CONFIG}[Project]    console=yes",
+        "```"
+      ],
+      "success_message": "Correct. The robot test suite ran successfully.",
+      "failure_message": "The robot suite did not pass. Check the robot output above for details.",
+      "tags": ["robot", "testsuite", "TestsuitesManagement"]
+    },
+    {
+      "id": "p2",
+      "title": "Practice 2: Test suite with a custom configuration file",
+      "prompt": [
+        "In this practice you define a custom configuration file in JSONP format and pass it to the robot test suite via the `${config_file}` robot variable.",
+        "",
+        "Steps:",
+        "1. The `json_config` variable holds the JSONP configuration content — it is already written to `config_file_path` for you.",
+        "2. Build `robot_code` as an **f-string** so that `${config_file}` is set from `config_file_path` in the `*** Variables ***` section.",
+        "3. Import `RobotFramework_TestsuitesManagement` and add `tm.testsuite_setup` as `Suite Setup`.",
+        "4. Add a test case that checks the configuration values.",
+        "5. Call `p2.check()` to execute the suite and verify all tests pass."
+      ],
+      "starter_code": [
+        "json_config = \"\"\"\n{\n    ...\n}\"\"\"",
+        "config_file_path = './learningtools/examples/RobotFrameworkAIO/config/practice2_config.jsonp'",
+        "with open(config_file_path, 'w') as f:",
+        "    f.write(json_config)",
+        "",
+        "robot_code = f\"\"\"",
+        "*** Variables ***",
+        "${config_file}   {config_file_path}",
+        "",
+        "*** Settings ***",
+        "<Import testsuites management library>",
+        "",
+        "<Suite Setup>    <Keyword to setup the test suite>",
+        "",
+        "*** Test Cases ***",
+        "<Test cases go here>",
+        "\"\"\"",
+        "p2.check()"
+      ],
+      "hint": [
+        "Set the variable `config_file` under `*** Variables ***` to the path of the JSONP config file `config_file_path`.",
+        "Import the `RobotFramework_TestsuitesManagement` library and configure `Suite Setup`",
+        "",
+        "```",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "Suite Setup    tm.testsuite_setup",
+        "```",
+        "",
+        "Then in `*** Test Cases ***`, use the `Should Be Equal` keyword with `console=yes` to check the configuration values.",
+        "",
+        "Access config values with `${<parameter_name>}` syntax."
+      ],
+      "solution": [
+        "Here is a complete solution:",
+        "",
+        "```python",
+        "*** Variables ***",
+        "${config_file}   <config_file_path>",
+        "",
+        "*** Settings ***",
+        "Library    RobotFramework_TestsuitesManagement    WITH NAME    tm",
+        "Suite Setup    tm.testsuite_setup",
+        "",
+        "*** Test Cases ***",
+        "Test Case practice-02",
+        "    [documentation]    practice-02",
+        "    Should Be Equal    ${robot_variable_1}    ABC",
+        "    Should Be Equal    ${robot_variable_2}    ${25}",
+        "```"
+      ],
+      "success_message": "Correct. The robot test suite with the custom config file ran successfully.",
+      "failure_message": "The robot suite did not pass. Check the robot output above for details.",
+      "tags": ["robot", "testsuite", "TestsuitesManagement", "config"]
+    }
+  ]
+}
