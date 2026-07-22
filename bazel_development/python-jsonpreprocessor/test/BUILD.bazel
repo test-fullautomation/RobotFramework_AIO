@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "component_test",
+    srcs = ["component_test.py"],
+    deps = [
+        "//python-jsonpreprocessor/test/libs:libs",
+        "//python-jsonpreprocessor/JsonPreprocessor:jsonpreprocessor",
+    ],
+    visibility = ["//python-jsonpreprocessor/test/pytest:__pkg__"],
+)

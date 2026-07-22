@@ -1,0 +1,142 @@
+# --------------------------------------------------------------------------------------------------------------
+#
+# Copyright 2020-2026 Robert Bosch GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# --------------------------------------------------------------------------------------------------------------
+#
+# TOML file used for component installation
+#
+# Version 0.1.0 / 12.02.2026
+#
+# --------------------------------------------------------------------------------------------------------------
+#
+# According to the TOML specification:
+# * Names in square brackets (e.g. [build-system]) are called 'table'.
+# * Names located to the left of the equal sign (e.g. 'requires') are called 'key'.
+#
+# --------------------------------------------------------------------------------------------------------------
+# [build-system]
+# Specifies the build backend (e.g. setuptools) and required build dependencies.
+# Status: Required
+#
+[build-system]
+# 'requires' specifies the dependencies necessary for the build process (meaning the conversion of source code into an installable distribution)
+requires      = ["setuptools>=80.9.0", "wheel", "build", "docutils>=0.22.4", "robotframework>=6.1", "robotframework-pythonlibcore",
+                 "regex", "jsonschema", "GenPackageDoc", "PythonExtensionsCollection", "JsonPreprocessor"] # need to be strengthened later to: "GenPackageDoc>=0.43.0"
+build-backend = "build_backend"
+backend-path  = ["."] # the repository main folder
+
+# --------------------------------------------------------------------------------------------------------------
+# [project]
+# Core metadata including name, version, authors, and package dependencies.
+# Status: Required
+#
+[project]
+name            = "RobotFramework_TestsuitesManagement" # the official PyPi package name (must be unique worldwide), not necessarily the import name
+description     = "Functionality to manage Robot Framework testsuites"
+requires-python = ">=3.11"
+authors         = [{name = "Mai Dinh Nam Son", email = "son.maidinhnam@vn.bosch.com"}]
+readme          = "README.rst"
+license         = "Apache-2.0"
+keywords        = ["robotframework", "testsuites", "varianthandling", "test"]
+# 'classifiers' need to be choosen according to: https://pypi.org/classifiers/
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development"
+]
+# 'dependencies' defines the dependencies required to run the application or library (runtime dependencies)
+dependencies = [
+    "robotframework>=6.1",
+    "robotframework-pythonlibcore",
+    "jsonschema",
+    "regex",
+    "lxml",
+    "dotdict",
+    "colorama",
+    "GenPackageDoc",
+    "PythonExtensionsCollection",
+    "JsonPreprocessor"
+]
+dynamic = ["version"]
+
+# --------------------------------------------------------------------------------------------------------------
+# [project.optional-dependencies]
+# Defines optional dependency groups (extras), e.g., for testing or documentation.
+# Status: Optional
+#
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",          # !to be verified !
+    "pytest-cov>=3.0",      # !to be verified !
+]
+
+docs = [
+    "docutils>=0.22.4",
+]
+
+# --------------------------------------------------------------------------------------------------------------
+# [project.urls]
+# External project links such as homepage, source code repository, or documentation.
+# Status: Optional
+#
+[project.urls]
+Homepage      = "https://pypi.org/project/RobotFramework_TestsuitesManagement/"
+Documentation = "https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/RobotFramework_TestsuitesManagement/RobotFramework_TestsuitesManagement.pdf"
+Readme        = "https://github.com/test-fullautomation/robotframework-testsuitesmanagement/blob/develop/README.rst"
+Repository    = "https://github.com/test-fullautomation/robotframework-testsuitesmanagement"
+Issues        = "https://github.com/test-fullautomation/robotframework-testsuitesmanagement/issues"
+
+# --------------------------------------------------------------------------------------------------------------
+# [project.scripts]
+# Defines command-line scripts (entry points) that are installed with your Python package.
+# Status: Optional
+#
+[project.scripts]
+robfwaio_version = "RobotFramework_TestsuitesManagement.Utils.app_config:print_bundle_version"
+
+# --------------------------------------------------------------------------------------------------------------
+# [tool.setuptools]
+# Specific settings for the setuptools backend, e.g., package discovery.
+# Defines the main package to be installed.
+# Status: Optional
+#
+[tool.setuptools]
+packages = [
+    "RobotFramework_TestsuitesManagement",
+    "RobotFramework_TestsuitesManagement.Config",
+    "RobotFramework_TestsuitesManagement.Keywords",
+    "RobotFramework_TestsuitesManagement.Utils",
+    "RobotFramework_TestsuitesManagement.Utils.Events"
+]
+
+# [tool.setuptools.package-data]
+# Specifies additional non-Python files (e.g., data) to be included in the package.
+# Assigns additional installation files to the main package (without making subfolders a separate sub-package).
+# Status: Optional
+#
+[tool.setuptools.package-data]
+"RobotFramework_TestsuitesManagement" = ["*.pdf","./Config/*.json","./Config/*.jsonp"]
+
+# --------------------------------------------------------------------------------------------------------------
+# [tool.setuptools.dynamic]
+# Configures sources for dynamic fields (e.g., version from file or git tags).
+# Status: Optional (but required if 'dynamic' is used within the [project] block!)
+#
+[tool.setuptools.dynamic]
+version = {attr = "RobotFramework_TestsuitesManagement.version.VERSION"} # not defined here; we take the version from source code
+

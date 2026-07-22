@@ -1,0 +1,14 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "pytestlibs",
+    srcs = glob(["pytestlibs/**/*.py"]),
+    imports = ["."],
+    visibility = ["//python-jsonpreprocessor/test/pytest:__pkg__"],
+)
+
+filegroup(
+    name = "test_files",
+    srcs = glob(["test_*.py"]),
+    visibility = ["//python-jsonpreprocessor/test/pytest:__pkg__"],
+)

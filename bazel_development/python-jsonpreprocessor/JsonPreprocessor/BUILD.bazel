@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "jsonpreprocessor",
+    srcs = glob(["*.py"]),
+    imports = [".."],  # Damit 'from JsonPreprocessor.CJsonPreprocessor import' funktioniert
+    deps = [
+        "@pypi//regex",
+    ],
+    visibility = ["//visibility:public"],
+)

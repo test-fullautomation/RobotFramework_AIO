@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "./Config/configuration_schema.json",
+  "title": "robot_config",
+  "description": "ROBFW AIO configuration file in json format",
+  "type": "object",
+  "properties": {
+    "Project": {
+      "type": "string"
+    },
+    "WelcomeString": {
+      "type": "string"
+    },
+    "version": {
+      "type": "object"
+    },
+    "TargetName": {
+      "type": "string"
+    },
+    "Maximum_version": {
+      "type": ["string", "null"]
+    },
+    "Minimum_version": {
+      "type": ["string", "null"]
+    },
+	"params": {
+    "type": "object",
+	  "properties": {
+	    "global": {
+		}
+	  },
+    "required": ["global"],
+    "additionalProperties": false
+	}
+  },
+  "required": ["Project", "WelcomeString", "TargetName"],
+  "additionalProperties": false
+}

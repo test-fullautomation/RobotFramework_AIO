@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "libs",
+    srcs = glob(["*.py"]),
+    imports = [".."],  # Damit 'from libs.CConfig import' funktioniert
+    deps = [
+        "//python-jsonpreprocessor/test/testconfig:testconfig",
+    ],
+    visibility = ["//python-jsonpreprocessor/test:__subpackages__"],
+)

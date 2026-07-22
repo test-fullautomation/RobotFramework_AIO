@@ -1,0 +1,71 @@
+# .bazelrc
+
+**Pfad:** `.bazelrc`  
+**Absoluter Pfad:** `C:\workplace\ROBFW\components\bazel_aio\.bazelrc`  
+**Typ:** Bazel Configuration (Build-Optionen)
+
+---
+
+## Inhalt
+
+```ini
+# Bazel configuration for bits project
+
+# Enable automatic platform detection (applies to all commands)
+build --enable_platform_specific_config
+
+# ============================================================================
+# Platform-specific imports
+# ============================================================================
+# Import platform-specific configurations (startup options, paths, etc.)
+# These files contain settings that cannot be made conditional in main .bazelrc
+# Hint: %workspace% is a Bazel specific variable that works on Windows
+# and on Linux!
+# If file does not exist: no error!
+try-import %workspace%/.bazelrc.windows
+try-import %workspace%/.bazelrc.linux
+# or:
+# try-import %workspace%/.bazelrc.platform
+
+# ============================================================================
+# Windows-specific configuration
+# ============================================================================
+build:windows --cxxopt=/std:c++17
+build:windows --host_cxxopt=/std:c++17
+build:windows --enable_runfiles
+build:windows --ui_event_filters=-info,-stderr
+test:windows --test_output=all
+
+# ============================================================================
+# Linux-specific configuration
+# ============================================================================
+build:linux --cxxopt=-std=c++17
+build:linux --host_cxxopt=-std=c++17
+test:linux --test_output=all
+
+# Verbose output for debugging
+# Uncomment to see more details during build
+# build --verbose_failures
+# build --sandbox_debug
+
+
+
+
+
+
+```
+
+---
+
+## Datei-Informationen
+
+- **Größe:** 1573 bytes
+- **Zeilen:** 43
+- **Verzeichnis:** `C:\workplace\ROBFW\components\bazel_aio`
+
+---
+
+## Navigation
+
+**Übergeordnetes Verzeichnis:** `(Root)`
+

@@ -1,0 +1,56 @@
+site_name: Bazel Configuration Documentation - bazel_aio
+site_description: Automated documentation of Bazel configuration files in C:\workplace\ROBFW\components\bazel_aio
+site_author: Bazel Docs Generator
+docs_dir: docs
+site_dir: bazel_config_doc
+theme:
+  name: readthedocs
+  language: de
+  features:
+  - navigation.tabs
+  - navigation.sections
+  - navigation.expand
+  - toc.integrate
+  - search.suggest
+  - search.highlight
+nav:
+- Übersicht: index.md
+- Root Directory:
+  - .bazelrc: _bazelrc.md
+  - BUILD.bazel: BUILD_bazel.md
+  - MODULE.bazel: MODULE_bazel.md
+- python-extensions-collection:
+  - BUILD.bazel (python-extensions-collection): python-extensions-collection_BUILD_bazel.md
+- python-jsonpreprocessor  /  JsonPreprocessor:
+  - BUILD.bazel (python-jsonpreprocessor\JsonPreprocessor): python-jsonpreprocessor_JsonPreprocessor_BUILD_bazel.md
+- python-jsonpreprocessor  /  test:
+  - BUILD.bazel (python-jsonpreprocessor\test): python-jsonpreprocessor_test_BUILD_bazel.md
+- python-jsonpreprocessor  /  test  /  libs:
+  - BUILD.bazel (python-jsonpreprocessor\test\libs): python-jsonpreprocessor_test_libs_BUILD_bazel.md
+- python-jsonpreprocessor  /  test  /  pytest:
+  - BUILD.bazel (python-jsonpreprocessor\test\pytest): python-jsonpreprocessor_test_pytest_BUILD_bazel.md
+- python-jsonpreprocessor  /  test  /  pytest  /  pytestfiles:
+  - BUILD.bazel (python-jsonpreprocessor\test\pytest\pytestfiles): python-jsonpreprocessor_test_pytest_pytestfiles_BUILD_bazel.md
+- python-jsonpreprocessor  /  test  /  testconfig:
+  - BUILD.bazel (python-jsonpreprocessor\test\testconfig): python-jsonpreprocessor_test_testconfig_BUILD_bazel.md
+- python-jsonpreprocessor  /  test  /  testfiles:
+  - BUILD.bazel (python-jsonpreprocessor\test\testfiles): python-jsonpreprocessor_test_testfiles_BUILD_bazel.md
+plugins:
+- search:
+    lang:
+    - de
+    - en
+markdown_extensions:
+- toc
+- admonition
+- codehilite
+- def_list
+- footnotes
+- meta
+- tables
+- pymdownx.highlight
+- pymdownx.superfences
+- pymdownx.inlinehilite
+extra:
+  version: '1.0'
+copyright: Copyright &copy; 2026 - Auto-generated Bazel Documentation

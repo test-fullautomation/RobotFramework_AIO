@@ -1,0 +1,9 @@
+filegroup(
+    name = "testfiles",
+    srcs = glob([
+        "*.jsonp",
+        "dynamic_imports/**",
+        "import/**",
+    ]),
+    visibility = ["//python-jsonpreprocessor/test:__subpackages__"],
+)
