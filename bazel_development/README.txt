@@ -1,7 +1,6 @@
 bazel_workspace/                    # Haupt-Repository
 +-- .git/                           # Git des Haupt-Repos
 +-- .gitmodules                     # Submodule-Konfiguration
-+-- WORKSPACE.bazel                 # Bazel Workspace-Config
 +-- BUILD.bazel                     # Root BUILD-Datei
 +-- .bazelrc                        # Bazel-Optionen
 +-- requirements.txt                # Shared Python-Dependencies
