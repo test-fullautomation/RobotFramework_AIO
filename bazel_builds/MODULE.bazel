@@ -1,0 +1,66 @@
+# MODULE.bazel
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+bazel_dep(name = "rules_pkg", version = "1.0.1")   # optional, fürs Archivieren
+bazel_dep(name = "rules_python", version = "1.7.0")  # Für py_binary
+# bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")  # Deaktiviert - Toolchain-Probleme
+
+
+http_archive = use_repo_rule(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+)
+
+# Portables CPython für Windows x86_64
+http_archive(
+    name = "python_portable_windows",
+    urls = ["https://github.com/astral-sh/python-build-standalone/releases/download/20250612/cpython-3.12.11+20250612-x86_64-pc-windows-msvc-install_only.tar.gz"],
+    sha256 = "7b93afa91931dbc37b307a81b8680b30193736b5ef29a44ef6452f702c306e7a",
+    strip_prefix = "python",          # Archiv enthält ein Top-Level python/
+    build_file_content = """
+filegroup(
+    name = "runtime",
+    srcs = glob(["**"], exclude = ["**/__pycache__/**"]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "interpreter",
+    srcs = ["python.exe"],
+    visibility = ["//visibility:public"],
+)
+""",
+)
+
+
+
+
+
+# # ------------------------------------------
+# # Alt
+
+# # module(
+    # # name = "python_distribution",
+    # # version = "1.0.0",
+# # )
+
+# # # Bazel Dependencies
+# # bazel_dep(name = "rules_python", version = "1.9.0")
+# # bazel_dep(name = "rules_pkg", version = "1.0.1")
+# # bazel_dep(name = "platforms", version = "1.0.0")
+
+# # # Python Toolchain registrieren
+# # python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+# # python.toolchain(
+    # # python_version = "3.13",
+# # )
+# # use_repo(python, "python_3_13")  # ← Repository explizit importieren
+
+# # # PyPI Dependencies
+# # pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+# # pip.parse(
+    # # hub_name = "pypi",
+    # # python_version = "3.13",
+    # # requirements_lock = "//:requirements_lock.txt",
+# # )
+
+# # use_repo(pip, "pypi")

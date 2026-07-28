@@ -1,0 +1,54 @@
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup", "strip_prefix")
+load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+# Alle PyPI-Pakete sammeln (direkt als pkg_files, nicht pkg_filegroup)
+pkg_files(
+    name = "all_pypi_packages",
+    srcs = [
+        "@pypi//docutils:whl",
+    ],
+    strip_prefix = strip_prefix.from_pkg(),
+    prefix = "python/Lib/site-packages",
+)
+
+# Schritt 1: Python-Interpreter sammeln
+pkg_files(
+    name = "python_runtime",
+    srcs = ["@python_3_13//:files"],
+    strip_prefix = strip_prefix.from_pkg(),
+    prefix = "python",
+)
+
+# Schritt 2: Installierte Pakete sammeln
+# (nutzt die pkg_filegroup von oben)
+
+# Schritt 3: Python-Distribution als ZIP
+pkg_zip(
+    name = "python_distribution",
+    srcs = [
+        ":python_runtime",
+        ":all_pypi_packages",  # ← Referenziert die pkg_filegroup
+    ],
+)
+
+# Python-Tool für Installer-Build
+py_binary(
+    name = "build_installer_tool",
+    srcs = ["build_installer.py"],
+    visibility = ["//visibility:private"],
+)
+
+# Schritt 4: Inno Setup Installer
+genrule(
+    name = "windows_installer",
+    srcs = [
+        ":python_distribution",
+        "installer.iss",
+    ],
+    outs = ["PythonDevEnv-Setup.exe"],
+    tools = [":build_installer_tool"],
+    cmd = "$(location :build_installer_tool) $(location :python_distribution) $(location installer.iss) $@",
+    tags = ["manual", "no-sandbox"],
+    local = True,
+)

@@ -1,0 +1,45 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load(":inno_setup.bzl", "inno_setup_installer")
+
+# ============================================================================
+# Schritt 3: Auswahl zu installierender Komponenten
+# ============================================================================
+
+filegroup(
+    name = "bundle_python",
+    srcs = [
+        "//components/python:python_runtime",
+        "//components/py_modules:site_packages",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# ============================================================================
+# Schritt 4: Inno Setup Installer bauen
+# ============================================================================
+
+# Python-Tool für den Installer-Build
+py_binary(
+    name = "build_installer_tool",
+    srcs = ["build_installer.py"],
+    main = "build_installer.py",
+    visibility = ["//visibility:private"],
+)
+
+# Python-Tool für das Staging der Dateien
+py_binary(
+    name = "stage_files_tool",
+    srcs = ["stage_files.py"],
+    main = "stage_files.py",
+    visibility = ["//visibility:private"],
+)
+
+# Der eigentliche Installer
+inno_setup_installer(
+    name = "python_installer",
+    bundle = [":bundle_python"],
+    iss_template = "installer.iss",
+    iscc_path = "C:/workplace/Programme/InnoSetup/ISCC.exe",
+    version = "3.12.11",
+    installer_name = "install_python",
+)
