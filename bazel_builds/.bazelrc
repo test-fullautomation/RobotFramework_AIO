@@ -40,11 +40,11 @@ test:linux --test_output=all
 # ============================================================================
 # Proxy configuration
 # ============================================================================
-common --repo_env=https_proxy=http://rb-proxy-de.bosch.com:8080
-common --repo_env=http_proxY=http://rb-proxy-de.bosch.com:8080
-common --repo_env=no_proxy=localhost,127.0.0.1,.bosch.com
+common --repo_env=
+common --repo_env=
+common --repo_env=
 
-build --action_env=https_proxy=http://rb-proxy-de.bosch.com:8080
-build --action_env=http_proxy=http://rb-proxy-de.bosch.com:8080
-build --action_env=no_proxy=localhost,127.0.0.1,.bosch.com
+build --action_env=
+build --action_env=
+build --action_env=
 
