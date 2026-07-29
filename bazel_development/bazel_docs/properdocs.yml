@@ -35,6 +35,8 @@ nav:
   - BUILD.bazel (python-jsonpreprocessor\test\testconfig): python-jsonpreprocessor_test_testconfig_BUILD_bazel.md
 - python-jsonpreprocessor  /  test  /  testfiles:
   - BUILD.bazel (python-jsonpreprocessor\test\testfiles): python-jsonpreprocessor_test_testfiles_BUILD_bazel.md
+- tools:
+  - BUILD.bazel (tools): tools_BUILD_bazel.md
 plugins:
 - search:
     lang:

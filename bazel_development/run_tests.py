@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-run_all_tests.py - Generic Bazel Test Runner
+run_tests.py - Generic Bazel Test Runner
 
 Runs all Bazel test targets separately. Supports multiple test frameworks:
 - pytest: Isolation of pytest.ini configurations
@@ -10,10 +10,10 @@ Each module can use its own framework configuration.
 Prevents conflicts with module-specific settings (junit_suite_name, log_level, etc.).
 
 Usage:
-    python run_all_tests.py                          # all tests
-    python run_all_tests.py --pattern "//test_trigger/components/..."
-    python run_all_tests.py --continue-on-error      # don't stop in case of errors
-    python run_all_tests.py --verbose                # dertailled console output
+    python run_tests.py                          # all tests
+    python run_tests.py --pattern "//test_trigger/components/..."
+    python run_tests.py --continue-on-error      # don't stop in case of errors
+    python run_tests.py --verbose                # dertailled console output
 """
 
 import subprocess
@@ -427,13 +427,13 @@ def main():
         epilog="""
 Beispiele:
   # Alle Tests in test_trigger/components ausführen
-  python run_all_tests.py
+  python run_tests.py
 
   # Alle Tests eines bestimmten Moduls
-  python run_all_tests.py --pattern "//test_trigger/components/module_1_py_binary/..."
+  python run_tests.py --pattern "//test_trigger/components/module_1_py_binary/..."
 
   # Mit detaillierter Ausgabe und ohne Abbruch bei Fehlern
-  python run_all_tests.py --verbose --continue-on-error
+  python run_tests.py --verbose --continue-on-error
 
 Hintergrund:
   Dieses Script führt jedes Bazel Test-Target separat aus, damit jedes

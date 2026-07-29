@@ -24,6 +24,7 @@ module(
 bazel_dep(name = "rules_python", version = "1.9.0")
 # bazel_dep(name = "rules_python", version = "2.0.3")
 bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
@@ -45,8 +46,8 @@ use_repo(pip, "pypi")
 
 ## Datei-Informationen
 
-- **Größe:** 986 bytes
-- **Zeilen:** 29
+- **Größe:** 1038 bytes
+- **Zeilen:** 30
 - **Verzeichnis:** `C:\workplace\ROBFW\components\bazel_aio`
 
 ---
