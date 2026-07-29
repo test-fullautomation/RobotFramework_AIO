@@ -18,9 +18,9 @@ set LOGFILE_BASE_DIR=%WORKSPACE_ROOT%\test_logfiles
 set BAZEL_EXEC=C:\TAF\tools\bazelisk\bazel.exe
 
 REM Proxy settings
-set HTTP_PROXY=http://rb-proxy-de.bosch.com:8080
-set HTTPS_PROXY=http://rb-proxy-de.bosch.com:8080
-set NO_PROXY=localhost,127.0.0.1
+set HTTP_PROXY=
+set HTTPS_PROXY=
+set NO_PROXY=
 
 REM Bazel shell (required for 'bazel test'; select any Bazel compatible bash)
 set BAZEL_SH="C:\Program Files\Git\usr\bin\bash.exe"
@@ -30,7 +30,7 @@ echo Logfile Base Dir: %LOGFILE_BASE_DIR%
 echo.
 
 REM -- Filter by folder name
-"%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE_ROOT%" --logfile-base-dir "%LOGFILE_BASE_DIR%" --no-cache %*
+REM "%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE_ROOT%" --logfile-base-dir "%LOGFILE_BASE_DIR%" --no-cache %*
 REM "%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE_ROOT%" --logfile-base-dir "%LOGFILE_BASE_DIR%" --pattern //test_trigger/components/py_test_module_2/... %*
 REM "%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE_ROOT%" --logfile-base-dir "%LOGFILE_BASE_DIR%" --pattern //test_trigger/components/py_test_module_2/... --no-cache %*
 
@@ -41,6 +41,10 @@ REM "%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE
 
 REM with --verbose und --continue-on-error
 REM "%RobotPythonPath%/python.exe" run_all_tests.py --workspace-root "%WORKSPACE_ROOT%" --logfile-base-dir "%LOGFILE_BASE_DIR%" --verbose --continue-on-error %*
+
+
+REM Python independend
+REM C:\TAF\tools\bazelisk\bazel.exe run //:run_all_tests  --check_direct_dependencies=off
 
 echo ---------------------------------------
 echo Batch returned ERRORLEVEL : %ERRORLEVEL%
