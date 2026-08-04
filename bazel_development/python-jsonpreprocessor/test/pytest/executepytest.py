@@ -26,7 +26,7 @@
 #
 # --------------------------------------------------------------------------------------------------------------
 #
-# 14.07.2026
+# 04.08.2026
 #
 # --------------------------------------------------------------------------------------------------------------
 
@@ -77,58 +77,66 @@ oCmdLineParser.add_argument('--pytestcommandline', type=str, help='Command line 
 oCmdLineArgs = oCmdLineParser.parse_args()
 
 # Determine log file location
-# Priority: 1. Command line, 2. TEST_UNDECLARED_OUTPUTS_DIR (Bazel), 3. TEST_LOGFILE (external), 4. Default
-sLogFile = None
+# Priority: 1. XML_OUTPUT_FILE (Bazel), 2. Command line, 3. TEST_UNDECLARED_OUTPUTS_DIR (Bazel), 4. TEST_LOGFILE (external), 5. Default
+xml_log_file = None
 
-if oCmdLineArgs.logfile is not None:
-   # Command line argument has highest priority
-   sLogFile = ntpath.normpath(oCmdLineArgs.logfile)
+# Check for Bazel's XML_OUTPUT_FILE environment variable (highest priority)
+xml_output_file_env = os.environ.get("XML_OUTPUT_FILE")
+if xml_output_file_env:
+   # Bazel test: Use the path provided by Bazel
+   xml_log_file = ntpath.normpath(xml_output_file_env)
+elif oCmdLineArgs.logfile is not None:
+   # Command line argument has second priority
+   xml_log_file = ntpath.normpath(oCmdLineArgs.logfile)
 else:
    # Check if running in Bazel test environment
    sTestUndeclaredOutputsDir = os.environ.get("TEST_UNDECLARED_OUTPUTS_DIR")
    if sTestUndeclaredOutputsDir:
       # Bazel test: Write to undeclared outputs (will be copied to bazel-testlogs)
-      sLogFile = os.path.join(sTestUndeclaredOutputsDir, "pytest_results.xml")
-      # Store target logfile path for later reference
-      sTargetLogFile = os.environ.get("TEST_LOGFILE")
-      if sTargetLogFile:
-         print(f"Running in Bazel test environment")
-         print(f"XML will be written to: {sLogFile}")
-         print(f"Target logfile location: {sTargetLogFile}")
+      xml_log_file = ntpath.normpath(os.path.join(sTestUndeclaredOutputsDir, "pytest_results.xml"))
    else:
       # Direct execution or bazel run: Use TEST_LOGFILE if available
-      sLogFile = os.environ.get("TEST_LOGFILE")
-      if sLogFile:
-         sLogFile = ntpath.normpath(sLogFile)
+      xml_log_file = os.environ.get("TEST_LOGFILE")
+      if xml_log_file:
+         xml_log_file = ntpath.normpath(xml_log_file)
       else:
-         # Fallback default
-         sLogFile = f"{sThisScriptPath}/logfiles/PyTestLog.xml"
-
-sPytestCommandLine = None
-if oCmdLineArgs.pytestcommandline is not None:
-   sPytestCommandLine = oCmdLineArgs.pytestcommandline
+         # Fallback
+         xml_log_file = f"{sThisScriptPath}/logfiles/PyTestLog.xml"
 
 # -- create the log file folder
-
-sLogFilePath = os.path.dirname(sLogFile)
-if not os.path.isdir(sLogFilePath):
+xml_log_file_path = os.path.dirname(xml_log_file)
+if not os.path.isdir(xml_log_file_path):
    try:
-      os.makedirs(sLogFilePath)
+      os.makedirs(xml_log_file_path)
    except Exception as ex:
       print()
       printexception(str(ex))
       print()
       sys.exit(ERROR)
 
+print(f"Test log file '{xml_log_file}'")
+print()
+
+sPytestCommandLine = None
+if oCmdLineArgs.pytestcommandline is not None:
+   sPytestCommandLine = oCmdLineArgs.pytestcommandline
+
 # -- prepare the command line for the test execution
 
+# pytest.ini
+# The complete absolute path deactivates the pytest internal automatic search for this file.
+# This enables to use a specific pytest.ini file individually by every component - even in case
+# of a common target call like '//...' (because in this case the Bazel root folder would be used
+# as starting point for the search for pytest.ini files - and this would go wrong).
+pytest_ini = ntpath.normpath(os.path.join(os.path.dirname(__file__), "pytest.ini"))
 listCmdLineParts = []
 listCmdLineParts.append(f"\"{sPython}\"")
 listCmdLineParts.append("-m pytest")
 if sPytestCommandLine:
    listCmdLineParts.append(f"{sPytestCommandLine}")
+listCmdLineParts.append(f"-c \"{pytest_ini}\"")
 listCmdLineParts.append("--show-capture=all")
-listCmdLineParts.append(f"--junitxml=\"{sLogFile}\"")
+listCmdLineParts.append(f"--junitxml=\"{xml_log_file}\"")
 listCmdLineParts.append(f"\"{sThisScriptPath}\"")
 sCmdLine = " ".join(listCmdLineParts)
 del listCmdLineParts
@@ -158,7 +166,7 @@ except Exception as ex:
 print()
 
 if nReturn == SUCCESS:
-   print(f"Test results in '{sLogFile}'")
+   print(f"Test results in '{xml_log_file}'")
    print()
    print(COLBG + f"{sThisScriptName} done")
 else:

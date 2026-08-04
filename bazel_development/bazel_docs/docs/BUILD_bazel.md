@@ -11,7 +11,7 @@
 ```python
 # Root BUILD file - makes the workspace root a Bazel package
 load("@rules_python//python:defs.bzl", "py_binary")
-load("//tools:test_suite_runner.bzl", "create_test_runner")
+# # # load("//tools:test_suite_runner.bzl", "create_test_runner")
 
 exports_files(["requirements_lock.txt"])
 
@@ -86,83 +86,14 @@ py_binary(
     deps = [],
 )
 
-# ============================================================================
-# Test Runner - Executes all tests without Python dependency
-# ============================================================================
-# Replaces run_all_tests.py with Bazel-native solution.
-# Generated scripts can run in CI/CD without Python installation.
-#
-# Usage:
-#   bazel run //:run_all_tests          # Run all tests (continue on error)
-#   bazel run //:run_all_tests_strict   # Run all tests (stop on first error)
-#   bazel run //:run_unit_tests         # Run only unit tests
-#
-# Generated scripts:
-#   bazel-bin/run_all_tests.bat         # Windows
-#   bazel-bin/run_all_tests.sh          # Linux
-# ============================================================================
-
-create_test_runner(
-    name = "run_all_tests_gen",
-    tests = [
-        "//python-jsonpreprocessor/test/pytest:execute_py_test_jpp",
-        # "//python-extensions-collection/test/pytest:execute_py_test_pec",
-        # "//robotframework-testsuitesmanagement/test/pytest:execute_py_test_tsm",
-    ],
-    continue_on_error = True,
-    verbose = True,
-)
-
-py_binary(
-    name = "run_all_tests",
-    srcs = [":run_all_tests_gen"],
-    data = [":run_all_tests_gen"],
-    main = "run_all_tests_gen_runner.py",
-)
-
-create_test_runner(
-    name = "run_all_tests_strict_gen",
-    tests = [
-        "//python-jsonpreprocessor/test/pytest:execute_py_test_jpp",
-        # "//python-extensions-collection/test/pytest:execute_py_test_pec",
-        # "//robotframework-testsuitesmanagement/test/pytest:execute_py_test_tsm",
-    ],
-    continue_on_error = False,
-    verbose = True,
-)
-
-py_binary(
-    name = "run_all_tests_strict",
-    srcs = [":run_all_tests_strict_gen"],
-    data = [":run_all_tests_strict_gen"],
-    main = "run_all_tests_strict_gen_runner.py",
-)
-
-create_test_runner(
-    name = "run_unit_tests_gen",
-    tests = [
-        "//python-jsonpreprocessor/test/pytest:execute_py_test_jpp",
-        # "//python-extensions-collection/test/pytest:execute_py_test_pec",
-    ],
-    continue_on_error = True,
-)
-
-py_binary(
-    name = "run_unit_tests",
-    srcs = [":run_unit_tests_gen"],
-    data = [":run_unit_tests_gen"],
-    main = "run_unit_tests_gen_runner.py",
-)
-
-
 ```
 
 ---
 
 ## Datei-Informationen
 
-- **Größe:** 5152 bytes
-- **Zeilen:** 145
+- **Größe:** 2926 bytes
+- **Zeilen:** 76
 - **Verzeichnis:** `C:\workplace\ROBFW\components\bazel_aio`
 
 ---

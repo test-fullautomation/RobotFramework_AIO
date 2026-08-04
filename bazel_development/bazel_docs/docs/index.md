@@ -2,7 +2,7 @@
 
 **Projekt:** `bazel_aio`  
 **Root-Pfad:** `C:\workplace\ROBFW\components\bazel_aio`  
-**Generiert am:** 2026-07-29 10:26:05
+**Generiert am:** 2026-08-04 14:32:16
 
 ---
 
@@ -12,12 +12,12 @@ Diese Dokumentation wurde automatisch generiert und zeigt alle Bazel-Konfigurati
 
 ### Statistik
 
-- **Gesamt gefundene Dateien:** 12
+- **Gesamt gefundene Dateien:** 11
 
 **Dateitypen:**
 
 - **.bazelrc:** 1 Datei(en) - _Bazel Configuration (Build-Optionen)_
-- **BUILD.bazel:** 10 Datei(en) - _Bazel Build File (definiert Targets und Dependencies)_
+- **BUILD.bazel:** 9 Datei(en) - _Bazel Build File (definiert Targets und Dependencies)_
 - **MODULE.bazel:** 1 Datei(en) - _Bazel Module File (Bzlmod)_
 
 
@@ -45,8 +45,6 @@ bazel_aio/
 ├── python-jsonpreprocessor\test\testconfig/
 │   ├── BUILD.bazel
 ├── python-jsonpreprocessor\test\testfiles/
-│   ├── BUILD.bazel
-├── tools/
 │   ├── BUILD.bazel
 ```
 
@@ -81,7 +79,6 @@ Verwenden Sie das Navigationsmenü links, um zu den einzelnen Bazel-Konfiguratio
 - [python-jsonpreprocessor\test\pytest\pytestfiles\BUILD.bazel](python-jsonpreprocessor_test_pytest_pytestfiles_BUILD_bazel.md)
 - [python-jsonpreprocessor\test\testconfig\BUILD.bazel](python-jsonpreprocessor_test_testconfig_BUILD_bazel.md)
 - [python-jsonpreprocessor\test\testfiles\BUILD.bazel](python-jsonpreprocessor_test_testfiles_BUILD_bazel.md)
-- [tools\BUILD.bazel](tools_BUILD_bazel.md)
 
 ---
 

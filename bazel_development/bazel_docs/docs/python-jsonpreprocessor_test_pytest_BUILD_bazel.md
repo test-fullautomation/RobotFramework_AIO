@@ -18,8 +18,8 @@ load("@rules_python//python:defs.bzl", "py_test")
 # ──────────────────────────────────────────
 py_test(
     name = "execute_py_test_jpp",
-    srcs = ["executepytest_bazel.py"],
-    main = "executepytest_bazel.py",
+    srcs = ["executepytest.py"],
+    main = "executepytest.py",
     python_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
@@ -53,7 +53,7 @@ py_test(
 
 ## Datei-Informationen
 
-- **Größe:** 1598 bytes
+- **Größe:** 1586 bytes
 - **Zeilen:** 37
 - **Verzeichnis:** `C:\workplace\ROBFW\components\bazel_aio\python-jsonpreprocessor\test\pytest`
 
