@@ -151,6 +151,9 @@ class BepInterface:
             - last_stop_time: End timestamp (ISO 8601)
             - status: Test status (PASSED, FAILED, etc.)
             - duration_ms: Test duration in milliseconds
+            - cached_locally: True if test result was restored from local cache
+            - cached_remotely: True if test result was restored from remote cache
+            - total_num_cached: Number of test runs restored from cache (from testSummary)
             - tags: Complete tag list
         
         Args:
@@ -190,6 +193,13 @@ class BepInterface:
             # Duration from testResult
             duration_ms = test_result.get("testAttemptDurationMillis")
             
+            # Cache information from testResult
+            cached_locally = test_result.get("cachedLocally", False)
+            cached_remotely = test_result.get("remotelyCached", False)
+            
+            # Cache counter from testSummary
+            total_num_cached = test_summary.get("totalNumCached", 0)
+            
             result_entry = {
                 "label": label,
                 "xml_path": xml_path,
@@ -199,6 +209,9 @@ class BepInterface:
                 "last_stop_time": last_stop_time,
                 "status": status,
                 "duration_ms": duration_ms,
+                "cached_locally": cached_locally,
+                "cached_remotely": cached_remotely,
+                "total_num_cached": total_num_cached,
                 "tags": tags,
             }
             
@@ -405,17 +418,21 @@ if __name__ == "__main__":
     # Get test results
     results = bep.get_test_results()
     
+    print()
     print(f"Found test results: {len(results)}")
     print()
     
     for result in results:
-        print(f"Label:      {result['label']}")
-        print(f"  Status:     {result['status']}")
-        print(f"  Framework:  {result['framework']}")
-        print(f"  Component:  {result['component']}")
-        print(f"  XML Path:   {result['xml_path']}")
-        print(f"  Start:      {result['first_start_time']}")
-        print(f"  Stop:       {result['last_stop_time']}")
-        print(f"  Duration:   {result['duration_ms']} ms")
-        print(f"  Tags:       {result['tags']}")
+        print(f"Label             : {result['label']}")
+        print(f"  Status          : {result['status']}")
+        print(f"  Framework       : {result['framework']}")
+        print(f"  Component       : {result['component']}")
+        print(f"  XML Path        : {result['xml_path']}")
+        print(f"  Start           : {result['first_start_time']}")
+        print(f"  Stop            : {result['last_stop_time']}")
+        print(f"  Duration        : {result['duration_ms']} ms")
+        print(f"  Cached Locally  : {result['cached_locally']}")
+        print(f"  Cached Remotely : {result['cached_remotely']}")
+        print(f"  Total Cached    : {result['total_num_cached']}")
+        print(f"  Tags            : {result['tags']}")
         print()
