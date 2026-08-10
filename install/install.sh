@@ -34,18 +34,12 @@ pandoc_only="No"
 android_only="No"
 docker="No"
 use_cache="No"
+variant="OSS"
 
 UNAME=$(uname)
 
 # Load Version definition of package tools
 source $mypath/versions.conf
-
-echo "VS Codium version $VERSION_VSCODIUM"
-echo "Node.js version $VERSION_NODEJS"
-echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
-echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
-echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
-echo "Appium Server version $VERSION_APPIUM_SERVER"
 
 function parse_arg() {
 	while [ "$#" -gt 0 ]; do
@@ -58,6 +52,20 @@ function parse_arg() {
 		--pandoc) echo "Create pandoc repo only";pandoc_only="Yes"; shift;;
 		--android) echo "Create android repo only";android_only="Yes"; shift;;
 		--docker) echo "Create for docker image";docker="Yes"; shift;;
+		--variant=*)
+			variant="${1#*=}"
+			echo "Variant: $variant"
+			shift
+			;;
+		--variant)
+			if [ -z "$2" ] || [[ "$2" == -* ]]; then
+				echo "missing value for --variant" >&2
+				exit 1
+			fi
+			variant="$2"
+			echo "Variant: $variant"
+			shift 2
+			;;
 		--cache-folder=*)
 			cache_folder="${1#*=}"
 			cache_folder="${cache_folder//\\//}"
@@ -72,6 +80,26 @@ function parse_arg() {
 }
 
 parse_arg "$@"
+VARIANT=$(echo "$variant" | tr '[:lower:]' '[:upper:]')
+if [[ "$VARIANT" != "BIOS" && "$VARIANT" != "OSS" ]]; then
+	echo "Unsupported variant '$VARIANT'. Allowed values: BIOS, OSS" >&2
+	exit 1
+fi
+
+if [ "$VARIANT" == "BIOS" ]; then
+	echo "VS Code version $VERSION_VSCODE"
+	IDE=vscode
+else
+	echo "VS Codium version $VERSION_VSCODIUM"
+	IDE=vscodium
+fi
+echo "Using variant: $VARIANT"
+echo "Node.js version $VERSION_NODEJS"
+echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
+echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
+echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
+echo "Appium Server version $VERSION_APPIUM_SERVER"
+
 if [[ "$use_cache" == "No" ]]; then
 	rm -R -- "$sourceDir"/*
 else
@@ -88,11 +116,15 @@ if [ "$UNAME" == "Linux" ] ; then
 	arch=
 	platform=linux-x64
 	download_python_url=https://github.com/indygreg/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
-
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
+	if [ "$VARIANT" == "BIOS" ] ; then
+		download_vscode_url=https://update.code.visualstudio.com/${VERSION_VSCODE}/linux-x64/stable
+		archived_vscode_file=$sourceDir/VSCode-linux-x64-${VERSION_VSCODE}.tar.gz
+	else
+		download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
+		archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
+	fi
 
 	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-unknown-linux-gnu-install_only.tar.gz
-	archived_vscode_file=$sourceDir/VSCodium-linux-x64-${VERSION_VSCODIUM}.tar.gz
 
 	nodejs_ext=tar.xz
 	appium_inspector_ext=AppImage
@@ -102,12 +134,17 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	os_short=win
 	arch=-x64
 	platform=win32-x64
+	if [ "$VARIANT" == "BIOS" ] ; then
+		download_vscode_url=https://update.code.visualstudio.com/${VERSION_VSCODE}/win32-x64-archive/stable
+		archived_vscode_file=$sourceDir/VSCode-win32-x64-${VERSION_VSCODE}.zip
+	else
+		download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
+		archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
+	fi
 	download_python_url=https://github.com/astral-sh/python-build-standalone/releases/download/20250205/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	download_vscode_url=https://github.com/VSCodium/vscodium/releases/download/${VERSION_VSCODIUM}/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	download_pandoc_url=https://github.com/jgm/pandoc/releases/download/2.18/pandoc-2.18-windows-x86_64.zip
 
 	archived_python_file=$sourceDir/cpython-3.13.2+20250205-x86_64-pc-windows-msvc-shared-install_only.tar.gz
-	archived_vscode_file=$sourceDir/VSCodium-win32-x64-${VERSION_VSCODIUM}.zip
 	archived_pandoc_file=$sourceDir/pandoc-2.18-windows-x86_64.zip
 
 	nodejs_ext=zip
@@ -193,18 +230,40 @@ function download_package(){
 
 function packaging_vscode() {
 	MY_PUBLISHER="test-fullautomation"
-	rm -rf "$sourceDir/vscodium"
-	if [ "$UNAME" == "Linux" ] ; then
-		mkdir -p "$sourceDir/vscodium"
-		tar --force-local -xf "$archived_vscode_file" -C "$sourceDir/vscodium"
-	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/vscodium"
+
+	ide_setting_file="$sourceDir/$IDE/data/user-data/User/settings.json"
+
+	if [ "$VARIANT" == "BIOS" ]; then
+		ideCliPath="$sourceDir/$IDE/bin/code"
+		ideLogResult="unzipped Visual Studio Code"
+		ideLogProcess="unzip Visual Studio Code"
+		ideNameDisplay="VSCode"
+		ideExtensionsRequirements="vscode_requirement.csv"
+	else
+		ideCliPath="$sourceDir/$IDE/bin/codium"
+		ideLogResult="unzipped Visual Studio Codium"
+		ideLogProcess="unzip Visual Studio Codium"
+		ideNameDisplay="VSCodium"
+		ideExtensionsRequirements="vscodium_requirement.csv"
 	fi
 
-	logresult "$?" "unzipped Visual Studio Codium" "unzip Visual Studio Codium"
+	rm -rf "$sourceDir/$IDE"
+	if [ "$UNAME" == "Linux" ] ; then
+		mkdir -p "$sourceDir/$IDE"
+		if [ "$VARIANT" == "BIOS" ]; then
+			tar --force-local -xf "$archived_vscode_file" --strip-components=1 -C "$sourceDir/$IDE"
+		else
+			tar --force-local -xf "$archived_vscode_file" -C "$sourceDir/$IDE"
+		fi
 
-	mkdir -p "$sourceDir/vscodium/data"
-	cp -rf "$vscodeData/data/user-data" "$sourceDir/vscodium/data/"
+	elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+		/usr/bin/yes A | unzip "$archived_vscode_file" -d "$sourceDir/$IDE"
+	fi
+
+	logresult "$?" "$ideLogResult" "$ideLogProcess"
+
+	mkdir -p "$sourceDir/$IDE/data"
+	cp -rf "$vscodeData/data/user-data" "$sourceDir/$IDE/data/"
 
 	echo "Copy vscode-welcome extension"
 
@@ -217,18 +276,17 @@ function packaging_vscode() {
 
 	mkdir -p "$vscodeData/extensions/$MY_PUBLISHER.$vsix_name"
 
-	vscodium_setting_file="$sourceDir/vscodium/data/user-data/User/settings.json"
-	# add proxy configuration in vscodium setting if given
+	# add proxy configuration in vscodium/vscode setting if given
 	if [ "$VSCODIUM_PROXY" != "" ] ; then
-		if [[ -f "$vscodium_setting_file" ]]; then
-			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$vscodium_setting_file"
+		if [[ -f "$ide_setting_file" ]]; then
+			sed -i -E "s|\"http.proxy\": \"\"|\"http.proxy\": \"$VSCODIUM_PROXY\"|g" "$ide_setting_file"
 		else
-			echo "Vscodium setting file '$vscodium_setting_file' does not exist"
+			echo "$ideNameDisplay setting file '$ide_setting_file' does not exist"
 		fi
 	fi
 
 	echo "Add workbench.colorCustomizations for terminal colors"
-	if grep -q '"workbench.colorCustomizations"' "$vscodium_setting_file"; then
+	if grep -q '"workbench.colorCustomizations"' "$ide_setting_file"; then
 		echo "Replace existing workbench.colorCustomizations"
 		sed -i -E '/"workbench.colorCustomizations":\s*\{[^}]*\}/c\
     "workbench.colorCustomizations": {\
@@ -237,7 +295,7 @@ function packaging_vscode() {
         "terminal.ansiBrightMagenta": "#FF69B4",\
         "terminal.ansiRed": "#FF4040",\
         "terminal.ansiBrightRed": "#FF0000"\
-    },' "$vscodium_setting_file"
+    },' "$ide_setting_file"
 	else
 		echo "append workbench.colorCustomizations before closing brace"
 		sed -i -E '$ s/}/    "workbench.colorCustomizations": {\
@@ -246,30 +304,47 @@ function packaging_vscode() {
         "terminal.ansiBrightMagenta": "#FF69B4",\
         "terminal.ansiRed": "#FF4040",\
         "terminal.ansiBrightRed": "#FF0000"\
-    },\n}/' "$vscodium_setting_file"
+    },\n}/' "$ide_setting_file"
 	fi
 
-   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$vscodium_setting_file"; then
+   if grep -q '"robotframeworkWelcome.hasSeenWelcome"' "$ide_setting_file"; then
        echo "robotframeworkWelcome.hasSeenWelcome exists, updating to true"
-       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$vscodium_setting_file"
+       sed -i -E 's/"robotframeworkWelcome.hasSeenWelcome":\s*(true|false)/"robotframeworkWelcome.hasSeenWelcome": false/' "$ide_setting_file"
    else
        echo "Append robotframeworkWelcome.hasSeenWelcome with false before closing brace"
-       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$vscodium_setting_file"
+       sed -i -E '$ s/}/    "robotframeworkWelcome.hasSeenWelcome": false,\n}/' "$ide_setting_file"
    fi
 
 	# Ensure "workbench.startupEditor" is set to "none"
-	if grep -q '"workbench.startupEditor"' "$vscodium_setting_file"; then
+	if grep -q '"workbench.startupEditor"' "$ide_setting_file"; then
 	    echo "workbench.startupEditor exists, updating to none"
-	    sed -i -E 's/"workbench.startupEditor":\s*"[^"]*"/"workbench.startupEditor": "none"/' "$vscodium_setting_file"
+	    sed -i -E 's/"workbench.startupEditor":\s*"[^"]*"/"workbench.startupEditor": "none"/' "$ide_setting_file"
 	else
 	    echo "Append workbench.startupEditor with none before closing brace"
-	    sed -i -E '$ s/}/    "workbench.startupEditor": "none",\n}/' "$vscodium_setting_file"
+	    sed -i -E '$ s/}/    "workbench.startupEditor": "none",\n}/' "$ide_setting_file"
 	fi
 
-	echo "Install extension for visual codium from *.vsix files under config/robotvscode/extensions folder"
-	chmod +x "$sourceDir/vscodium/bin/codium"
+	echo "Install extension for $ideNameDisplay from *.vsix files under config/robotvscode/extensions folder"
+	if [ ! -f "$ideCliPath" ]; then
+		if [ "$VARIANT" == "BIOS" ]; then
+			detectedCliPath=$(find "$sourceDir/$IDE" -maxdepth 6 -type f -path "*/bin/code" | head -n 1)
+		else
+			detectedCliPath=$(find "$sourceDir/$IDE" -maxdepth 6 -type f -path "*/bin/codium" | head -n 1)
+		fi
+
+		if [ -n "$detectedCliPath" ]; then
+			warningmsg "Expected IDE CLI at '$ideCliPath' was not found. Using detected path '$detectedCliPath'"
+			ideCliPath="$detectedCliPath"
+		fi
+	fi
+
+	if [ ! -f "$ideCliPath" ]; then
+		errormsg "FATAL: Could not find IDE executable at '$ideCliPath' after extraction"
+	fi
+
+	chmod +x "$ideCliPath"
 	for extfile in $vscodeData/extensions/*.vsix; do
-		"$sourceDir/vscodium/bin/codium" --install-extension "$extfile" --user-data-dir "$sourceDir/vscodium/data"
+		"$ideCliPath" --install-extension "$extfile" --user-data-dir "$sourceDir/$IDE/data"
 		logresult "$?" "installed ${extfile#$vscodeData/extensions/} Extension" "install ${extfile#$vscodeData/extensions/} Extension"
 	done
 
@@ -277,44 +352,51 @@ function packaging_vscode() {
 		jsonp_ext_pathfile=$(ls ${vscode_jsonp})
 		json_ext_filename=$(basename $jsonp_ext_pathfile)
 		echo "Install ${json_ext_filename} extension from vscode-jsonp repo"
-		"$sourceDir/vscodium/bin/codium" --install-extension "${jsonp_ext_pathfile}" --user-data-dir "$sourceDir/vscodium/data"
+		"$ideCliPath" --install-extension "${jsonp_ext_pathfile}" --user-data-dir "$sourceDir/$IDE/data"
 		logresult "$?" "installed ${json_ext_filename} Extension" "install ${json_ext_filename} Extension"
 	fi
 
-	echo "Install extension for visual codium defined in $mypath/vscode_requirement.csv"
+	echo "Install extension for $ideNameDisplay defined in $mypath/$ideExtensionsRequirements"
 
 	while IFS=, read -r publisher name version dump || [[ -n $publisher ]]
 	do
 		version=$(echo $version|tr -d '\n'|tr -d '\r')
-		url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+		ext_filename="${name}-${version}.vsix"
+		ext_path="$sourceDir/${ext_filename}"
+
+		if [ "$VARIANT" == "BIOS" ]; then
+			url=https://${publisher}.gallery.vsassets.io/_apis/public/gallery/publisher/${publisher}/extension/${name}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
+		else
+			url=https://open-vsx.org/api/${publisher}/${name}/${version}/file/${publisher}.${name}-${version}.vsix
+		fi
+
 		if [ "$name" == "debugpy" ]; then
 			url=https://open-vsx.org/api/${publisher}/${name}/${platform}/${version}/file/${publisher}.${name}-${version}@${platform}.vsix
 		fi
 
-		microsoft_url=https://${publisher}.gallery.vsassets.io/_apis/public/gallery/PUBLISHER/${publisher}/extension/${name}/${version}/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
 		our_url=https://github.com/${publisher}/${name}/releases/download/${name}-${version}/${name}.vsix
 
 		if [[ -n "$name" ]]; then
 			# Download the test-fullautomation asset.
 			if [ "$publisher" == "$MY_PUBLISHER" ]; then
-            	download_package "${name}-${version} Extension" "$our_url" "$sourceDir/${name}-${version}.vsix"
-        	# Download the Open-VSX Community extension.
-			elif [ ! -f "${sourceDir}/${name}-${version}.vsix" ]; then
-				download_package "${name}-${version} Extension" "$url" "$sourceDir/${name}-${version}.vsix" "$microsoft_url"
+	            download_package "${name}-${version} Extension" "$our_url" "$ext_path"
+			elif [ ! -f "$ext_path" ]; then
+				download_package "${name}-${version} Extension" "$url" "$ext_path" "$alternative_url"
 			fi
 
-			"$sourceDir/vscodium/bin/codium" --install-extension "${sourceDir}/${name}-${version}.vsix" --user-data-dir "$sourceDir/vscodium/data"
-			logresult "$?" "installed ${name}-${version}.vsix Extension" "install ${name}-${version}.vsix Extension"
+			"$ideCliPath" --install-extension "$ext_path" --user-data-dir "$sourceDir/$IDE/data"
+			logresult "$?" "installed ${ext_filename} Extension" "install ${ext_filename} Extension"
 		fi
-	done < "$mypath/vscode_requirement.csv"
+	done < "$mypath/$ideExtensionsRequirements"
 
-	echo "Creating preconfigured VSCodium repository ..."
-	cp -R -a "$vscodeIcons/." "$sourceDir/vscodium/icons"
+	echo "Creating preconfigured $ideNameDisplay repository ..."
+	if [ "$VARIANT" != "BIOS" ]; then
+		cp -R -a "$vscodeIcons/." "$sourceDir/$IDE/icons"
+	fi
 
-
-	cp -R -a "$sourceDir/vscodium/." "$destDir/robotvscode/"
+	cp -R -a "$sourceDir/$IDE/." "$destDir/robotvscode/"
 	cp -R -a "$vscodeData/data/user-data/User/workspaceStorage" "$destDir/robotvscode/data/user-data/User"
-	logresult "$?" "created Robot VSCodium repository" "create Robot VSCodium repository"
+	logresult "$?" "created Robot $ideNameDisplay repository" "create Robot $ideNameDisplay repository"
 }
 
 function packaging_pandoc_windows() {
@@ -498,9 +580,11 @@ function cleanall() {
 }
 
 function make_vscode() {
-	# if [ ! -f "$archived_vscode_file" ]; then
-	download_package "Visual Studio Code" "$download_vscode_url" "$archived_vscode_file"
-	# fi
+	if [ "$VARIANT" == "BIOS" ] ; then
+		download_package "Visual Studio Code" "$download_vscode_url" "$archived_vscode_file"
+	else
+		download_package "VSCodium for RobotFramework" "$download_vscode_url" "$archived_vscode_file"
+	fi
 	packaging_vscode
 	goodmsg "make_vscode done"
 }

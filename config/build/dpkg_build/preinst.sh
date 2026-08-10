@@ -1,5 +1,7 @@
 #!/bin/bash
 
+IDE_NAME="VSCodium"
+
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
 
@@ -9,23 +11,23 @@ if $DO_UPDATE_VSCODIUM_FLAG; then
    EXTRA_CMPTS=(
       "    N : No extra package - only the core framework and libraries"
       "    A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)" 
-      "    V : Vscodium package"
-      "        1 : Fresh Install of VSCodium"
+      "    V : $IDE_NAME package"
+      "        1 : Fresh Install of $IDE_NAME"
       "            - Performs a clean setup with default settings."
       "            - No previous extensions or user configurations are retained."
-      "        2 : Upgrade Existing VSCodium"
+      "        2 : Upgrade Existing $IDE_NAME"
       "            - Updates the current installation to the latest version."
       "            - Preserves all existing extensions and user settings."
-      "Enter : All packages (default choice after 30s, includes Android + Vscodium Upgrade [V2])"
-      )
+      "Enter : All packages (default choice after 30s, includes Android + $IDE_NAME Upgrade [V2])"
+   )
    DEFAULT_OPT="AV2"
 else
    # End-user mode
    EXTRA_CMPTS=(
-   "    N : No extra package - only the core framework and libraries"
-   "    A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)" 
-   "    V : Vscodium package"
-   "Enter : All packages (default choice after 30s)"
+      "    N : No extra package - only the core framework and libraries"
+      "    A : Android package (includes Node.js, Appium server, Appium Inspector, Android SDK tools)" 
+      "    V : $IDE_NAME package"
+      "Enter : All packages (default choice after 30s)"
    )
    DEFAULT_OPT="AV"
 fi
@@ -35,10 +37,11 @@ echo "Select one or more extra components:"
 for option in "${EXTRA_CMPTS[@]}"; do
    echo "$option"
 done
+
 if $DO_UPDATE_VSCODIUM_FLAG; then
-   read -rt 30 -p "Enter your choices (e.g., AV2 for both Android and Vscodium (upgrade/overwrite) packages): " choices
+   read -rt 30 -p "Enter your choices (e.g., AV2 for both Android and $IDE_NAME (upgrade/overwrite) packages): " choices
 else
-   read -rt 30 -p "Enter your choices (e.g., AV for both Android and VSCodium packages): " choices
+   read -rt 30 -p "Enter your choices (e.g., AV for both Android and $IDE_NAME packages): " choices
 fi
    
 
@@ -48,28 +51,25 @@ if [ -z "$choices" ]; then
 fi
 
 SELECTED_CMPTS=()
-if $DO_UPDATE_VSCODIUM_FLAG; then
-   # Dev mode
-   # mkdir /opt/ngoan-dev
-   # Process user input
-   if [[ "$choices" =~ [Nn] ]]; then
-      SELECTED_CMPTS=() # No extras overrides everything
-   elif [[ "$choices" =~ [Aa] ]]; then
-      SELECTED_CMPTS+=("Android")
-   fi
-   if [[ "$choices" =~ V1|v1 ]]; then
-      SELECTED_CMPTS+=("Vscodium (fresh install)")
-   elif [[ "$choices" =~ V2|v2|V|v ]]; then
-      SELECTED_CMPTS+=("Vscodium (upgrade/overwrite)")
-   fi
+
+# Process user input
+if [[ "$choices" =~ [Nn] ]]; then
+   SELECTED_CMPTS=() # No extras overrides everything
 else
-   if [[ "$choices" =~ [Nn] ]]; then
-      SELECTED_CMPTS=() # No extras overrides everything
-   elif [[ "$choices" =~ [Aa] ]]; then
+   if [[ "$choices" =~ [Aa] ]]; then
       SELECTED_CMPTS+=("Android")
    fi
-   if [[ "$choices" =~ V|v ]]; then
-      SELECTED_CMPTS+=("Vscodium")
+   if $DO_UPDATE_VSCODIUM_FLAG; then
+      # Dev mode
+      if [[ "$choices" =~ V1|v1 ]]; then
+         SELECTED_CMPTS+=("$IDE_NAME (fresh install)")
+      elif [[ "$choices" =~ V2|v2|V|v ]]; then
+         SELECTED_CMPTS+=("$IDE_NAME (upgrade/overwrite)")
+      fi
+   else
+      if [[ "$choices" =~ V|v ]]; then
+         SELECTED_CMPTS+=("$IDE_NAME")
+      fi
    fi
 fi
 
