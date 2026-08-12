@@ -549,7 +549,7 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2
+        /opt/rfwaio/devtools/nodejs/bin/appium driver install uiautomator2@8.0.0
         /opt/rfwaio/devtools/nodejs/bin/appium driver list --installed
 
     - name: Run Android selftest
@@ -786,7 +786,7 @@ jobs:
           arch: x86_64
           profile: pixel_xl
           script: |
-            docker run --rm --network host -v "$(dirname "${{ github.workspace }}")":/workspace -v /dev/bus/usb:/dev/bus/usb -e ANDROID_HOME="/opt/rfwaio/devtools/Android" -w "/workspace/$(basename "${{ github.workspace }}")" ${{ env.AIO_IMAGE }} bash -c ". /opt/rfwaio/linux/set_robotenv.sh && \$RobotAppium/appium driver install uiautomator2 && \$RobotAppium/appium driver list --installed && \$RobotAndroidPlatformTools/adb connect localhost:5554 && python3 '../robotframework-selftest/testcases/executerobottest.py' --logfile='/home/runner/work/RobotFramework_AIO/robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml' --robotcommandline='--variable run_on:Github_Action --exclude QConnectSelfTest --exclude SerialSelfTest --exclude DLTSelfTestApp'"
+            docker run --rm --network host -v "$(dirname "${{ github.workspace }}")":/workspace -v /dev/bus/usb:/dev/bus/usb -e ANDROID_HOME="/opt/rfwaio/devtools/Android" -w "/workspace/$(basename "${{ github.workspace }}")" ${{ env.AIO_IMAGE }} bash -c ". /opt/rfwaio/linux/set_robotenv.sh && \$RobotAppium/appium driver install uiautomator2@8.0.0 && \$RobotAppium/appium driver list --installed && \$RobotAndroidPlatformTools/adb connect localhost:5554 && python3 '../robotframework-selftest/testcases/executerobottest.py' --logfile='/home/runner/work/RobotFramework_AIO/robotframework-selftest/testcases/aiotestlogfiles/aiotestlogfile.xml' --robotcommandline='--variable run_on:Github_Action --exclude QConnectSelfTest --exclude SerialSelfTest --exclude DLTSelfTestApp'"
 
       - name: Upload test result
         if: success() || failure()

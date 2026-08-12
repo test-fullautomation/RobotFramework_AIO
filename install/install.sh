@@ -99,6 +99,7 @@ echo "Android SDK Build Tool version $VERSION_BUILD_TOOL"
 echo "Android SDK Platform Tool version $VERSION_PLATFORM_TOOL"
 echo "Appium Inspector version $VERSION_APPIUM_INSPECTOR"
 echo "Appium Server version $VERSION_APPIUM_SERVER"
+echo "Appium UIAutomator2 driver version $VERSION_APPIUM_UIAUTOMATOR2_DRIVER"
 
 if [[ "$use_cache" == "No" ]]; then
 	rm -R -- "$sourceDir"/*
@@ -458,7 +459,7 @@ function packaging_android() {
 	#  - UIAutomator2 driver for appium
 	echo "Installing UIAutomator2 driver for appium"
 	export APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
-	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver -g --verbose ${npm_proxy_args}
+	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver@${VERSION_APPIUM_UIAUTOMATOR2_DRIVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed UIAutomator2 driver for appium" "install UIAutomator2 driver for appium"
 	# APPIUM_HOME=./android appium driver install uiautomator2
 	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
