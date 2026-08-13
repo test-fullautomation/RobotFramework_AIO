@@ -156,14 +156,14 @@ Source: "..\config\tools\Appium.bat"; Excludes: ".git"; DestDir: {app}\devtools;
 ;   DESKTOP
 ;
 Name: {commondesktop}\HelloWorld.robot; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases;
-Name: "{commondesktop}\{#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}\testcases; Components: VsCodium;
+Name: "{commondesktop}\{#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}\testcases; IconFilename: {app}\robotvscode\{#IdeExe}; Components: VsCodium;
 
 ;
 ;   START MENU
 ;
 ;  !! Attention !! space after \ is intended. win10 sorts entries alphabetically and this bring the corresponding entries
 ;                  up before Android links
-Name: "{group}\ {#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}; Components: VsCodium;
+Name: "{group}\ {#IdeName} for RobotFramework"; Filename: {app}\robotvscode\{#IdeExe}; WorkingDir: {code:GetUsrDataDir}; IconFilename: {app}\robotvscode\{#IdeExe}; Components: VsCodium;
 Name: "{group}\ HelloWorld.robot"; Filename: {code:GetUsrDataDir}\testcases\HelloWorld.robot; WorkingDir: {code:GetUsrDataDir}\testcases\;
 Name: "{group}\ TestCase Base Folder"; Filename: {code:GetUsrDataDir}\testcases; WorkingDir: {code:GetUsrDataDir}\testcases;
 
@@ -893,8 +893,8 @@ begin
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
-  //Notice for user who want to use Github Copilot extensions
-  InfoAfterPage := CreateCustomPage(wpInfoAfter, 'GitHub Copilot extension for VsCodium', '');
+  //Notice for users who want to use GitHub Copilot extensions
+  InfoAfterPage := CreateCustomPage(wpInfoAfter, ExpandConstant('GitHub Copilot extension for {#IdeName}'), '');
 
   InstructionLabel := TLabel.Create(WizardForm);
   InstructionLabel.Parent := InfoAfterPage.Surface;
