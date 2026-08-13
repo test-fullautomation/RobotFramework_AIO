@@ -893,7 +893,7 @@ begin
   UsrDataDirPage.Values[0] := GetPreviousData('UsrDataDir',ExpandConstant('{sd}\RobotTest'));
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
-  //Notice for user who want to use Github Copilot extensions
+  //Notice for users who want to use GitHub Copilot extensions
   InfoAfterPage := CreateCustomPage(wpInfoAfter, ExpandConstant('GitHub Copilot extension for {#IdeName}'), '');
 
   InstructionLabel := TLabel.Create(WizardForm);
