@@ -8,11 +8,15 @@ echo.
 REM Workspace configuration
 set BAZEL_EXEC=C:\TAF\tools\bazelisk\bazel.exe
 
-%BAZEL_EXEC% build //components/python:python_runtime
+REM Proxy settings
+set HTTP_PROXY=...
+set HTTPS_PROXY=...
+set NO_PROXY=...
 
-%BAZEL_EXEC% build //components/py_modules:site_packages
+REM %BAZEL_EXEC% build //components/installer:installer_set_1
+REM %BAZEL_EXEC% build //components/installer:installer_set_2
+%BAZEL_EXEC% build //components/installer:all
 
-%BAZEL_EXEC% build //components/installer:python_installer
 
 echo ========================================
 echo Batch file returns : %ERRORLEVEL%
