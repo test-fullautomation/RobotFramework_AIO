@@ -1,0 +1,26 @@
+# =============================================================================
+# components/py_modules_set_2/BUILD.bazel - Python Module Set 2
+# =============================================================================
+#
+# This package installs a set of Python packages from PyPI using pip.
+# The packages are defined in requirements_set_2_lock.txt.
+#
+# Proxy Configuration:
+#   Proxy settings are inherited from the environment via .bazelrc.
+#   Set HTTPS_PROXY, HTTP_PROXY, and NO_PROXY environment variables
+#   before running bazel build.
+#
+# =============================================================================
+
+load(":pip_install.bzl", "pip_install_dir")
+
+# Install Python packages from requirements file
+# Note: Proxy environment variables are passed through via --action_env in .bazelrc
+pip_install_dir(
+    name = "py_modules_set_2",
+    requirements = "requirements_set_2_lock.txt",
+    interpreter = "@python_portable_windows//:interpreter",
+    runtime = "@python_portable_windows//:runtime",
+    # No explicit env needed - proxy variables are inherited via --action_env
+    visibility = ["//components/installer:__pkg__"],
+)

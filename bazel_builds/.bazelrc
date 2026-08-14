@@ -38,13 +38,40 @@ test:linux --test_output=all
 # build --sandbox_debug
 
 # ============================================================================
-# Proxy configuration
+# Proxy configuration (inherited from environment)
 # ============================================================================
-common --repo_env=
-common --repo_env=
-common --repo_env=
+# Proxy settings are NOT hardcoded here. Instead, they are inherited from
+# the environment variables of the process that starts the Bazel server.
+#
+# Required environment variables (set before calling bazel):
+#   HTTPS_PROXY - Proxy for HTTPS connections (e.g., https://proxy:8080)
+#   HTTP_PROXY  - Proxy for HTTP connections (e.g., http://proxy:8080)
+#   NO_PROXY    - Comma-separated list of hosts to bypass proxy
+#
+# Example (PowerShell):
+#   $env:HTTPS_PROXY = "http://proxy.example.com:8080"
+#   $env:HTTP_PROXY = "http://proxy.example.com:8080"
+#   $env:NO_PROXY = "localhost,127.0.0.1,.example.com"
+#   bazel build //...
+#
+# Example (Bash):
+#   export HTTPS_PROXY="http://proxy.example.com:8080"
+#   export HTTP_PROXY="http://proxy.example.com:8080"
+#   export NO_PROXY="localhost,127.0.0.1,.example.com"
+#   bazel build //...
 
-build --action_env=
-build --action_env=
-build --action_env=
+# Pass proxy environment variables to repository rules (http_archive, etc.)
+# Note: Without a value, the variable is inherited from the calling process
+common --repo_env=HTTPS_PROXY
+common --repo_env=HTTP_PROXY
+common --repo_env=NO_PROXY
+
+# Pass proxy environment variables to build actions (pip install, etc.)
+# Note: Both uppercase and lowercase variants for compatibility
+build --action_env=HTTPS_PROXY
+build --action_env=HTTP_PROXY
+build --action_env=NO_PROXY
+build --action_env=https_proxy
+build --action_env=http_proxy
+build --action_env=no_proxy
 

@@ -1,39 +1,41 @@
+# =============================================================================
+# components/python/BUILD.bazel - Python Runtime Component
+# =============================================================================
+#
+# This package provides the Python runtime distribution as a component for
+# the installer build system. It wraps the portable Python distribution
+# fetched via http_archive (defined in MODULE.bazel) and prepares it for
+# inclusion in installers.
+#
+# The python_runtime target:
+#   - Takes all files from @python_portable_windows//:runtime
+#   - Strips the repository prefix from file paths
+#   - Adds a "python/" prefix for the target installation directory
+#
+# This target is referenced by installer variants in:
+#   //components/installer:installer_variants.bzl
+#
+# =============================================================================
+
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
-# load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
+
+# -----------------------------------------------------------------------------
+# Python Runtime Distribution
+# -----------------------------------------------------------------------------
+# This target packages the portable Python distribution for use in installers.
+#
+# Path transformation:
+#   Source: @python_portable_windows//:runtime (e.g., python.exe, Lib/os.py)
+#   Output: python/python.exe, python/Lib/os.py
+#
+# The "python" prefix ensures that the Python distribution is installed
+# into a "python" subdirectory in the final installation.
 
 pkg_files(
     name = "python_runtime",
     srcs = ["@python_portable_windows//:runtime"],
     strip_prefix = strip_prefix.from_root(),
-    prefix = "python",          # Zielpfad im Installer-Bündel
+    prefix = "python",  # Target path in installer bundle (e.g., python/python.exe)
     visibility = ["//components/installer:__pkg__"],
 )
 
-# pkg_zip(
-    # name = "python_portable_zip",
-    # srcs = ["//components/python:python_runtime"],
-# )
-
-
-# # # previous:
-
-# # # # components/python/BUILD.bazel
-# # # alias(
-    # # # name = "python_runtime",
-    # # # actual = "@python_portable_windows//:runtime",
-    # # # visibility = ["//visibility:public"],
-# # # )
-
-
-
-# # # previous:
-
-# # # load("@bazel_skylib//rules:copy_directory.bzl", "copy_directory")
-
-# # # # Bringt die Distribution unter einen stabilen, eigenen Pfad im Output-Baum.
-# # # copy_directory(
-    # # # name = "python_runtime",
-    # # # src = "@python_portable_windows//:runtime",
-    # # # out = "python",                  # -> bazel-bin/components/python/python/...
-    # # # visibility = ["//installer:__pkg__"],
-# # # )

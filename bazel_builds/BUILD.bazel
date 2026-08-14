@@ -1,54 +1,23 @@
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup", "strip_prefix")
-load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
-load("@rules_python//python:defs.bzl", "py_binary")
+# =============================================================================
+# Root BUILD.bazel - Workspace Entry Point
+# =============================================================================
+#
+# IMPORTANT: This file is the root BUILD file for the Bazel workspace.
+# The actual build targets are defined in the subdirectories under components/:
+#
+#   //components/python:python_runtime    - Python interpreter distribution
+#   //components/py_modules_set_1:*       - Python module set 1
+#   //components/py_modules_set_2:*       - Python module set 2
+#   //components/installer:*              - Installer targets (using macros)
+#
+# To build installers, use:
+#   bazel build //components/installer:installer_set_1
+#   bazel build //components/installer:installer_set_2
+#   bazel build //components/installer:all
+#
+# =============================================================================
 
-# Alle PyPI-Pakete sammeln (direkt als pkg_files, nicht pkg_filegroup)
-pkg_files(
-    name = "all_pypi_packages",
-    srcs = [
-        "@pypi//docutils:whl",
-    ],
-    strip_prefix = strip_prefix.from_pkg(),
-    prefix = "python/Lib/site-packages",
-)
+# This package is intentionally empty.
+# All build targets are organized in the components/ subdirectory.
+# See components/installer/BUILD.bazel for installer targets.
 
-# Schritt 1: Python-Interpreter sammeln
-pkg_files(
-    name = "python_runtime",
-    srcs = ["@python_3_13//:files"],
-    strip_prefix = strip_prefix.from_pkg(),
-    prefix = "python",
-)
-
-# Schritt 2: Installierte Pakete sammeln
-# (nutzt die pkg_filegroup von oben)
-
-# Schritt 3: Python-Distribution als ZIP
-pkg_zip(
-    name = "python_distribution",
-    srcs = [
-        ":python_runtime",
-        ":all_pypi_packages",  # ← Referenziert die pkg_filegroup
-    ],
-)
-
-# Python-Tool für Installer-Build
-py_binary(
-    name = "build_installer_tool",
-    srcs = ["build_installer.py"],
-    visibility = ["//visibility:private"],
-)
-
-# Schritt 4: Inno Setup Installer
-genrule(
-    name = "windows_installer",
-    srcs = [
-        ":python_distribution",
-        "installer.iss",
-    ],
-    outs = ["PythonDevEnv-Setup.exe"],
-    tools = [":build_installer_tool"],
-    cmd = "$(location :build_installer_tool) $(location :python_distribution) $(location installer.iss) $@",
-    tags = ["manual", "no-sandbox"],
-    local = True,
-)
