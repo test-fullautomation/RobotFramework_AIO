@@ -327,9 +327,9 @@ function packaging_vscode() {
 
 	# BIOS VSCode only: use JS locator to avoid Python locator issues
 	if [ "$VARIANT" == "BIOS" ]; then
-		if grep -q '"python.locator"' "$ide_setting_file"; then
+		if grep -q '^[[:space:]]*"python\.locator"[[:space:]]*:' "$ide_setting_file"; then
 		    echo "python.locator exists, updating to js"
-		    sed -i -E 's/"python.locator":\s*"[^"]*"/"python.locator": "js"/' "$ide_setting_file"
+		    sed -i -E 's/"python\.locator"[[:space:]]*:[[:space:]]*"[^"]*"/"python.locator": "js"/' "$ide_setting_file"
 		else
 		    echo "Append python.locator with js before closing brace"
 		    sed -i -E '$ s/}/    "python.locator": "js",\n}/' "$ide_setting_file"
