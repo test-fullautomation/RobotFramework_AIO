@@ -894,6 +894,7 @@ begin
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
   //Notice for users who want to use GitHub Copilot extensions
+#if VARIANT != "BIOS"
   InfoAfterPage := CreateCustomPage(wpInfoAfter, ExpandConstant('GitHub Copilot extension for {#IdeName}'), '');
 
   InstructionLabel := TLabel.Create(WizardForm);
@@ -924,6 +925,7 @@ begin
   InstructionMemo.SelStart := 0;
   InstructionMemo.SelLength := Length(InstructionMemo.Text)
   InfoAfterPage.Surface.Hide;
+#endif
 
 end;
 
@@ -1078,6 +1080,7 @@ begin
       end;
     end;
 
+#if VARIANT != "BIOS"
     if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
     begin
       if IsComponentSelected('VsCodium') and (VSCodiumRemoveDataSelected or not Assigned(ReinstallCheckbox)) then
@@ -1085,16 +1088,19 @@ begin
       else
         WizardForm.NextButton.OnClick(nil); // skip page
     end;
+#endif
   end
   else
   begin
-    if (CurPageID = InfoAfterPage.ID) then
+#if VARIANT != "BIOS"
+    if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
     begin
       if IsComponentSelected('VsCodium') then
         InfoAfterPage.Surface.Show
       else
         WizardForm.NextButton.OnClick(nil); // skip page
     end;
+#endif
   end;
 end;
 

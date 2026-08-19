@@ -150,11 +150,13 @@ function update_vscodium_related(){
       sed -i "s|\"type\"\s*:\s*\"robotframework-lsp\"|\"type\": \"robotcode\"|g" "$TestPath/.vscode/launch.json"
    fi
 
-   # Remind user to install Github Copilot extensions for IDE
-   INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
-      echo "For using Github Copilot extensions with $IDE_NAME, please install them by executing below script:"
-      echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
+   # Remind user to install Github Copilot extensions for IDE (only for VSCodium)
+   if [ "$IDE_NAME" == "VSCodium" ]; then
+      INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
+      if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
+         echo "For using Github Copilot extensions with $IDE_NAME, please install them by executing below script:"
+         echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
+      fi
    fi
 
    # Restore user's VSCode extensions for reinstalled IDE
