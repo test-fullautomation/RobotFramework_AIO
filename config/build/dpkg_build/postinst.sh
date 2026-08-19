@@ -1,7 +1,13 @@
 #!/bin/bash
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
-IDE_NAME="VSCodium"
+if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
+   IDE_NAME="VSCodium"
+elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
+   IDE_NAME="VSCode"
+else
+   IDE_NAME="VSCodium"
+fi
 
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
@@ -150,9 +156,9 @@ function update_vscodium_related(){
       sed -i "s|\"type\"\s*:\s*\"robotframework-lsp\"|\"type\": \"robotcode\"|g" "$TestPath/.vscode/launch.json"
    fi
 
-   # Remind user to install Github Copilot extensions for IDE
+   # Remind user to install Github Copilot extensions only for VSCodium builds.
    INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ]; then
+   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ] && [ "$IDE_NAME" = "VSCodium" ]; then
       echo "For using Github Copilot extensions with $IDE_NAME, please install them by executing below script:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
    fi

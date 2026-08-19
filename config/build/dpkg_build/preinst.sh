@@ -1,6 +1,12 @@
 #!/bin/bash
 
-IDE_NAME="VSCodium"
+if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
+   IDE_NAME="VSCodium"
+elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
+   IDE_NAME="VSCode"
+else
+   IDE_NAME="VSCodium"
+fi
 
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true

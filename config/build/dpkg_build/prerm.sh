@@ -6,7 +6,13 @@
 #   echo 1 | sudo tee /var/lib/robotframework-aio-do-update-vscodium
 #   sudo apt-get install -y ./*.deb --fix-missing --reinstall --allow-downgrades
 ###############################################################################
-IDE_NAME="VSCodium"
+if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
+   IDE_NAME="VSCodium"
+elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
+   IDE_NAME="VSCode"
+else
+   IDE_NAME="VSCodium"
+fi
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
 

@@ -809,8 +809,10 @@ begin
       end;
 #endif
 
-      if IsComponentSelected('VsCodium') then
+        #if VARIANT != "BIOS"
+        if IsComponentSelected('VsCodium') then
           SuppressibleMsgBox('Additional installations are available. Please refer to the following instructions for details.', mbInformation, MB_OK, MB_OK);
+        #endif
     end;
 
 end;
@@ -894,6 +896,7 @@ begin
   PreviousUserDataDir := GetPreviousData('UsrDataDir',ExpandConstant(''));
 
   //Notice for users who want to use GitHub Copilot extensions
+  #if VARIANT != "BIOS"
   InfoAfterPage := CreateCustomPage(wpInfoAfter, ExpandConstant('GitHub Copilot extension for {#IdeName}'), '');
 
   InstructionLabel := TLabel.Create(WizardForm);
@@ -924,6 +927,7 @@ begin
   InstructionMemo.SelStart := 0;
   InstructionMemo.SelLength := Length(InstructionMemo.Text)
   InfoAfterPage.Surface.Hide;
+  #endif
 
 end;
 
@@ -1088,7 +1092,7 @@ begin
   end
   else
   begin
-    if (CurPageID = InfoAfterPage.ID) then
+    if Assigned(InfoAfterPage) and (CurPageID = InfoAfterPage.ID) then
     begin
       if IsComponentSelected('VsCodium') then
         InfoAfterPage.Surface.Show
