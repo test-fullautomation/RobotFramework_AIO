@@ -129,12 +129,12 @@ jobs:
       - name: Install
         run: |
           chmod +x ./install/install.sh
-          ./install/install.sh
+          ./install/install.sh --variant=BIOS
 
       - name: Build
         run: |
           chmod +x ./build
-          ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
+          ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }} --variant=BIOS
 
       - name: Update all documents
         if: ${{ github.ref_type == 'tag' }}
@@ -263,11 +263,11 @@ jobs:
 
       - name: Install
         shell: bash
-        run: ./install/install.sh
+        run: ./install/install.sh --variant=BIOS
 
       - name: Build
         shell: bash
-        run: ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }}
+        run: ./build --config-file=${REPO_CONFIG} --sub-version=${{ matrix.version }} --variant=BIOS
 
       - name: Upload built package
         uses: actions/upload-artifact@v4
