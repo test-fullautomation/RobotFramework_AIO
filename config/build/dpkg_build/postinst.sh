@@ -1,13 +1,18 @@
 #!/bin/bash
 # Script to setup enviroment for Robotframework AIO on Linux
 # This should run 1 time when postinst
-if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
-   IDE_NAME="VSCodium"
-elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
-   IDE_NAME="VSCode"
-else
-   IDE_NAME="VSCodium"
-fi
+detect_ide_name() {
+   if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
+      echo "VSCodium"
+   elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
+      echo "VSCode"
+   else
+      # Keep previous fallback to avoid changing behavior in log messages.
+      echo "VSCodium"
+   fi
+}
+
+IDE_NAME="$(detect_ide_name)"
 
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
@@ -119,6 +124,7 @@ function update_android_related(){
 }
 
 function update_vscodium_related(){
+   IDE_NAME="$(detect_ide_name)"
    echo "Performing updates for $IDE_NAME-related components..."
 
    #
@@ -158,7 +164,7 @@ function update_vscodium_related(){
 
    # Remind user to install Github Copilot extensions only for VSCodium builds.
    INSTALL_COPILOT_EXTS_SCRIPT=/opt/rfwaio/robotvscode/install-github-copilot-exts.sh
-   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ] && [ "$IDE_NAME" = "VSCodium" ]; then
+   if [ -f "${INSTALL_COPILOT_EXTS_SCRIPT}" ] && [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
       echo "For using Github Copilot extensions with $IDE_NAME, please install them by executing below script:"
       echo "${INSTALL_COPILOT_EXTS_SCRIPT} $GITHUB_COPILOT_EXT_ARG"
    fi
@@ -348,7 +354,29 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
 
    # Update/remove components based on user selection during installation
    readarray -t SELECTED_CMPTS < /tmp/robfw_aio_selected_cmpts.tmp
-   if ! [[ " ${SELECTED_CMPTS[@]} " =~ " Android " ]]; then
+   SELECTED_CMPTS_JOINED=" ${SELECTED_CMPTS[*]} "
+
+   HAS_ANDROID=false
+   HAS_IDE=false
+   HAS_IDE_FRESH=false
+   HAS_IDE_UPGRADE=false
+
+   [[ "$SELECTED_CMPTS_JOINED" =~ " Android " ]] && HAS_ANDROID=true
+
+   # Use IDE-name agnostic tokens from preinst and keep compatibility with
+   # legacy values written by older packages.
+   [[ "$SELECTED_CMPTS_JOINED" =~ " IDE " ]] && HAS_IDE=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " IDE_FRESH " ]] && HAS_IDE_FRESH=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " IDE_UPGRADE " ]] && HAS_IDE_UPGRADE=true
+
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCodium " ]] && HAS_IDE=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCode " ]] && HAS_IDE=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCodium (fresh install) " ]] && HAS_IDE_FRESH=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCode (fresh install) " ]] && HAS_IDE_FRESH=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCodium (upgrade/overwrite) " ]] && HAS_IDE_UPGRADE=true
+   [[ "$SELECTED_CMPTS_JOINED" =~ " VSCode (upgrade/overwrite) " ]] && HAS_IDE_UPGRADE=true
+
+   if ! $HAS_ANDROID; then
       remove_android_package;
    else
       #
@@ -360,8 +388,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
    fi
    if $DO_UPDATE_VSCODIUM_FLAG; then
       # Dev mode
-      if [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (fresh install) " ]] || \
-      [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (upgrade/overwrite) " ]]; then
+      if $HAS_IDE_FRESH || $HAS_IDE_UPGRADE; then
 
          # Update permission of IDE-related data
          ###########################################################################
@@ -370,7 +397,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
          chmod 4755 /opt/rfwaio/robotvscode/chrome-sandbox
 
          # Extra step only for fresh install
-         if [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME (fresh install) " ]]; then
+         if $HAS_IDE_FRESH; then
             rm -rf "/tmp/vscode_backup"
          fi
 
@@ -380,7 +407,7 @@ if [ -f "${SELECTED_CMPTS_FILE}" ];then
       fi
    else
       # End-user mode
-      if ! [[ " ${SELECTED_CMPTS[@]} " =~ " $IDE_NAME " ]]; then
+      if ! $HAS_IDE; then
          remove_vscodium_package;
       else
          #

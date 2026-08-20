@@ -922,10 +922,10 @@ begin
   InstructionMemo.ReadOnly := True;
   InstructionMemo.ScrollBars := ssVertical;
   InstructionMemo.Cursor := crArrow;
-  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs
+  InstructionMemo.Text := '& "'+ ScriptPath + '" ' + MsgInstallCopilotArgs;
   // Select all text in the memo
   InstructionMemo.SelStart := 0;
-  InstructionMemo.SelLength := Length(InstructionMemo.Text)
+  InstructionMemo.SelLength := Length(InstructionMemo.Text);
   InfoAfterPage.Surface.Hide;
   #endif
 
