@@ -7,3 +7,6 @@ hediet,vscode-drawio,1.9.0
 ms-python,pylint,2026.6.0
 d-biehl,robotcode,2.6.2
 ms-python,debugpy,2026.6.0
+ms-vscode-remote,remote-ssh,0.124.0
+ms-vscode-remote,remote-ssh-edit,0.87.0
+ms-vscode,remote-explorer,0.5.0
