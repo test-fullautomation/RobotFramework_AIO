@@ -1,6 +1,12 @@
 #!/bin/bash
 
-IDE_NAME="VSCodium"
+if [ -x "/opt/rfwaio/robotvscode/bin/codium" ]; then
+   IDE_NAME="VSCodium"
+elif [ -x "/opt/rfwaio/robotvscode/bin/code" ]; then
+   IDE_NAME="VSCode"
+else
+   IDE_NAME="VSCodium"
+fi
 
 DO_UPDATE_VSCODIUM_FLAG=false
 [ -f /var/lib/robotframework-aio-do-update-vscodium ] && DO_UPDATE_VSCODIUM_FLAG=true
@@ -48,6 +54,7 @@ fi
 # Set default value if input is empty
 if [ -z "$choices" ]; then
    choices=$DEFAULT_OPT
+   echo "No input detected. Applying default selection: ${DEFAULT_OPT}"
 fi
 
 SELECTED_CMPTS=()
@@ -62,13 +69,13 @@ else
    if $DO_UPDATE_VSCODIUM_FLAG; then
       # Dev mode
       if [[ "$choices" =~ V1|v1 ]]; then
-         SELECTED_CMPTS+=("$IDE_NAME (fresh install)")
+         SELECTED_CMPTS+=("IDE_FRESH")
       elif [[ "$choices" =~ V2|v2|V|v ]]; then
-         SELECTED_CMPTS+=("$IDE_NAME (upgrade/overwrite)")
+         SELECTED_CMPTS+=("IDE_UPGRADE")
       fi
    else
       if [[ "$choices" =~ V|v ]]; then
-         SELECTED_CMPTS+=("$IDE_NAME")
+         SELECTED_CMPTS+=("IDE")
       fi
    fi
 fi
@@ -80,7 +87,23 @@ else
    # Print selected components
    echo "Selected component(s):"
    for component in "${SELECTED_CMPTS[@]}"; do
-      echo "- $component"
+      case "$component" in
+         Android)
+            echo "- Android package"
+            ;;
+         IDE)
+            echo "- ${IDE_NAME} package"
+            ;;
+         IDE_FRESH)
+            echo "- ${IDE_NAME} package (fresh install)"
+            ;;
+         IDE_UPGRADE)
+            echo "- ${IDE_NAME} package (upgrade/overwrite)"
+            ;;
+         *)
+            echo "- $component"
+            ;;
+      esac
    done
 fi
 
