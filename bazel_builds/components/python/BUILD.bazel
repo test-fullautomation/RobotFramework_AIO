@@ -4,16 +4,21 @@
 #
 # This package provides the Python runtime distribution as a component for
 # the installer build system. It wraps the portable Python distribution
-# fetched via http_archive (defined in MODULE.bazel) and prepares it for
-# inclusion in installers.
+# fetched via http_archive (defined in this module's own MODULE.bazel) and
+# prepares it for inclusion in installers.
 #
 # The python_runtime target:
 #   - Takes all files from @python_portable_windows//:runtime
 #   - Strips the repository prefix from file paths
 #   - Adds a "python/" prefix for the target installation directory
 #
+# The python_interpreter target re-exports the bare interpreter executable
+# so other Bzlmod modules (py_modules_set_1, py_modules_set_2) can depend on
+# it as "@python//:python_interpreter" without needing direct visibility into
+# the "@python_portable_windows" repository, which is private to this module.
+#
 # This target is referenced by installer variants in:
-#   //components/installer:installer_variants.bzl
+#   @installer//:installer_variants.bzl
 #
 # =============================================================================
 
@@ -36,6 +41,29 @@ pkg_files(
     srcs = ["@python_portable_windows//:runtime"],
     strip_prefix = strip_prefix.from_root(),
     prefix = "python",  # Target path in installer bundle (e.g., python/python.exe)
-    visibility = ["//components/installer:__pkg__"],
+    # NOTE: Public visibility is required here, not module-scoped visibility.
+    # Granting visibility to "@installer//:__pkg__" would require THIS module
+    # (python) to declare bazel_dep(installer) - but installer already depends
+    # on python, which would create a circular module dependency (disallowed
+    # by Bzlmod). Access control for this shared component is instead handled
+    # via the one-directional bazel_dep graph (installer/py_modules_set_1/2
+    # depend on python, not vice versa).
+    visibility = ["//visibility:public"],
 )
+
+# -----------------------------------------------------------------------------
+# Python Interpreter (Re-export)
+# -----------------------------------------------------------------------------
+# Re-exports the bare interpreter executable from the private
+# "@python_portable_windows" repository so that other Bzlmod modules can
+# consume it as "@python//:python_interpreter".
+
+alias(
+    name = "python_interpreter",
+    actual = "@python_portable_windows//:interpreter",
+    # Public visibility - see note on python_runtime above (avoids circular
+    # bazel_dep back to consumer modules).
+    visibility = ["//visibility:public"],
+)
+
 

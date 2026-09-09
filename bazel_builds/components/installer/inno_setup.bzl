@@ -204,7 +204,7 @@ inno_setup_installer = rule(
         # -------------------------------------------------------------------------
         
         "_builder": attr.label(
-            default = "//components/installer:build_installer_tool",
+            default = "//:build_installer_tool",
             executable = True,
             cfg = "exec",
             doc = """Python tool that invokes ISCC.exe.
@@ -217,7 +217,7 @@ inno_setup_installer = rule(
         ),
         
         "_stager": attr.label(
-            default = "//components/installer:stage_files_tool",
+            default = "//:stage_files_tool",
             executable = True,
             cfg = "exec",
             doc = """Python tool that stages files for the installer.

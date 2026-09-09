@@ -128,7 +128,7 @@ pip_install_dir = rule(
             This should point to python.exe from the target Python distribution.
             Using the target interpreter ensures packages are compatible.
             
-            Example: "@python_portable_windows//:interpreter"
+            Example: "@python//:python_interpreter"
             """,
         ),
         
@@ -139,7 +139,7 @@ pip_install_dir = rule(
             Pip needs access to the full Python installation including
             standard library, DLLs, etc. to function correctly.
             
-            Example: "@python_portable_windows//:runtime"
+            Example: "@python//:python_runtime"
             """,
         ),
         

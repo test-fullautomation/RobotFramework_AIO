@@ -1,0 +1,62 @@
+# =============================================================================
+# MODULE.bazel - Bazel Module Configuration
+# =============================================================================
+#
+# This file defines the external dependencies for the Bazel workspace using
+# the Bzlmod dependency management system (Bazel 6.0+).
+#
+# Structure:
+#   1. Bazel module dependencies (bazel_dep)
+#   2. External archives (http_archive for non-Bzlmod dependencies)
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Bazel Module Dependencies
+# -----------------------------------------------------------------------------
+# These are dependencies available through the Bazel Central Registry (BCR).
+# They are automatically fetched and their transitive dependencies resolved.
+
+# Skylib: Common utility functions for Starlark (e.g., paths, shell, types)
+# Used for: Helper functions in custom rules and macros
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+
+# Rules PKG: Rules for creating distributable packages (tar, zip, deb, rpm)
+# Used for: Bundling components into archives before installer creation
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+
+# Rules Python: Official Python rules for Bazel (py_binary, py_library, py_test)
+# Used for: Building Python tools like build_installer.py and stage_files.py
+bazel_dep(name = "rules_python", version = "1.7.0")
+
+# DISABLED: Aspect Bazel Lib - Additional utility rules
+# Reason: Toolchain configuration issues on Windows
+# bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
+
+
+bazel_dep(name = "installer", version = "0.1.0")
+bazel_dep(name = "py_modules_set_1", version = "0.1.0")
+bazel_dep(name = "py_modules_set_2", version = "0.1.0")
+bazel_dep(name = "python", version = "0.1.0")
+
+local_path_override(
+    module_name = "installer",
+    path = "../installer",
+)
+
+local_path_override(
+    module_name = "py_modules_set_1",
+    path = "../py_modules_set_1",
+)
+
+local_path_override(
+    module_name = "py_modules_set_2",
+    path = "../py_modules_set_2",
+)
+
+local_path_override(
+    module_name = "python",
+    path = "../python",
+)
+
+

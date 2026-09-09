@@ -1,0 +1,9 @@
+# ============================================================================
+# Linux-specific startup options
+# ============================================================================
+# Startup options cannot use the "startup:linux" config-suffix syntax
+# (Bazel does not support :config selectors for the startup phase). This
+# file is therefore loaded explicitly via --bazelrc=.bazelrc.linux on the
+# command line (see build_installer.bat) instead of being auto-selected.
+startup --output_base=/tmp/bazel_output
+startup --output_user_root=/tmp/bazel_user

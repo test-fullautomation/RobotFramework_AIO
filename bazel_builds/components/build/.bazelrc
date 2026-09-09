@@ -1,20 +1,16 @@
 # Bazel configuration for bits project
 
-# Enable automatic platform detection (applies to all commands)
+# Enable automatic platform detection for command-specific flags
+# (build:windows/build:linux/... are expanded automatically based on the
+# detected OS). NOTE: This does NOT apply to "startup" options - Bazel does
+# not support "startup:windows"/"startup:linux" syntax at all, because the
+# startup phase runs before the OS-specific command expansion logic exists.
+# Startup options (--output_base, --output_user_root) live in separate,
+# platform-specific files (.bazelrc.windows / .bazelrc.linux) which are
+# loaded explicitly via --bazelrc=<file> on the command line
+# (see build_installer.bat). This keeps the batch script free of any
+# hardcoded paths - it only selects which rc file to load.
 build --enable_platform_specific_config
-
-# ============================================================================
-# Platform-specific imports
-# ============================================================================
-# Import platform-specific configurations (startup options, paths, etc.)
-# These files contain settings that cannot be made conditional in main .bazelrc
-# Hint: %workspace% is a Bazel specific variable that works on Windows
-# and on Linux!
-# If file does not exist: no error!
-try-import %workspace%/.bazelrc.windows
-try-import %workspace%/.bazelrc.linux
-# or:
-# try-import %workspace%/.bazelrc.platform
 
 # ============================================================================
 # Windows-specific configuration
@@ -23,6 +19,7 @@ build:windows --cxxopt=/std:c++17
 build:windows --host_cxxopt=/std:c++17
 build:windows --enable_runfiles
 build:windows --ui_event_filters=-info,-stderr
+build:windows --disk_cache=C:/bazel_cache
 test:windows --test_output=all
 
 # ============================================================================
@@ -30,6 +27,7 @@ test:windows --test_output=all
 # ============================================================================
 build:linux --cxxopt=-std=c++17
 build:linux --host_cxxopt=-std=c++17
+build:linux --disk_cache=/tmp/bazel_cache
 test:linux --test_output=all
 
 # Verbose output for debugging

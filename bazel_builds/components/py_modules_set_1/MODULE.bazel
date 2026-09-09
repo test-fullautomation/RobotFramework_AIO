@@ -1,0 +1,16 @@
+module(
+    name = "py_modules_set_1",
+    version = "0.1.0",
+)
+
+# This module installs pip packages using the portable Python distribution
+# owned by the "python" module. It depends on "python" to access the
+# re-exported interpreter and runtime targets (@python//:python_interpreter,
+# @python//:python_runtime), since the underlying "@python_portable_windows"
+# repository is private to the "python" module and not visible here.
+bazel_dep(name = "python", version = "0.1.0")
+
+local_path_override(
+    module_name = "python",
+    path = "../python",
+)

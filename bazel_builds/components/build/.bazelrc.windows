@@ -1,0 +1,9 @@
+# ============================================================================
+# Windows-specific startup options
+# ============================================================================
+# Startup options cannot use the "startup:windows" config-suffix syntax
+# (Bazel does not support :config selectors for the startup phase). This
+# file is therefore loaded explicitly via --bazelrc=.bazelrc.windows on the
+# command line (see build_installer.bat) instead of being auto-selected.
+startup --output_base=C:/a
+startup --output_user_root=C:/bazel_user

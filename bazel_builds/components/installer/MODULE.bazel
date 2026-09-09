@@ -1,0 +1,34 @@
+module(
+    name = "installer",
+    version = "0.1.0",
+)
+
+# Bzlmod isolates each module's dependency graph. Even though the root
+# module ("build") already declares rules_python, this module ("installer")
+# must declare it again, because it directly loads from
+# "@rules_python//python:defs.bzl" in its own BUILD.bazel.
+bazel_dep(name = "rules_python", version = "1.7.0")
+
+# This module references component targets from "python", "py_modules_set_1",
+# and "py_modules_set_2" (see installer_variants.bzl: @python//:python_runtime,
+# @py_modules_set_1//:py_modules_set_1, @py_modules_set_2//:py_modules_set_2).
+# Bzlmod requires each module to declare its own direct dependencies -
+# declaring them in the root module ("build") is NOT sufficient here.
+bazel_dep(name = "python", version = "0.1.0")
+bazel_dep(name = "py_modules_set_1", version = "0.1.0")
+bazel_dep(name = "py_modules_set_2", version = "0.1.0")
+
+local_path_override(
+    module_name = "python",
+    path = "../python",
+)
+
+local_path_override(
+    module_name = "py_modules_set_1",
+    path = "../py_modules_set_1",
+)
+
+local_path_override(
+    module_name = "py_modules_set_2",
+    path = "../py_modules_set_2",
+)

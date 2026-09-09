@@ -1,0 +1,76 @@
+module(
+    name = "python",
+    version = "0.1.0",
+)
+
+# Bzlmod isolates each module's dependency graph. This module loads from
+# "@rules_pkg//pkg:mappings.bzl" in its own BUILD.bazel, so it must declare
+# rules_pkg itself, even though the root module ("build") already does.
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+
+# This module's own BUILD.bazel declares visibility for its targets using
+# labels like "@py_modules_set_1//:__pkg__" and "@py_modules_set_2//:__pkg__".
+# Bzlmod resolves "@name" labels using the DECLARING module's own repo
+# mapping - so even though these are only used for visibility (not load()),
+# this module must still declare bazel_dep for them, otherwise the labels
+# don't resolve and the visibility check silently fails for the consumers.
+bazel_dep(name = "py_modules_set_1", version = "0.1.0")
+bazel_dep(name = "py_modules_set_2", version = "0.1.0")
+
+local_path_override(
+    module_name = "py_modules_set_1",
+    path = "../py_modules_set_1",
+)
+
+local_path_override(
+    module_name = "py_modules_set_2",
+    path = "../py_modules_set_2",
+)
+
+# -----------------------------------------------------------------------------
+# Python Portable Distribution
+# -----------------------------------------------------------------------------
+# Pre-built portable Python distribution for Windows x86_64.
+# Source: python-build-standalone project by Astral (creators of uv/ruff)
+#
+# This repository is only visible within THIS module ("python"). Other
+# modules (e.g. py_modules_set_1, py_modules_set_2) cannot reference
+# "@python_portable_windows" directly - they must depend on this "python"
+# module instead and use the re-exported targets in components/python/BUILD.bazel
+# (@python//:python_interpreter, @python//:python_runtime).
+#
+# Version: CPython 3.12.11
+# Platform: Windows x86_64 (MSVC build)
+# Build date: 2025-06-12
+
+http_archive = use_repo_rule(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+)
+
+http_archive(
+    name = "python_portable_windows",
+    urls = ["https://github.com/astral-sh/python-build-standalone/releases/download/20250612/cpython-3.12.11+20250612-x86_64-pc-windows-msvc-install_only.tar.gz"],
+    sha256 = "7b93afa91931dbc37b307a81b8680b30193736b5ef29a44ef6452f702c306e7a",
+    strip_prefix = "python",
+    build_file_content = """
+# Build file for the portable Python distribution.
+# Exposes the runtime files and interpreter as separate filegroups.
+
+# Complete Python runtime (all files)
+# Used by: components/python:python_runtime
+filegroup(
+    name = "runtime",
+    srcs = glob(["**"], exclude = ["**/__pycache__/**"]),
+    visibility = ["//visibility:public"],
+)
+
+# Python interpreter executable only
+# Used for: Running Python scripts during the build process
+filegroup(
+    name = "interpreter",
+    srcs = ["python.exe"],
+    visibility = ["//visibility:public"],
+)
+""",
+)

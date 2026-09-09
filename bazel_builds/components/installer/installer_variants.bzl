@@ -115,7 +115,7 @@ def create_installer(
 # Using a private variable (underscore prefix) to indicate this is
 # an internal implementation detail, not meant for external use.
 _BASE_COMPONENTS = [
-    "//components/python:python_runtime",  # Python interpreter distribution
+    "@python//:python_runtime",  # Python interpreter distribution
 ]
 
 # Central definition of all installer variants.
@@ -140,7 +140,7 @@ INSTALLER_VARIANTS = {
     # Output: install_python_set_1.exe
     "installer_set_1": {
         "components": _BASE_COMPONENTS + [
-            "//components/py_modules_set_1:py_modules_set_1",
+            "@py_modules_set_1//:py_modules_set_1",
         ],
         "version": "3.12.11",
         "installer_name": "install_python_set_1",
@@ -150,7 +150,7 @@ INSTALLER_VARIANTS = {
     # Output: install_python_set_2.exe
     "installer_set_2": {
         "components": _BASE_COMPONENTS + [
-            "//components/py_modules_set_2:py_modules_set_2",
+            "@py_modules_set_2//:py_modules_set_2",
         ],
         "version": "3.12.11",
         "installer_name": "install_python_set_2",

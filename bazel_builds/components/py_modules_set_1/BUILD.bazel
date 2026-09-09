@@ -19,8 +19,12 @@ load(":pip_install.bzl", "pip_install_dir")
 pip_install_dir(
     name = "py_modules_set_1",
     requirements = "requirements_set_1_lock.txt",
-    interpreter = "@python_portable_windows//:interpreter",
-    runtime = "@python_portable_windows//:runtime",
+    interpreter = "@python//:python_interpreter",
+    runtime = "@python//:python_runtime",
     # No explicit env needed - proxy variables are inherited via --action_env
-    visibility = ["//components/installer:__pkg__"],
+    # NOTE: Public visibility required - granting "@installer//:__pkg__" here
+    # would force this module to bazel_dep(installer), but installer already
+    # bazel_dep's this module, creating a circular dependency. Access control
+    # is enforced via the one-directional bazel_dep graph instead.
+    visibility = ["//visibility:public"],
 )
