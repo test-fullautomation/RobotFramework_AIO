@@ -76,12 +76,22 @@ def _pip_install_impl(ctx):
     #   - requires-network: Needs to download packages from PyPI
     #   - no-sandbox: pip needs filesystem access beyond sandbox
     #   - no-remote: Must run locally, not on remote execution
+    #
+    # IMPORTANT: ctx.actions.run(env=...) does NOT automatically merge with
+    # --action_env values from .bazelrc unless use_default_shell_env=True is
+    # set. Without it, proxy variables declared via
+    # "build --action_env=HTTPS_PROXY" etc. are silently discarded and the
+    # pip subprocess runs with an empty/minimal environment. This previously
+    # went unnoticed on machines with a warm --disk_cache (cached action
+    # result, pip never actually re-executed) and only surfaced as a
+    # "getaddrinfo failed" network error on a machine with a cold cache.
     ctx.actions.run(
         executable = interpreter,
         arguments = [args],
         inputs = depset([ctx.file.requirements] + runtime),
         outputs = [out],
         env = ctx.attr.env,
+        use_default_shell_env = True,  # merge --action_env (e.g. HTTPS_PROXY) into env
         execution_requirements = {
             "requires-network": "",   # Allow network access for PyPI downloads
             "no-sandbox": "",         # Disable sandbox for pip operations
