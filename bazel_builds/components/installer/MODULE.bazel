@@ -18,6 +18,22 @@ bazel_dep(name = "python", version = "0.1.0")
 bazel_dep(name = "py_modules_set_1", version = "0.1.0")
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 
+# This module's inno_setup.bzl references "@inno_setup//:iscc" (default of
+# the iscc_path attribute) - the Inno Setup Compiler provided as a hermetic
+# Bazel target instead of a hardcoded path to a manually installed ISCC.exe.
+bazel_dep(name = "inno_setup", version = "0.1.0")
+
+# This module references "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement"
+# (see installer_variants.bzl) - the robotframework-testsuitesmanagement PyPI
+# package, installed via pip the same way as py_modules_set_1/2.
+bazel_dep(name = "robotframework_testsuitesmanagement", version = "0.1.0")
+
+# installer_variants.bzl loads "@config//:variant_config.bzl" to obtain
+# BASE_COMPONENTS / INSTALLER_VARIANTS - the central, user-facing installer
+# variant configuration now lives in its own module/package
+# (components/config) instead of being defined inline here.
+bazel_dep(name = "config", version = "0.1.0")
+
 local_path_override(
     module_name = "python",
     path = "../python",
@@ -31,4 +47,19 @@ local_path_override(
 local_path_override(
     module_name = "py_modules_set_2",
     path = "../py_modules_set_2",
+)
+
+local_path_override(
+    module_name = "inno_setup",
+    path = "../inno_setup",
+)
+
+local_path_override(
+    module_name = "robotframework_testsuitesmanagement",
+    path = "../robotframework-testsuitesmanagement",
+)
+
+local_path_override(
+    module_name = "config",
+    path = "../config",
 )

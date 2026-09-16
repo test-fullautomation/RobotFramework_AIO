@@ -8,8 +8,9 @@
 # generating the corresponding Bazel targets automatically.
 #
 # Architecture:
-#   - INSTALLER_VARIANTS: Central dictionary defining all variants
-#   - _BASE_COMPONENTS: Components included in every installer
+#   - BASE_COMPONENTS / INSTALLER_VARIANTS: Central variant configuration -
+#     NOT defined in this file anymore. See components/config/variant_config.bzl.
+#     *** That is the file to edit when adding/changing installer variants. ***
 #   - create_installer(): Macro to create a single installer target
 #   - create_all_installers(): Macro to generate all defined variants
 #
@@ -18,8 +19,9 @@
 #   create_all_installers()
 #
 # Adding a new variant:
-#   Simply add an entry to INSTALLER_VARIANTS dictionary below.
-#   No changes to BUILD.bazel required.
+#   Add an entry to the INSTALLER_VARIANTS dictionary in
+#   components/config/variant_config.bzl. No changes needed in this file or
+#   in BUILD.bazel.
 #
 # =============================================================================
 
@@ -28,11 +30,12 @@ Macros for generating installer variants.
 
 This module defines Starlark macros that create multiple installer combinations
 from the available components. Each variant is defined declaratively in the
-INSTALLER_VARIANTS dictionary, and the macros generate the corresponding
-Bazel targets during the analysis phase.
+INSTALLER_VARIANTS dictionary (components/config/variant_config.bzl), and the
+macros here generate the corresponding Bazel targets during the analysis phase.
 """
 
 load(":inno_setup.bzl", "inno_setup_installer")
+load("@config//:variant_config.bzl", "BASE_COMPONENTS", "INSTALLER_VARIANTS")
 
 
 def create_installer(
@@ -40,7 +43,7 @@ def create_installer(
         components,
         version = "1.0.0",
         installer_name = None,
-        iscc_path = "C:/workplace/Programme/InnoSetup/ISCC.exe",
+        iscc_path = "@inno_setup//:iscc",
         iss_template = "installer.iss",
         visibility = None):
     """Creates an installer target with the specified components.
@@ -66,7 +69,10 @@ def create_installer(
         installer_name: Base name for the output .exe file (default: same as name).
                         The final output will be {installer_name}.exe
         
-        iscc_path: Absolute path to ISCC.exe on the build machine.
+        iscc_path: Label pointing to the Inno Setup Compiler executable
+                  (ISCC.exe). Defaults to "@inno_setup//:iscc", the target
+                  exposed by the "inno_setup" Bzlmod module - no manually
+                  installed ISCC.exe required.
         
         iss_template: Path to the Inno Setup script template (.iss file).
         
@@ -107,59 +113,16 @@ def create_installer(
 # =============================================================================
 # Installer Variant Configuration
 # =============================================================================
-# This section defines all available installer variants in a declarative way.
-# To add a new variant, simply add an entry to INSTALLER_VARIANTS.
-
-# Base components included in EVERY installer variant.
-# These are the core dependencies that all installers share.
-# Using a private variable (underscore prefix) to indicate this is
-# an internal implementation detail, not meant for external use.
-_BASE_COMPONENTS = [
-    "@python//:python_runtime",  # Python interpreter distribution
-]
-
-# Central definition of all installer variants.
-# Each key is the target name, each value is a configuration dictionary.
-#
-# Configuration options:
-#   - components: List of component targets (required)
-#   - version: Installer version string (optional, default: "1.0.0")
-#   - installer_name: Output filename without .exe (optional, default: target name)
-#
-# To add a new variant:
-#   "installer_new_variant": {
-#       "components": _BASE_COMPONENTS + [
-#           "//components/new_module:new_module",
-#       ],
-#       "version": "1.0.0",
-#       "installer_name": "install_python_new_variant",
-#   },
-
-INSTALLER_VARIANTS = {
-    # Installer with Python runtime + Module Set 1
-    # Output: install_python_set_1.exe
-    "installer_set_1": {
-        "components": _BASE_COMPONENTS + [
-            "@py_modules_set_1//:py_modules_set_1",
-        ],
-        "version": "3.12.11",
-        "installer_name": "install_python_set_1",
-    },
-    
-    # Installer with Python runtime + Module Set 2
-    # Output: install_python_set_2.exe
-    "installer_set_2": {
-        "components": _BASE_COMPONENTS + [
-            "@py_modules_set_2//:py_modules_set_2",
-        ],
-        "version": "3.12.11",
-        "installer_name": "install_python_set_2",
-    },
-}
+# BASE_COMPONENTS and INSTALLER_VARIANTS are imported from
+# components/config/variant_config.bzl (see the load() statement above).
+# They are intentionally NOT defined in this file - see that file's module
+# docstring for the rationale (keeping the user-facing "what goes into which
+# installer" configuration separate from this file's generic macro/rule
+# plumbing).
 
 
 def create_all_installers(
-        iscc_path = "C:/workplace/Programme/InnoSetup/ISCC.exe",
+        iscc_path = "@inno_setup//:iscc",
         iss_template = "installer.iss",
         visibility = None):
     """Creates all installer variants defined in INSTALLER_VARIANTS.
@@ -169,7 +132,8 @@ def create_all_installers(
     BUILD.bazel file to generate all standard installer targets.
     
     Args:
-        iscc_path: Absolute path to ISCC.exe (shared by all variants).
+        iscc_path: Label pointing to the Inno Setup Compiler executable
+                  (shared by all variants). Defaults to "@inno_setup//:iscc".
         
         iss_template: Path to ISS template file (shared by all variants).
         

@@ -29,9 +29,32 @@ structure and copies files to a staging directory for use by ISCC.exe.
 """
 
 import argparse
+import os
 import shutil
+import stat
 import sys
 from pathlib import Path
+
+
+def _make_writable(path: Path) -> None:
+    """Clears the read-only attribute on a file or (recursively) directory.
+
+    Bazel marks action outputs read-only on Windows (and POSIX) to prevent
+    accidental modification. shutil.copy2 preserves this mode bit on the
+    copy, which means a later incremental build that needs to overwrite or
+    delete that staged file (e.g. via shutil.rmtree or a second copy2 to the
+    same destination) fails with PermissionError: [WinError 5] Zugriff
+    verweigert. Call this right after copying to keep the staging directory
+    freely modifiable for subsequent staging runs.
+    """
+    if path.is_dir():
+        for root, dirs, files in os.walk(path):
+            for name in dirs:
+                os.chmod(os.path.join(root, name), stat.S_IWRITE | stat.S_IREAD)
+            for name in files:
+                os.chmod(os.path.join(root, name), stat.S_IWRITE | stat.S_IREAD)
+    else:
+        os.chmod(path, stat.S_IWRITE | stat.S_IREAD)
 
 
 def extract_relative_path(full_path: str) -> str:
@@ -82,14 +105,36 @@ def extract_relative_path(full_path: str) -> str:
             if rel_parts:
                 return str(Path(*rel_parts))
             break
-    
+
+    # Case 1b: Inno Setup Compiler from inno_setup_install repository_rule
+    # (components/inno_setup). Place it under an "inno_setup/" subfolder so
+    # it doesn't collide with the Python runtime's own top-level files.
+    for i, part in enumerate(parts):
+        if "inno_setup_portable" in part.lower():
+            rel_parts = parts[i + 1:]
+            if rel_parts:
+                return str(Path("inno_setup", *rel_parts))
+            break
+
     # Case 2: site-packages from pip_install
     # These need to be placed under Lib/site-packages/
+    #
+    # IMPORTANT: Multiple independent pip_install_dir targets (e.g.
+    # py_modules_set_1, py_modules_set_2, robotframework_testsuitesmanagement)
+    # all use the same default out_dir name "site-packages". Since this
+    # function only matches on the directory NAME (not on which Bazel
+    # target/repository it came from), every one of them maps to the exact
+    # same destination "Lib/site-packages". This is intentional - packages
+    # from different components should end up merged together in the same
+    # site-packages folder of the final installation - but it means the
+    # caller (main()) MUST merge multiple source directories into this same
+    # destination instead of deleting/overwriting it for each new source
+    # (see the dirs_exist_ok=True copytree call below).
     for i, part in enumerate(parts):
         if part == "site-packages":
             # Prepend Lib/ to create: Lib/site-packages/...
             return str(Path("Lib", *parts[i:]))
-    
+
     # Fallback: Use filename only (should not happen in normal use)
     print(f"WARNING: Could not resolve path structure: {full_path}")
     return Path(full_path).name
@@ -167,13 +212,32 @@ expected by the Inno Setup script.
 
         # Copy file or directory
         if src.is_file():
-            # copy2 preserves metadata (timestamps, permissions)
-            shutil.copy2(src, dest)
-        elif src.is_dir():
-            # Remove existing directory to ensure clean copy
+            # copy2 preserves metadata (timestamps, permissions). Bazel
+            # marks action outputs read-only, so the copy inherits that -
+            # clear it again so the staging dir stays freely modifiable
+            # (both for merging further sources into the same destination
+            # further down in this loop, and for any subsequent rebuild).
             if dest.exists():
-                shutil.rmtree(dest)
-            shutil.copytree(src, dest)
+                _make_writable(dest)
+            shutil.copy2(src, dest)
+            _make_writable(dest)
+        elif src.is_dir():
+            # Merge instead of replace: several independent components
+            # (e.g. py_modules_set_1, py_modules_set_2,
+            # robotframework_testsuitesmanagement) all produce a directory
+            # literally named "site-packages", which extract_relative_path()
+            # intentionally maps to the SAME destination "Lib/site-packages"
+            # so their packages end up side by side in the final
+            # installation. Deleting the destination here (as a plain
+            # shutil.rmtree + copytree would) would wipe out whatever a
+            # previous source already staged there - and since those files
+            # were copied with copy2 (preserving Bazel's read-only bit),
+            # that rmtree would additionally fail on Windows with
+            # PermissionError. dirs_exist_ok=True merges the tree instead.
+            if dest.exists():
+                _make_writable(dest)
+            shutil.copytree(src, dest, dirs_exist_ok=True)
+            _make_writable(dest)
 
     print("=== Staging completed ===")
 

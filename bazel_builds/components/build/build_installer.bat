@@ -54,10 +54,28 @@ echo Platform: %PLATFORM%
 echo Platform rc file: %BAZEL_PLATFORM_RC%
 echo.
 
-%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:installer_set_1
+REM set
+REM %BAZEL_EXEC% info --show_make_env
+REM %BAZEL_EXEC% info client-env
+
+REM BASIC CALLS:
+
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:installer_set_1
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:installer_set_2
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:all
 
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @inno_setup//:iscc
+
+REM DEBUGGING:
+REM - test run without disk cache, to detect hidden cache dependencies:
+REM     %BAZEL_EXEC% ... build --disk_cache= ...
+REM - or with new output_base (simulating a new computer)
+REM     %BAZEL_EXEC% ... --output_base=C:/bazel_out_fresh_test build ...
+
+REM EXTENDED CALLS:
+%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_1
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_2
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:all
 
 echo ========================================
 echo Batch file returns : %ERRORLEVEL%

@@ -1,0 +1,11 @@
+# =============================================================================
+# components/config/BUILD.bazel
+# =============================================================================
+#
+# This package intentionally contains no targets. Its only purpose is to
+# exist as a Bazel package (see "makes the workspace root a Bazel package"
+# in Bazel_Komponenten_Analyse_Statisch.md for the same reasoning applied to
+# a root BUILD.bazel) so that "variant_config.bzl" in this directory can be
+# referenced as a proper label ("@config//:variant_config.bzl") from other
+# modules such as "installer".
+# =============================================================================

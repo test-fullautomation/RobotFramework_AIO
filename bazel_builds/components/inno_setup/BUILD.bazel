@@ -1,0 +1,33 @@
+# =============================================================================
+# components/inno_setup/BUILD.bazel - Inno Setup Compiler Component
+# =============================================================================
+#
+# This package re-exports the ISCC.exe executable from the private
+# "@inno_setup_portable" repository (fetched via http_archive in this
+# module's own MODULE.bazel) so that other Bzlmod modules (e.g. "installer")
+# can depend on it as "@inno_setup//:iscc" without needing direct visibility
+# into "@inno_setup_portable", which is private to this module.
+#
+# This follows the exact same pattern as components/python/BUILD.bazel and
+# its "@python//:python_interpreter" re-export.
+#
+# This target is referenced by:
+#   @installer//:inno_setup.bzl (attribute "iscc_path")
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Inno Setup Compiler (Re-export)
+# -----------------------------------------------------------------------------
+# Re-exports the bare ISCC.exe executable from the private
+# "@inno_setup_portable" repository so other Bzlmod modules can consume it
+# as "@inno_setup//:iscc".
+
+alias(
+    name = "iscc",
+    actual = "@inno_setup_portable//:iscc",
+    # Public visibility - avoids a circular bazel_dep back to consumer
+    # modules (e.g. "installer"), same reasoning as python_interpreter in
+    # components/python/BUILD.bazel.
+    visibility = ["//visibility:public"],
+)

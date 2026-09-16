@@ -113,7 +113,7 @@ def _inno_setup_installer_impl(ctx):
     # The build tool wraps ISCC.exe and handles path conversion and error handling.
     
     args = ctx.actions.args()
-    args.add("--iscc", ctx.attr.iscc_path)
+    args.add("--iscc", ctx.file.iscc_path.path)
     args.add("--iss", ctx.file.iss_template.path)
     args.add("--source-dir", staging_dir.path)
     args.add("--output", output.path)
@@ -121,7 +121,7 @@ def _inno_setup_installer_impl(ctx):
     
     ctx.actions.run(
         outputs = [output],
-        inputs = [staging_dir, ctx.file.iss_template],
+        inputs = [staging_dir, ctx.file.iss_template, ctx.file.iscc_path],
         executable = ctx.executable._builder,
         arguments = [args],
         mnemonic = "InnoSetup",
@@ -172,12 +172,22 @@ inno_setup_installer = rule(
             """,
         ),
         
-        "iscc_path": attr.string(
-            default = "C:/workplace/Programme/InnoSetup/ISCC.exe",
-            doc = """Absolute path to the Inno Setup Compiler (ISCC.exe).
+        "iscc_path": attr.label(
+            default = "@inno_setup//:iscc",
+            allow_single_file = True,
+            cfg = "exec",
+            doc = """Label pointing to the Inno Setup Compiler executable (ISCC.exe).
             
-            This should point to the ISCC.exe executable on the build machine.
-            Note: This breaks hermeticity but is necessary for Windows-only tools.
+            By default this resolves to "@inno_setup//:iscc", a Bazel target
+            provided by the "inno_setup" Bzlmod module (components/inno_setup),
+            which fetches a portable ISCC.exe via http_archive instead of
+            relying on a manually installed copy at a hardcoded filesystem path.
+            
+            Because it is a regular label, Bazel tracks it as a build input:
+            the installer is rebuilt if the ISCC.exe binary changes, and the
+            target works correctly with remote caching (as far as ISCC.exe
+            itself is concerned - the action still requires local execution,
+            see execution_requirements below).
             """,
         ),
         

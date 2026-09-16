@@ -44,7 +44,7 @@ py_binary(
 # in installer_variants.bzl - no changes to this BUILD file are required.
 
 create_all_installers(
-    iscc_path = "C:/workplace/Programme/InnoSetup/ISCC.exe",
+    iscc_path = "@inno_setup//:iscc",
     iss_template = "installer.iss",
     visibility = ["//visibility:public"],
 )

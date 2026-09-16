@@ -1,0 +1,36 @@
+module(
+    name = "inno_setup",
+    version = "0.1.0",
+)
+
+# -----------------------------------------------------------------------------
+# Inno Setup Compiler
+# -----------------------------------------------------------------------------
+# Provides ISCC.exe (the Inno Setup command-line compiler) as a hermetic,
+# Bazel-managed dependency instead of relying on a manually installed copy
+# at a hardcoded path like "C:/workplace/Programme/InnoSetup/ISCC.exe".
+#
+# This mirrors the pattern used by the "python" module
+# (components/python/MODULE.bazel): fetch the distribution and re-export the
+# relevant executable through this module's own BUILD.bazel so that other
+# modules can depend on "@inno_setup//:iscc" without needing visibility into
+# the private "@inno_setup_portable" repository.
+#
+# IMPORTANT: The official Inno Setup download is a self-extracting installer
+# .exe, NOT a plain zip/tar archive - Bazel's builtin http_archive cannot
+# extract it (it only understands standard archive formats). Therefore this
+# module uses a custom repository_rule (inno_setup_install.bzl) which
+# downloads the installer with checksum verification and then runs it in
+# silent/unattended mode, pointed directly at the repository directory, so
+# ISCC.exe ends up as a normal Bazel-tracked file.
+
+inno_setup_install = use_repo_rule(
+    "//:inno_setup_install.bzl",
+    "inno_setup_install",
+)
+
+inno_setup_install(
+    name = "inno_setup_portable",
+    url = "https://files.jrsoftware.org/is/5/isetup-5.5.1-unicode.exe",
+    sha256 = "244cdf9ef58cbe68bc65fd9371bad53b60fb4e1e50624df25d4eb4400a9d2508",
+)

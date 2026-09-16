@@ -1,0 +1,17 @@
+module(
+    name = "config",
+    version = "0.1.0",
+)
+
+# This module has no external dependencies of its own - it exists purely to
+# host "variant_config.bzl", the central, user-facing configuration file for
+# installer variants (see components/installer/installer_variants.bzl).
+#
+# Splitting this out into its own Bzlmod module (instead of e.g. a plain
+# subdirectory inside "installer") follows the same one-module-per-top-level-
+# components-directory convention already used for "python", "inno_setup",
+# "py_modules_set_1/2", etc. It also means variant_config.bzl could in
+# principle be reused/overridden independently of the "installer" module
+# itself (e.g. via a different local_path_override pointing at a
+# site-specific configuration checkout), without touching any of the
+# generic installer-building logic in installer_variants.bzl / inno_setup.bzl.
