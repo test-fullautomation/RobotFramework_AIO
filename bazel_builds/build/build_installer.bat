@@ -9,9 +9,9 @@ REM Workspace configuration
 set BAZEL_EXEC=C:\TAF\tools\bazelisk\bazel.exe
 
 REM Proxy settings
-set HTTP_PROXY=http://rb-proxy-de.bosch.com:8080
-set HTTPS_PROXY=http://rb-proxy-de.bosch.com:8080
-set NO_PROXY=localhost,127.0.0.1
+set HTTP_PROXY=...
+set HTTPS_PROXY=...
+set NO_PROXY=...
 
 REM ----------------------------------------------------------------------
 REM Platform selection
