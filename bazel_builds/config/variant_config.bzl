@@ -38,6 +38,7 @@ installer_variants.bzl.
 # modules - Starlark's load() statement can only import public symbols.
 BASE_COMPONENTS = [
     "@python//:python_runtime",  # Python interpreter distribution
+    "@vscode//:vscode",  # VS Code portable distribution (Windows x64) - TODO: check: move to separate target?
     "@inno_setup//:iscc",  # InnoSetup distribution - TODO: move to separate target
 ]
 

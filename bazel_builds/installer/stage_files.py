@@ -68,15 +68,32 @@ def extract_relative_path(full_path: str) -> str:
         python.exe
         Lib/site-packages/pkg/__init__.py
     
-    Target Directory Structure (Python distribution):
-        python.exe           # Main interpreter
-        pythonw.exe          # Windowed interpreter
-        python3.dll          # Core DLL
-        Lib/                 # Standard library
-            site-packages/   # Third-party packages
-        DLLs/                # Extension modules
-        include/             # Header files
-        Scripts/             # Entry point scripts
+    Target Directory Structure (installation root "{app}"):
+        Python/                # Everything belonging to the Python distribution
+            python.exe        # Main interpreter
+            pythonw.exe       # Windowed interpreter
+            python3.dll       # Core DLL
+            Lib/              # Standard library
+                site-packages/  # Third-party packages (all pip_install_dir components)
+            DLLs/             # Extension modules
+            include/          # Header files
+            Scripts/          # Entry point scripts
+        VSCode/               # Portable VS Code distribution (unrelated to Python)
+            Code.exe
+            ...
+    
+    Python and VS Code are kept in strictly separate subdirectories so that
+    the two components never mix inside the installation folder (see
+    installer.iss: [Files] copies the whole staging tree as-is into "{app}",
+    so the subfolder names chosen here directly become the final on-disk
+    layout).
+    
+    NOTE: The Python subdirectory is deliberately named "Python" (not
+    "PortablePython") to keep staged paths as short as possible - some
+    transitive dependencies (e.g. appium's deeply nested
+    site-packages/appium/options/android/common/... modules) already come
+    close to Windows' legacy MAX_PATH (260 chars) limit, and ISCC 5.5.1
+    (currently in use, see components/inno_setup) has no long-path support.
     
     Args:
         full_path: Full Bazel sandbox path to a file
@@ -86,24 +103,43 @@ def extract_relative_path(full_path: str) -> str:
     
     Examples:
         >>> extract_relative_path("external/+http_archive+python_portable_windows/python.exe")
-        'python.exe'
+        'Python/python.exe'
         
         >>> extract_relative_path("external/+http_archive+python_portable_windows/Lib/os.py")
-        'Lib/os.py'
+        'Python/Lib/os.py'
         
         >>> extract_relative_path("bazel-out/.../site-packages/requests/__init__.py")
-        'Lib/site-packages/requests/__init__.py'
+        'Python/Lib/site-packages/requests/__init__.py'
+        
+        >>> extract_relative_path("external/+http_archive+vscode_windows_x64/Code.exe")
+        'VSCode/Code.exe'
     """
     parts = Path(full_path).parts
+    
+    # Case 0: Portable VS Code distribution from http_archive (vscode_windows_x64,
+    # see components/vscode/MODULE.bazel). Must be checked before the generic
+    # "python_portable" case below since the repository names don't overlap,
+    # but keeping this first documents that VS Code is intentionally kept OUT
+    # of the Python/ tree.
+    for i, part in enumerate(parts):
+        if "vscode_windows_x64" in part.lower():
+            rel_parts = parts[i + 1:]
+            if rel_parts:
+                return str(Path("VSCode", *rel_parts))
+            break
     
     # Case 1: Python runtime from http_archive (python_portable_windows)
     # Look for the repository marker in the path
     for i, part in enumerate(parts):
         if "python_portable" in part.lower():
-            # Everything after the repository name is the relative path
+            # Everything after the repository name is the relative path,
+            # nested under Python/ to keep it separate from other
+            # components (e.g. VSCode/). Kept short ("Python", not
+            # "PortablePython") to avoid Windows MAX_PATH issues - see
+            # docstring note above.
             rel_parts = parts[i + 1:]
             if rel_parts:
-                return str(Path(*rel_parts))
+                return str(Path("Python", *rel_parts))
             break
 
     # Case 1b: Inno Setup Compiler from inno_setup_install repository_rule
@@ -132,8 +168,9 @@ def extract_relative_path(full_path: str) -> str:
     # (see the dirs_exist_ok=True copytree call below).
     for i, part in enumerate(parts):
         if part == "site-packages":
-            # Prepend Lib/ to create: Lib/site-packages/...
-            return str(Path("Lib", *parts[i:]))
+            # Prepend Python/Lib/ to create: Python/Lib/site-packages/...
+            # so these end up alongside the Python runtime, not mixed with VSCode/.
+            return str(Path("Python", "Lib", *parts[i:]))
 
     # Fallback: Use filename only (should not happen in normal use)
     print(f"WARNING: Could not resolve path structure: {full_path}")

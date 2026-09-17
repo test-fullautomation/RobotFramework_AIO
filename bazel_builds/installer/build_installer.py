@@ -117,6 +117,14 @@ Example:
         help="Version string for the installer (default: 1.0.0)"
     )
     parser.add_argument(
+        "--target-name", default="installer",
+        help="""Name of the Bazel target that produced this installer
+        (e.g. 'installer_set_1'). Used by installer.iss as the default
+        installation directory name (DefaultDirName), so that different
+        installer variants suggest distinct install folders and never
+        collide when installed side by side."""
+    )
+    parser.add_argument(
         "--min-iscc-version", default="5.0",
         help="Minimum required ISCC version, e.g., '6.3' (default: 5.0)"
     )
@@ -141,6 +149,7 @@ Example:
     print(f"Source:     {source_dir}")
     print(f"Output:     {output_path}")
     print(f"Version:    {args.version}")
+    print(f"Target:     {args.target_name}")
 
     # -------------------------------------------------------------------------
     # Validation: ISCC Existence
@@ -194,6 +203,7 @@ Example:
         f"/DSourceDir={source_dir}",      # Source files location
         f"/DOutputDir={output_dir}",      # Output directory
         f"/DAppVersion={args.version}",   # Application version
+        f"/DTargetName={args.target_name}",  # Bazel target name -> default install dir name
         f"/F{output_name}",               # Output filename (without .exe)
         args.iss,                          # ISS script file
     ]

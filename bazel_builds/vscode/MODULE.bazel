@@ -1,0 +1,28 @@
+# MODULE.bazel
+module(
+    name = "vscode",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Offizieller Windows 64-Bit Portable-Download von VS Code (aktuellste stabile
+# Version, ermittelt via
+# https://update.code.visualstudio.com/api/update/win32-x64-archive/stable/<commit>).
+# NOTE: This pins an exact version + sha256 for reproducible builds. To
+# update to a newer VS Code release, query the same API endpoint again and
+# replace both the URL and sha256 below.
+http_archive(
+    name = "vscode_windows_x64",
+    urls = ["https://vscode.download.prss.microsoft.com/dbazure/download/stable/7debcd0e2acdea1c52de81bf9ee1620444407dda/VSCode-win32-x64-1.138.0.zip"],
+    sha256 = "c0a9f12a0d8962fa4cda1959eecd5fdd3f82de9715ad4dadd5601856bb60fd21",
+    build_file_content = """
+filegroup(
+    name = "files",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+""",
+)

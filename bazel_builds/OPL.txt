@@ -1,0 +1,14 @@
+**************************************************************************************************************
+
+Bazel installer playground - OPL
+
+17.09.2026
+
+--------------------------------------------------------------------------------------------------------------
+
+* Currently designed for Windows. Required second configuration for Linux.
+
+* Installation of ISCC causes popup indicating changes in file system. Must be confimed manually.
+  How to suppress?
+
+

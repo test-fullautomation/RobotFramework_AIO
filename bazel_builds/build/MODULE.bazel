@@ -50,6 +50,7 @@ bazel_dep(name = "robotframework_uds", version = "0.1.0")
 bazel_dep(name = "robotframework_qconnect_winapp", version = "0.1.0")
 bazel_dep(name = "robotframework_robotlog2rqm", version = "0.1.0")
 bazel_dep(name = "robotframework_robotlog2db", version = "0.1.0")
+bazel_dep(name = "vscode", version = "0.1.0")
 bazel_dep(name = "config", version = "0.1.0")
 
 local_path_override(
@@ -142,6 +143,11 @@ local_path_override(
 local_path_override(
     module_name = "robotframework_robotlog2db",
     path = "../robotframework-robotlog2db",
+)
+
+local_path_override(
+    module_name = "vscode",
+    path = "../vscode",
 )
 
 

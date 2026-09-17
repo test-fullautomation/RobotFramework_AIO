@@ -118,6 +118,13 @@ def _inno_setup_installer_impl(ctx):
     args.add("--source-dir", staging_dir.path)
     args.add("--output", output.path)
     args.add("--version", ctx.attr.version)
+    # ctx.label.name is the Bazel target name (e.g. "installer_set_1", as
+    # defined in components/config/variant_config.bzl's INSTALLER_VARIANTS
+    # keys). This is intentionally NOT the same as installer_name (which
+    # controls the output .exe filename, e.g. "install_python_set_1") - it
+    # is used by installer.iss as the DefaultDirName, so the suggested
+    # installation folder always matches the Bazel target that built it.
+    args.add("--target-name", ctx.label.name)
     
     ctx.actions.run(
         outputs = [output],

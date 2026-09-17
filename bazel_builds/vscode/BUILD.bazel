@@ -1,0 +1,12 @@
+# BUILD.bazel
+#
+# Exposes the portable VS Code (Windows x64) distribution as this module's
+# public target. Follows the same "<module_name> == public target name"
+# convention used by all other components (e.g. python, robotframework_dbus):
+# the target name below ("vscode") matches the module name declared in
+# MODULE.bazel, so other modules can depend on it via "@vscode//:vscode".
+filegroup(
+    name = "vscode",
+    srcs = ["@vscode_windows_x64//:files"],
+    visibility = ["//visibility:public"],
+)

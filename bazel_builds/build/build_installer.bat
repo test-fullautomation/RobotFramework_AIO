@@ -9,9 +9,9 @@ REM Workspace configuration
 set BAZEL_EXEC=C:\TAF\tools\bazelisk\bazel.exe
 
 REM Proxy settings
-set HTTP_PROXY=...
-set HTTPS_PROXY=...
-set NO_PROXY=...
+set HTTP_PROXY=http://rb-proxy-de.bosch.com:8080
+set HTTPS_PROXY=http://rb-proxy-de.bosch.com:8080
+set NO_PROXY=localhost,127.0.0.1
 
 REM ----------------------------------------------------------------------
 REM Platform selection
@@ -76,6 +76,10 @@ REM EXTENDED CALLS:
 %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_1
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_2
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:all
+
+REM with new output_base also
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/bazel_out_fresh_test_3 build --disk_cache= @installer//:installer_set_1
+
 
 echo ========================================
 echo Batch file returns : %ERRORLEVEL%
