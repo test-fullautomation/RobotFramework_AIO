@@ -23,10 +23,19 @@ bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 # Bazel target instead of a hardcoded path to a manually installed ISCC.exe.
 bazel_dep(name = "inno_setup", version = "0.1.0")
 
-# This module references "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement"
-# (see installer_variants.bzl) - the robotframework-testsuitesmanagement PyPI
-# package, installed via pip the same way as py_modules_set_1/2.
+# own components
 bazel_dep(name = "robotframework_testsuitesmanagement", version = "0.1.0")
+bazel_dep(name = "python_genpackagedoc", version = "0.1.0")
+bazel_dep(name = "python_extensions_collection", version = "0.1.0")
+bazel_dep(name = "python_jsonpreprocessor", version = "0.1.0")
+bazel_dep(name = "robotframework_qconnect_base", version = "0.1.0")
+bazel_dep(name = "robotframework_extensions_collection", version = "0.1.0")
+bazel_dep(name = "robotframework_dbus", version = "0.1.0")
+bazel_dep(name = "robotframework_doip", version = "0.1.0")
+bazel_dep(name = "robotframework_uds", version = "0.1.0")
+bazel_dep(name = "robotframework_qconnect_winapp", version = "0.1.0")
+bazel_dep(name = "robotframework_robotlog2rqm", version = "0.1.0")
+bazel_dep(name = "robotframework_robotlog2db", version = "0.1.0")
 
 # installer_variants.bzl loads "@config//:variant_config.bzl" to obtain
 # BASE_COMPONENTS / INSTALLER_VARIANTS - the central, user-facing installer
@@ -40,6 +49,16 @@ local_path_override(
 )
 
 local_path_override(
+    module_name = "inno_setup",
+    path = "../inno_setup",
+)
+
+local_path_override(
+    module_name = "config",
+    path = "../config",
+)
+
+local_path_override(
     module_name = "py_modules_set_1",
     path = "../py_modules_set_1",
 )
@@ -50,16 +69,61 @@ local_path_override(
 )
 
 local_path_override(
-    module_name = "inno_setup",
-    path = "../inno_setup",
-)
-
-local_path_override(
     module_name = "robotframework_testsuitesmanagement",
     path = "../robotframework-testsuitesmanagement",
 )
 
 local_path_override(
-    module_name = "config",
-    path = "../config",
+    module_name = "python_genpackagedoc",
+    path = "../python-genpackagedoc",
+)
+
+local_path_override(
+    module_name = "python_extensions_collection",
+    path = "../python-extensions-collection",
+)
+
+local_path_override(
+    module_name = "python_jsonpreprocessor",
+    path = "../python-jsonpreprocessor",
+)
+
+local_path_override(
+    module_name = "robotframework_qconnect_base",
+    path = "../robotframework-qconnect-base",
+)
+
+local_path_override(
+    module_name = "robotframework_extensions_collection",
+    path = "../robotframework-extensions-collection",
+)
+
+local_path_override(
+    module_name = "robotframework_dbus",
+    path = "../robotframework-dbus",
+)
+
+local_path_override(
+    module_name = "robotframework_doip",
+    path = "../robotframework-doip",
+)
+
+local_path_override(
+    module_name = "robotframework_uds",
+    path = "../RobotFramework-UDS",
+)
+
+local_path_override(
+    module_name = "robotframework_qconnect_winapp",
+    path = "../robotframework-qconnect-winapp",
+)
+
+local_path_override(
+    module_name = "robotframework_robotlog2rqm",
+    path = "../robotframework-robotlog2rqm",
+)
+
+local_path_override(
+    module_name = "robotframework_robotlog2db",
+    path = "../robotframework-robotlog2db",
 )

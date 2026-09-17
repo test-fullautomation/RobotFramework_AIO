@@ -38,8 +38,7 @@ installer_variants.bzl.
 # modules - Starlark's load() statement can only import public symbols.
 BASE_COMPONENTS = [
     "@python//:python_runtime",  # Python interpreter distribution
-    "@inno_setup//:iscc",  # InnoSetup distribution
-    # "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # RFTSM PyPI package
+    "@inno_setup//:iscc",  # InnoSetup distribution - TODO: move to separate target
 ]
 
 # -----------------------------------------------------------------------------
@@ -71,7 +70,18 @@ INSTALLER_VARIANTS = {
     "installer_set_1": {
         "components": BASE_COMPONENTS + [
             "@py_modules_set_1//:py_modules_set_1",
-            "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # RFTSM PyPI package
+            "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # PyPI package
+            "@python_genpackagedoc//:python_genpackagedoc",  # PyPI package
+            "@python_extensions_collection//:python_extensions_collection",  # PyPI package
+            "@python_jsonpreprocessor//:python_jsonpreprocessor",  # PyPI package
+            "@robotframework_qconnect_base//:robotframework_qconnect_base",  # PyPI package
+            "@robotframework_extensions_collection//:robotframework_extensions_collection",  # PyPI package
+            "@robotframework_dbus//:robotframework_dbus",  # PyPI package
+            "@robotframework_doip//:robotframework_doip",  # PyPI package
+            # "@robotframework_uds//:robotframework_uds",  # PyPI package     >>>>>>>>>>>>>>>>>>>>>>>> causes Bazel errors / to be investigated
+            "@robotframework_qconnect_winapp//:robotframework_qconnect_winapp",  # PyPI package
+            "@robotframework_robotlog2rqm//:robotframework_robotlog2rqm",  # PyPI package
+            "@robotframework_robotlog2db//:robotframework_robotlog2db",  # PyPI package
         ],
         "version": "3.12.11",
         "installer_name": "install_python_set_1",

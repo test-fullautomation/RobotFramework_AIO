@@ -1,0 +1,33 @@
+# =============================================================================
+# components/RobotFramework-UDS/BUILD.bazel
+# =============================================================================
+#
+# This package installs the "RobotFramework-UDS" PyPI
+# package (https://pypi.org/project/RobotFramework-UDS/)
+# via pip.
+#
+# Proxy Configuration:
+#   Proxy settings are inherited from the environment via .bazelrc.
+#   Set HTTPS_PROXY, HTTP_PROXY, and NO_PROXY environment variables
+#   before running bazel build.
+#
+# =============================================================================
+
+load(":pip_install.bzl", "pip_install_dir")
+
+# Install the RobotFramework-UDS package (and its
+# transitive dependencies) from requirements_lock.txt.
+# Note: Proxy environment variables are passed through via --action_env in .bazelrc
+pip_install_dir(
+    name = "robotframework_uds",
+    requirements = "requirements_lock.txt",
+    interpreter = "@python//:python_interpreter",
+    runtime = "@python//:python_runtime",
+    # No explicit env needed - proxy variables are inherited via --action_env
+    # NOTE: Public visibility required - granting "@installer//:__pkg__" here
+    # would force this module to bazel_dep(installer), but installer already
+    # bazel_dep's this module, creating a circular dependency. Access control
+    # is enforced via the one-directional bazel_dep graph instead (same
+    # reasoning as py_modules_set_1 / py_modules_set_2).
+    visibility = ["//visibility:public"],
+)
