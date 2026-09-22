@@ -1,0 +1,40 @@
+# =============================================================================
+# MODULE.bazel - pip_utils
+# =============================================================================
+#
+# Shared utility module that provides the custom pip-install Bazel rules
+# (pip_install_dir, pip_install_from_source) used by every PyPI/Git-source
+# component in this repository.
+#
+# Rationale:
+#   Bzlmod isolates each module's dependency graph and does not support
+#   loading a plain .bzl file directly across module boundaries - a module
+#   can only load .bzl files that live in its own repository or in a
+#   repository it has declared a bazel_dep on. Previously, every component
+#   (robotframework-dbus, robotframework-doip, py_modules_set_1, ...) kept
+#   its own verbatim COPY of pip_install.bzl, which was a maintenance burden
+#   (any bugfix/change had to be applied N times).
+#
+#   This module solves that by hosting pip_install.bzl exactly ONCE. Every
+#   component declares:
+#
+#       bazel_dep(name = "pip_utils", version = "0.1.0")
+#       local_path_override(module_name = "pip_utils", path = "../pip_utils")
+#
+#   and then loads the rules via:
+#
+#       load("@pip_utils//:pip_install.bzl", "pip_install_dir")
+#
+#   instead of load(":pip_install.bzl", "pip_install_dir").
+#
+# This module intentionally has NO further dependencies (no bazel_dep on
+# "python") - the rules defined here only reference attr.label(...) values;
+# the actual labels (e.g. "@python//:python_interpreter") are supplied by
+# the CALLING component's BUILD.bazel and resolved in that component's own
+# module context, not in pip_utils's context.
+# =============================================================================
+
+module(
+    name = "pip_utils",
+    version = "0.1.0",
+)

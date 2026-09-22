@@ -1,0 +1,16 @@
+# =============================================================================
+# BUILD.bazel - pip_utils
+# =============================================================================
+#
+# Exposes pip_install.bzl for loading by other modules via:
+#   load("@pip_utils//:pip_install.bzl", "pip_install_dir", "pip_install_from_source")
+#
+# exports_files() makes the .bzl file an explicit, publicly-visible target of
+# this package (best practice for shared .bzl files, even though Bazel does
+# not strictly enforce visibility on load() by default).
+# =============================================================================
+
+exports_files(
+    ["pip_install.bzl"],
+    visibility = ["//visibility:public"],
+)

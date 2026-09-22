@@ -14,12 +14,12 @@ bazel_dep(name = "rules_pkg", version = "1.0.1")
 # mapping - so even though these are only used for visibility (not load()),
 # this module must still declare bazel_dep for them, otherwise the labels
 # don't resolve and the visibility check silently fails for the consumers.
-bazel_dep(name = "py_modules_set_1", version = "0.1.0")
+bazel_dep(name = "test_framework_tng", version = "0.1.0")
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 
 local_path_override(
-    module_name = "py_modules_set_1",
-    path = "../py_modules_set_1",
+    module_name = "test_framework_tng",
+    path = "../test_framework_tng",
 )
 
 local_path_override(

@@ -1,0 +1,19 @@
+# =============================================================================
+# requirements.txt - Transitive PyPI dependencies of robotframework-qconnect-dlt
+# =============================================================================
+#
+# robotframework-qconnect-dlt itself is NOT listed here - it is fetched from
+# the internal Bosch Bitbucket repository via git_repository (see
+# MODULE.bazel) and installed via the pip_install_from_source rule in
+# BUILD.bazel, NOT via this requirements file.
+#
+# This file lists ONLY the package's regular (PyPI-hosted) runtime
+# dependencies, exactly like requirements.txt in every other component
+# (e.g. robotframework-qconnect-base). Fill this in based on the
+# "install_requires" / "dependencies" list in the internal repo's
+# setup.py / pyproject.toml (see repo browse link in MODULE.bazel).
+#
+# TODO: Replace the placeholder below with the actual dependencies of
+# robotframework-qconnect-dlt once the source has been inspected.
+robotframework
+# "INSTALLREQUIRES" : ["pypandoc","colorama","GenPackageDoc","PythonExtensionsCollection"],

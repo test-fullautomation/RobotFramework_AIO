@@ -73,3 +73,29 @@ build --action_env=https_proxy
 build --action_env=http_proxy
 build --action_env=no_proxy
 
+# ----------------------------------------------------------------------------
+# Limit build parallelism to avoid intermittent corporate-proxy failures
+# ----------------------------------------------------------------------------
+# The Bosch proxy (rb-proxy-de.bosch.com, SSL-inspecting) has been observed
+# to intermittently return malformed responses (e.g. "Content-Type: Unknown"
+# instead of the expected text/html/json) for individual pip/PyPI requests
+# when MANY pip_install_dir actions run concurrently (Bazel's default
+# parallelism spawns one "pip install" subprocess per component target at
+# the same time, each opening several HTTPS connections through the same
+# proxy). This causes seemingly random, non-reproducible failures like:
+#   ERROR: Could not find a version that satisfies the requirement <pkg>
+# - always for a DIFFERENT package each time, confirming it's a proxy load
+#   issue, not a broken/missing package.
+#
+# Reducing --jobs limits how many actions (of ANY kind, not just pip
+# installs) run at once, which in practice keeps the number of concurrent
+# proxy connections low enough to avoid the issue. A fully serial build
+# (--jobs=1) reliably avoids it entirely, at the cost of a slower build.
+# 4 is a compromise that still meaningfully speeds up the local/CPU-bound
+# parts of the build (staging, ISCC) while keeping proxy load moderate.
+#
+# Override on the command line if needed, e.g.:
+#   bazel build --jobs=1 ...   (most robust, slowest)
+#   bazel build --jobs=8 ...   (faster, higher risk of proxy hiccups)
+build --jobs=1
+

@@ -14,7 +14,7 @@
 #
 # =============================================================================
 
-load(":pip_install.bzl", "pip_install_dir")
+load("@pip_utils//:pip_install.bzl", "pip_install_dir")
 
 # Install the robotframework-testsuitesmanagement package (and its
 # transitive dependencies) from requirements_rftsm_lock.txt.

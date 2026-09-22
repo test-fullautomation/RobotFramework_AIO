@@ -36,6 +36,49 @@ import sys
 from pathlib import Path
 
 
+def _long_path(path: Path) -> str:
+    """Returns a Windows extended-length path string ("\\\\?\\C:\\...") for
+    the given path, bypassing the legacy MAX_PATH (260 char) limit.
+
+    Background:
+        VS Code's bundled extensions (e.g. GitHub Copilot's
+        node_modules.asar.unpacked tree) contain files with very deeply
+        nested paths. Combined with the staging directory's own path
+        prefix (bazel-out/.../installer_set_1_staging/VSCode/...), the
+        resulting absolute path can exceed 260 characters even after all
+        prior shortening measures (see extract_relative_path() docstring:
+        "Python" instead of "PortablePython", project moved to C:\\BZL,
+        etc.). Windows historically rejects such paths with
+        FileNotFoundError, even though the path is perfectly valid.
+
+        The "\\\\?\\" prefix tells the Windows API to skip path parsing/
+        normalization and MAX_PATH checks entirely, allowing paths up to
+        ~32,767 characters. This works regardless of whether the
+        system-wide "Enable Win32 long paths" policy is turned on, so it
+        does not depend on any configuration of the build machine.
+
+        Requires an absolute path (relative paths are not valid with this
+        prefix), hence the os.path.abspath() call. No-op on non-Windows
+        platforms since MAX_PATH does not apply there.
+
+    Args:
+        path: The path to convert.
+
+    Returns:
+        On Windows: an extended-length path string.
+        On other platforms: the plain string form of the path.
+    """
+    if os.name != "nt":
+        return str(path)
+    abs_path = os.path.abspath(str(path))
+    if abs_path.startswith("\\\\?\\"):
+        return abs_path
+    if abs_path.startswith("\\\\"):
+        # UNC path (\\server\share\...) needs the \\?\UNC\ prefix variant
+        return "\\\\?\\UNC\\" + abs_path.lstrip("\\")
+    return "\\\\?\\" + abs_path
+
+
 def _make_writable(path: Path) -> None:
     """Clears the read-only attribute on a file or (recursively) directory.
 
@@ -48,13 +91,13 @@ def _make_writable(path: Path) -> None:
     freely modifiable for subsequent staging runs.
     """
     if path.is_dir():
-        for root, dirs, files in os.walk(path):
+        for root, dirs, files in os.walk(_long_path(path)):
             for name in dirs:
                 os.chmod(os.path.join(root, name), stat.S_IWRITE | stat.S_IREAD)
             for name in files:
                 os.chmod(os.path.join(root, name), stat.S_IWRITE | stat.S_IREAD)
     else:
-        os.chmod(path, stat.S_IWRITE | stat.S_IREAD)
+        os.chmod(_long_path(path), stat.S_IWRITE | stat.S_IREAD)
 
 
 def extract_relative_path(full_path: str) -> str:
@@ -244,8 +287,12 @@ expected by the Inno Setup script.
         rel_path = extract_relative_path(src_path)
         dest = output_dir / rel_path
 
-        # Create parent directories as needed
-        dest.parent.mkdir(parents=True, exist_ok=True)
+        # Create parent directories as needed. Uses the extended-length
+        # path form since VS Code's bundled extensions (e.g. GitHub
+        # Copilot's node_modules.asar.unpacked tree) can produce staging
+        # paths that exceed Windows' legacy 260-char MAX_PATH limit - see
+        # _long_path() docstring for details.
+        os.makedirs(_long_path(dest.parent), exist_ok=True)
 
         # Copy file or directory
         if src.is_file():
@@ -254,9 +301,9 @@ expected by the Inno Setup script.
             # clear it again so the staging dir stays freely modifiable
             # (both for merging further sources into the same destination
             # further down in this loop, and for any subsequent rebuild).
-            if dest.exists():
+            if os.path.exists(_long_path(dest)):
                 _make_writable(dest)
-            shutil.copy2(src, dest)
+            shutil.copy2(_long_path(src), _long_path(dest))
             _make_writable(dest)
         elif src.is_dir():
             # Merge instead of replace: several independent components
@@ -271,9 +318,9 @@ expected by the Inno Setup script.
             # were copied with copy2 (preserving Bazel's read-only bit),
             # that rmtree would additionally fail on Windows with
             # PermissionError. dirs_exist_ok=True merges the tree instead.
-            if dest.exists():
+            if os.path.exists(_long_path(dest)):
                 _make_writable(dest)
-            shutil.copytree(src, dest, dirs_exist_ok=True)
+            shutil.copytree(_long_path(src), _long_path(dest), dirs_exist_ok=True)
             _make_writable(dest)
 
     print("=== Staging completed ===")

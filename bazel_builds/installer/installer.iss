@@ -1,4 +1,4 @@
-; Inno Setup Script für Python Distribution
+; Inno Setup Script für Framework Distribution
 ; Wird von Bazel gebaut
 
 #ifndef SourceDir
@@ -23,7 +23,7 @@
 #endif
 
 [Setup]
-AppName=Python Portable Environment
+AppName=Test Environment TNG
 AppVersion={#AppVersion}
 AppPublisher=Development Team
 ; Default install directory name = the Bazel target name (e.g. "installer_set_1").

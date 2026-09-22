@@ -1,5 +1,5 @@
 module(
-    name = "py_modules_set_1",
+    name = "test_framework_tng",
     version = "0.1.0",
 )
 
@@ -13,4 +13,12 @@ bazel_dep(name = "python", version = "0.1.0")
 local_path_override(
     module_name = "python",
     path = "../python",
+)
+
+# Shared pip_install.bzl rules (pip_install_dir) - see components/pip_utils.
+bazel_dep(name = "pip_utils", version = "0.1.0")
+
+local_path_override(
+    module_name = "pip_utils",
+    path = "../pip_utils",
 )

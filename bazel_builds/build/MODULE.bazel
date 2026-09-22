@@ -34,7 +34,7 @@ bazel_dep(name = "rules_python", version = "1.7.0")
 # bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 
 bazel_dep(name = "installer", version = "0.1.0")
-bazel_dep(name = "py_modules_set_1", version = "0.1.0")
+bazel_dep(name = "test_framework_tng", version = "0.1.0")
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 bazel_dep(name = "python", version = "0.1.0")
 bazel_dep(name = "inno_setup", version = "0.1.0")
@@ -51,7 +51,15 @@ bazel_dep(name = "robotframework_qconnect_winapp", version = "0.1.0")
 bazel_dep(name = "robotframework_robotlog2rqm", version = "0.1.0")
 bazel_dep(name = "robotframework_robotlog2db", version = "0.1.0")
 bazel_dep(name = "vscode", version = "0.1.0")
+# bazel_dep(name = "robotframework_qconnect_dlt", version = "0.1.0")
 bazel_dep(name = "config", version = "0.1.0")
+
+# Shared pip_install.bzl rules (pip_install_dir / pip_install_from_source) -
+# used transitively by every component's BUILD.bazel via
+# load("@pip_utils//:pip_install.bzl", ...). Must be declared here too,
+# since local_path_override only takes effect when declared in the root
+# module (the module actually being built).
+bazel_dep(name = "pip_utils", version = "0.1.0")
 
 local_path_override(
     module_name = "installer",
@@ -75,8 +83,8 @@ local_path_override(
 
 
 local_path_override(
-    module_name = "py_modules_set_1",
-    path = "../py_modules_set_1",
+    module_name = "test_framework_tng",
+    path = "../test_framework_tng",
 )
 
 local_path_override(
@@ -148,6 +156,16 @@ local_path_override(
 local_path_override(
     module_name = "vscode",
     path = "../vscode",
+)
+
+# local_path_override(
+    # module_name = "robotframework_qconnect_dlt",
+    # path = "../robotframework-qconnect-dlt",
+# )
+
+local_path_override(
+    module_name = "pip_utils",
+    path = "../pip_utils",
 )
 
 

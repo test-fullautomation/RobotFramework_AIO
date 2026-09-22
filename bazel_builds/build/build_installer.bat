@@ -60,7 +60,7 @@ REM %BAZEL_EXEC% info client-env
 
 REM BASIC CALLS:
 
-REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:installer_set_1
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:test_framework_tng
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:installer_set_2
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build @installer//:all
 
@@ -73,12 +73,12 @@ REM - or with new output_base (simulating a new computer)
 REM     %BAZEL_EXEC% ... --output_base=C:/bazel_out_fresh_test build ...
 
 REM EXTENDED CALLS:
-%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_1
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:test_framework_tng
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:installer_set_2
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_cache= @installer//:all
 
 REM with new output_base also
-REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/bazel_out_fresh_test_3 build --disk_cache= @installer//:installer_set_1
+%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/BO6 build --disk_cache= @installer//:test_framework_tng
 
 
 echo ========================================

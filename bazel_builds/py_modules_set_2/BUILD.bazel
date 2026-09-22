@@ -12,7 +12,7 @@
 #
 # =============================================================================
 
-load(":pip_install.bzl", "pip_install_dir")
+load("@pip_utils//:pip_install.bzl", "pip_install_dir")
 
 # Install Python packages from requirements file
 # Note: Proxy environment variables are passed through via --action_env in .bazelrc

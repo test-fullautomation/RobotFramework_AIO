@@ -13,7 +13,7 @@
 #
 # =============================================================================
 
-load(":pip_install.bzl", "pip_install_dir")
+load("@pip_utils//:pip_install.bzl", "pip_install_dir")
 
 # Install the robotframework-dbus package (and its
 # transitive dependencies) from requirements_lock.txt.

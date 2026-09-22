@@ -1,5 +1,5 @@
 # =============================================================================
-# components/py_modules_set_1/BUILD.bazel - Python Module Set 1
+# components/test_framework_tng/BUILD.bazel - Python Module Set 1
 # =============================================================================
 #
 # This package installs a set of Python packages from PyPI using pip.
@@ -12,12 +12,12 @@
 #
 # =============================================================================
 
-load(":pip_install.bzl", "pip_install_dir")
+load("@pip_utils//:pip_install.bzl", "pip_install_dir")
 
 # Install Python packages from requirements file
 # Note: Proxy environment variables are passed through via --action_env in .bazelrc
 pip_install_dir(
-    name = "py_modules_set_1",
+    name = "test_framework_tng",
     requirements = "requirements_set_1_lock.txt",
     interpreter = "@python//:python_interpreter",
     runtime = "@python//:python_runtime",

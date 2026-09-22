@@ -68,9 +68,9 @@ BASE_COMPONENTS = [
 INSTALLER_VARIANTS = {
     # Installer with Python runtime + Module Set 1
     # Output: install_python_set_1.exe
-    "installer_set_1": {
+    "test_framework_tng": {
         "components": BASE_COMPONENTS + [
-            "@py_modules_set_1//:py_modules_set_1",
+            "@test_framework_tng//:test_framework_tng",
             "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # PyPI package
             "@python_genpackagedoc//:python_genpackagedoc",  # PyPI package
             "@python_extensions_collection//:python_extensions_collection",  # PyPI package
@@ -83,9 +83,10 @@ INSTALLER_VARIANTS = {
             "@robotframework_qconnect_winapp//:robotframework_qconnect_winapp",  # PyPI package
             "@robotframework_robotlog2rqm//:robotframework_robotlog2rqm",  # PyPI package
             "@robotframework_robotlog2db//:robotframework_robotlog2db",  # PyPI package
+            # "@robotframework_qconnect_dlt//:robotframework_qconnect_dlt",  # Internal Git source (Bosch Bitbucket) - TODO: real git tag/deps still pending
         ],
         "version": "3.12.11",
-        "installer_name": "install_python_set_1",
+        "installer_name": "test_framework_tng_setup",
     },
 
     # Installer with Python runtime + Module Set 2
