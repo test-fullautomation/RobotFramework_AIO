@@ -1,0 +1,367 @@
+====================================================================================================
+Version Audit Report
+Scanned root: C:\workplace\ROBFW\components\bits
+Total findings: 219  |  Distinct components: 101  |  Components with version MISMATCH: 21
+====================================================================================================
+
+Component                       Version    Status    Source            File                                                                Line
+------------------------------  ---------  --------  ----------------  ------------------------------------------------------------------  ----
+   annotated-doc                   0.0.4                requirements      requirements_lock.txt                                               10  
+
+>> annotated-types                 0.7.0      MISMATCH  requirements      requirements_lock.txt                                               1   
+>> annotated-types                 0.7.0      MISMATCH  requirements      services\testbench\device\requirements.txt                          3   
+>> annotated-types                 0.8.0      MISMATCH  requirements      services\testbench\iperf\requirements.txt                           3   
+
+   anyio                           4.14.2               requirements      requirements_lock.txt                                               11  
+
+   asyncpg                         0.31.0               requirements      requirements_lock.txt                                               65  
+   asyncpg                         0.31.0               toml[dependency]  services\log\pyproject.toml                                         7   
+
+>> black                           23.0       MISMATCH  toml[dependency]  nomad\tools\raw_exec_wrapper\pyproject.toml                         34  
+>> black                           23.12.1    MISMATCH  toml[dependency]  pyproject.toml                                                      31  
+
+   certifi                         2026.7.22            requirements      requirements_lock.txt                                               28  
+
+   cffi                            2.0.0                requirements      requirements_lock.txt                                               50  
+
+   charset-normalizer              3.4.9                requirements      requirements_lock.txt                                               29  
+
+>> click                           8.1.7      MISMATCH  toml[dependency]  pyproject.toml                                                      18  
+>> click                           8.4.2      MISMATCH  requirements      requirements_lock.txt                                               30  
+
+   colorama                        0.4.6                requirements      requirements_lock.txt                                               54  
+
+   commitizen                      4.17.0               toml[dependency]  pyproject.toml                                                      23  
+
+   configuration                   0.1.0                toml[project]     services\testbench\configuration\pyproject.toml                     3   
+
+   cryptography                    45.0.5               requirements      requirements_lock.txt                                               49  
+
+   decorator                       5.2.1                requirements      requirements_lock.txt                                               60  
+
+   deprecation                     2.1.0                requirements      requirements_lock.txt                                               31  
+
+   device                          0.1.0                toml[project]     services\testbench\device\pyproject.toml                            3   
+
+   distro                          1.9.0                requirements      requirements_lock.txt                                               32  
+
+   docs                            0.1.0                toml[project]     docs\pyproject.toml                                                 3   
+   docs                            0.1.0                toml[project]     products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                3   
+
+>> fastapi                         0.115.0    MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     7   
+>> fastapi                         0.140.7    MISMATCH  requirements      requirements_lock.txt                                               12  
+
+>> grpcio                          1.60.0     MISMATCH  toml[dependency]  pyproject.toml                                                      12  
+>> grpcio                          1.60.0     MISMATCH  toml[dependency]  services\log\pyproject.toml                                         8   
+>> grpcio                          1.60.0     MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        7   
+>> grpcio                          1.68.0     MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\device\pyproject.toml        12  
+>> grpcio                          1.68.0     MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\relay\device\pyproject.toml  12  
+>> grpcio                          1.68.0     MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            7   
+>> grpcio                          1.68.0     MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             7   
+>> grpcio                          1.68.0     MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               7   
+>> grpcio                          1.80.0     MISMATCH  requirements      requirements_lock.txt                                               2   
+>> grpcio                          1.80.0     MISMATCH  requirements      services\testbench\device\requirements.txt                          5   
+>> grpcio                          1.83.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           5   
+
+>> grpcio-health-checking          1.78.0     MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            8   
+>> grpcio-health-checking          1.78.0     MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             8   
+>> grpcio-health-checking          1.78.0     MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               8   
+>> grpcio-health-checking          1.80.0     MISMATCH  requirements      requirements_lock.txt                                               3   
+>> grpcio-health-checking          1.80.0     MISMATCH  requirements      services\testbench\device\requirements.txt                          11  
+>> grpcio-health-checking          1.83.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           11  
+
+>> grpcio-reflection               1.60.0     MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        9   
+>> grpcio-reflection               1.78.0     MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            9   
+>> grpcio-reflection               1.78.0     MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             9   
+>> grpcio-reflection               1.78.0     MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               9   
+>> grpcio-reflection               1.80.0     MISMATCH  requirements      requirements_lock.txt                                               4   
+>> grpcio-reflection               1.80.0     MISMATCH  requirements      services\testbench\device\requirements.txt                          13  
+>> grpcio-reflection               1.83.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           13  
+
+>> grpcio-tools                    1.60.0     MISMATCH  toml[dependency]  pyproject.toml                                                      13  
+>> grpcio-tools                    1.60.0     MISMATCH  toml[dependency]  services\log\pyproject.toml                                         9   
+>> grpcio-tools                    1.60.0     MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        8   
+>> grpcio-tools                    1.68.0     MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            10  
+>> grpcio-tools                    1.68.0     MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             10  
+>> grpcio-tools                    1.68.0     MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               10  
+>> grpcio-tools                    1.80.0     MISMATCH  requirements      requirements_lock.txt                                               5   
+>> grpcio-tools                    1.80.0     MISMATCH  requirements      services\testbench\device\requirements.txt                          15  
+>> grpcio-tools                    1.83.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           15  
+
+   gssapi                          1.10.1               requirements      requirements_lock.txt                                               59  
+
+   h11                             0.16.0               requirements      requirements_lock.txt                                               13  
+
+   hightime                        1.0.0                requirements      requirements_lock.txt                                               33  
+
+   httpcore                        1.0.9                requirements      requirements_lock.txt                                               14  
+
+>> httpx                           0.27.0     MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     11  
+>> httpx                           0.28.1     MISMATCH  requirements      requirements_lock.txt                                               15  
+
+   idna                            3.18                 requirements      requirements_lock.txt                                               34  
+
+   iniconfig                       2.1.0                requirements      requirements_lock.txt                                               18  
+
+   iperf                           0.1.0                toml[project]     services\testbench\iperf\pyproject.toml                             3   
+
+   iperf3                          0.1.11               toml[dependency]  services\testbench\iperf\pyproject.toml                             11  
+   iperf3                          0.1.11               requirements      services\testbench\iperf\requirements.txt                           17  
+
+>> kafka-python                    2.0.2      MISMATCH  toml[dependency]  pyproject.toml                                                      14  
+>> kafka-python                    2.0.2      MISMATCH  toml[dependency]  services\log\pyproject.toml                                         10  
+>> kafka-python                    2.3.0      MISMATCH  requirements      requirements_lock.txt                                               63  
+
+   krb5                            0.8.0                requirements      requirements_lock.txt                                               61  
+
+   log                             0.1.0                toml[project]     services\log\pyproject.toml                                         3   
+
+   lxml                            6.0.0                requirements      requirements_lock.txt                                               62  
+
+   mkdocs-drawio                   1.5.5                toml[dependency]  docs\pyproject.toml                                                 10  
+   mkdocs-drawio                   1.5.5                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                10  
+
+   mkdocs-gen-files                0.6.1                toml[dependency]  docs\pyproject.toml                                                 11  
+   mkdocs-gen-files                0.6.1                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                11  
+
+   mkdocs-include-markdown-plugin  7.3.0                toml[dependency]  docs\pyproject.toml                                                 8   
+   mkdocs-include-markdown-plugin  7.3.0                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                8   
+
+   mkdocs-jupyter                  0.26.1               toml[dependency]  docs\pyproject.toml                                                 12  
+   mkdocs-jupyter                  0.26.1               toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                12  
+
+   mkdocs-material                 9.7.6                toml[dependency]  docs\pyproject.toml                                                 13  
+   mkdocs-material                 9.7.6                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                13  
+
+   mkdocs-monorepo-plugin          1.1.2                toml[dependency]  pyproject.toml                                                      22  
+
+   mkdocs_puml                     2.3.0                toml[dependency]  docs\pyproject.toml                                                 9   
+   mkdocs_puml                     2.3.0                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                9   
+
+   mypy                            1.8.0                toml[dependency]  pyproject.toml                                                      33  
+
+   mysqlclient                     2.2.7                requirements      requirements_lock.txt                                               45  
+
+   nidaqmx                         1.5.0                requirements      requirements_lock.txt                                               35  
+   nidaqmx                         1.5.0                toml[dependency]  services\testbench\device\pyproject.toml                            15  
+
+   nitypes                         1.1.0                requirements      requirements_lock.txt                                               36  
+
+   nomad-raw-exec-wrapper          1.0.0                toml[project]     nomad\tools\raw_exec_wrapper\pyproject.toml                         3   
+
+   nuitka                          4.0.7                toml[dependency]  services\testbench\device\pyproject.toml                            11  
+   nuitka                          4.0.7                requirements      services\testbench\device\requirements.txt                          17  
+
+   numpy                           2.5.1                requirements      requirements_lock.txt                                               37  
+
+   odxtools                        7.0.1                toml[dependency]  services\testbench\uds_tester\pyproject.toml                        12  
+
+   packaging                       25.0                 requirements      requirements_lock.txt                                               21  
+
+   pika                            1.3.2                toml[dependency]  pyproject.toml                                                      20  
+   pika                            1.3.2                requirements      requirements_lock.txt                                               64  
+   pika                            1.3.2                toml[dependency]  services\log\pyproject.toml                                         11  
+
+   platforms                       1.0.0                bazel_dep()       MODULE.bazel                                                        8   
+
+   pluggy                          1.6.0                requirements      requirements_lock.txt                                               22  
+
+   properdocs                      1.6.7                toml[dependency]  docs\pyproject.toml                                                 15  
+   properdocs                      1.6.7                toml[dependency]  products\HW_DV_BMW_HIP_Framework\docs\pyproject.toml                15  
+
+>> protobuf                        6.33.6     MISMATCH  requirements      requirements_lock.txt                                               6   
+>> protobuf                        6.33.6     MISMATCH  requirements      services\testbench\device\requirements.txt                          19  
+>> protobuf                        7.35.1     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           19  
+
+   psutil                          7.2.2                requirements      requirements_lock.txt                                               66  
+   psutil                          7.2.2                toml[dependency]  services\log\pyproject.toml                                         14  
+
+>> pydantic                        2.12.5     MISMATCH  requirements      requirements_lock.txt                                               7   
+>> pydantic                        2.12.5     MISMATCH  requirements      services\testbench\device\requirements.txt                          24  
+>> pydantic                        2.13.4     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           24  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  pyproject.toml                                                      15  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\log\pyproject.toml                                         12  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     9   
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            12  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             12  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               11  
+>> pydantic                        2.5.0      MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        10  
+
+>> pydantic-core                   2.41.5     MISMATCH  requirements      requirements_lock.txt                                               8   
+>> pydantic-core                   2.41.5     MISMATCH  requirements      services\testbench\device\requirements.txt                          28  
+>> pydantic-core                   2.46.4     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           28  
+
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  pyproject.toml                                                      16  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\log\pyproject.toml                                         13  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     10  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            13  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             13  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               12  
+>> pydantic-settings               2.1.0      MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        11  
+>> pydantic-settings               2.13.1     MISMATCH  requirements      requirements_lock.txt                                               9   
+>> pydantic-settings               2.13.1     MISMATCH  requirements      services\testbench\device\requirements.txt                          30  
+>> pydantic-settings               2.14.2     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           30  
+
+   PyMySQL                         1.1.3                requirements      requirements_lock.txt                                               44  
+
+   pyserial                        3.5                  requirements      requirements_lock.txt                                               23  
+   pyserial                        3.5                  toml[dependency]  services\testbench\device\pyproject.toml                            14  
+   pyserial                        3.5                  requirements      services\testbench\device\requirements.txt                          32  
+
+   pyspnego                        0.12.0               requirements      requirements_lock.txt                                               48  
+
+>> pytest                          7.0        MISMATCH  toml[dependency]  nomad\tools\raw_exec_wrapper\pyproject.toml                         33  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\log\pyproject.toml                                         26  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     23  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            27  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             25  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               24  
+>> pytest                          7.4.0      MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        24  
+>> pytest                          7.4.3      MISMATCH  toml[dependency]  pyproject.toml                                                      28  
+>> pytest                          7.4.3      MISMATCH  requirements      requirements_lock.txt                                               19  
+>> pytest                          8.0.0      MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\device\pyproject.toml        17  
+>> pytest                          8.0.0      MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\relay\device\pyproject.toml  17  
+
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\log\pyproject.toml                                         27  
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     24  
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\testbench\device\pyproject.toml                            28  
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\testbench\iperf\pyproject.toml                             26  
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\testbench\uds\pyproject.toml                               25  
+>> pytest-asyncio                  0.21.0     MISMATCH  toml[dependency]  services\testbench\uds_tester\pyproject.toml                        25  
+>> pytest-asyncio                  0.23.2     MISMATCH  toml[dependency]  pyproject.toml                                                      29  
+>> pytest-asyncio                  0.23.8     MISMATCH  requirements      requirements_lock.txt                                               20  
+
+   pytest-cov                      4.1.0                toml[dependency]  clients\robotframework\tests\testbench\device\pyproject.toml        18  
+   pytest-cov                      4.1.0                toml[dependency]  clients\robotframework\tests\testbench\relay\device\pyproject.toml  18  
+   pytest-cov                      4.1.0                toml[dependency]  pyproject.toml                                                      30  
+   pytest-cov                      4.1.0                toml[dependency]  services\log\pyproject.toml                                         28  
+   pytest-cov                      4.1.0                toml[dependency]  services\testbench\configuration\pyproject.toml                     25  
+   pytest-cov                      4.1.0                toml[dependency]  services\testbench\device\pyproject.toml                            29  
+   pytest-cov                      4.1.0                toml[dependency]  services\testbench\iperf\pyproject.toml                             27  
+   pytest-cov                      4.1.0                toml[dependency]  services\testbench\uds\pyproject.toml                               26  
+   pytest-cov                      4.1.0                toml[dependency]  services\testbench\uds_tester\pyproject.toml                        26  
+
+   pytest-mock                     3.12.0               toml[dependency]  services\log\pyproject.toml                                         29  
+   pytest-mock                     3.12.0               toml[dependency]  services\testbench\configuration\pyproject.toml                     26  
+   pytest-mock                     3.12.0               toml[dependency]  services\testbench\device\pyproject.toml                            30  
+   pytest-mock                     3.12.0               toml[dependency]  services\testbench\iperf\pyproject.toml                             28  
+   pytest-mock                     3.12.0               toml[dependency]  services\testbench\uds\pyproject.toml                               27  
+
+   PyTestLog2DB                    0.4.2                requirements      requirements_lock.txt                                               57  
+
+   python-dateutil                 2.9.0                requirements      requirements_lock.txt                                               55  
+
+   python-decouple                 3.8                  requirements      requirements_lock.txt                                               38  
+
+   python-dotenv                   1.2.2                requirements      requirements_lock.txt                                               24  
+   python-dotenv                   1.2.2                requirements      services\testbench\device\requirements.txt                          34  
+   python-dotenv                   1.2.2                requirements      services\testbench\iperf\requirements.txt                           32  
+
+   pywin32                         306                  toml[dependency]  nomad\tools\raw_exec_wrapper\pyproject.toml                         28  
+
+   pyyaml                          6.0.1                toml[dependency]  pyproject.toml                                                      17  
+
+   relay-device-rf-keywords        0.1.0                toml[project]     clients\robotframework\tests\testbench\relay\device\pyproject.toml  7   
+
+   repo_template                   0.0.1                module()          MODULE.bazel                                                        1   
+
+   requests                        2.32.4               requirements      requirements_lock.txt                                               46  
+
+   requests_kerberos               0.15.0               requirements      requirements_lock.txt                                               47  
+
+   rich                            13.7.0               toml[dependency]  pyproject.toml                                                      19  
+
+>> robotframework                  6.1        MISMATCH  requirements      requirements_lock.txt                                               58  
+>> robotframework                  7.0        MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\device\pyproject.toml        11  
+>> robotframework                  7.0        MISMATCH  toml[dependency]  clients\robotframework\tests\testbench\relay\device\pyproject.toml  11  
+
+   robotframework-robotlog2db      1.6.0                requirements      requirements_lock.txt                                               42  
+
+>> ruff                            0.1.0      MISMATCH  toml[dependency]  nomad\tools\raw_exec_wrapper\pyproject.toml                         35  
+>> ruff                            0.1.9      MISMATCH  toml[dependency]  pyproject.toml                                                      32  
+
+   rules_java                      9.1.0                bazel_dep()       MODULE.bazel                                                        7   
+
+   rules_python                    1.9.0                bazel_dep()       MODULE.bazel                                                        6   
+
+   selenium                        4.34.2               requirements      requirements_lock.txt                                               52  
+
+>> setuptools                      61.0       MISMATCH  toml[dependency]  nomad\tools\raw_exec_wrapper\pyproject.toml                         43  
+>> setuptools                      82.0.1     MISMATCH  requirements      requirements_lock.txt                                               25  
+>> setuptools                      82.0.1     MISMATCH  requirements      services\testbench\device\requirements.txt                          36  
+>> setuptools                      83.0.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           34  
+
+   six                             1.17.0               requirements      requirements_lock.txt                                               56  
+
+   sspilib                         0.4.0                requirements      requirements_lock.txt                                               51  
+
+   starlette                       1.3.1                requirements      requirements_lock.txt                                               16  
+
+   ta-framework                    0.1.0                toml[project]     pyproject.toml                                                      3   
+
+   testbench-device-rf-keywords    0.1.0                toml[project]     clients\robotframework\tests\testbench\device\pyproject.toml        7   
+
+   TestResultDBAccess              0.2.0                requirements      requirements_lock.txt                                               43  
+
+>> typing-extensions               4.15.0     MISMATCH  requirements      requirements_lock.txt                                               26  
+>> typing-extensions               4.15.0     MISMATCH  requirements      services\testbench\device\requirements.txt                          38  
+>> typing-extensions               4.16.0     MISMATCH  requirements      services\testbench\iperf\requirements.txt                           36  
+
+   typing-inspection               0.4.2                requirements      requirements_lock.txt                                               27  
+   typing-inspection               0.4.2                requirements      services\testbench\device\requirements.txt                          44  
+   typing-inspection               0.4.2                requirements      services\testbench\iperf\requirements.txt                           42  
+
+   tzdata                          2026.3               requirements      requirements_lock.txt                                               39  
+
+   tzlocal                         5.4.4                requirements      requirements_lock.txt                                               40  
+
+   uds                             0.1.0                toml[project]     services\testbench\uds\pyproject.toml                               3   
+
+   uds_tester                      0.1.0                toml[project]     services\testbench\uds_tester\pyproject.toml                        3   
+
+   urllib3                         2.7.0                requirements      requirements_lock.txt                                               41  
+
+>> uvicorn                         0.30.0     MISMATCH  toml[dependency]  services\testbench\configuration\pyproject.toml                     8   
+>> uvicorn                         0.51.0     MISMATCH  requirements      requirements_lock.txt                                               17  
+
+   websocket-client                1.9.0                requirements      requirements_lock.txt                                               53  
+
+----------------------------------------------------------------------------------------------------
+21 component(s) with INCONSISTENT versions detected:
+  - annotated-types: 0.7.0, 0.8.0
+  - black: 23.0, 23.12.1
+  - click: 8.1.7, 8.4.2
+  - fastapi: 0.115.0, 0.140.7
+  - grpcio: 1.60.0, 1.68.0, 1.80.0, 1.83.0
+  - grpcio-health-checking: 1.78.0, 1.80.0, 1.83.0
+  - grpcio-reflection: 1.60.0, 1.78.0, 1.80.0, 1.83.0
+  - grpcio-tools: 1.60.0, 1.68.0, 1.80.0, 1.83.0
+  - httpx: 0.27.0, 0.28.1
+  - kafka-python: 2.0.2, 2.3.0
+  - protobuf: 6.33.6, 7.35.1
+  - pydantic: 2.12.5, 2.13.4, 2.5.0
+  - pydantic-core: 2.41.5, 2.46.4
+  - pydantic-settings: 2.1.0, 2.13.1, 2.14.2
+  - pytest: 7.0, 7.4.0, 7.4.3, 8.0.0
+  - pytest-asyncio: 0.21.0, 0.23.2, 0.23.8
+  - robotframework: 6.1, 7.0
+  - ruff: 0.1.0, 0.1.9
+  - setuptools: 61.0, 82.0.1, 83.0.0
+  - typing-extensions: 4.15.0, 4.16.0
+  - uvicorn: 0.30.0, 0.51.0
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+Bazel bazel_dep() Dependency Overview
+Distinct dependency names: 3  |  Names with version MISMATCH: 0
+(One row per dependency name; ALL bazel_dep() declarations are included here, even those superseded by a local_path_override - see the main table above for the noise-filtered view.)
+====================================================================================================
+
+Dependency Name  Versions Found  Status
+---------------  --------------  ------
+   platforms        1.0.0           ok    
+   rules_java       9.1.0           ok    
+   rules_python     1.9.0           ok    
+----------------------------------------------------------------------------------------------------
+No bazel_dep() version mismatches detected.
+----------------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@ bazel_dep(name = "rules_python", version = "1.7.0")
 # Bzlmod requires each module to declare its own direct dependencies -
 # declaring them in the root module ("build") is NOT sufficient here.
 bazel_dep(name = "python", version = "0.1.0")
-bazel_dep(name = "test_framework_tng", version = "0.1.0")
+bazel_dep(name = "py_modules_set_1", version = "0.1.0")
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 
 # This module's inno_setup.bzl references "@inno_setup//:iscc" (default of
@@ -73,8 +73,8 @@ local_path_override(
 )
 
 local_path_override(
-    module_name = "test_framework_tng",
-    path = "../test_framework_tng",
+    module_name = "py_modules_set_1",
+    path = "../py_modules_set_1",
 )
 
 local_path_override(

@@ -209,11 +209,30 @@ def extract_relative_path(full_path: str) -> str:
     # caller (main()) MUST merge multiple source directories into this same
     # destination instead of deleting/overwriting it for each new source
     # (see the dirs_exist_ok=True copytree call below).
+    #
+    # Special case "site-packages-deps": Some components (e.g.
+    # python-extensions-collection) need TWO pip_install targets in the
+    # SAME Bazel package - one pip_install_dir for transitive PyPI
+    # dependencies, one pip_install_from_source for the package itself
+    # (built from a git_repository source tree). Two actions in the same
+    # package cannot both declare an output literally named "site-packages"
+    # (Bazel would reject this as "conflicting actions" - two different
+    # actions producing the same output path). The transitive-deps target
+    # therefore uses out_dir="site-packages-deps" instead (see that
+    # component's BUILD.bazel) - matched here via startswith() so it still
+    # merges into the exact same "Lib/site-packages" destination as every
+    # other component's plain "site-packages" output.
     for i, part in enumerate(parts):
-        if part == "site-packages":
+        if part == "site-packages" or part.startswith("site-packages-"):
             # Prepend Python/Lib/ to create: Python/Lib/site-packages/...
-            # so these end up alongside the Python runtime, not mixed with VSCode/.
-            return str(Path("Python", "Lib", *parts[i:]))
+            # so these end up alongside the Python runtime, not mixed with
+            # VSCode/. The destination segment is always normalized to the
+            # literal name "site-packages" (regardless of the actual source
+            # out_dir name, e.g. "site-packages-deps"), so that all
+            # variants merge into the one true site-packages directory.
+            rel_parts = parts[i + 1:]
+            return str(Path("Python", "Lib", "site-packages", *rel_parts))
+
 
     # Fallback: Use filename only (should not happen in normal use)
     print(f"WARNING: Could not resolve path structure: {full_path}")

@@ -1,1 +1,29 @@
 GenPackageDoc==0.44.0
+
+# NOTE: GenPackageDoc's own PyPI metadata declares a dependency on
+# "PythonExtensionsCollection". Without an explicit pin here, pip-compile
+# resolves that transitive dependency to whatever the CURRENTLY newest PyPI
+# release is at compile time - which is independent of, and can silently
+# diverge from, the Git tag pinned in
+# ../python-extensions-collection/MODULE.bazel (git_repository "tag"
+# attribute), from which PythonExtensionsCollection is actually built for
+# the installer.
+#
+# Both this PyPI-installed copy (site-packages, via this component) and the
+# git-source-built copy (site-packages, via python-extensions-collection)
+# get merged by stage_files.py into the SAME final "Lib/site-packages"
+# directory. If their versions differ, whichever copy is staged LAST wins
+# (overwrites the other's dist-info metadata) - this previously caused the
+# installed PythonExtensionsCollection version to silently be "0.17.1"
+# (from here) even though the Git tag was explicitly set to "rel/0.17.0".
+#
+# Fix: pin this transitive dependency EXPLICITLY to the SAME version as the
+# Git tag in python-extensions-collection/MODULE.bazel, so the "harmless
+# duplicate" assumption documented there (both copies are pinned to the
+# SAME version) actually holds again.
+#
+# *** Whenever the Git tag in python-extensions-collection/MODULE.bazel is
+# changed, this pin MUST be updated to match, and requirements_lock.txt
+# regenerated via pip-compile. ***
+
+# not yet # PythonExtensionsCollection==0.17.0

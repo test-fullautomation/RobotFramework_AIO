@@ -1,0 +1,24 @@
+# =============================================================================
+# MODULE.bazel - repo_rules
+# =============================================================================
+#
+# Shared repository-rule module hosting variant_git_repository.bzl - a
+# generic replacement for @bazel_tools//tools/build_defs/repo:git.bzl's
+# git_repository that supports switching between a fixed release tag
+# (hermetic, default) and a tracked branch HEAD (non-hermetic, Daily
+# Build/Test only) via the BUILD_VARIANT environment variable.
+#
+# See documentation/docs/Bazel_Git_Repository_Tag_vs_Branch.md for the full
+# rationale, and pip_utils/MODULE.bazel for the general pattern this module
+# follows (hosting a shared .bzl file exactly once, loaded by other modules
+# via bazel_dep + local_path_override instead of duplicating the file).
+#
+# This module intentionally has NO further dependencies - it only uses
+# repository_rule()/repository_ctx APIs from @bazel_tools, which is always
+# implicitly available and does not require an explicit bazel_dep.
+# =============================================================================
+
+module(
+    name = "repo_rules",
+    version = "0.1.0",
+)

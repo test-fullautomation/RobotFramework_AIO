@@ -1,0 +1,18 @@
+# =============================================================================
+# BUILD.bazel - repo_rules
+# =============================================================================
+#
+# Exposes variant_git_repository.bzl for loading by other modules via:
+#   variant_git_repository = use_repo_rule(
+#       "@repo_rules//:variant_git_repository.bzl",
+#       "variant_git_repository",
+#   )
+#
+# exports_files() makes the .bzl file an explicit, publicly-visible target of
+# this package (same pattern as pip_utils/BUILD.bazel).
+# =============================================================================
+
+exports_files(
+    ["variant_git_repository.bzl"],
+    visibility = ["//visibility:public"],
+)

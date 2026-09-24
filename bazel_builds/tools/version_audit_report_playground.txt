@@ -1,0 +1,388 @@
+====================================================================================================
+Version Audit Report
+Scanned root: C:\BZL
+Total findings: 238  |  Distinct components: 98  |  Components with version MISMATCH: 4
+====================================================================================================
+
+Component                             Version      Status    Source               File                                                             Line
+------------------------------------  -----------  --------  -------------------  ---------------------------------------------------------------  ----
+   appium-python-client                  6.0.6                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             7   
+
+   argparse-addons                       0.12.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         7   
+
+   aspect_bazel_lib                      2.9.4                  bazel_dep()          build\MODULE.bazel                                               34  
+
+   attrs                                 26.1.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             11  
+   attrs                                 26.1.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  7   
+
+   bazel_skylib                          1.8.2                  bazel_dep()          build\MODULE.bazel                                               22  
+
+   bcrypt                                5.0.0                  requirements         robotframework-qconnect-base\requirements_lock.txt               7   
+   bcrypt                                5.0.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             17  
+
+   beautifulsoup4                        4.15.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         13  
+
+   bincopy                               20.1.1                 requirements         RobotFramework-UDS\requirements_lock.txt                         17  
+
+   can-isotp                             2.0.7                  requirements         RobotFramework-UDS\requirements_lock.txt                         21  
+
+   certifi                               2026.7.22              requirements         robotframework-qconnect-winapp\requirements_lock.txt             82  
+   certifi                               2026.7.22              requirements         robotframework-robotlog2rqm\requirements_lock.txt                7   
+
+   cffi                                  2.1.1                  requirements         robotframework-qconnect-base\requirements_lock.txt               72  
+   cffi                                  2.1.1                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             86  
+
+   charset-normalizer                    3.5.1                  requirements         robotframework-robotlog2rqm\requirements_lock.txt                11  
+
+   colorama                              0.4.6                  requirements         RobotFramework-UDS\requirements_lock.txt                         25  
+   colorama                              0.4.6                  requirements         py_modules_set_2\requirements_set_2.txt                          2   
+   colorama                              0.4.6                  requirements         py_modules_set_2\requirements_set_2_lock.txt                     7   
+   colorama                              0.4.6                  requirements         python-extensions-collection\requirements_lock.txt               7   
+   colorama                              0.4.6                  requirements         python-genpackagedoc\requirements_lock.txt                       7   
+   colorama                              0.4.6                  requirements         python-jsonpreprocessor\requirements_lock.txt                    7   
+   colorama                              0.4.6                  requirements         robotframework-dbus\requirements_lock.txt                        7   
+   colorama                              0.4.6                  requirements         robotframework-doip\requirements_lock.txt                        7   
+   colorama                              0.4.6                  requirements         robotframework-extensions-collection\requirements_lock.txt       7   
+   colorama                              0.4.6                  requirements         robotframework-qconnect-base\requirements_lock.txt               176 
+   colorama                              0.4.6                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             191 
+   colorama                              0.4.6                  requirements         robotframework-robotlog2db\requirements_lock.txt                 7   
+   colorama                              0.4.6                  requirements         robotframework-robotlog2rqm\requirements_lock.txt                185 
+   colorama                              0.4.6                  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  13  
+
+   config                                0.1.0                  module()             config\MODULE.bazel                                              1   
+
+   cryptography                          50.0.1                 requirements         robotframework-qconnect-base\requirements_lock.txt               182 
+   cryptography                          50.0.1                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             198 
+
+   deprecation                           2.1.0                  requirements         RobotFramework-UDS\requirements_lock.txt                         32  
+
+>> docutils                              0.22.4       MISMATCH  requirements         py_modules_set_2\requirements_set_2.txt                          1   
+>> docutils                              0.22.4       MISMATCH  requirements         py_modules_set_2\requirements_set_2_lock.txt                     13  
+>> docutils                              0.23         MISMATCH  requirements         RobotFramework-UDS\requirements_lock.txt                         36  
+>> docutils                              0.23         MISMATCH  requirements         python-extensions-collection\requirements_lock.txt               13  
+>> docutils                              0.23         MISMATCH  requirements         python-genpackagedoc\requirements_lock.txt                       13  
+>> docutils                              0.23         MISMATCH  requirements         python-jsonpreprocessor\requirements_lock.txt                    14  
+>> docutils                              0.23         MISMATCH  requirements         robotframework-dbus\requirements_lock.txt                        14  
+>> docutils                              0.23         MISMATCH  requirements         robotframework-doip\requirements_lock.txt                        14  
+>> docutils                              0.23         MISMATCH  requirements         robotframework-extensions-collection\requirements_lock.txt       14  
+>> docutils                              0.23         MISMATCH  requirements         robotframework-qconnect-base\requirements_lock.txt               230 
+>> docutils                              0.23         MISMATCH  requirements         robotframework-qconnect-winapp\requirements_lock.txt             246 
+>> docutils                              0.23         MISMATCH  requirements         robotframework-robotlog2db\requirements_lock.txt                 14  
+>> docutils                              0.23         MISMATCH  requirements         robotframework-robotlog2rqm\requirements_lock.txt                192 
+>> docutils                              0.23         MISMATCH  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  21  
+
+   doipclient                            1.2.2                  requirements         RobotFramework-UDS\requirements_lock.txt                         42  
+   doipclient                            1.2.2                  requirements         robotframework-doip\requirements_lock.txt                        20  
+
+   dotdict                               0.1                    requirements         RobotFramework-UDS\requirements_lock.txt                         46  
+   dotdict                               0.1                    requirements         py_modules_set_2\requirements_set_2.txt                          3   
+   dotdict                               0.1                    requirements         py_modules_set_2\requirements_set_2_lock.txt                     17  
+   dotdict                               0.1                    requirements         python-extensions-collection\requirements_lock.txt               19  
+   dotdict                               0.1                    requirements         python-jsonpreprocessor\requirements_lock.txt                    21  
+   dotdict                               0.1                    requirements         robotframework-dbus\requirements_lock.txt                        20  
+   dotdict                               0.1                    requirements         robotframework-doip\requirements_lock.txt                        24  
+   dotdict                               0.1                    requirements         robotframework-extensions-collection\requirements_lock.txt       20  
+   dotdict                               0.1                    requirements         robotframework-qconnect-base\requirements_lock.txt               236 
+   dotdict                               0.1                    requirements         robotframework-qconnect-winapp\requirements_lock.txt             252 
+   dotdict                               0.1                    requirements         robotframework-robotlog2db\requirements_lock.txt                 20  
+   dotdict                               0.1                    requirements         robotframework-robotlog2rqm\requirements_lock.txt                198 
+   dotdict                               0.1                    requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  28  
+
+   genpackagedoc                         0.44.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         51  
+   genpackagedoc                         0.44.0                 requirements         python-extensions-collection\requirements_lock.txt               22  
+   GenPackageDoc                         0.44.0                 requirements         python-genpackagedoc\requirements.txt                            1   
+   genpackagedoc                         0.44.0                 requirements         python-genpackagedoc\requirements_lock.txt                       19  
+   genpackagedoc                         0.44.0                 requirements         python-jsonpreprocessor\requirements_lock.txt                    24  
+   genpackagedoc                         0.44.0                 requirements         robotframework-dbus\requirements_lock.txt                        23  
+   genpackagedoc                         0.44.0                 requirements         robotframework-doip\requirements_lock.txt                        29  
+   genpackagedoc                         0.44.0                 requirements         robotframework-extensions-collection\requirements_lock.txt       25  
+   genpackagedoc                         0.44.0                 requirements         robotframework-qconnect-base\requirements_lock.txt               239 
+   genpackagedoc                         0.44.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             255 
+   genpackagedoc                         0.44.0                 requirements         robotframework-robotlog2db\requirements_lock.txt                 23  
+   genpackagedoc                         0.44.0                 requirements         robotframework-robotlog2rqm\requirements_lock.txt                201 
+   genpackagedoc                         0.44.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  33  
+
+   h11                                   0.16.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             262 
+
+   humanfriendly                         10.0                   requirements         RobotFramework-UDS\requirements_lock.txt                         57  
+
+   idna                                  3.19                   requirements         robotframework-qconnect-winapp\requirements_lock.txt             266 
+   idna                                  3.19                   requirements         robotframework-robotlog2rqm\requirements_lock.txt                207 
+
+   iniconfig                             2.3.0                  requirements         py_modules_set_2\requirements_set_2_lock.txt                     20  
+
+   inno_setup                            0.1.0                  module()             inno_setup\MODULE.bazel                                          1   
+
+   installer                             0.1.0                  module()             installer\MODULE.bazel                                           1   
+
+   invoke                                3.0.3                  requirements         robotframework-qconnect-base\requirements_lock.txt               245 
+   invoke                                3.0.3                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             270 
+
+   jinja2                                3.1.6                  requirements         RobotFramework-UDS\requirements_lock.txt                         61  
+
+   JsonPreprocessor                      0.12.0                 requirements         python-jsonpreprocessor\requirements.txt                         1   
+   jsonpreprocessor                      0.12.0                 requirements         python-jsonpreprocessor\requirements_lock.txt                    30  
+   jsonpreprocessor                      0.12.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  40  
+
+   jsonschema                            4.26.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  44  
+
+   jsonschema-specifications             2025.9.1               requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  48  
+
+   lxml                                  6.1.3                  requirements         robotframework-robotlog2db\requirements_lock.txt                 29  
+   lxml                                  6.1.3                  requirements         robotframework-robotlog2rqm\requirements_lock.txt                211 
+   lxml                                  6.1.3                  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  52  
+
+   markdown-it-py                        4.2.0                  requirements         RobotFramework-UDS\requirements_lock.txt                         65  
+
+   markdownify                           1.2.3                  requirements         RobotFramework-UDS\requirements_lock.txt                         69  
+
+   markupsafe                            3.0.3                  requirements         RobotFramework-UDS\requirements_lock.txt                         73  
+
+   mdurl                                 0.1.2                  requirements         RobotFramework-UDS\requirements_lock.txt                         164 
+
+   mysqlclient                           2.3.0                  requirements         robotframework-robotlog2db\requirements_lock.txt                 207 
+
+   odxtools                              11.6.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         168 
+
+   outcome                               1.3.0.post0            requirements         robotframework-qconnect-winapp\requirements_lock.txt             274 
+
+   packaging                             26.3                   requirements         RobotFramework-UDS\requirements_lock.txt                         171 
+   packaging                             26.3                   requirements         py_modules_set_2\requirements_set_2_lock.txt                     24  
+   packaging                             26.3                   requirements         python-extensions-collection\requirements_lock.txt               28  
+
+   paramiko                              5.0.0                  requirements         robotframework-qconnect-base\requirements_lock.txt               249 
+   paramiko                              5.0.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             280 
+
+   pip                                   26.0.1                 requirements         py_modules_set_1\requirements_set_1.txt                          4   
+   pip                                   26.0.1                 requirements         py_modules_set_1\requirements_set_1_lock.txt                     17  
+   pip                                   26.0.1                 requirements         py_modules_set_2\requirements_set_2.txt                          6   
+   pip                                   26.0.1                 requirements         py_modules_set_2\requirements_set_2_lock.txt                     42  
+
+   pip_utils                             0.1.0                  module()             pip_utils\MODULE.bazel                                           37  
+
+   pluggy                                1.6.0                  requirements         py_modules_set_2\requirements_set_2_lock.txt                     28  
+
+   py_modules_set_1                      0.1.0                  module()             py_modules_set_1\MODULE.bazel                                    1   
+
+   py_modules_set_2                      0.1.0                  module()             py_modules_set_2\MODULE.bazel                                    1   
+
+   pycparser                             3.0                    requirements         robotframework-qconnect-base\requirements_lock.txt               253 
+   pycparser                             3.0                    requirements         robotframework-qconnect-winapp\requirements_lock.txt             284 
+
+   pydotdict                             3.3.11                 requirements         python-jsonpreprocessor\requirements_lock.txt                    34  
+   pydotdict                             3.3.11                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  230 
+
+   pyelftools                            0.33                   requirements         RobotFramework-UDS\requirements_lock.txt                         178 
+
+   pygments                              2.21.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         182 
+   pygments                              2.21.0                 requirements         python-extensions-collection\requirements_lock.txt               32  
+   pygments                              2.21.0                 requirements         python-genpackagedoc\requirements_lock.txt                       25  
+   pygments                              2.21.0                 requirements         python-jsonpreprocessor\requirements_lock.txt                    37  
+   pygments                              2.21.0                 requirements         robotframework-dbus\requirements_lock.txt                        29  
+   pygments                              2.21.0                 requirements         robotframework-doip\requirements_lock.txt                        35  
+   pygments                              2.21.0                 requirements         robotframework-extensions-collection\requirements_lock.txt       31  
+   pygments                              2.21.0                 requirements         robotframework-qconnect-base\requirements_lock.txt               257 
+   pygments                              2.21.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             288 
+   pygments                              2.21.0                 requirements         robotframework-robotlog2db\requirements_lock.txt                 226 
+   pygments                              2.21.0                 requirements         robotframework-robotlog2rqm\requirements_lock.txt                389 
+   pygments                              2.21.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  233 
+
+   pynacl                                1.6.2                  requirements         robotframework-qconnect-base\requirements_lock.txt               261 
+   pynacl                                1.6.2                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             292 
+
+   pyreadline3                           3.5.6                  requirements         RobotFramework-UDS\requirements_lock.txt                         188 
+
+   pyserial                              3.5                    requirements         robotframework-qconnect-base\requirements_lock.txt               288 
+   pyserial                              3.5                    requirements         robotframework-qconnect-winapp\requirements_lock.txt             319 
+
+   pysocks                               1.7.1                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             323 
+
+   pytest                                8.3.4                  requirements         py_modules_set_2\requirements_set_2.txt                          4   
+   pytest                                8.3.4                  requirements         py_modules_set_2\requirements_set_2_lock.txt                     32  
+
+   python                                0.1.0                  module()             python\MODULE.bazel                                              1   
+
+   python-can                            4.6.1                  requirements         RobotFramework-UDS\requirements_lock.txt                         192 
+
+   python-dotenv                         1.2.2                  requirements         py_modules_set_1\requirements_set_1.txt                          1   
+   python-dotenv                         1.2.2                  requirements         py_modules_set_1\requirements_set_1_lock.txt                     7   
+   python-dotenv                         1.2.2                  requirements         py_modules_set_2\requirements_set_2.txt                          5   
+   python-dotenv                         1.2.2                  requirements         py_modules_set_2\requirements_set_2_lock.txt                     36  
+
+   python_extensions_collection          0.17.1                 module()             python-extensions-collection\MODULE.bazel                        1   
+
+   python_extensions_collection_src      0.17.0                 git_repository(tag)  python-extensions-collection\MODULE.bazel                        85  
+
+   python_genpackagedoc                  0.44.0                 module()             python-genpackagedoc\MODULE.bazel                                1   
+
+   python_jsonpreprocessor               0.12.0                 module()             python-jsonpreprocessor\MODULE.bazel                             1   
+
+>> PythonExtensionsCollection            0.17.0       MISMATCH  requirements         python-genpackagedoc\requirements.txt                            28  
+>> pythonextensionscollection            0.17.0       MISMATCH  requirements         python-genpackagedoc\requirements_lock.txt                       29  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         RobotFramework-UDS\requirements_lock.txt                         198 
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         python-extensions-collection\requirements_lock.txt               36  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         python-jsonpreprocessor\requirements_lock.txt                    41  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-dbus\requirements_lock.txt                        33  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-doip\requirements_lock.txt                        39  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-extensions-collection\requirements_lock.txt       35  
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-qconnect-base\requirements_lock.txt               292 
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-qconnect-winapp\requirements_lock.txt             328 
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-robotlog2db\requirements_lock.txt                 230 
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-robotlog2rqm\requirements_lock.txt                393 
+>> pythonextensionscollection            0.17.1       MISMATCH  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  237 
+
+   referencing                           0.37.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  244 
+
+   regex                                 2026.9.10              requirements         python-jsonpreprocessor\requirements_lock.txt                    47  
+   regex                                 2026.9.10              requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  250 
+
+   requests                              2.34.2                 requirements         robotframework-robotlog2rqm\requirements_lock.txt                399 
+
+   rich                                  15.0.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         204 
+
+>> robotframework                        6.1          MISMATCH  requirements         py_modules_set_1\requirements_set_1.txt                          2   
+>> robotframework                        6.1          MISMATCH  requirements         py_modules_set_1\requirements_set_1_lock.txt                     11  
+>> robotframework                        7.5          MISMATCH  requirements         RobotFramework-UDS\requirements_lock.txt                         208 
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-dbus\requirements_lock.txt                        39  
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-doip\requirements_lock.txt                        45  
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-extensions-collection\requirements_lock.txt       41  
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-qconnect-base\requirements_lock.txt               298 
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-qconnect-dlt\requirements_lock.txt                7   
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-qconnect-dlt\requirements_lock__.txt              7   
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-qconnect-winapp\requirements_lock.txt             335 
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-robotlog2db\requirements_lock.txt                 236 
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-robotlog2rqm\requirements_lock.txt                403 
+>> robotframework                        7.5          MISMATCH  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  384 
+
+   robotframework_dbus                   0.2.0                  module()             robotframework-dbus\MODULE.bazel                                 1   
+   robotframework-dbus                   0.2.0                  requirements         robotframework-dbus\requirements.txt                             1   
+   robotframework-dbus                   0.2.0                  requirements         robotframework-dbus\requirements_lock.txt                        43  
+
+   robotframework_doip                   0.2.0                  module()             robotframework-doip\MODULE.bazel                                 1   
+   robotframework-doip                   0.2.0                  requirements         robotframework-doip\requirements.txt                             1   
+   robotframework-doip                   0.2.0                  requirements         robotframework-doip\requirements_lock.txt                        49  
+
+   robotframework_extensions_collection  0.12.0                 module()             robotframework-extensions-collection\MODULE.bazel                1   
+   robotframework-extensions-collection  0.12.0                 requirements         robotframework-extensions-collection\requirements.txt            1   
+   robotframework-extensions-collection  0.12.0                 requirements         robotframework-extensions-collection\requirements_lock.txt       45  
+
+   robotframework-pythonlibcore          4.6.0                  requirements         robotframework-qconnect-base\requirements_lock.txt               302 
+   robotframework-pythonlibcore          4.6.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             341 
+   robotframework-pythonlibcore          4.6.0                  requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  388 
+
+   robotframework_qconnect_base          1.4.0                  module()             robotframework-qconnect-base\MODULE.bazel                        1   
+   robotframework-qconnect-base          1.4.0                  requirements         robotframework-qconnect-base\requirements.txt                    1   
+   robotframework-qconnect-base          1.4.0                  requirements         robotframework-qconnect-base\requirements_lock.txt               306 
+   robotframework-qconnect-base          1.4.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             345 
+
+   robotframework_qconnect_winapp        1.1.0                  module()             robotframework-qconnect-winapp\MODULE.bazel                      1   
+   robotframework-qconnect-winapp        1.1.0                  requirements         robotframework-qconnect-winapp\requirements.txt                  1   
+   robotframework-qconnect-winapp        1.1.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             349 
+
+   robotframework_robotlog2db            1.6.0                  module()             robotframework-robotlog2db\MODULE.bazel                          1   
+   robotframework-robotlog2db            1.6.0                  requirements         robotframework-robotlog2db\requirements.txt                      1   
+   robotframework-robotlog2db            1.6.0                  requirements         robotframework-robotlog2db\requirements_lock.txt                 240 
+
+   robotframework_robotlog2rqm           1.8.1                  module()             robotframework-robotlog2rqm\MODULE.bazel                         1   
+   robotframework-robotlog2rqm           1.8.1                  requirements         robotframework-robotlog2rqm\requirements.txt                     1   
+   robotframework-robotlog2rqm           1.8.1                  requirements         robotframework-robotlog2rqm\requirements_lock.txt                407 
+
+   robotframework_testsuitesmanagement   0.11.0                 module()             robotframework-testsuitesmanagement\MODULE.bazel                 1   
+   robotframework-testsuitesmanagement   0.11.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm.txt       1   
+   robotframework-testsuitesmanagement   0.11.0                 requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  392 
+
+   robotframework_uds                    0.2.0                  module()             RobotFramework-UDS\MODULE.bazel                                  1   
+   RobotFramework-UDS                    0.2.0                  requirements         RobotFramework-UDS\requirements.txt                              1   
+   robotframework-uds                    0.2.0                  requirements         RobotFramework-UDS\requirements_lock.txt                         212 
+
+   rpds-py                               2026.6.3               requirements         robotframework-testsuitesmanagement\requirements_rftsm_lock.txt  396 
+
+   rules_pkg                             1.0.1                  bazel_dep()          build\MODULE.bazel                                               26  
+   rules_pkg                             1.0.1                  bazel_dep()          python\MODULE.bazel                                              9   
+   rules_pkg                             1.0.1                  bazel_dep()          vscode\MODULE.bazel                                              7   
+
+   rules_python                          1.7.0                  bazel_dep()          build\MODULE.bazel                                               30  
+   rules_python                          1.7.0                  bazel_dep()          installer\MODULE.bazel                                           10  
+
+   selenium                              4.49.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             353 
+
+>> setuptools                            82.0.1       MISMATCH  requirements         py_modules_set_1\requirements_set_1.txt                          3   
+>> setuptools                            82.0.1       MISMATCH  requirements         py_modules_set_1\requirements_set_1_lock.txt                     21  
+>> setuptools                            84.0.0       MISMATCH  requirements         python-extensions-collection\requirements_lock.txt               46  
+
+   six                                   1.17.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         216 
+
+   sniffio                               1.3.1                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             359 
+
+   sortedcontainers                      2.4.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             363 
+
+   soupsieve                             2.9.2                  requirements         RobotFramework-UDS\requirements_lock.txt                         220 
+
+   tabulate                              0.10.0                 requirements         robotframework-extensions-collection\requirements_lock.txt       49  
+
+   trio                                  0.34.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             367 
+
+   trio-websocket                        0.12.2                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             373 
+
+   typing-extensions                     4.16.0                 requirements         RobotFramework-UDS\requirements_lock.txt                         224 
+   typing-extensions                     4.16.0                 requirements         robotframework-qconnect-winapp\requirements_lock.txt             377 
+
+   udsoncan                              1.26.1                 requirements         RobotFramework-UDS\requirements_lock.txt                         231 
+
+   urllib3                               2.8.0                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             383 
+   urllib3                               2.8.0                  requirements         robotframework-robotlog2rqm\requirements_lock.txt                411 
+
+   vscode                                0.1.0                  module()             vscode\MODULE.bazel                                              2   
+
+   websocket-client                      1.9.2                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             387 
+
+   wheel                                 0.48.0                 requirements         python-extensions-collection\requirements_lock.txt               40  
+
+   wrapt                                 1.17.3                 requirements         RobotFramework-UDS\requirements_lock.txt                         235 
+
+   wsproto                               1.3.2                  requirements         robotframework-qconnect-winapp\requirements_lock.txt             391 
+
+----------------------------------------------------------------------------------------------------
+4 component(s) with INCONSISTENT versions detected:
+  - docutils: 0.22.4, 0.23
+  - pythonextensionscollection: 0.17.0, 0.17.1
+  - robotframework: 6.1, 7.5
+  - setuptools: 82.0.1, 84.0.0
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+Bazel bazel_dep() Dependency Overview
+Distinct dependency names: 25  |  Names with version MISMATCH: 0
+(One row per dependency name; ALL bazel_dep() declarations are included here, even those superseded by a local_path_override - see the main table above for the noise-filtered view.)
+====================================================================================================
+
+Dependency Name                       Versions Found  Status
+------------------------------------  --------------  ------
+   aspect_bazel_lib                      2.9.4           ok    
+   bazel_skylib                          1.8.2           ok    
+   config                                0.1.0           ok    
+   inno_setup                            0.1.0           ok    
+   installer                             0.1.0           ok    
+   pip_utils                             0.1.0           ok    
+   py_modules_set_1                      0.1.0           ok    
+   py_modules_set_2                      0.1.0           ok    
+   python                                0.1.0           ok    
+   python_extensions_collection          0.1.0           ok    
+   python_genpackagedoc                  0.1.0           ok    
+   python_jsonpreprocessor               0.1.0           ok    
+   robotframework_dbus                   0.1.0           ok    
+   robotframework_doip                   0.1.0           ok    
+   robotframework_extensions_collection  0.1.0           ok    
+   robotframework_qconnect_base          0.1.0           ok    
+   robotframework_qconnect_dlt           0.1.0           ok    
+   robotframework_qconnect_winapp        0.1.0           ok    
+   robotframework_robotlog2db            0.1.0           ok    
+   robotframework_robotlog2rqm           0.1.0           ok    
+   robotframework_testsuitesmanagement   0.1.0           ok    
+   robotframework_uds                    0.1.0           ok    
+   rules_pkg                             1.0.1           ok    
+   rules_python                          1.7.0           ok    
+   vscode                                0.1.0           ok    
+----------------------------------------------------------------------------------------------------
+No bazel_dep() version mismatches detected.
+----------------------------------------------------------------------------------------------------

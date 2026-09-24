@@ -34,7 +34,8 @@ py_binary(
 # The create_all_installers() macro reads the INSTALLER_VARIANTS dictionary
 # from installer_variants.bzl and generates the following targets:
 #
-#   - installer_set_1       -> install_python_set_1.exe (Python + Module Set 1)
+#   - test_framework_tng    -> test_framework_tng_setup.exe (Python + Module Set 1 + full test framework stack)
+#   - rf_testsuitesmanagement -> rf_testsuitesmanagement_setup.exe (Python + Module Set 1 + RobotFramework TestsuitesManagement)
 #   - installer_set_2       -> install_python_set_2.exe (Python + Module Set 2)
 #
 # Each installer target also creates a corresponding bundle filegroup

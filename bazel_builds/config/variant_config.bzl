@@ -38,8 +38,6 @@ installer_variants.bzl.
 # modules - Starlark's load() statement can only import public symbols.
 BASE_COMPONENTS = [
     "@python//:python_runtime",  # Python interpreter distribution
-    "@vscode//:vscode",  # VS Code portable distribution (Windows x64) - TODO: check: move to separate target?
-    "@inno_setup//:iscc",  # InnoSetup distribution - TODO: move to separate target
 ]
 
 # -----------------------------------------------------------------------------
@@ -66,11 +64,13 @@ BASE_COMPONENTS = [
 # an entry here.
 
 INSTALLER_VARIANTS = {
-    # Installer with Python runtime + Module Set 1
-    # Output: install_python_set_1.exe
+    # Installer with Python runtime + Module Set 1 + bunch of own components (test_framework_tng)
+    # Output: <installer_name>.exe
     "test_framework_tng": {
-        "components": BASE_COMPONENTS + [
-            "@test_framework_tng//:test_framework_tng",
+        "components": BASE_COMPONENTS + [            # Python interpreter distribution
+            "@py_modules_set_1//:py_modules_set_1",  # certain set of additional Python modules (site-packages)
+            #
+            # own components
             "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # PyPI package
             "@python_genpackagedoc//:python_genpackagedoc",  # PyPI package
             "@python_extensions_collection//:python_extensions_collection",  # PyPI package
@@ -84,16 +84,38 @@ INSTALLER_VARIANTS = {
             "@robotframework_robotlog2rqm//:robotframework_robotlog2rqm",  # PyPI package
             "@robotframework_robotlog2db//:robotframework_robotlog2db",  # PyPI package
             # "@robotframework_qconnect_dlt//:robotframework_qconnect_dlt",  # Internal Git source (Bosch Bitbucket) - TODO: real git tag/deps still pending
+            #
+            # further extensions
+            "@inno_setup//:iscc", # InnoSetup distribution
+            "@vscode//:vscode",   # VS Code portable distribution (Windows x64)
         ],
         "version": "3.12.11",
         "installer_name": "test_framework_tng_setup",
     },
 
+    # Robot Framework and TestsuitesManagement installation
+    # Output: <installer_name>.exe
+    "rf_testsuitesmanagement": {
+        "components": BASE_COMPONENTS + [            # Python interpreter distribution
+            "@py_modules_set_1//:py_modules_set_1",  # certain set of additional Python modules (site-packages)
+            #
+            # own components
+            "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",
+            #
+            # further extensions
+            "@inno_setup//:iscc", # InnoSetup distribution
+            "@vscode//:vscode",   # VS Code portable distribution (Windows x64)
+        ],
+        "version": "3.12.11",
+        "installer_name": "rf_testsuitesmanagement_setup",
+    },
+
     # Installer with Python runtime + Module Set 2
-    # Output: install_python_set_2.exe
+    # Output: <installer_name>.exe
     "installer_set_2": {
-        "components": BASE_COMPONENTS + [
-            "@py_modules_set_2//:py_modules_set_2",
+        "components": BASE_COMPONENTS + [            # Python interpreter distribution
+            "@py_modules_set_2//:py_modules_set_2",  # certain set of additional Python modules (site-packages)
+            "@inno_setup//:iscc",                    # InnoSetup distribution
         ],
         "version": "3.12.11",
         "installer_name": "install_python_set_2",

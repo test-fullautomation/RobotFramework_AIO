@@ -1,1 +1,38 @@
-PythonExtensionsCollection==0.17.1
+# =============================================================================
+# requirements.txt - Transitive PyPI dependencies of PythonExtensionsCollection
+# =============================================================================
+#
+# PythonExtensionsCollection itself is NOT listed here anymore - it is now
+# fetched from its GitHub repository via git_repository (see MODULE.bazel)
+# and installed via the pip_install_from_source rule in BUILD.bazel, NOT
+# via this requirements file (previously: "PythonExtensionsCollection==0.17.1").
+#
+# This file lists PythonExtensionsCollection's regular (PyPI-hosted) runtime
+# dependency instead - "genpackagedoc" - so that pip-compile still resolves
+# the full transitive dependency tree (colorama, docutils, dotdict,
+# pygments, ...) with hashes, exactly as before.
+#
+# NOTE on the circular genpackagedoc <-> PythonExtensionsCollection
+# reference: genpackagedoc's own PyPI metadata declares a dependency back
+# on "PythonExtensionsCollection" (the two packages depend on each other).
+# pip-compile does not know that PEC now comes from git instead of PyPI, so
+# the resulting requirements_lock.txt will still contain a
+# "pythonextensionscollection==<version>" entry, hash-verified and
+# installed via the normal pip_install_dir mechanism. This is harmless: both
+# copies are pinned to the SAME version/tag, they are merged into the same
+# "Lib/site-packages" directory by stage_files.py either way, and the files
+# are effectively identical - functionally a no-op duplicate, not a
+# conflict.
+# NOTE on "setuptools" and "wheel": PythonExtensionsCollection's git source
+# uses a PEP 517 build backend (build_backend.py, based on setuptools) that
+# is invoked with --no-build-isolation (see pip_install_from_source in
+# pip_utils/pip_install.bzl). Without build isolation, pip does NOT create
+# a fresh, ephemeral build environment with the backend's declared
+# build-time requirements (setuptools, wheel) - it expects them to already
+# be importable in the environment pip itself runs in. The portable Python
+# distribution's own site-packages does not ship these by default, so they
+# must be listed here explicitly to end up in the deps_dir passed via
+# PYTHONPATH to the pip_install_from_source action.
+setuptools
+wheel
+genpackagedoc

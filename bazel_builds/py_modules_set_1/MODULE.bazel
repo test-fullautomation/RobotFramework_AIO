@@ -1,5 +1,5 @@
 module(
-    name = "test_framework_tng",
+    name = "py_modules_set_1",
     version = "0.1.0",
 )
 

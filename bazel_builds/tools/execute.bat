@@ -1,0 +1,3 @@
+"%RobotPythonPath%/python.exe" C:\BZL\tools\version_audit.py --root C:\BZL --output C:\BZL\tools\version_audit_report_playground.txt
+REM "%RobotPythonPath%/python.exe" C:\BZL\tools\version_audit.py --root C:\workplace\ROBFW\components\bits --output C:\BZL\tools\version_audit_report_bits.txt
+REM "%RobotPythonPath%/python.exe" C:\BZL\tools\version_audit.py --root C:\workplace\ROBFW\components --output C:\BZL\tools\version_audit_report_aio_components.txt

@@ -95,17 +95,54 @@ def _pip_install_impl(ctx):
     runtime = ctx.files.runtime           # All files from the Python distribution
 
     # Build pip install command arguments
-    args = ctx.actions.args()
-    args.add("-m").add("pip").add("install")    # Run pip as a module
-    args.add("--requirement", ctx.file.requirements)  # Requirements file
-    args.add("--target", out.path)              # Install to output directory
-    args.add("--no-compile")                    # Skip .pyc compilation (saves time)
-    args.add("--disable-pip-version-check")    # Skip pip update check
-    args.add("--no-input")                      # Non-interactive mode
+    pip_args = ["-m", "pip", "install"]
+    pip_args += ["--requirement", ctx.file.requirements.path]
+    pip_args += ["--target", out.path]
+    pip_args += ["--no-compile"]
+    pip_args += ["--disable-pip-version-check"]
+    pip_args += ["--no-input"]
 
     # Optional: Require hash verification for security
     if ctx.attr.require_hashes:
-        args.add("--require-hashes")
+        pip_args += ["--require-hashes"]
+
+    # IMPORTANT - stale output directory content:
+    # This action runs with "no-sandbox" (see execution_requirements below),
+    # which means Bazel does NOT necessarily delete a pre-existing
+    # declare_directory() output directory before re-running this action
+    # (unlike sandboxed actions, where every output starts from a guaranteed
+    # empty directory each time). If a PREVIOUS build already populated
+    # `out.path` with an OLDER resolution of requirements.txt/lock file
+    # (e.g. a different pinned version of some package), pip's
+    # "--target <dir>" install mode does NOT perform an uninstall-then-
+    # install of the previous version the way a normal site-packages
+    # install would - it just extracts the new wheel's files over
+    # whatever is already there. Depending on file-name/case overlaps
+    # between old and new versions, this can leave a mix of old and new
+    # files/dist-info directories behind, causing tools that read package
+    # metadata (e.g. importlib.metadata, `pip show`) to report a STALE
+    # version even though the requirements file was correctly updated and
+    # re-resolved.
+    #
+    # Fix: explicitly wipe `out.path` before invoking pip, so every build
+    # of this target always starts from a guaranteed-empty directory,
+    # regardless of whether Bazel happened to reuse a stale one.
+    launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_launcher.py")
+    pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+    ctx.actions.write(
+        output = launcher,
+        content = """\
+import shutil
+import subprocess
+import sys
+
+out_dir = r"{out_path}"
+shutil.rmtree(out_dir, ignore_errors=True)
+
+cmd = [sys.executable] + {pip_args_literal}
+raise SystemExit(subprocess.call(cmd))
+""".format(out_path = out.path, pip_args_literal = pip_args_literal),
+    )
 
     # Execute pip install
     # Note: This action has special execution requirements:
@@ -120,8 +157,8 @@ def _pip_install_impl(ctx):
     # pip subprocess runs with an empty/minimal environment.
     ctx.actions.run(
         executable = interpreter,
-        arguments = [args],
-        inputs = depset([ctx.file.requirements] + runtime),
+        arguments = [launcher.path],
+        inputs = depset([launcher, ctx.file.requirements] + runtime),
         outputs = [out],
         env = ctx.attr.env,
         use_default_shell_env = True,  # merge --action_env (e.g. HTTPS_PROXY) into env
@@ -255,15 +292,14 @@ def _pip_install_from_source_impl(ctx):
         fail("pip_install_from_source: 'source' attribute produced no files.")
     source_dir = source_files[0].dirname
 
-    args = ctx.actions.args()
-    args.add("-m").add("pip").add("install")
-    args.add("--target", out.path)
-    args.add("--no-compile")
-    args.add("--disable-pip-version-check")
-    args.add("--no-input")
-    args.add("--no-deps")               # transitive deps come from deps_dir instead
-    args.add("--no-build-isolation")    # use the interpreter's own env, no fresh venv
-    args.add(source_dir)                # install FROM this local directory, not PyPI
+    pip_args = ["-m", "pip", "install"]
+    pip_args += ["--target", out.path]
+    pip_args += ["--no-compile"]
+    pip_args += ["--disable-pip-version-check"]
+    pip_args += ["--no-input"]
+    pip_args += ["--no-deps"]               # transitive deps come from deps_dir instead
+    pip_args += ["--no-build-isolation"]    # use the interpreter's own env, no fresh venv
+    pip_args += [source_dir]                # install FROM this local directory, not PyPI
 
     # inputs: full source tree + runtime + (optionally) the pre-installed
     # transitive dependency directory, so the build backend can import them
@@ -271,28 +307,133 @@ def _pip_install_from_source_impl(ctx):
     inputs = depset(source_files + runtime + ctx.files.deps_dir)
 
     env = dict(ctx.attr.env)
-    if ctx.files.deps_dir:
-        # Make transitively-installed PyPI packages (from a sibling
-        # pip_install_dir target) importable during the build/install step,
-        # e.g. for packages whose setup.py imports a helper dependency.
-        deps_path = ctx.files.deps_dir[0].path
-        env["PYTHONPATH"] = deps_path
 
-    ctx.actions.run(
-        executable = interpreter,
-        arguments = [args],
-        inputs = inputs,
-        outputs = [out],
-        env = env,
-        use_default_shell_env = True,
-        execution_requirements = {
-            "requires-network": "",  # pip still needs network for its own bookkeeping
-            "no-sandbox": "",
-            "no-remote": "",
-        },
-        mnemonic = "PipInstallFromSource",
-        progress_message = "pip install (from source) -> %s" % out.short_path,
-    )
+    deps_path_rel = None
+    if ctx.files.deps_dir:
+        deps_path_rel = ctx.files.deps_dir[0].path
+
+    if deps_path_rel:
+        # IMPORTANT: We do NOT set PYTHONPATH directly here to
+        # ctx.files.deps_dir[0].path (a path RELATIVE to the Bazel
+        # execution root). That relative path only resolves correctly as
+        # long as the process importing from it has the execution root as
+        # its current working directory - which is true for THIS action's
+        # own process, but NOT for the pip-internal subprocess that
+        # actually needs it:
+        #
+        # pip's build-backend metadata/wheel hooks (prepare_metadata_for_
+        # build_wheel / build_wheel, invoked even with --no-build-isolation)
+        # are executed by pyproject_hooks in a SEPARATE subprocess whose
+        # working directory pip explicitly sets to the unpacked SOURCE
+        # directory (not the execution root) - while still inheriting our
+        # PYTHONPATH value as a plain string. Since Python resolves
+        # relative sys.path/PYTHONPATH entries against the process's
+        # CURRENT working directory at import time, a relative PYTHONPATH
+        # that was valid from the execution root silently resolves to a
+        # nonexistent path from within the source directory - causing
+        # e.g. "ModuleNotFoundError: No module named 'setuptools'" even
+        # though setuptools is physically present in deps_dir's output.
+        # (Confirmed by reproducing the exact same pip invocation manually
+        # outside Bazel: it only succeeds when PYTHONPATH is an ABSOLUTE
+        # path - a relative one reproduces the identical import error.)
+        #
+        # Fix: generate a tiny Python launcher script that converts the
+        # relative deps_dir path to an ABSOLUTE one via os.path.abspath()
+        # while the launcher's own cwd is STILL the execution root (i.e.
+        # before pip gets a chance to spawn its cwd-changed subprocess),
+        # then re-execs "python -m pip install ..." with that now-absolute
+        # PYTHONPATH. This makes the fix robust regardless of whatever
+        # working directory pip's internal hook subprocess happens to use.
+        launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_from_source_launcher.py")
+
+        # Starlark's string.format() has no Python "!r"/repr() equivalent,
+        # so the pip argument list is rendered into a Python list-literal
+        # string manually here (each argument individually quoted).
+        pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+
+        ctx.actions.write(
+            output = launcher,
+            content = """\
+import os
+import shutil
+import subprocess
+import sys
+
+# See _pip_install_impl for why this cleanup is necessary: this action
+# runs with "no-sandbox", so Bazel does not guarantee out.path starts
+# empty on every re-execution. Without this, a package version bump
+# (e.g. a new git tag) can leave stale files/dist-info from a PREVIOUS
+# build's different version behind, causing tools that read package
+# metadata to report a stale version despite a successful, "correct"
+# build.
+out_dir = r"{out_path}"
+shutil.rmtree(out_dir, ignore_errors=True)
+
+# Resolved while cwd is still the Bazel execution root (see pip_install.bzl
+# _pip_install_from_source_impl for why this must be absolute).
+deps_dir_abs = os.path.abspath(r"{deps_path_rel}")
+
+env = dict(os.environ)
+existing = env.get("PYTHONPATH")
+env["PYTHONPATH"] = deps_dir_abs if not existing else (deps_dir_abs + os.pathsep + existing)
+
+cmd = [sys.executable] + {pip_args_literal}
+raise SystemExit(subprocess.call(cmd, env=env))
+""".format(out_path = out.path, deps_path_rel = deps_path_rel, pip_args_literal = pip_args_literal),
+        )
+
+        ctx.actions.run(
+            executable = interpreter,
+            arguments = [launcher.path],
+            inputs = depset([launcher], transitive = [inputs]),
+            outputs = [out],
+            env = env,
+            use_default_shell_env = True,
+            execution_requirements = {
+                "requires-network": "",  # pip still needs network for its own bookkeeping
+                "no-sandbox": "",
+                "no-remote": "",
+            },
+            mnemonic = "PipInstallFromSource",
+            progress_message = "pip install (from source) -> %s" % out.short_path,
+        )
+    else:
+        # No deps_dir given - no PYTHONPATH/cwd concerns, but still need the
+        # same stale-output-directory cleanup as the branch above (see the
+        # comment there and in _pip_install_impl for why this is necessary
+        # with "no-sandbox" actions).
+        launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_from_source_launcher.py")
+        pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+        ctx.actions.write(
+            output = launcher,
+            content = """\
+import shutil
+import subprocess
+import sys
+
+out_dir = r"{out_path}"
+shutil.rmtree(out_dir, ignore_errors=True)
+
+cmd = [sys.executable] + {pip_args_literal}
+raise SystemExit(subprocess.call(cmd))
+""".format(out_path = out.path, pip_args_literal = pip_args_literal),
+        )
+
+        ctx.actions.run(
+            executable = interpreter,
+            arguments = [launcher.path],
+            inputs = depset([launcher], transitive = [inputs]),
+            outputs = [out],
+            env = env,
+            use_default_shell_env = True,
+            execution_requirements = {
+                "requires-network": "",  # pip still needs network for its own bookkeeping
+                "no-sandbox": "",
+                "no-remote": "",
+            },
+            mnemonic = "PipInstallFromSource",
+            progress_message = "pip install (from source) -> %s" % out.short_path,
+        )
 
     return [DefaultInfo(files = depset([out]))]
 

@@ -142,6 +142,8 @@ def create_all_installers(
     Generated Targets (based on current INSTALLER_VARIANTS):
         //components/installer:installer_set_1         -> install_python_set_1.exe
         //components/installer:installer_set_1_bundle  -> (internal filegroup)
+        //components/installer:rf_testsuitesmanagement        -> rf_testsuitesmanagement_setup.exe
+        //components/installer:rf_testsuitesmanagement_bundle -> (internal filegroup)
         //components/installer:installer_set_2         -> install_python_set_2.exe
         //components/installer:installer_set_2_bundle  -> (internal filegroup)
     

@@ -22,7 +22,13 @@ dotdict==0.1 \
 genpackagedoc==0.44.0 \
     --hash=sha256:36e2cd79521eee9e3a03a08a877e28bedd2ae3afe7ad7f1444cab68cc98aac50 \
     --hash=sha256:a8ab2324e506d9cc6a12d06192c17f7e896c942eb90a1f49d518b066b06db39b
-    # via pythonextensionscollection
+    # via
+    #   -r requirements.txt
+    #   pythonextensionscollection
+packaging==26.3 \
+    --hash=sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79 \
+    --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
+    # via wheel
 pygments==2.21.0 \
     --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9 \
     --hash=sha256:610ca751c9bc2492b38eb9a38a7fbc93edbbb2d7182edaf34e66ae493dee5c8c
@@ -30,6 +36,14 @@ pygments==2.21.0 \
 pythonextensionscollection==0.17.1 \
     --hash=sha256:a75e9a326c0bcaac0e6084856b2f279e35086c6e784bcdd26158982c460886a2 \
     --hash=sha256:f257c5a41f433b7f5b22ba6e3db6702cab8229b8eac9cc779008289e63659053
-    # via
-    #   -r requirements.txt
-    #   genpackagedoc
+    # via genpackagedoc
+wheel==0.48.0 \
+    --hash=sha256:3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab \
+    --hash=sha256:94800765601e9171bf5d58d066e640662842bcedcbab982b2c90787a2c987322
+    # via -r requirements.txt
+
+# The following packages are considered to be unsafe in a requirements file:
+setuptools==84.0.0 \
+    --hash=sha256:51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670 \
+    --hash=sha256:f4695c21257f0d9b537ec2692c941d02ee143b7cc1276941349a546573b2ef73
+    # via -r requirements.txt

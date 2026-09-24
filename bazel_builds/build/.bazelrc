@@ -99,3 +99,22 @@ build --action_env=no_proxy
 #   bazel build --jobs=8 ...   (faster, higher risk of proxy hiccups)
 build --jobs=1
 
+# ============================================================================
+# BUILD_VARIANT: Tag vs. Branch selection for variant_git_repository
+# ============================================================================
+# Selects whether components using variant_git_repository (see
+# tools/repo_rules/variant_git_repository.bzl, e.g.
+# python-extensions-collection/MODULE.bazel) fetch a fixed, hermetic
+# release tag ("tagged") or track a branch's current HEAD ("daily", the
+# default here, for Daily Build / Daily Test pipelines).
+#
+# See documentation/docs/Bazel_Git_Repository_Tag_vs_Branch.md for the full
+# rationale and usage guide.
+#
+# Default: Daily Build / Daily Test (always the latest branch HEAD)
+common --repo_env=BUILD_VARIANT=daily
+
+# Explicit reproducible/hermetic tagged variant (production/installer
+# builds):
+#   bazel build --config=tagged //...
+common:tagged --repo_env=BUILD_VARIANT=tagged

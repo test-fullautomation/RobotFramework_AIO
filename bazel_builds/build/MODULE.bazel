@@ -34,7 +34,7 @@ bazel_dep(name = "rules_python", version = "1.7.0")
 # bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 
 bazel_dep(name = "installer", version = "0.1.0")
-bazel_dep(name = "test_framework_tng", version = "0.1.0")
+bazel_dep(name = "py_modules_set_1", version = "0.1.0")
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
 bazel_dep(name = "python", version = "0.1.0")
 bazel_dep(name = "inno_setup", version = "0.1.0")
@@ -61,6 +61,12 @@ bazel_dep(name = "config", version = "0.1.0")
 # module (the module actually being built).
 bazel_dep(name = "pip_utils", version = "0.1.0")
 
+# Shared variant_git_repository.bzl rule (Tag vs. Branch selection for
+# git_repository-based components, e.g. python-extensions-collection) -
+# see tools/repo_rules. Must be declared here too, for the same reason as
+# pip_utils above (local_path_override only takes effect in the root module).
+bazel_dep(name = "repo_rules", version = "0.1.0")
+
 local_path_override(
     module_name = "installer",
     path = "../installer",
@@ -83,8 +89,8 @@ local_path_override(
 
 
 local_path_override(
-    module_name = "test_framework_tng",
-    path = "../test_framework_tng",
+    module_name = "py_modules_set_1",
+    path = "../py_modules_set_1",
 )
 
 local_path_override(
@@ -166,6 +172,11 @@ local_path_override(
 local_path_override(
     module_name = "pip_utils",
     path = "../pip_utils",
+)
+
+local_path_override(
+    module_name = "repo_rules",
+    path = "../tools/repo_rules",
 )
 
 

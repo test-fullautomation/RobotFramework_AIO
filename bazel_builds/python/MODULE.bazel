@@ -8,19 +8,20 @@ module(
 # rules_pkg itself, even though the root module ("build") already does.
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 
-# This module's own BUILD.bazel declares visibility for its targets using
-# labels like "@py_modules_set_1//:__pkg__" and "@py_modules_set_2//:__pkg__".
-# Bzlmod resolves "@name" labels using the DECLARING module's own repo
-# mapping - so even though these are only used for visibility (not load()),
-# this module must still declare bazel_dep for them, otherwise the labels
-# don't resolve and the visibility check silently fails for the consumers.
-bazel_dep(name = "test_framework_tng", version = "0.1.0")
+# NOTE: This module's BUILD.bazel actually grants "//visibility:public" on
+# python_runtime/python_interpreter (see BUILD.bazel comments), specifically
+# to avoid circular bazel_dep back-references from consumer modules, so
+# visibility itself does not require any bazel_dep here. A stale
+# bazel_dep(test_framework_tng) + local_path_override pointing at a
+# non-existent "../test_framework_tng" directory was previously present and
+# has been removed - it referenced an installer *variant target name*
+# (config/variant_config.bzl dict key, now renamed to "installer_set_1"),
+# not a real Bzlmod module/component directory. That dangling reference
+# caused a BCR "module not found in registries" error once Bazel actually
+# tried to resolve it (e.g. after the rename invalidated some cached
+# resolution state). The py_modules_set_2 bazel_dep/override below is kept
+# since it is not confirmed unused - remove only once verified unnecessary.
 bazel_dep(name = "py_modules_set_2", version = "0.1.0")
-
-local_path_override(
-    module_name = "test_framework_tng",
-    path = "../test_framework_tng",
-)
 
 local_path_override(
     module_name = "py_modules_set_2",
