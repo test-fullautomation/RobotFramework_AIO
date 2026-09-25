@@ -39,6 +39,14 @@ pip_install_dir(
     # "site-packages-deps" name and still merge it into the same
     # Python/Lib/site-packages destination as every other component.
     out_dir = "site-packages-deps",
+    # Same collision reason as out_dir above: this rule now ALSO declares a
+    # second output directory (scripts_dir, for console-script launchers -
+    # see pip_install.bzl). Its default ("py-scripts") would likewise
+    # collide with the pip_install_from_source target below, so it needs
+    # its own distinct name here too. stage_files.py's
+    # extract_relative_path() recognizes "py-scripts-deps" via the same
+    # startswith("py-scripts") matching used for "site-packages-deps".
+    scripts_dir = "py-scripts-deps",
     visibility = ["//visibility:private"],
 )
 

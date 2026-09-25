@@ -87,14 +87,31 @@
 #   "release_tag" attribute value is used unchanged. This override has NO
 #   effect in "daily" mode (which always uses "daily_branch").
 #
+# Overriding the daily branch from the command line:
+#   Analogous to RELEASE_TAG_OVERRIDE above, "daily" mode uses the
+#   "daily_branch" attribute hardcoded in MODULE.bazel (e.g.
+#   daily_branch = "develop") by default. To build/test against a
+#   DIFFERENT branch for a one-off run WITHOUT editing MODULE.bazel, pass
+#   the RELEASE_BRANCH_OVERRIDE environment variable via --repo_env, e.g.:
+#
+#     bazel build --repo_env=RELEASE_BRANCH_OVERRIDE=feature/my-branch //...
+#
+#   Like RELEASE_TAG_OVERRIDE, this is declared in "environ" below, so
+#   Bazel correctly re-fetches the repository whenever this value changes.
+#   If RELEASE_BRANCH_OVERRIDE is unset (the normal case), the hardcoded
+#   "daily_branch" attribute value is used unchanged. This override has NO
+#   effect in "tagged" mode (which always uses "release_tag"/
+#   RELEASE_TAG_OVERRIDE).
+#
 # =============================================================================
 
 def _variant_git_repository_impl(rctx):
     variant = rctx.getenv("BUILD_VARIANT", "tagged")
 
     if variant == "daily":
-        ref = rctx.attr.daily_branch
-        ref_kind = "branch"
+        branch_override = rctx.getenv("RELEASE_BRANCH_OVERRIDE", "")
+        ref = branch_override if branch_override else rctx.attr.daily_branch
+        ref_kind = "branch (overridden via RELEASE_BRANCH_OVERRIDE)" if branch_override else "branch"
     elif variant == "tagged":
         ref_override = rctx.getenv("RELEASE_TAG_OVERRIDE", "")
         ref = ref_override if ref_override else rctx.attr.release_tag
@@ -196,7 +213,12 @@ variant_git_repository = repository_rule(
             default = "develop",
             doc = """Branch name used when BUILD_VARIANT is 'daily'. Always resolves
             to the branch's current HEAD commit at fetch time - intentionally
-            NON-hermetic, for Daily Build / Daily Test pipelines only.""",
+            NON-hermetic, for Daily Build / Daily Test pipelines only.
+
+            Can be overridden without editing MODULE.bazel by passing the
+            RELEASE_BRANCH_OVERRIDE environment variable via --repo_env, e.g.:
+              bazel build --repo_env=RELEASE_BRANCH_OVERRIDE=feature/my-branch //...
+            If set, RELEASE_BRANCH_OVERRIDE takes precedence over this attribute.""",
         ),
         "build_file_content": attr.string(
             default = "",
@@ -211,7 +233,7 @@ variant_git_repository = repository_rule(
             doc = "Timeout in seconds for the git clone operation.",
         ),
     },
-    environ = ["BUILD_VARIANT", "RELEASE_TAG_OVERRIDE"],
+    environ = ["BUILD_VARIANT", "RELEASE_TAG_OVERRIDE", "RELEASE_BRANCH_OVERRIDE"],
     doc = """Fetches a Git source tree, selecting between a fixed release tag
     (hermetic) and a tracked branch HEAD (non-hermetic, for Daily
     Build/Test, project default) based on the BUILD_VARIANT environment
@@ -219,6 +241,10 @@ variant_git_repository = repository_rule(
 
     In 'tagged' mode, the tag itself can additionally be overridden without
     editing MODULE.bazel via `--repo_env=RELEASE_TAG_OVERRIDE=<tag>`.
+
+    In 'daily' mode, the branch itself can additionally be overridden
+    without editing MODULE.bazel via
+    `--repo_env=RELEASE_BRANCH_OVERRIDE=<branch>`.
 
     See documentation/docs/Bazel_Git_Repository_Tag_vs_Branch.md for the
     full rationale and usage guide.""",

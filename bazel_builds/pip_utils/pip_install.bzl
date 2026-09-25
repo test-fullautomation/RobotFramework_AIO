@@ -70,34 +70,150 @@ installers. One rule installs from PyPI (requirements_lock.txt), the other
 installs a local source tree (e.g. fetched from an internal Git server).
 """
 
+# =============================================================================
+# Relocatable console-script wrapper generation ("Solution 1")
+# =============================================================================
+#
+# BUG BACKGROUND: pip (via distlib) generates console-script launchers
+# (e.g. "rst2latex.exe") as PE executables with an embedded, ABSOLUTE
+# shebang path pointing at the interpreter used AT BUILD TIME - i.e. the
+# python.exe under this action's Bazel execroot
+# (".../external/python++http_archive+python_portable_windows/python.exe").
+# That build-time interpreter's own site-packages is always the pristine,
+# empty root distribution; the actually-installed packages produced by
+# THIS action live in a separate declared output (out_dir) that only gets
+# merged into the final installation tree later, during Inno Setup
+# staging. Consequently, once these launchers are copied to their real
+# installed location (e.g. "...\\Python\\Scripts\\rst2latex.exe"), they
+# either fail outright (build execroot no longer exists on the target
+# machine) or - if run on the build machine itself - fail with
+# "ModuleNotFoundError" (interpreter found, but its site-packages is
+# empty).
+#
+# FIX: after pip has finished installing (and its own launchers have been
+# moved into scripts_dir), delete pip's non-relocatable launchers and
+# regenerate our OWN launchers for the same console_scripts entry points,
+# reading them via importlib.metadata against the just-installed out_dir.
+# Each entry point becomes a pair of files:
+#   <name>-script.py  - a tiny Python script importing the target module
+#                        and invoking the entry point's callable.
+#   <name>.cmd        - a batch-file wrapper that locates ITS OWN
+#                        directory via "%~dp0" (always correct, no matter
+#                        where the Scripts folder is finally copied to)
+#                        and invokes "..\\python.exe" (one directory up,
+#                        matching both the temporary pip --prefix layout
+#                        used here AND the final installed layout, where
+#                        Python/Scripts and Python/python.exe are siblings)
+#                        against the paired *-script.py.
+#
+# This keeps the whole operation fully offline/hermetic (no PyPI access,
+# no extra Bazel outputs) and produces launchers that work correctly
+# regardless of where the final "Scripts" directory ends up on disk -
+# at the cost of console scripts becoming "<name>.cmd" instead of
+# "<name>.exe" (transparent for any caller that invokes them without an
+# explicit extension, e.g. via PATH, since Windows' PATHEXT resolves
+# ".CMD" the same way; callers hardcoding the ".exe" extension need to be
+# updated to drop it, or to call "<name>" without an extension instead).
+# =============================================================================
+
+_WRAPPER_GENERATION_SNIPPET = """\
+# --- BEGIN relocatable console-script wrapper generation (Solution 1) ---
+try:
+    from importlib.metadata import entry_points as _entry_points
+except ImportError:
+    from importlib_metadata import entry_points as _entry_points
+
+sys.path.insert(0, out_dir)
+try:
+    _eps = _entry_points(group="console_scripts")
+except TypeError:
+    # Python < 3.10: entry_points() returns a SelectableGroups-like mapping
+    # instead of accepting a group= keyword argument directly.
+    _eps = _entry_points().get("console_scripts", [])
+
+# Wipe whatever pip itself generated into scripts_dir (non-relocatable
+# .exe/-script.py/.exe.manifest launchers with a hardcoded, build-time-only
+# shebang path) - fully replaced below with our own relocatable .cmd +
+# *-script.py pair per console_scripts entry point.
+shutil.rmtree(scripts_dir, ignore_errors=True)
+os.makedirs(scripts_dir, exist_ok=True)
+
+for _ep in _eps:
+    _name = _ep.name
+    _module, _, _attr = _ep.value.partition(":")
+    _attr_chain = _attr.split(".") if _attr else []
+
+    _py_path = os.path.join(scripts_dir, _name + "-script.py")
+    with open(_py_path, "w", encoding="utf-8") as _f:
+        _f.write("import sys\\n")
+        _f.write("import " + _module + " as _mod\\n")
+        _f.write("_obj = _mod\\n")
+        for _part in _attr_chain:
+            _f.write("_obj = getattr(_obj, " + repr(_part) + ")\\n")
+        _f.write("sys.exit(_obj())\\n")
+
+    _cmd_path = os.path.join(scripts_dir, _name + ".cmd")
+    with open(_cmd_path, "w", encoding="utf-8") as _f:
+        _f.write("@echo off\\r\\n")
+        _f.write('"%~dp0..\\\\python.exe" "%~dp0' + _name + '-script.py" %*\\r\\n')
+# --- END relocatable console-script wrapper generation (Solution 1) ---
+"""
+
 def _pip_install_impl(ctx):
     """Implementation function for the pip_install_dir rule.
 
     Executes pip install with the specified requirements file and target
     Python interpreter. Outputs packages to a directory that can be
-    referenced by other targets.
+    referenced by other targets, AND a second directory containing the
+    console-script launchers (e.g. robotlog2rqm.exe) that pip generates
+    for any package declaring console_scripts entry points.
 
     Args:
         ctx: The rule context providing access to attributes and actions.
 
     Returns:
-        DefaultInfo provider with the output directory containing installed packages.
+        DefaultInfo provider with the output directories containing
+        installed packages (out_dir) and their console-script launchers
+        (scripts_dir).
 
     Note:
         This action requires network access and must run without sandboxing
         to allow pip to download packages from PyPI.
     """
-    # Declare output directory for installed packages
+    # Declare output directories: one for the installed packages
+    # (site-packages), one for the console-script launchers pip generates
+    # for any package with console_scripts entry points (e.g. robotlog2rqm,
+    # robotlog2db, genpackagedoc's CLI, ...). See the "--target vs --prefix"
+    # note below for why a second directory is needed at all.
     out = ctx.actions.declare_directory(ctx.attr.out_dir)
+    scripts_out = ctx.actions.declare_directory(ctx.attr.scripts_dir)
 
     # Get Python interpreter and runtime files from the external repository
     interpreter = ctx.file.interpreter    # python.exe from portable distribution
     runtime = ctx.files.runtime           # All files from the Python distribution
 
-    # Build pip install command arguments
+    # --target vs --prefix:
+    # "pip install --target <dir>" installs package FILES into <dir> but
+    # deliberately does NOT generate console-script launchers (the .exe/
+    # -script.py wrappers for any package's console_scripts entry points) -
+    # this is documented, intentional pip behavior, since --target does not
+    # simulate a full installation prefix. "pip install --prefix <dir>"
+    # instead simulates a complete installation prefix (like a venv's
+    # sys.prefix) and DOES generate these launchers, using the standard
+    # Windows prefix layout:
+    #   <prefix>/Lib/site-packages/...   (equivalent to --target's output)
+    #   <prefix>/Scripts/...             (console-script launchers)
+    #
+    # We install into a temporary prefix directory (not itself a declared
+    # Bazel output - just scratch space alongside the two real outputs),
+    # then move its two subdirectories into the actual declared outputs.
+    # This gives us both pieces (packages AND scripts) from a single pip
+    # invocation, instead of needing a second, redundant install pass.
+    tmp_prefix = out.path + "__pip_prefix_tmp"
+
     pip_args = ["-m", "pip", "install"]
     pip_args += ["--requirement", ctx.file.requirements.path]
-    pip_args += ["--target", out.path]
+    pip_args += ["--prefix", tmp_prefix]
     pip_args += ["--no-compile"]
     pip_args += ["--disable-pip-version-check"]
     pip_args += ["--no-input"]
@@ -113,35 +229,82 @@ def _pip_install_impl(ctx):
     # (unlike sandboxed actions, where every output starts from a guaranteed
     # empty directory each time). If a PREVIOUS build already populated
     # `out.path` with an OLDER resolution of requirements.txt/lock file
-    # (e.g. a different pinned version of some package), pip's
-    # "--target <dir>" install mode does NOT perform an uninstall-then-
-    # install of the previous version the way a normal site-packages
-    # install would - it just extracts the new wheel's files over
-    # whatever is already there. Depending on file-name/case overlaps
-    # between old and new versions, this can leave a mix of old and new
-    # files/dist-info directories behind, causing tools that read package
-    # metadata (e.g. importlib.metadata, `pip show`) to report a STALE
-    # version even though the requirements file was correctly updated and
-    # re-resolved.
+    # (e.g. a different pinned version of some package), pip's install mode
+    # does NOT perform an uninstall-then-install of the previous version
+    # the way a normal site-packages install would - it just extracts the
+    # new wheel's files over whatever is already there. Depending on
+    # file-name/case overlaps between old and new versions, this can leave
+    # a mix of old and new files/dist-info directories behind, causing
+    # tools that read package metadata (e.g. importlib.metadata, `pip
+    # show`) to report a STALE version even though the requirements file
+    # was correctly updated and re-resolved.
     #
-    # Fix: explicitly wipe `out.path` before invoking pip, so every build
-    # of this target always starts from a guaranteed-empty directory,
-    # regardless of whether Bazel happened to reuse a stale one.
+    # Fix: explicitly wipe `out.path`, `scripts_out.path`, AND the
+    # temporary prefix directory before invoking pip, so every build of
+    # this target always starts from guaranteed-empty directories,
+    # regardless of whether Bazel happened to reuse stale ones.
     launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_launcher.py")
     pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
     ctx.actions.write(
         output = launcher,
         content = """\
+import os
 import shutil
 import subprocess
 import sys
 
 out_dir = r"{out_path}"
+scripts_dir = r"{scripts_path}"
+prefix_dir = r"{prefix_path}"
+
 shutil.rmtree(out_dir, ignore_errors=True)
+shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(prefix_dir, ignore_errors=True)
+
+# Bootstrap pip if this interpreter doesn't have it yet. The
+# python-build-standalone "install_only" distribution used by this
+# project does NOT bundle pip (unlike a typical desktop CPython install),
+# but its stdlib DOES include the "ensurepip" module with a bundled pip
+# wheel (Lib/ensurepip/_bundled/*.whl) - so this works fully offline, with
+# no PyPI/network access needed, and is a cheap no-op if pip is already
+# present (e.g. a previously-bootstrapped, reused output_base).
+try:
+    import pip  # noqa: F401
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "ensurepip", "--default-pip"])
 
 cmd = [sys.executable] + {pip_args_literal}
-raise SystemExit(subprocess.call(cmd))
-""".format(out_path = out.path, pip_args_literal = pip_args_literal),
+rc = subprocess.call(cmd)
+if rc != 0:
+    raise SystemExit(rc)
+
+# Move the two subdirectories pip created under the temporary prefix into
+# the two REAL declared outputs. Both declare_directory() outputs must
+# exist (even if empty) after this action runs, so fall back to an empty
+# mkdir if pip happened not to produce one (e.g. no console_scripts
+# entry points anywhere in this requirements file -> no Scripts dir).
+site_packages_src = os.path.join(prefix_dir, "Lib", "site-packages")
+if os.path.isdir(site_packages_src):
+    shutil.move(site_packages_src, out_dir)
+else:
+    os.makedirs(out_dir, exist_ok=True)
+
+scripts_src = os.path.join(prefix_dir, "Scripts")
+if os.path.isdir(scripts_src):
+    shutil.move(scripts_src, scripts_dir)
+else:
+    os.makedirs(scripts_dir, exist_ok=True)
+
+{wrapper_generation_snippet}
+
+shutil.rmtree(prefix_dir, ignore_errors=True)
+""".format(
+            out_path = out.path,
+            scripts_path = scripts_out.path,
+            prefix_path = tmp_prefix,
+            pip_args_literal = pip_args_literal,
+            wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+        ),
     )
 
     # Execute pip install
@@ -159,7 +322,7 @@ raise SystemExit(subprocess.call(cmd))
         executable = interpreter,
         arguments = [launcher.path],
         inputs = depset([launcher, ctx.file.requirements] + runtime),
-        outputs = [out],
+        outputs = [out, scripts_out],
         env = ctx.attr.env,
         use_default_shell_env = True,  # merge --action_env (e.g. HTTPS_PROXY) into env
         execution_requirements = {
@@ -171,7 +334,7 @@ raise SystemExit(subprocess.call(cmd))
         progress_message = "pip install -> %s" % out.short_path,
     )
 
-    return [DefaultInfo(files = depset([out]))]
+    return [DefaultInfo(files = depset([out, scripts_out]))]
 
 
 # =============================================================================
@@ -225,6 +388,22 @@ pip_install_dir = rule(
             Default: "site-packages"
             """,
         ),
+        "scripts_dir": attr.string(
+            default = "py-scripts",
+            doc = """Name of the output directory for console-script launchers.
+
+            pip generates these (e.g. robotlog2rqm.exe, robotlog2rqm-script.py)
+            for any installed package declaring console_scripts entry points,
+            when installed via "pip install --prefix" (used internally by
+            this rule instead of "--target", specifically to obtain these
+            launchers - see _pip_install_impl for details).
+
+            Default: "py-scripts". Must be changed (like out_dir) if two
+            pip_install_dir/pip_install_from_source targets exist in the
+            SAME Bazel package (e.g. python-extensions-collection's
+            "..._deps" target), to avoid a "conflicting actions" error.
+            """,
+        ),
         "require_hashes": attr.bool(
             default = True,
             doc = """Whether to require hash verification for all packages.
@@ -275,10 +454,12 @@ def _pip_install_from_source_impl(ctx):
         ctx: The rule context providing access to attributes and actions.
 
     Returns:
-        DefaultInfo provider with the output directory containing the
-        installed package.
+        DefaultInfo provider with the output directories containing the
+        installed package (out_dir) and its console-script launchers
+        (scripts_dir), if any.
     """
     out = ctx.actions.declare_directory(ctx.attr.out_dir)
+    scripts_out = ctx.actions.declare_directory(ctx.attr.scripts_dir)
 
     interpreter = ctx.file.interpreter
     runtime = ctx.files.runtime
@@ -292,8 +473,15 @@ def _pip_install_from_source_impl(ctx):
         fail("pip_install_from_source: 'source' attribute produced no files.")
     source_dir = source_files[0].dirname
 
+    # See _pip_install_impl for the rationale of using "--prefix" instead of
+    # "--target": only --prefix makes pip generate console-script launchers
+    # (e.g. genpackagedoc.exe) for the source tree's console_scripts entry
+    # points, into a standard <prefix>/Lib/site-packages + <prefix>/Scripts
+    # layout, which we then split into our two REAL declared outputs below.
+    tmp_prefix = out.path + "__pip_prefix_tmp"
+
     pip_args = ["-m", "pip", "install"]
-    pip_args += ["--target", out.path]
+    pip_args += ["--prefix", tmp_prefix]
     pip_args += ["--no-compile"]
     pip_args += ["--disable-pip-version-check"]
     pip_args += ["--no-input"]
@@ -367,7 +555,11 @@ import sys
 # metadata to report a stale version despite a successful, "correct"
 # build.
 out_dir = r"{out_path}"
+scripts_dir = r"{scripts_path}"
+prefix_dir = r"{prefix_path}"
 shutil.rmtree(out_dir, ignore_errors=True)
+shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(prefix_dir, ignore_errors=True)
 
 # Resolved while cwd is still the Bazel execution root (see pip_install.bzl
 # _pip_install_from_source_impl for why this must be absolute).
@@ -377,16 +569,51 @@ env = dict(os.environ)
 existing = env.get("PYTHONPATH")
 env["PYTHONPATH"] = deps_dir_abs if not existing else (deps_dir_abs + os.pathsep + existing)
 
+# See _pip_install_impl's launcher for why this bootstrap is necessary and
+# safe to run unconditionally (offline, idempotent).
+try:
+    import pip  # noqa: F401
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "ensurepip", "--default-pip"])
+
 cmd = [sys.executable] + {pip_args_literal}
-raise SystemExit(subprocess.call(cmd, env=env))
-""".format(out_path = out.path, deps_path_rel = deps_path_rel, pip_args_literal = pip_args_literal),
+rc = subprocess.call(cmd, env=env)
+if rc != 0:
+    raise SystemExit(rc)
+
+# Move the two subdirectories pip created under the temporary prefix into
+# the two REAL declared outputs (see _pip_install_impl for the same
+# pattern/rationale).
+site_packages_src = os.path.join(prefix_dir, "Lib", "site-packages")
+if os.path.isdir(site_packages_src):
+    shutil.move(site_packages_src, out_dir)
+else:
+    os.makedirs(out_dir, exist_ok=True)
+
+scripts_src = os.path.join(prefix_dir, "Scripts")
+if os.path.isdir(scripts_src):
+    shutil.move(scripts_src, scripts_dir)
+else:
+    os.makedirs(scripts_dir, exist_ok=True)
+
+{wrapper_generation_snippet}
+
+shutil.rmtree(prefix_dir, ignore_errors=True)
+""".format(
+                out_path = out.path,
+                scripts_path = scripts_out.path,
+                prefix_path = tmp_prefix,
+                deps_path_rel = deps_path_rel,
+                pip_args_literal = pip_args_literal,
+                wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+            ),
         )
 
         ctx.actions.run(
             executable = interpreter,
             arguments = [launcher.path],
             inputs = depset([launcher], transitive = [inputs]),
-            outputs = [out],
+            outputs = [out, scripts_out],
             env = env,
             use_default_shell_env = True,
             execution_requirements = {
@@ -407,23 +634,59 @@ raise SystemExit(subprocess.call(cmd, env=env))
         ctx.actions.write(
             output = launcher,
             content = """\
+import os
 import shutil
 import subprocess
 import sys
 
 out_dir = r"{out_path}"
+scripts_dir = r"{scripts_path}"
+prefix_dir = r"{prefix_path}"
 shutil.rmtree(out_dir, ignore_errors=True)
+shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(prefix_dir, ignore_errors=True)
+
+# See _pip_install_impl's launcher for why this bootstrap is necessary and
+# safe to run unconditionally (offline, idempotent).
+try:
+    import pip  # noqa: F401
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "ensurepip", "--default-pip"])
 
 cmd = [sys.executable] + {pip_args_literal}
-raise SystemExit(subprocess.call(cmd))
-""".format(out_path = out.path, pip_args_literal = pip_args_literal),
+rc = subprocess.call(cmd)
+if rc != 0:
+    raise SystemExit(rc)
+
+site_packages_src = os.path.join(prefix_dir, "Lib", "site-packages")
+if os.path.isdir(site_packages_src):
+    shutil.move(site_packages_src, out_dir)
+else:
+    os.makedirs(out_dir, exist_ok=True)
+
+scripts_src = os.path.join(prefix_dir, "Scripts")
+if os.path.isdir(scripts_src):
+    shutil.move(scripts_src, scripts_dir)
+else:
+    os.makedirs(scripts_dir, exist_ok=True)
+
+{wrapper_generation_snippet}
+
+shutil.rmtree(prefix_dir, ignore_errors=True)
+""".format(
+                out_path = out.path,
+                scripts_path = scripts_out.path,
+                prefix_path = tmp_prefix,
+                pip_args_literal = pip_args_literal,
+                wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+            ),
         )
 
         ctx.actions.run(
             executable = interpreter,
             arguments = [launcher.path],
             inputs = depset([launcher], transitive = [inputs]),
-            outputs = [out],
+            outputs = [out, scripts_out],
             env = env,
             use_default_shell_env = True,
             execution_requirements = {
@@ -435,7 +698,7 @@ raise SystemExit(subprocess.call(cmd))
             progress_message = "pip install (from source) -> %s" % out.short_path,
         )
 
-    return [DefaultInfo(files = depset([out]))]
+    return [DefaultInfo(files = depset([out, scripts_out]))]
 
 
 # =============================================================================
@@ -492,6 +755,16 @@ pip_install_from_source = rule(
             so that components/installer/stage_files.py's existing
             site-packages merge logic (dirs_exist_ok=True copytree) applies
             here without any changes.
+            """,
+        ),
+        "scripts_dir": attr.string(
+            default = "py-scripts",
+            doc = """Name of the output directory for console-script launchers.
+
+            Same rationale/mechanism as pip_install_dir's "scripts_dir" -
+            see pip_install_dir's doc and _pip_install_from_source_impl for
+            details. Must be changed if two targets exist in the SAME
+            Bazel package (see out_dir's doc for the same requirement).
             """,
         ),
         "env": attr.string_dict(

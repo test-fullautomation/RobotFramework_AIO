@@ -1,7 +1,7 @@
 @echo off
 echo.
 echo ========================================
-echo Install Python
+echo Install Framework
 echo ========================================
 echo.
 
@@ -126,10 +126,13 @@ REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% build --disk_c
 
 
 REM (1) daily build based on latest commit in develop branch (default, no further command line extension)
-REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/B13 build --disk_cache= @installer//:test_framework_tng
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/B16 build --disk_cache= @installer//:test_framework_tng
 
 REM (2) build based on tag
-%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/B12 build --config=tagged --repo_env=RELEASE_TAG_OVERRIDE=rel/0.17.0 --disk_cache= @installer//:test_framework_tng
+REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/B13 build --config=tagged --repo_env=RELEASE_TAG_OVERRIDE=rel/0.17.0 --disk_cache= @installer//:test_framework_tng
+
+REM (2b) daily build based on a different branch than daily_branch's MODULE.bazel default
+%BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/B18 build --repo_env=RELEASE_BRANCH_OVERRIDE=develop --disk_cache= @installer//:test_framework_tng
 
 REM another target
 REM %BAZEL_EXEC% --bazelrc=.bazelrc --bazelrc=%BAZEL_PLATFORM_RC% --output_base=C:/BO8 build --disk_cache= @installer//:rf_testsuitesmanagement
