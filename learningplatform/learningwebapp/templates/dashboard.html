@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Learning Tools{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Your Learning Dashboard</h1>
+        <p class="lead">Welcome back, {{ current_user.username }}! Continue your learning journey.</p>
+    </div>
+</div>
+
+<div class="row">
+    {% if categories %}
+        {% for category_name, category_data in categories.items() %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm category-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-folder-fill text-primary"></i> {{ category_name }}
+                    </h5>
+                    <p class="card-text text-muted small">
+                        {{ category_data.workbooks|length }} exercise{{ 's' if category_data.workbooks|length != 1 else '' }}
+                    </p>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small">Overall Progress</span>
+                            <span class="small">
+                                {{ category_data.completed_exercises }}/{{ category_data.total_exercises }} questions
+                                {% if category_data.progress == 100 %}
+                                    <span class="badge bg-success">✓</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar {% if category_data.progress == 100 %}bg-success{% else %}bg-primary{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ category_data.progress }}%"
+                                 aria-valuenow="{{ category_data.progress }}" 
+                                 aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('category', category_name=category_name) }}" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-chevron-right"></i> View Exercises
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>No categories available</h4>
+                <p>There are currently no learning modules available. Please check back later.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .category-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
+{% endblock %}
