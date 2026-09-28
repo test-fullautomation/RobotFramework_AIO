@@ -289,6 +289,25 @@ def extract_relative_path(full_path: str) -> str:
     if Path(full_path).name == "reinstall_console_scripts.py":
         return str(Path("Python", "_wheels", "reinstall_console_scripts.py"))
 
+    # Case 6: package_context.json (see components/config/BUILD.bazel's
+    # exports_files() + installer_variants.bzl's create_installer(), which
+    # unconditionally appends "@config//:package_context.json" to every
+    # variant's bundle). This is plain, version-controlled bundle metadata
+    # (installer_location/bundle_name/bundle_version/bundle_version_date) -
+    # not a pip_install_dir/pip_install_from_source output - that
+    # RobotFramework_TestsuitesManagement expects to find in its own
+    # installed package's Config/ subfolder at runtime. Matched by literal
+    # filename (like Case 5 above) and placed directly into the SAME
+    # site-packages destination that Case 2 above already produces for
+    # RobotFramework_TestsuitesManagement itself, so both end up merged
+    # into one real, final directory regardless of Bazel action boundaries.
+    if Path(full_path).name == "package_context.json":
+        return str(Path(
+            "Python", "Lib", "site-packages",
+            "RobotFramework_TestsuitesManagement", "Config",
+            "package_context.json",
+        ))
+
     # Fallback: Use filename only (should not happen in normal use)
     print(f"WARNING: Could not resolve path structure: {full_path}")
     return Path(full_path).name

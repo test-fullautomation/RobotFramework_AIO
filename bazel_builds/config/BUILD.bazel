@@ -9,3 +9,12 @@
 # referenced as a proper label ("@config//:variant_config.bzl") from other
 # modules such as "installer".
 # =============================================================================
+
+# package_context.json is a plain, version-controlled data file (bundle
+# metadata such as installer_location/bundle_name/bundle_version - NOT a
+# Bazel-generated output) that needs to be staged into the final installer
+# tree (see installer/installer_variants.bzl and installer/stage_files.py's
+# "package_context.json" mapping case). exports_files() makes it referenceable
+# as "@config//:package_context.json" from the "installer" module, exactly
+# like "variant_config.bzl" above.
+exports_files(["package_context.json"])

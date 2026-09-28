@@ -106,9 +106,25 @@ def create_installer(
     # problem entirely. See reinstall_console_scripts.py's own docstring
     # and pip_utils/pip_install.bzl's "Solution 2b" note for what it does
     # and why every variant needs it.
+    #
+    # "@config//:package_context.json" (see exports_files() in
+    # components/config/BUILD.bazel) is likewise unconditionally appended to
+    # EVERY variant's bundle here. It is plain bundle metadata (installer
+    # location, bundle name/version/date) that RobotFramework_TestsuitesManagement
+    # reads at runtime from its own installed Config/ folder (see
+    # stage_files.py's "package_context.json" mapping case). Unlike
+    # "reinstall_console_scripts.py" above, referencing "@config" here is NOT
+    # circular: this file (installer_variants.bzl) already load()s
+    # BASE_COMPONENTS/INSTALLER_VARIANTS from "@config//:variant_config.bzl",
+    # so "installer" already depends on "config" in this direction; adding
+    # one more label reference to the same module does not introduce any new
+    # dependency edge.
     native.filegroup(
         name = bundle_name,
-        srcs = components + [":reinstall_console_scripts.py"],
+        srcs = components + [
+            ":reinstall_console_scripts.py",
+            "@config//:package_context.json",
+        ],
         visibility = ["//visibility:private"],
     )
     
