@@ -47,6 +47,14 @@ pip_install_dir(
     # extract_relative_path() recognizes "py-scripts-deps" via the same
     # startswith("py-scripts") matching used for "site-packages-deps".
     scripts_dir = "py-scripts-deps",
+    # Same collision reason again: this rule now ALSO declares a THIRD
+    # output directory (wheels_dir, for pre-built .whl files - see the
+    # "Solution 2b" note in pip_install.bzl). Its default ("py-wheels")
+    # would likewise collide with the pip_install_from_source target
+    # below. stage_files.py's extract_relative_path() recognizes
+    # "py-wheels-deps" via the same startswith("py-wheels") matching used
+    # for "site-packages-deps"/"py-scripts-deps".
+    wheels_dir = "py-wheels-deps",
     visibility = ["//visibility:private"],
 )
 

@@ -91,9 +91,24 @@ def create_installer(
     # Create a filegroup that aggregates all component files for this variant.
     # This bundle is marked private since it's an implementation detail;
     # users should reference the installer target, not the bundle.
+    #
+    # ":reinstall_console_scripts.py" (see exports_files() in this package's
+    # BUILD.bazel) is unconditionally appended to EVERY variant's bundle
+    # here, rather than being listed in components/config/variant_config.bzl's
+    # BASE_COMPONENTS - that file lives in a SEPARATE Bzlmod module
+    # ("config"), which this package (installer_variants.bzl, module
+    # "installer") already bazel_dep's/load()'s FROM; adding a label
+    # pointing back at "installer" INTO config's BASE_COMPONENTS would
+    # require config to bazel_dep(installer) as well, creating a circular
+    # module dependency that Bzlmod does not allow. Since this file is a
+    # plain, same-package source file (no cross-module reference needed at
+    # all), appending it here instead is both simpler and avoids that
+    # problem entirely. See reinstall_console_scripts.py's own docstring
+    # and pip_utils/pip_install.bzl's "Solution 2b" note for what it does
+    # and why every variant needs it.
     native.filegroup(
         name = bundle_name,
-        srcs = components,
+        srcs = components + [":reinstall_console_scripts.py"],
         visibility = ["//visibility:private"],
     )
     

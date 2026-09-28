@@ -55,6 +55,27 @@ Name: "{group}\Python Console"; Filename: "{app}\Python\python.exe"
 Name: "{group}\Visual Studio Code"; Filename: "{app}\VSCode\Code.exe"
 Name: "{group}\{cm:UninstallProgram,Python Portable}"; Filename: "{uninstallexe}"
 
+[Run]
+; "Solution 2b" (see pip_utils/pip_install.bzl and
+; installer/reinstall_console_scripts.py for the full rationale): console-
+; script launchers (e.g. rst2latex.exe) that were generated DURING THE
+; BAZEL BUILD have a non-relocatable, build-time-only shebang path baked
+; in by pip and fail once copied to their real installed location. Fix:
+; run reinstall_console_scripts.py exactly once here, at the END of
+; installation, using the python.exe that was JUST installed at its REAL,
+; final location ({app}\Python\python.exe) - it reinstalls every bundled
+; wheel (staged under {app}\Python\_wheels, see stage_files.py's
+; "py-wheels" mapping) fully offline (--no-index --find-links=...), which
+; makes pip regenerate every launcher with a shebang pointing at THIS
+; correct, final interpreter, regardless of where the installer was run.
+;
+; Flags:
+;   runhidden          - no visible console window flashing during install
+;   waituntilterminated - installation does not continue/finish until this
+;                         step completes, so the launchers are guaranteed
+;                         ready by the time the installer exits
+Filename: "{app}\Python\python.exe"; Parameters: """{app}\Python\_wheels\reinstall_console_scripts.py"""; WorkingDir: "{app}\Python"; StatusMsg: "Finalizing console scripts..."; Flags: runhidden waituntilterminated
+
 [Registry]
 ; Optional: PATH-Eintrag für aktuellen Benutzer
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\Python"; Flags: preservestringtype; Check: NeedsAddPath(ExpandConstant('{app}\Python'))

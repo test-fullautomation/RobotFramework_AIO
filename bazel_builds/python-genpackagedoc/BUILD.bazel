@@ -2,9 +2,12 @@
 # components/python-genpackagedoc/BUILD.bazel
 # =============================================================================
 #
-# This package installs the "GenPackageDoc" PyPI
-# package (https://pypi.org/project/GenPackageDoc/)
-# via pip.
+# This package now builds the "GenPackageDoc" package directly from its
+# GitHub repository source (see MODULE.bazel: variant_git_repository
+# "python_genpackagedoc_src") instead of installing the published PyPI
+# package. Its transitive PyPI dependencies (PythonExtensionsCollection,
+# colorama, docutils, Pygments, setuptools, wheel, build, ...) continue to
+# be installed the normal, hash-verified way from requirements_lock.txt.
 #
 # Proxy Configuration:
 #   Proxy settings are inherited from the environment via .bazelrc.
@@ -13,16 +16,56 @@
 #
 # =============================================================================
 
-load("@pip_utils//:pip_install.bzl", "pip_install_dir")
+load("@pip_utils//:pip_install.bzl", "pip_install_dir", "pip_install_from_source")
 
-# Install the GenPackageDoc package (and its
-# transitive dependencies) from requirements_lock.txt.
-# Note: Proxy environment variables are passed through via --action_env in .bazelrc
+# Install GenPackageDoc's transitive PyPI dependencies (and, as an
+# unavoidable but harmless side effect of the genpackagedoc <->
+# PythonExtensionsCollection circular PyPI dependency, a redundant
+# same-version copy of PythonExtensionsCollection itself - see the comment
+# in requirements.txt for details).
 pip_install_dir(
-    name = "python_genpackagedoc",
+    name = "python_genpackagedoc_deps",
     requirements = "requirements_lock.txt",
     interpreter = "@python//:python_interpreter",
     runtime = "@python//:python_runtime",
+    # IMPORTANT: Cannot use the default out_dir ("site-packages") here.
+    # Both this target AND the pip_install_from_source target below live in
+    # the SAME Bazel package (this BUILD.bazel), so declaring two actions
+    # that both output a directory literally named "site-packages" would
+    # make Bazel reject the build with "conflicting actions" (two actions
+    # producing the same output path within the same package). Using a
+    # distinct name here avoids the collision; stage_files.py's
+    # extract_relative_path() has been extended to recognize this
+    # "site-packages-deps" name and still merge it into the same
+    # Python/Lib/site-packages destination as every other component.
+    out_dir = "site-packages-deps",
+    # Same collision reason as out_dir above: this rule now ALSO declares a
+    # second output directory (scripts_dir, for console-script launchers -
+    # see pip_install.bzl). Its default ("py-scripts") would likewise
+    # collide with the pip_install_from_source target below, so it needs
+    # its own distinct name here too. stage_files.py's
+    # extract_relative_path() recognizes "py-scripts-deps" via the same
+    # startswith("py-scripts") matching used for "site-packages-deps".
+    scripts_dir = "py-scripts-deps",
+    # Same collision reason again: this rule now ALSO declares a THIRD
+    # output directory (wheels_dir, for pre-built .whl files - see the
+    # "Solution 2b" note in pip_install.bzl). Its default ("py-wheels")
+    # would likewise collide with the pip_install_from_source target
+    # below. stage_files.py's extract_relative_path() recognizes
+    # "py-wheels-deps" via the same startswith("py-wheels") matching used
+    # for "site-packages-deps"/"py-scripts-deps".
+    wheels_dir = "py-wheels-deps",
+    visibility = ["//visibility:private"],
+)
+
+# Build/install GenPackageDoc itself from the GitHub source tree fetched
+# via variant_git_repository (see MODULE.bazel).
+pip_install_from_source(
+    name = "python_genpackagedoc",
+    source = "@python_genpackagedoc_src//:src",
+    interpreter = "@python//:python_interpreter",
+    runtime = "@python//:python_runtime",
+    deps_dir = ":python_genpackagedoc_deps",
     # No explicit env needed - proxy variables are inherited via --action_env
     # NOTE: Public visibility required - granting "@installer//:__pkg__" here
     # would force this module to bazel_dep(installer), but installer already

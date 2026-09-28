@@ -255,6 +255,40 @@ def extract_relative_path(full_path: str) -> str:
             rel_parts = parts[i + 1:]
             return str(Path("Python", "Scripts", *rel_parts))
 
+    # Case 4: pre-built .whl files from pip_install_dir/
+    # pip_install_from_source's "wheels_dir" output (see pip_install.bzl's
+    # "Solution 2b" note). These are bundled as plain data files and
+    # reinstalled once, at the END of installation (via Inno Setup's [Run]
+    # section, see installer.iss + reinstall_console_scripts.py below), to
+    # regenerate console-script launchers with a correct, relocatable
+    # shebang path pointing at the FINAL, installed python.exe - instead of
+    # the non-relocatable, build-time-only shebang pip embeds when it
+    # generates launchers directly during the Bazel build (see Case 3
+    # above).
+    #
+    # Same multi-component merge situation as "site-packages"/"py-scripts"
+    # above: several independent pip_install_dir/pip_install_from_source
+    # targets each produce their own "py-wheels" directory (or a
+    # package-local variant like "py-wheels-deps" for components with two
+    # targets in the same Bazel package), and ALL of them must merge into
+    # the exact same Python/_wheels destination, so
+    # reinstall_console_scripts.py finds every bundled wheel in one place.
+    for i, part in enumerate(parts):
+        if part == "py-wheels" or part.startswith("py-wheels-"):
+            rel_parts = parts[i + 1:]
+            return str(Path("Python", "_wheels", *rel_parts))
+
+    # Case 5: reinstall_console_scripts.py itself (see installer/BUILD.bazel
+    # exports_files() + installer.iss's [Run] section). This is a plain,
+    # version-controlled source file (not a pip_install_dir/
+    # pip_install_from_source output), so it is matched by its literal
+    # filename instead of a containing directory name, and placed
+    # alongside the bundled wheels from Case 4 above so the script can
+    # locate them via its own directory (Path(__file__).parent) at
+    # install time, regardless of the final installation path.
+    if Path(full_path).name == "reinstall_console_scripts.py":
+        return str(Path("Python", "_wheels", "reinstall_console_scripts.py"))
+
     # Fallback: Use filename only (should not happen in normal use)
     print(f"WARNING: Could not resolve path structure: {full_path}")
     return Path(full_path).name

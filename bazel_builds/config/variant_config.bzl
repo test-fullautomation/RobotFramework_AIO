@@ -72,8 +72,8 @@ INSTALLER_VARIANTS = {
             #
             # own components
             "@robotframework_testsuitesmanagement//:robotframework_testsuitesmanagement",  # PyPI package
-            "@python_genpackagedoc//:python_genpackagedoc",  # PyPI package
-            "@python_extensions_collection//:python_extensions_collection",  # PyPI package
+            # "@python_genpackagedoc//:python_genpackagedoc", # GitHub
+            "@python_extensions_collection//:python_extensions_collection", # GitHub
             "@python_jsonpreprocessor//:python_jsonpreprocessor",  # PyPI package
             "@robotframework_qconnect_base//:robotframework_qconnect_base",  # PyPI package
             "@robotframework_extensions_collection//:robotframework_extensions_collection",  # PyPI package

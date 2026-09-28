@@ -71,7 +71,7 @@ installs a local source tree (e.g. fetched from an internal Git server).
 """
 
 # =============================================================================
-# Relocatable console-script wrapper generation ("Solution 1")
+# Relocatable console scripts via bundled wheels ("Solution 2b")
 # =============================================================================
 #
 # BUG BACKGROUND: pip (via distlib) generates console-script launchers
@@ -90,91 +90,67 @@ installs a local source tree (e.g. fetched from an internal Git server).
 # "ModuleNotFoundError" (interpreter found, but its site-packages is
 # empty).
 #
-# FIX: after pip has finished installing (and its own launchers have been
-# moved into scripts_dir), delete pip's non-relocatable launchers and
-# regenerate our OWN launchers for the same console_scripts entry points,
-# reading them via importlib.metadata against the just-installed out_dir.
-# Each entry point becomes a pair of files:
-#   <name>-script.py  - a tiny Python script importing the target module
-#                        and invoking the entry point's callable.
-#   <name>.cmd        - a batch-file wrapper that locates ITS OWN
-#                        directory via "%~dp0" (always correct, no matter
-#                        where the Scripts folder is finally copied to)
-#                        and invokes "..\\python.exe" (one directory up,
-#                        matching both the temporary pip --prefix layout
-#                        used here AND the final installed layout, where
-#                        Python/Scripts and Python/python.exe are siblings)
-#                        against the paired *-script.py.
+# FIX ("Solution 2b" - see documentation/docs/Bazel_Installer_Python_Scripts_Ordner.md
+# for the full comparison against the previously implemented "Solution 1",
+# custom relocatable wrapper-script generation, which this replaces):
+# instead of trying to construct our own relocatable launcher scripts at
+# BUILD time (where the real, final installation path is not yet known),
+# this rule additionally builds a pre-compiled .whl file for every package
+# it installs (via "pip wheel", into a THIRD declared output directory,
+# wheels_dir) and bundles those wheels into the installer as plain data
+# files (see installer/stage_files.py's "py-wheels" mapping ->
+# "Python/_wheels"). A tiny helper script
+# (installer/reinstall_console_scripts.py, staged to
+# "Python/_wheels/reinstall_console_scripts.py") is then invoked ONCE, at
+# the very END of installation, via Inno Setup's [Run] section (see
+# installer/installer.iss) - using the REAL, now-installed python.exe at
+# its REAL, final location. It reinstalls every bundled wheel with
+# "--force-reinstall --no-deps --no-index --find-links=<its own directory>"
+# (fully offline, no PyPI access), which makes pip itself regenerate every
+# console-script launcher - but this time pip embeds the shebang of the
+# ACTUAL, final sys.executable, since that is genuinely the interpreter
+# now running pip. This works regardless of where the installer was run,
+# with no further build-time knowledge of the eventual installation path
+# required.
 #
-# This keeps the whole operation fully offline/hermetic (no PyPI access,
-# no extra Bazel outputs) and produces launchers that work correctly
-# regardless of where the final "Scripts" directory ends up on disk -
-# at the cost of console scripts becoming "<name>.cmd" instead of
-# "<name>.exe" (transparent for any caller that invokes them without an
-# explicit extension, e.g. via PATH, since Windows' PATHEXT resolves
-# ".CMD" the same way; callers hardcoding the ".exe" extension need to be
-# updated to drop it, or to call "<name>" without an extension instead).
+# The package files themselves (out_dir/site-packages) are still installed
+# and staged the normal way at BUILD time as before - only the
+# console-script launchers get regenerated at INSTALL time; the wheels
+# used for that reinstall step are otherwise redundant with out_dir's
+# content and are only there to let pip regenerate scripts fully offline
+# without needing the original source/sdist again.
 # =============================================================================
 
-_WRAPPER_GENERATION_SNIPPET = """\
-# --- BEGIN relocatable console-script wrapper generation (Solution 1) ---
-try:
-    from importlib.metadata import entry_points as _entry_points
-except ImportError:
-    from importlib_metadata import entry_points as _entry_points
-
-sys.path.insert(0, out_dir)
-try:
-    _eps = _entry_points(group="console_scripts")
-except TypeError:
-    # Python < 3.10: entry_points() returns a SelectableGroups-like mapping
-    # instead of accepting a group= keyword argument directly.
-    _eps = _entry_points().get("console_scripts", [])
-
-# Wipe whatever pip itself generated into scripts_dir (non-relocatable
-# .exe/-script.py/.exe.manifest launchers with a hardcoded, build-time-only
-# shebang path) - fully replaced below with our own relocatable .cmd +
-# *-script.py pair per console_scripts entry point.
-shutil.rmtree(scripts_dir, ignore_errors=True)
-os.makedirs(scripts_dir, exist_ok=True)
-
-for _ep in _eps:
-    _name = _ep.name
-    _module, _, _attr = _ep.value.partition(":")
-    _attr_chain = _attr.split(".") if _attr else []
-
-    _py_path = os.path.join(scripts_dir, _name + "-script.py")
-    with open(_py_path, "w", encoding="utf-8") as _f:
-        _f.write("import sys\\n")
-        _f.write("import " + _module + " as _mod\\n")
-        _f.write("_obj = _mod\\n")
-        for _part in _attr_chain:
-            _f.write("_obj = getattr(_obj, " + repr(_part) + ")\\n")
-        _f.write("sys.exit(_obj())\\n")
-
-    _cmd_path = os.path.join(scripts_dir, _name + ".cmd")
-    with open(_cmd_path, "w", encoding="utf-8") as _f:
-        _f.write("@echo off\\r\\n")
-        _f.write('"%~dp0..\\\\python.exe" "%~dp0' + _name + '-script.py" %*\\r\\n')
-# --- END relocatable console-script wrapper generation (Solution 1) ---
-"""
+def _pip_wheel_args_literal(wheel_args):
+    """Renders a Python argument list (for `sys.executable -m pip wheel ...`)
+    as a Starlark string containing a literal Python list expression, for
+    embedding into a generated launcher script's `.format()` template -
+    mirrors the pattern already used for the "install" pip_args lists in
+    both _pip_install_impl and _pip_install_from_source_impl.
+    """
+    return "[" + ", ".join([repr(a) for a in wheel_args]) + "]"
 
 def _pip_install_impl(ctx):
     """Implementation function for the pip_install_dir rule.
 
     Executes pip install with the specified requirements file and target
     Python interpreter. Outputs packages to a directory that can be
-    referenced by other targets, AND a second directory containing the
+    referenced by other targets, a second directory containing the
     console-script launchers (e.g. robotlog2rqm.exe) that pip generates
-    for any package declaring console_scripts entry points.
+    for any package declaring console_scripts entry points, and a third
+    directory containing pre-built .whl files for every installed package
+    (see the "Solution 2b" note above for why - installed via
+    installer/reinstall_console_scripts.py at the END of installation, to
+    regenerate the console-script launchers with a correct, relocatable
+    shebang path).
 
     Args:
         ctx: The rule context providing access to attributes and actions.
 
     Returns:
         DefaultInfo provider with the output directories containing
-        installed packages (out_dir) and their console-script launchers
-        (scripts_dir).
+        installed packages (out_dir), their console-script launchers
+        (scripts_dir), and their pre-built wheels (wheels_dir).
 
     Note:
         This action requires network access and must run without sandboxing
@@ -183,10 +159,14 @@ def _pip_install_impl(ctx):
     # Declare output directories: one for the installed packages
     # (site-packages), one for the console-script launchers pip generates
     # for any package with console_scripts entry points (e.g. robotlog2rqm,
-    # robotlog2db, genpackagedoc's CLI, ...). See the "--target vs --prefix"
-    # note below for why a second directory is needed at all.
+    # robotlog2db, genpackagedoc's CLI, ...), and one for pre-built .whl
+    # files (used to regenerate those launchers at install time - see the
+    # "Solution 2b" note above). See the "--target vs --prefix" note below
+    # for why a second directory is needed at all.
     out = ctx.actions.declare_directory(ctx.attr.out_dir)
     scripts_out = ctx.actions.declare_directory(ctx.attr.scripts_dir)
+    wheels_out = ctx.actions.declare_directory(ctx.attr.wheels_dir)
+
 
     # Get Python interpreter and runtime files from the external repository
     interpreter = ctx.file.interpreter    # python.exe from portable distribution
@@ -222,6 +202,24 @@ def _pip_install_impl(ctx):
     if ctx.attr.require_hashes:
         pip_args += ["--require-hashes"]
 
+    # Companion "pip wheel" invocation (see the "Solution 2b" note above):
+    # builds a pre-compiled .whl file for every package in requirements
+    # into wheels_out, WITHOUT installing them anywhere. --no-deps is
+    # correct here (not a limitation): "pip wheel -r requirements.txt"
+    # already builds a wheel for every entry in the file, including
+    # transitive dependencies (they are all explicit, hash-verified
+    # entries in a compiled requirements_lock.txt) - so no further
+    # dependency resolution is needed or wanted.
+    pip_wheel_args = ["-m", "pip", "wheel"]
+    pip_wheel_args += ["--requirement", ctx.file.requirements.path]
+    pip_wheel_args += ["--wheel-dir", wheels_out.path]
+    pip_wheel_args += ["--no-deps"]
+    pip_wheel_args += ["--disable-pip-version-check"]
+    pip_wheel_args += ["--no-input"]
+    if ctx.attr.require_hashes:
+        pip_wheel_args += ["--require-hashes"]
+
+
     # IMPORTANT - stale output directory content:
     # This action runs with "no-sandbox" (see execution_requirements below),
     # which means Bazel does NOT necessarily delete a pre-existing
@@ -245,6 +243,7 @@ def _pip_install_impl(ctx):
     # regardless of whether Bazel happened to reuse stale ones.
     launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_launcher.py")
     pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+    pip_wheel_args_literal = _pip_wheel_args_literal(pip_wheel_args)
     ctx.actions.write(
         output = launcher,
         content = """\
@@ -255,11 +254,14 @@ import sys
 
 out_dir = r"{out_path}"
 scripts_dir = r"{scripts_path}"
+wheels_dir = r"{wheels_path}"
 prefix_dir = r"{prefix_path}"
 
 shutil.rmtree(out_dir, ignore_errors=True)
 shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(wheels_dir, ignore_errors=True)
 shutil.rmtree(prefix_dir, ignore_errors=True)
+os.makedirs(wheels_dir, exist_ok=True)
 
 # Bootstrap pip if this interpreter doesn't have it yet. The
 # python-build-standalone "install_only" distribution used by this
@@ -274,6 +276,36 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "ensurepip", "--default-pip"])
 
 cmd = [sys.executable] + {pip_args_literal}
+rc = subprocess.call(cmd)
+if rc != 0:
+    raise SystemExit(rc)
+
+# See the "Solution 2b" note above pip_install.bzl's top: build a
+# pre-compiled .whl for every installed package into wheels_dir, bundled
+# into the installer and reinstalled at the END of installation (see
+# installer/reinstall_console_scripts.py) to regenerate console-script
+# launchers with a correct, relocatable shebang path.
+#
+# Re-check pip's importability here: if requirements(_lock).txt pins its
+# own "pip==..." entry (as e.g. py_modules_set_1's requirements do), the
+# install step above can end up UNINSTALLING the base interpreter's own
+# ensurepip-provided pip (pip sees a newer/different pinned version and
+# replaces the "existing installation" it finds via sys.path - which is
+# the base interpreter's real site-packages, NOT just tmp_prefix) - and
+# since this happens WHILE that very pip process is still running (pip
+# uninstalling itself mid-execution), the result can be a broken-but-
+# still-importable state on disk (some files removed, others not) that a
+# simple "try: import pip" check does NOT reliably detect (a bare
+# "import pip" can still succeed even though "python -m pip" itself then
+# fails with "No module named pip", since "-m" exercises more of pip's
+# internals than a bare top-level import does). Fix: force ensurepip to
+# unconditionally reinstall pip here ("--upgrade", not "--default-pip" -
+# the latter is a no-op if pip already appears present, which is exactly
+# the unreliable state being worked around), fully offline, regardless of
+# whether pip already looks importable.
+subprocess.check_call([sys.executable, "-m", "ensurepip", "--upgrade"])
+
+cmd = [sys.executable] + {pip_wheel_args_literal}
 rc = subprocess.call(cmd)
 if rc != 0:
     raise SystemExit(rc)
@@ -295,17 +327,17 @@ if os.path.isdir(scripts_src):
 else:
     os.makedirs(scripts_dir, exist_ok=True)
 
-{wrapper_generation_snippet}
-
 shutil.rmtree(prefix_dir, ignore_errors=True)
 """.format(
             out_path = out.path,
             scripts_path = scripts_out.path,
+            wheels_path = wheels_out.path,
             prefix_path = tmp_prefix,
             pip_args_literal = pip_args_literal,
-            wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+            pip_wheel_args_literal = pip_wheel_args_literal,
         ),
     )
+
 
     # Execute pip install
     # Note: This action has special execution requirements:
@@ -322,7 +354,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
         executable = interpreter,
         arguments = [launcher.path],
         inputs = depset([launcher, ctx.file.requirements] + runtime),
-        outputs = [out, scripts_out],
+        outputs = [out, scripts_out, wheels_out],
         env = ctx.attr.env,
         use_default_shell_env = True,  # merge --action_env (e.g. HTTPS_PROXY) into env
         execution_requirements = {
@@ -334,7 +366,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
         progress_message = "pip install -> %s" % out.short_path,
     )
 
-    return [DefaultInfo(files = depset([out, scripts_out]))]
+    return [DefaultInfo(files = depset([out, scripts_out, wheels_out]))]
 
 
 # =============================================================================
@@ -398,10 +430,36 @@ pip_install_dir = rule(
             this rule instead of "--target", specifically to obtain these
             launchers - see _pip_install_impl for details).
 
+            NOTE: These launchers have a build-time-only, non-relocatable
+            shebang path (see the "Solution 2b" note near the top of this
+            file) and are effectively superseded by an install-time
+            reinstall from wheels_dir's bundled wheels - they are still
+            produced/staged (harmless) but should not be relied upon
+            directly.
+
             Default: "py-scripts". Must be changed (like out_dir) if two
             pip_install_dir/pip_install_from_source targets exist in the
             SAME Bazel package (e.g. python-extensions-collection's
             "..._deps" target), to avoid a "conflicting actions" error.
+            """,
+        ),
+        "wheels_dir": attr.string(
+            default = "py-wheels",
+            doc = """Name of the output directory for pre-built .whl files.
+
+            One .whl is built (via "pip wheel", --no-deps) for every
+            package in requirements/requirements_lock.txt, WITHOUT
+            installing it anywhere. These wheels are bundled into the
+            installer (see installer/stage_files.py's "py-wheels" mapping)
+            and reinstalled once, at the END of installation, by
+            installer/reinstall_console_scripts.py - see the "Solution 2b"
+            note near the top of this file for the full rationale (fixes
+            console-script launchers' non-relocatable, build-time-only
+            shebang path).
+
+            Default: "py-wheels". Must be changed (like out_dir/scripts_dir)
+            if two pip_install_dir/pip_install_from_source targets exist in
+            the SAME Bazel package, to avoid a "conflicting actions" error.
             """,
         ),
         "require_hashes": attr.bool(
@@ -455,11 +513,12 @@ def _pip_install_from_source_impl(ctx):
 
     Returns:
         DefaultInfo provider with the output directories containing the
-        installed package (out_dir) and its console-script launchers
-        (scripts_dir), if any.
+        installed package (out_dir), its console-script launchers
+        (scripts_dir), and its pre-built wheel (wheels_dir), if any.
     """
     out = ctx.actions.declare_directory(ctx.attr.out_dir)
     scripts_out = ctx.actions.declare_directory(ctx.attr.scripts_dir)
+    wheels_out = ctx.actions.declare_directory(ctx.attr.wheels_dir)
 
     interpreter = ctx.file.interpreter
     runtime = ctx.files.runtime
@@ -488,6 +547,18 @@ def _pip_install_from_source_impl(ctx):
     pip_args += ["--no-deps"]               # transitive deps come from deps_dir instead
     pip_args += ["--no-build-isolation"]    # use the interpreter's own env, no fresh venv
     pip_args += [source_dir]                # install FROM this local directory, not PyPI
+
+    # Companion "pip wheel" invocation (see the "Solution 2b" note near the
+    # top of this file): builds a pre-compiled .whl for this source tree
+    # into wheels_out, WITHOUT installing it anywhere. Same --no-deps/
+    # --no-build-isolation reasoning as pip_args above.
+    pip_wheel_args = ["-m", "pip", "wheel"]
+    pip_wheel_args += ["--wheel-dir", wheels_out.path]
+    pip_wheel_args += ["--no-deps"]
+    pip_wheel_args += ["--disable-pip-version-check"]
+    pip_wheel_args += ["--no-input"]
+    pip_wheel_args += ["--no-build-isolation"]
+    pip_wheel_args += [source_dir]
 
     # inputs: full source tree + runtime + (optionally) the pre-installed
     # transitive dependency directory, so the build backend can import them
@@ -538,6 +609,7 @@ def _pip_install_from_source_impl(ctx):
         # so the pip argument list is rendered into a Python list-literal
         # string manually here (each argument individually quoted).
         pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+        pip_wheel_args_literal = _pip_wheel_args_literal(pip_wheel_args)
 
         ctx.actions.write(
             output = launcher,
@@ -556,10 +628,13 @@ import sys
 # build.
 out_dir = r"{out_path}"
 scripts_dir = r"{scripts_path}"
+wheels_dir = r"{wheels_path}"
 prefix_dir = r"{prefix_path}"
 shutil.rmtree(out_dir, ignore_errors=True)
 shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(wheels_dir, ignore_errors=True)
 shutil.rmtree(prefix_dir, ignore_errors=True)
+os.makedirs(wheels_dir, exist_ok=True)
 
 # Resolved while cwd is still the Bazel execution root (see pip_install.bzl
 # _pip_install_from_source_impl for why this must be absolute).
@@ -581,6 +656,25 @@ rc = subprocess.call(cmd, env=env)
 if rc != 0:
     raise SystemExit(rc)
 
+# See the "Solution 2b" note near the top of pip_install.bzl: build a
+# pre-compiled .whl for this source tree into wheels_dir, bundled into the
+# installer and reinstalled at the END of installation (see
+# installer/reinstall_console_scripts.py) to regenerate console-script
+# launchers with a correct, relocatable shebang path. Same PYTHONPATH as
+# the install step above (--no-build-isolation needs setuptools importable).
+#
+# Re-check pip's importability here - see the equivalent comment in
+# _pip_install_impl's launcher for why an unconditional "ensurepip
+# --upgrade" (not a "try: import pip" check) is necessary here (the
+# install step above can leave the base interpreter's own pip in a
+# broken-but-still-importable state even though it succeeded).
+subprocess.check_call([sys.executable, "-m", "ensurepip", "--upgrade"])
+
+cmd = [sys.executable] + {pip_wheel_args_literal}
+rc = subprocess.call(cmd, env=env)
+if rc != 0:
+    raise SystemExit(rc)
+
 # Move the two subdirectories pip created under the temporary prefix into
 # the two REAL declared outputs (see _pip_install_impl for the same
 # pattern/rationale).
@@ -596,16 +690,15 @@ if os.path.isdir(scripts_src):
 else:
     os.makedirs(scripts_dir, exist_ok=True)
 
-{wrapper_generation_snippet}
-
 shutil.rmtree(prefix_dir, ignore_errors=True)
 """.format(
                 out_path = out.path,
                 scripts_path = scripts_out.path,
+                wheels_path = wheels_out.path,
                 prefix_path = tmp_prefix,
                 deps_path_rel = deps_path_rel,
                 pip_args_literal = pip_args_literal,
-                wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+                pip_wheel_args_literal = pip_wheel_args_literal,
             ),
         )
 
@@ -613,7 +706,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
             executable = interpreter,
             arguments = [launcher.path],
             inputs = depset([launcher], transitive = [inputs]),
-            outputs = [out, scripts_out],
+            outputs = [out, scripts_out, wheels_out],
             env = env,
             use_default_shell_env = True,
             execution_requirements = {
@@ -631,6 +724,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
         # with "no-sandbox" actions).
         launcher = ctx.actions.declare_file(ctx.attr.name + "_pip_install_from_source_launcher.py")
         pip_args_literal = "[" + ", ".join([repr(a) for a in pip_args]) + "]"
+        pip_wheel_args_literal = _pip_wheel_args_literal(pip_wheel_args)
         ctx.actions.write(
             output = launcher,
             content = """\
@@ -641,10 +735,13 @@ import sys
 
 out_dir = r"{out_path}"
 scripts_dir = r"{scripts_path}"
+wheels_dir = r"{wheels_path}"
 prefix_dir = r"{prefix_path}"
 shutil.rmtree(out_dir, ignore_errors=True)
 shutil.rmtree(scripts_dir, ignore_errors=True)
+shutil.rmtree(wheels_dir, ignore_errors=True)
 shutil.rmtree(prefix_dir, ignore_errors=True)
+os.makedirs(wheels_dir, exist_ok=True)
 
 # See _pip_install_impl's launcher for why this bootstrap is necessary and
 # safe to run unconditionally (offline, idempotent).
@@ -654,6 +751,20 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "ensurepip", "--default-pip"])
 
 cmd = [sys.executable] + {pip_args_literal}
+rc = subprocess.call(cmd)
+if rc != 0:
+    raise SystemExit(rc)
+
+# See the "Solution 2b" note near the top of pip_install.bzl: build a
+# pre-compiled .whl for this source tree into wheels_dir - see the
+# deps_dir branch above for the full rationale.
+#
+# Re-check pip's importability here - see the equivalent comment in
+# _pip_install_impl's launcher for why this second, unconditional
+# bootstrap is necessary.
+subprocess.check_call([sys.executable, "-m", "ensurepip", "--upgrade"])
+
+cmd = [sys.executable] + {pip_wheel_args_literal}
 rc = subprocess.call(cmd)
 if rc != 0:
     raise SystemExit(rc)
@@ -670,15 +781,14 @@ if os.path.isdir(scripts_src):
 else:
     os.makedirs(scripts_dir, exist_ok=True)
 
-{wrapper_generation_snippet}
-
 shutil.rmtree(prefix_dir, ignore_errors=True)
 """.format(
                 out_path = out.path,
                 scripts_path = scripts_out.path,
+                wheels_path = wheels_out.path,
                 prefix_path = tmp_prefix,
                 pip_args_literal = pip_args_literal,
-                wrapper_generation_snippet = _WRAPPER_GENERATION_SNIPPET,
+                pip_wheel_args_literal = pip_wheel_args_literal,
             ),
         )
 
@@ -686,7 +796,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
             executable = interpreter,
             arguments = [launcher.path],
             inputs = depset([launcher], transitive = [inputs]),
-            outputs = [out, scripts_out],
+            outputs = [out, scripts_out, wheels_out],
             env = env,
             use_default_shell_env = True,
             execution_requirements = {
@@ -698,7 +808,7 @@ shutil.rmtree(prefix_dir, ignore_errors=True)
             progress_message = "pip install (from source) -> %s" % out.short_path,
         )
 
-    return [DefaultInfo(files = depset([out, scripts_out]))]
+    return [DefaultInfo(files = depset([out, scripts_out, wheels_out]))]
 
 
 # =============================================================================
@@ -767,6 +877,17 @@ pip_install_from_source = rule(
             Bazel package (see out_dir's doc for the same requirement).
             """,
         ),
+        "wheels_dir": attr.string(
+            default = "py-wheels",
+            doc = """Name of the output directory for the pre-built .whl file.
+
+            Same rationale/mechanism as pip_install_dir's "wheels_dir" -
+            see pip_install_dir's doc and the "Solution 2b" note near the
+            top of this file for details. Must be changed if two targets
+            exist in the SAME Bazel package (see out_dir's doc for the
+            same requirement).
+            """,
+        ),
         "env": attr.string_dict(
             doc = """Additional environment variables to set for the pip process.""",
         ),
@@ -785,3 +906,4 @@ pip_install_from_source = rule(
     deps_dir.
     """,
 )
+

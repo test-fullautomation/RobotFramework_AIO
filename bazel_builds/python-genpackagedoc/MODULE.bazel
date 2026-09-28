@@ -19,10 +19,79 @@ local_path_override(
     path = "../python",
 )
 
-# Shared pip_install.bzl rules (pip_install_dir) - see components/pip_utils.
+# Shared pip_install.bzl rules (pip_install_dir, pip_install_from_source) -
+# see components/pip_utils.
 bazel_dep(name = "pip_utils", version = "0.1.0")
 
 local_path_override(
     module_name = "pip_utils",
     path = "../pip_utils",
+)
+
+# Shared variant_git_repository.bzl rule (Tag vs. Branch selection) - see
+# tools/repo_rules. Used below instead of the plain
+# @bazel_tools//tools/build_defs/repo:git.bzl git_repository, so that this
+# component supports BOTH a fixed, hermetic release tag (production/
+# installer builds) AND a tracked branch HEAD (Daily Build/Test), selected
+# at build time via --repo_env=BUILD_VARIANT=tagged|daily. See
+# documentation/docs/Bazel_Git_Repository_Tag_vs_Branch.md for the full
+# rationale.
+bazel_dep(name = "repo_rules", version = "0.1.0")
+
+local_path_override(
+    module_name = "repo_rules",
+    path = "../tools/repo_rules",
+)
+
+# =============================================================================
+# GitHub Source (instead of PyPI)
+# =============================================================================
+#
+# GenPackageDoc is now built directly from its GitHub repository instead of
+# being installed from the published PyPI package. This mirrors the pattern
+# established for python-extensions-collection (see
+# ../python-extensions-collection/MODULE.bazel for the full rationale) -
+# just applied here to the other half of the genpackagedoc <->
+# PythonExtensionsCollection circular PyPI dependency pair.
+#
+#   https://github.com/test-fullautomation/python-genpackagedoc
+#
+# variant_git_repository (see tools/repo_rules/variant_git_repository.bzl)
+# fetches this source tree at build time. By default (BUILD_VARIANT unset
+# or "tagged") it pins to a FIXED tag for reproducibility. When
+# BUILD_VARIANT=daily is passed via --repo_env (see .bazelrc's ":daily"
+# config), it instead tracks the "daily_branch" branch's current HEAD -
+# intentionally non-hermetic, for Daily Build / Daily Test pipelines only.
+# NEVER use the "daily" variant for production/installer builds - see
+# documentation/docs/Bazel_Git_Repository_Tag_vs_Branch.md.
+#
+# Requirements on the build machine: see
+# ../python-extensions-collection/MODULE.bazel's equivalent comment (git.exe
+# on PATH, proxy/network access to github.com, GitHub PAT authentication via
+# _netrc - identical requirements, same GitHub organization).
+variant_git_repository = use_repo_rule(
+    "@repo_rules//:variant_git_repository.bzl",
+    "variant_git_repository",
+)
+
+variant_git_repository(
+    name = "python_genpackagedoc_src",
+    remote = "https://github.com/test-fullautomation/python-genpackagedoc.git",
+    # Used when --config=tagged is passed (BUILD_VARIANT=tagged) and no
+    # RELEASE_TAG_OVERRIDE is set. Pin to the exact released version
+    # corresponding to the previous PyPI pin (0.44.0). Verified to exist as
+    # of 2026-09-28 via the repository's tags page
+    # (https://github.com/test-fullautomation/python-genpackagedoc/tags):
+    # tag name is "rel/0.44.0" (same "rel/<version>" naming convention as
+    # python-extensions-collection).
+    #
+    # To build against a DIFFERENT tag without editing this file, override
+    # it on the command line instead:
+    #   bazel build --config=tagged --repo_env=RELEASE_TAG_OVERRIDE=rel/0.43.0 //...
+    release_tag = "rel/0.44.0",
+    # Used when BUILD_VARIANT=daily (the project default - no --config
+    # needed, see build/.bazelrc) - tracks this branch's current HEAD at
+    # fetch time. Intentionally non-hermetic; Daily Build/Test only.
+    daily_branch = "develop",
+    build_file_content = """filegroup(name = "src", srcs = glob(["**"], exclude = [".git/**"]), visibility = ["//visibility:public"])""",
 )

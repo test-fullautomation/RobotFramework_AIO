@@ -1,29 +1,71 @@
-GenPackageDoc==0.44.0
+# =============================================================================
+# requirements.txt - Transitive PyPI dependencies of GenPackageDoc
+# =============================================================================
+#
+# GenPackageDoc itself is NOT listed here anymore - it is now fetched from
+# its GitHub repository via variant_git_repository (see MODULE.bazel) and
+# installed via the pip_install_from_source rule in BUILD.bazel, NOT via
+# this requirements file (previously: "GenPackageDoc==0.44.0").
+#
+# This file lists GenPackageDoc's regular (PyPI-hosted) runtime dependency
+# instead - "PythonExtensionsCollection" - so that pip-compile still
+# resolves the full transitive dependency tree (docutils, Pygments,
+# colorama, ...) with hashes, exactly as before.
+#
+# NOTE on the circular genpackagedoc <-> PythonExtensionsCollection
+# reference: PythonExtensionsCollection's own PyPI metadata declares a
+# dependency back on "GenPackageDoc" (the two packages depend on each
+# other). pip-compile does not know that GenPackageDoc now comes from git
+# instead of PyPI, so the resulting requirements_lock.txt will still
+# contain a "genpackagedoc==<version>" entry, hash-verified and installed
+# via the normal pip_install_dir mechanism. This is harmless: both copies
+# are pinned to the SAME version/tag, they are merged into the same
+# "Lib/site-packages" directory by stage_files.py either way, and the files
+# are effectively identical - functionally a no-op duplicate, not a
+# conflict. (See ../python-extensions-collection/requirements.txt for the
+# mirror-image comment describing the same situation from the other side.)
+#
+# NOTE on "setuptools" and "wheel": GenPackageDoc's git source uses a
+# PEP 517 build backend (build_backend.py, based on setuptools) that is
+# invoked with --no-build-isolation (see pip_install_from_source in
+# pip_utils/pip_install.bzl). Without build isolation, pip does NOT create
+# a fresh, ephemeral build environment with the backend's declared
+# build-time requirements (setuptools, wheel) - it expects them to already
+# be importable in the environment pip itself runs in. The portable Python
+# distribution's own site-packages does not ship these by default, so they
+# must be listed here explicitly to end up in the deps_dir passed via
+# PYTHONPATH to the pip_install_from_source action. (pyproject.toml's
+# [build-system].requires also lists "build", but build_backend.py only
+# ever imports setuptools.build_meta, never the "build" package itself, so
+# it is deliberately omitted here - same reasoning already applied to
+# python-extensions-collection/requirements.txt.)
+setuptools
+wheel
 
-# NOTE: GenPackageDoc's own PyPI metadata declares a dependency on
-# "PythonExtensionsCollection". Without an explicit pin here, pip-compile
-# resolves that transitive dependency to whatever the CURRENTLY newest PyPI
-# release is at compile time - which is independent of, and can silently
-# diverge from, the Git tag pinned in
-# ../python-extensions-collection/MODULE.bazel (git_repository "tag"
-# attribute), from which PythonExtensionsCollection is actually built for
-# the installer.
+# NOTE on the explicit version pin below: unlike the mirror-image situation
+# in python-extensions-collection/requirements.txt (where an unpinned
+# "genpackagedoc" happened to resolve, via pip-compile, to the same version
+# as the Git tag pinned in this component's own MODULE.bazel - rel/0.44.0),
+# an UNPINNED "pythonextensionscollection" here does NOT reliably resolve
+# to the same version as the Git tag pinned in
+# ../python-extensions-collection/MODULE.bazel (release_tag = "rel/0.17.1"):
+# pip-compile resolved it to 0.17.0 instead (one version behind the latest
+# PyPI release, 0.17.1, likely due to solver/index-state differences at
+# compile time - NOT something to rely on remaining stable).
 #
 # Both this PyPI-installed copy (site-packages, via this component) and the
 # git-source-built copy (site-packages, via python-extensions-collection)
 # get merged by stage_files.py into the SAME final "Lib/site-packages"
 # directory. If their versions differ, whichever copy is staged LAST wins
-# (overwrites the other's dist-info metadata) - this previously caused the
-# installed PythonExtensionsCollection version to silently be "0.17.1"
-# (from here) even though the Git tag was explicitly set to "rel/0.17.0".
+# (overwrites the other's dist-info metadata) - reintroducing exactly the
+# version-drift problem this file used to warn about from the opposite
+# direction (see git history / Bazel_Installer_Python_Scripts_Ordner.md-
+# adjacent docs) before GenPackageDoc itself was switched to a Git source.
 #
 # Fix: pin this transitive dependency EXPLICITLY to the SAME version as the
-# Git tag in python-extensions-collection/MODULE.bazel, so the "harmless
-# duplicate" assumption documented there (both copies are pinned to the
-# SAME version) actually holds again.
+# Git tag in python-extensions-collection/MODULE.bazel.
 #
 # *** Whenever the Git tag in python-extensions-collection/MODULE.bazel is
 # changed, this pin MUST be updated to match, and requirements_lock.txt
 # regenerated via pip-compile. ***
-
-# not yet # PythonExtensionsCollection==0.17.0
+pythonextensionscollection==0.17.1
