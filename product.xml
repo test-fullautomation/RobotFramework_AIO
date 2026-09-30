@@ -3,7 +3,7 @@
  
 <remote name="github" fetch="https://github.com/test-fullautomation/" />
  
-<default remote="github" revision="default" />
+<default remote="github" revision="develop" />
  
 <project name="python-extensions-collection" path="python-extensions-collection" />
 <project name="python-genpackagedoc" path="python-genpackagedoc" />
