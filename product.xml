@@ -5,8 +5,6 @@
  
 <default remote="github" revision="default" />
  
-<project name="robotframework" path="robotframework" />
- 
 <project name="python-extensions-collection" path="python-extensions-collection" />
 <project name="python-genpackagedoc" path="python-genpackagedoc" />
 <project name="python-issue-sync-tool" path="python-issue-sync-tool" />
