@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+ 
+<remote name="github" fetch="https://github.com/test-fullautomation/" />
+ 
+<default remote="github" revision="default" />
+ 
+<project name="robotframework" path="robotframework" />
+ 
+<project name="python-extensions-collection" path="python-extensions-collection" />
+<project name="python-genpackagedoc" path="python-genpackagedoc" />
+<project name="python-issue-sync-tool" path="python-issue-sync-tool" />
+<project name="python-jsonpreprocessor" path="python-jsonpreprocessor" />
+<project name="python-microservice-base" path="python-microservice-base" />
+<project name="python-microservice-cleware-switch" path="python-microservice-cleware-switch" />
+<project name="python-process-hub" path="python-process-hub" />
+<project name="python-pytestlog2db" path="python-pytestlog2db" />
+<project name="python-rabbitmq-messagebus" path="python-rabbitmq-messagebus" />
+<project name="python-testresultdbaccess" path="python-testresultdbaccess" />
+<project name="robotframework" path="robotframework" />
+<project name="robotframework-dbus" path="robotframework-dbus" />
+<project name="robotframework-documentation" path="robotframework-documentation" />
+<project name="robotframework-doip" path="robotframework-doip" />
+<project name="robotframework-extensions-collection" path="robotframework-extensions-collection" />
+<project name="robotframework-prometheus" path="robotframework-prometheus" />
+<project name="robotframework-qconnect-base" path="robotframework-qconnect-base" />
+<project name="robotframework-qconnect-winapp" path="robotframework-qconnect-winapp" />
+<project name="robotframework-robotlog2db" path="robotframework-robotlog2db" />
+<project name="robotframework-robotlog2rqm" path="robotframework-robotlog2rqm" />
+<project name="robotframework-selftest" path="robotframework-selftest" />
+<project name="robotframework-testsuitesmanagement" path="robotframework-testsuitesmanagement" />
+<project name="robotframework-tutorial" path="robotframework-tutorial" />
+<project name="robotframework-uds" path="robotframework-uds" />
+<project name="RobotFramework_AIO" path="RobotFramework_AIO" />
+<project name="RobotFramework_AIO_website" path="RobotFramework_AIO_website" />
+<project name="testresultwebapp" path="testresultwebapp" />
+<project name="vscode-jsonp" path="vscode-jsonp" />
+<project name="vscode-welcome" path="vscode-welcome" />
+
+
+</manifest>
