@@ -10,3 +10,16 @@ ms-python,debugpy,2026.6.0
 ms-vscode-remote,remote-ssh,0.124.0
 ms-vscode-remote,remote-ssh-edit,0.87.0
 ms-vscode,remote-explorer,0.5.0
+lihui,vs-external-tools,1.3.0
+tht13,rst-vscode,3.0.1
+bazelbuild,vscode-bazel,0.15.0
+github,vscode-pull-request-github,0.156.0
+mhutchie,git-graph,1.30.0
+github,vscode-github-actions,0.32.3
+tintinweb,graphviz-interactive-preview,0.3.5
+davidanson,vscode-markdownlint,0.62.1
+ms-vscode,powershell,2025.4.0
+grapecity,gc-excelviewer,4.2.66
+simonsiefke,svg-preview,2.8.3
+formulahendry,code-runner,0.12.2
+njpwerner,autodocstring,0.6.1
