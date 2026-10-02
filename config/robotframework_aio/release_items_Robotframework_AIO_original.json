@@ -411,6 +411,49 @@
 
 * Integrated **robotframework-retryfailed** library
 
+**VSCode**
+
+* Add the following default extensions:
+
+  * **VS External Tools**
+  * **reStructuredText**
+  * **Bazel**
+  * **GitHub Pull Requests**
+  * **Git Graph**
+  * **GitHub Actions**
+  * **Graphviz Interactive Preview**
+  * **Markdownlint**
+  * **PowerShell**
+  * **Excel Viewer**
+  * **SVG Preview**
+  * **Code Runner**
+  * **AutoDocstring**
+
+**VSCodium**
+
+* Upgrade VSCodium to version **1.135.06055**.
+
+* Add the following default extensions:
+
+  * **Bazel**
+  * **GitHub Pull Requests**
+  * **Git Graph**
+  * **GitHub Actions**
+  * **Graphviz Interactive Preview**
+  * **Markdownlint**
+  * **PowerShell**
+  * **Excel Viewer**
+  * **Code Runner**
+  * **AutoDocstring**
+  * **Open Remote - SSH**
+
+* Upgrade the following extensions:
+
+  * **Python** to 2026.4.0
+  * **RobotCode** to 2.6.2
+  * **XML** to 0.29.3
+  * **Python Debugger** to 2026.6.0
+
 ** Docker Image **
 
 * Introduced a pre-configured Docker image built on the latest Debian release.
