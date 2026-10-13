@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category_name }} - Learning Tools{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-2">
+                    <i class="bi bi-folder-fill text-primary"></i> {{ category_name }}
+                </h1>
+                <p class="text-muted">{{ workbooks|length }} exercise{{ 's' if workbooks|length != 1 else '' }}</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% if workbooks %}
+        {% for workbook in workbooks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm exercise-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ workbook.title }}</h5>
+                    <p class="card-text text-muted small">{{ workbook.summary }}</p>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small">Progress</span>
+                            <span class="small">
+                                {{ workbook.completed_questions }}/{{ workbook.total_questions }} questions
+                                {% if workbook.progress == 100 %}
+                                    <span class="badge bg-success">✓</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar {% if workbook.progress == 100 %}bg-success{% else %}bg-primary{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ workbook.progress }}%"
+                                 aria-valuenow="{{ workbook.progress }}" 
+                                 aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('workbook', workbook_name=workbook.name) }}" class="btn btn-primary btn-sm w-100">
+                        {% if workbook.completed_questions > 0 %}
+                            <i class="bi bi-play-circle"></i> Continue Learning
+                        {% else %}
+                            <i class="bi bi-play-circle"></i> Start Learning
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                <h4>No exercises available</h4>
+                <p>There are currently no exercises in this category.</p>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .exercise-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .exercise-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
+{% endblock %}
