@@ -206,6 +206,15 @@ function check_and_install_texlive () {
 	export GENDOC_LATEXPATH="/usr/local/texlive/$(date +%Y)/bin/x86_64-linux"
 }
 
+# Native Windows Python does not understand Cygwin/MSYS POSIX paths, so convert before passing them to it
+function native_path () {
+	if command -v cygpath > /dev/null 2>&1; then
+		cygpath -w "$1"
+	else
+		printf '%s' "$1"
+	fi
+}
+
 # Print the newest wheel in the wheelhouse for package $1, comparing names as pip does (PEP 503)
 function latest_wheel () {
 	"${PYBIN}" -c '
@@ -214,7 +223,7 @@ norm = lambda s: re.sub(r"[-_.]+", "-", s).lower()
 wheels = [w for w in pathlib.Path(sys.argv[2]).glob("*.whl") if norm(w.name.split("-")[0]) == norm(sys.argv[1])]
 if wheels:
     print(max(wheels, key=lambda w: w.stat().st_mtime).resolve())
-' "$1" "$wheelHouseDir"
+' "$1" "$(native_path "$wheelHouseDir")"
 }
 
 # Replace any existing constraint for package $1 with a pin to wheel file $2
@@ -231,7 +240,15 @@ for line in path.read_text().splitlines():
         keep.append(line)
 keep.append(f"{name} @ {pathlib.Path(whl).resolve().as_uri()}")
 path.write_text("\n".join(keep) + "\n")
-' "$1" "$2" "$PY_CONSTRAIN_FILE"
+' "$1" "$(native_path "$2")" "$(native_path "$PY_CONSTRAIN_FILE")"
+}
+
+# Install wheel/dir $1 under the accumulated pins, then force the local build over any same-version copy
+function install_local () {
+	local target
+	target=$(native_path "$1")
+	${PYBIN} -m pip install --find-links="$(native_path "$wheelHouseDir")" -c "$(native_path "$PY_CONSTRAIN_FILE")" "$target" || return 1
+	${PYBIN} -m pip install --force-reinstall --no-deps "$target"
 }
 
 function build_python_package () {
@@ -239,7 +256,8 @@ function build_python_package () {
 	reponame=$1
 	if [ -f "./setup.py" ]; then
 		# Install and store required dependencies for building package
-		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
+		${PYBIN} -m pip install -c "$(native_path "$PY_CONSTRAIN_FILE")" setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
+		logresult "$?" "installed build tools for ${reponame}" "install build tools for ${reponame}"
 		if [ -f "requirements.txt" ]; then
 			${PYBIN} -m pip install --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
 			logresult "$?" "installed requirements for ${reponame}" "install requirements for ${reponame}"
@@ -267,9 +285,10 @@ function build_python_package () {
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 
 		# Install the built wheel itself so a same-version package on the index cannot win
-		WHL_FILE=$(latest_wheel "$PKG_NAME" | tr -d '\r')
+		WHL_FILE=$(latest_wheel "$PKG_NAME") || errormsg "Failed to look up built wheel for ${PKG_NAME}"
+		WHL_FILE=${WHL_FILE//$'\r'/}
 		[ -n "$WHL_FILE" ] || errormsg "Built wheel for ${PKG_NAME} not found in ${wheelHouseDir}"
-		${PYBIN} -m pip install --find-links=$wheelHouseDir "$WHL_FILE"
+		install_local "$WHL_FILE"
 		logresult "$?" "installed ${reponame}" "install ${reponame}"
 
 	elif [ -f "./pyproject.toml" ]; then
@@ -283,14 +302,14 @@ function build_python_package () {
 		# Install package and its dependencies then run genpackagedoc
 		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
-			${PYBIN} -m pip install .
+			install_local .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
 
 			${PYBIN} ./genpackagedoc.py
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
 		if [ -f "./genmaindoc.py" ]; then
-			${PYBIN} -m pip install .
+			install_local .
 			logresult "$?" "installed ${reponame}" "install ${reponame}"
 
 			${PYBIN} ./genmaindoc.py
@@ -307,11 +326,12 @@ function build_python_package () {
 
 	# Pin the built wheel so later pip calls cannot swap in a same-version package from the index
 	if [ -n "$PKG_NAME" ] && [ ${reponame} != "robotframework" ]; then
-		WHL_FILE=$(latest_wheel "$PKG_NAME" | tr -d '\r')
+		WHL_FILE=$(latest_wheel "$PKG_NAME") || errormsg "Failed to look up built wheel for ${PKG_NAME}"
+		WHL_FILE=${WHL_FILE//$'\r'/}
 		echo "Found wheel file: $WHL_FILE"
-		if [ -n "$WHL_FILE" ]; then
-			pin_wheel "$PKG_NAME" "$WHL_FILE"
-		fi
+		[ -n "$WHL_FILE" ] || errormsg "Built wheel for ${PKG_NAME} not found in ${wheelHouseDir}"
+		pin_wheel "$PKG_NAME" "$WHL_FILE"
+		logresult "$?" "pinned wheel of ${reponame}" "pin wheel of ${reponame}"
 	fi
 
 	# copy robotframework wheel to a separate folder for later use in postinst.sh - extended variant
