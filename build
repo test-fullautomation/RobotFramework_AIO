@@ -141,15 +141,18 @@ if [ "$UNAME" == "Linux" ] ; then
 	[ -d "../python3lx" ] || errormsg "Python directory '../python3lx' not found."
 	PYDIR=$(cd ../python3lx; pwd)
 	PYBIN=${PYDIR}/bin/python3
-	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements_lx.lock"
+	PY_CONSTRAIN_SRC="${mypath}/install/python_requirements_lx.lock"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
 	[ -d "../python3" ] || errormsg "Python directory '../python3' not found."
 	PYDIR=$(cd ../python3; pwd -W)
 	PYBIN=${PYDIR}/python.exe
-	PY_CONSTRAIN_FILE="${mypath}/install/python_requirements.lock"
+	PY_CONSTRAIN_SRC="${mypath}/install/python_requirements.lock"
 else
 	errormsg "Operation system '$UNAME' is not supported."
 fi
+# Work on a copy so pinning built wheels never modifies the tracked lock file
+PY_CONSTRAIN_FILE="${mypath}/python_constraints.build.lock"
+cp "$PY_CONSTRAIN_SRC" "$PY_CONSTRAIN_FILE"
 cd "$CURDIR"
 
 
@@ -203,14 +206,46 @@ function check_and_install_texlive () {
 	export GENDOC_LATEXPATH="/usr/local/texlive/$(date +%Y)/bin/x86_64-linux"
 }
 
+# Print the newest wheel in the wheelhouse for package $1, comparing names as pip does (PEP 503)
+function latest_wheel () {
+	"${PYBIN}" -c '
+import pathlib, re, sys
+norm = lambda s: re.sub(r"[-_.]+", "-", s).lower()
+wheels = [w for w in pathlib.Path(sys.argv[2]).glob("*.whl") if norm(w.name.split("-")[0]) == norm(sys.argv[1])]
+if wheels:
+    print(max(wheels, key=lambda w: w.stat().st_mtime).resolve())
+' "$1" "$wheelHouseDir"
+}
+
+# Replace any existing constraint for package $1 with a pin to wheel file $2
+function pin_wheel () {
+	"${PYBIN}" -c '
+import pathlib, re, sys
+norm = lambda s: re.sub(r"[-_.]+", "-", s).lower()
+name, whl, constraint = sys.argv[1:4]
+path = pathlib.Path(constraint)
+keep = []
+for line in path.read_text().splitlines():
+    m = re.match(r"[A-Za-z0-9][A-Za-z0-9._-]*", line)
+    if not (m and norm(m.group()) == norm(name)):
+        keep.append(line)
+keep.append(f"{name} @ {pathlib.Path(whl).resolve().as_uri()}")
+path.write_text("\n".join(keep) + "\n")
+' "$1" "$2" "$PY_CONSTRAIN_FILE"
+}
+
 function build_python_package () {
+	local PKG_NAME WHL_FILE
 	reponame=$1
 	if [ -f "./setup.py" ]; then
 		# Install and store required dependencies for building package
 		${PYBIN} -m pip install setuptools wheel docutils colorama PythonExtensionsCollection genpackagedoc pypandoc_binary
 		if [ -f "requirements.txt" ]; then
 			${PYBIN} -m pip install --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+			logresult "$?" "installed requirements for ${reponame}" "install requirements for ${reponame}"
+
 			${PYBIN} -m pip wheel -w $wheelHouseDir --find-links=$wheelHouseDir -r requirements.txt -c $PY_CONSTRAIN_FILE
+			logresult "$?" "built wheels for requirements of ${reponame}" "build wheels for requirements of ${reponame}"
 		fi
 
 		# Remove previous package version from wheelHouse folder
@@ -230,8 +265,12 @@ function build_python_package () {
 		# Build package as wheel file
 		${PYBIN} ./setup.py bdist_wheel -d $wheelHouseDir
 		logresult "$?" "built ${reponame}" "build ${reponame}"
-		# Install package into environment so later packages can import it
-		${PYBIN} -m pip install --find-links=$wheelHouseDir ${PKG_NAME}
+
+		# Install the built wheel itself so a same-version package on the index cannot win
+		WHL_FILE=$(latest_wheel "$PKG_NAME" | tr -d '\r')
+		[ -n "$WHL_FILE" ] || errormsg "Built wheel for ${PKG_NAME} not found in ${wheelHouseDir}"
+		${PYBIN} -m pip install --find-links=$wheelHouseDir "$WHL_FILE"
+		logresult "$?" "installed ${reponame}" "install ${reponame}"
 
 	elif [ -f "./pyproject.toml" ]; then
 		# Remove previous package version from wheelHouse folder
@@ -245,11 +284,15 @@ function build_python_package () {
 		${PYBIN} -m pip install build docutils
 		if [ -f "./genpackagedoc.py" ]; then
 			${PYBIN} -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+
 			${PYBIN} ./genpackagedoc.py
 			logresult "$?" "generated pdf documentation for ${reponame}" "generate pdf documentation for ${reponame}"
 		fi
 		if [ -f "./genmaindoc.py" ]; then
 			${PYBIN} -m pip install .
+			logresult "$?" "installed ${reponame}" "install ${reponame}"
+
 			${PYBIN} ./genmaindoc.py
 			logresult "$?" "generated main pdf documentation for Robotframework AIO" "generate main pdf documentation for Robotframework AIO"
 		fi
@@ -260,6 +303,15 @@ function build_python_package () {
 		logresult "$?" "built ${reponame}" "build ${reponame}"
 	else
 		goodmsg "no setup.py or pyproject.toml found, skipping installation."
+	fi
+
+	# Pin the built wheel so later pip calls cannot swap in a same-version package from the index
+	if [ -n "$PKG_NAME" ] && [ ${reponame} != "robotframework" ]; then
+		WHL_FILE=$(latest_wheel "$PKG_NAME" | tr -d '\r')
+		echo "Found wheel file: $WHL_FILE"
+		if [ -n "$WHL_FILE" ]; then
+			pin_wheel "$PKG_NAME" "$WHL_FILE"
+		fi
 	fi
 
 	# copy robotframework wheel to a separate folder for later use in postinst.sh - extended variant
@@ -439,10 +491,10 @@ function deduplicate_wheels_and_generate_requirements() {
 
 	for whl in "$wheel_dir"/*.whl; do
 		[ -e "$whl" ] || continue
-		
+
 		local filename=$(basename "$whl")
 		local basename_no_ext="${filename%.whl}"
-		
+
 		# Parse wheel filename to extract package name and version
 		# Wheel format: {name}-{version}(-{build})?-{python}-{abi}-{platform}.whl
 		if [[ "$basename_no_ext" =~ ^([^0-9]*[^-])-([0-9][^-]*)-(.*)$ ]]; then
@@ -454,7 +506,7 @@ function deduplicate_wheels_and_generate_requirements() {
 			local rest="${basename_no_ext#*-}"
 			local pkg_version="${rest%%-*}"
 		fi
-		
+
 		# Write package==version format
 		echo "${pkg_name}==${pkg_version}" >> "$req_file"
 	done
