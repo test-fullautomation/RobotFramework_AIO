@@ -288,7 +288,18 @@ function build_python_package () {
 		WHL_FILE=$(latest_wheel "$PKG_NAME") || errormsg "Failed to look up built wheel for ${PKG_NAME}"
 		WHL_FILE=${WHL_FILE//$'\r'/}
 		[ -n "$WHL_FILE" ] || errormsg "Built wheel for ${PKG_NAME} not found in ${wheelHouseDir}"
-		install_local "$WHL_FILE"
+		if [ "$reponame" == "robotframework" ]; then
+			(
+				CORE_CONSTRAIN_FILE=$(mktemp "${PY_CONSTRAIN_FILE}.XXXXXX") || exit 1
+				trap 'rm -f "$CORE_CONSTRAIN_FILE"' EXIT
+				cp "$PY_CONSTRAIN_FILE" "$CORE_CONSTRAIN_FILE" || exit 1
+				PY_CONSTRAIN_FILE=$CORE_CONSTRAIN_FILE
+				pin_wheel "$PKG_NAME" "$WHL_FILE" || exit 1
+				install_local "$WHL_FILE"
+			)
+		else
+			install_local "$WHL_FILE"
+		fi
 		logresult "$?" "installed ${reponame}" "install ${reponame}"
 
 	elif [ -f "./pyproject.toml" ]; then
