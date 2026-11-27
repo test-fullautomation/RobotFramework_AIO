@@ -1,0 +1,85 @@
+{
+  "name": "JsonPreprocessor.Comments",
+  "title": "JsonPreprocessor.Comments: JSONP Comment Syntax",
+  "summary": "Learn how JsonPreprocessor strips `//` comments and `/* ... */` comment blocks before parsing JSONP content.",
+  "introduction": [
+    "These exercises use `CJsonPreprocessor(...).json_loads(...)` so the examples stay self-contained inside the notebook.",
+    "Your task is to define JSONP content with comments. `p1.check()` and `p2.check()` will parse your `content` and compare the resulting object against the expected JSON structure for the exercise."
+  ],
+  "questions": [
+    {
+      "id": "p1",
+      "title": "Exercise 1: Inline comments",
+      "prompt": [
+        "Create JSONP content with an inline `//` comment so that the parsed object matches the JSON shown in the exercise markdown.",
+        "The check passes when the parsed JSON object is exactly `{\"name\": \"JPP comments\", \"version\": \"1.0.0\"}`."
+      ],
+      "starter_code": [
+        "content = '''",
+        "{",
+        "<define your JSONP content with comments here>",
+        "}",
+        "'''",
+        "json_object = CJsonPreprocessor(syntax=\"python\").json_loads(content)",
+        "p1.check()"
+      ],
+      "hint": [
+        "Start from the target JSON object and add an inline `//` comment on its own line."
+      ],
+      "solution": [
+        "One valid solution is:",
+        "",
+        "```python",
+        "content = '''",
+        "{",
+        "  // metadata for the tutorial",
+        "  \"name\" : \"JPP comments\",",
+        "  \"version\" : \"1.0.0\"",
+        "}",
+        "'''",
+        "json_object = CJsonPreprocessor(syntax=\"python\").json_loads(content)",
+        "p1.check()",
+        "```"
+      ],
+      "success_message": "Correct. Your commented JSONP content resolves to the expected JSON object.",
+      "failure_message": "The parsed JSON object does not match the expected result for exercise 1.",
+      "tags": ["comments", "json_loads", "json object"]
+    },
+    {
+      "id": "p2",
+      "title": "Exercise 2: Block comments inside a list",
+      "prompt": [
+        "Create JSONP content with a block comment inside a list so that the final parsed object becomes `{\"testlist\": [\"A1\", \"D4\"]}`.",
+        "The check compares the parsed JSON object, not printed output."
+      ],
+      "starter_code": [
+        "content = '''",
+        "{",
+        "<define your JSONP content with comments here>",
+        "}",
+        "'''",
+        "json_object = CJsonPreprocessor(syntax=\"python\").json_loads(content)",
+        "p2.check()"
+      ],
+      "hint": [
+        "Use a list where the middle entries are hidden by `/* ... */`."
+      ],
+      "solution": [
+        "One valid solution is:",
+        "",
+        "```python",
+        "content = '''",
+        "{",
+        "  \"testlist\": [\"A1\", /* \"B2\", \"C3\", */ \"D4\"]",
+        "}",
+        "'''",
+        "json_object = CJsonPreprocessor(syntax=\"python\").json_loads(content)",
+        "p2.check()",
+        "```"
+      ],
+      "success_message": "Correct. The block comment was removed and the parsed list matches the expected JSON object.",
+      "failure_message": "The parsed JSON object does not match the expected list result for exercise 2.",
+      "tags": ["comments", "lists", "jsonLoads"]
+    }
+  ]
+}
