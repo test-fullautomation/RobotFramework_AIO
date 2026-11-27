@@ -452,25 +452,28 @@ function packaging_android() {
 		npm_proxy_args=""
 		/usr/bin/yes A | unzip ${sourceDir}/${archived_nodejs} -d $destDir/devtools
 		mv $destDir/devtools/node-* $destDir/devtools/nodejs
-		PATH="$destDir/devtools/nodejs:$PATH"
-		npm_bin=$destDir/devtools/nodejs/npm
+		export PATH="$destDir/devtools/nodejs:$PATH"
+		npm_bin="$destDir/devtools/nodejs/npm.cmd"
 	else
 	   mkdir $destDir/devtools/nodejs
 		tar --force-local -xf ${sourceDir}/${archived_nodejs} -C $destDir/devtools/nodejs --strip-components=1
-		PATH="$destDir/devtools/nodejs/bin:$PATH"
-		npm_bin=$destDir/devtools/nodejs/bin/npm
+		export PATH="$destDir/devtools/nodejs/bin:$PATH"
+		npm_bin="$destDir/devtools/nodejs/bin/npm"
 	fi
+
+	# Ensure npm lifecycle scripts can resolve the bundled Node.js executable on Windows.
+	export npm_config_scripts_prepend_node_path=true
 
 	# download appium packages:
 	# 	- appium server
 	echo "Installing appium server"
-	$npm_bin install --prefix $destDir/devtools/nodejs appium@${VERSION_APPIUM_SERVER} -g --verbose ${npm_proxy_args}
+	"$npm_bin" install --prefix "$destDir/devtools/nodejs" appium@${VERSION_APPIUM_SERVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed appium server" "install appium server"
 
 	#  - UIAutomator2 driver for appium
 	echo "Installing UIAutomator2 driver for appium"
 	export APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
-	$npm_bin install --prefix $destDir/devtools/nodejs appium-uiautomator2-driver@${VERSION_APPIUM_UIAUTOMATOR2_DRIVER} -g --verbose ${npm_proxy_args}
+	"$npm_bin" install --prefix "$destDir/devtools/nodejs" appium-uiautomator2-driver@${VERSION_APPIUM_UIAUTOMATOR2_DRIVER} -g --verbose ${npm_proxy_args}
 	logresult "$?" "installed UIAutomator2 driver for appium" "install UIAutomator2 driver for appium"
 	# APPIUM_HOME=./android appium driver install uiautomator2
 	# APPIUM_HOME=./android appium => scan appium drivers under APPIUM_HOME
